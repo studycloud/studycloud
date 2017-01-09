@@ -1,0 +1,14 @@
+.logos { 
+	display:inline-flex;
+	/*read up on flexbox if you want: 
+	https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+	*/
+}
+
+.logos > img { /*set height of header images; currently arbitrary as heck*/
+	height=90px
+}
+
+.titletext { /*set font of Study Cloud at top of page*/
+
+}
