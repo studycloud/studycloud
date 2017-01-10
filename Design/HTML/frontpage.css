@@ -77,18 +77,22 @@ https://designmodo.com/create-drop-down-menu-search-box/
 }
 
 #search_text{
-    width: 297px;
-    padding: 15px 0 15px 20px;
+/*    width: 297px;
+*/    /*padding: 10px 0 10px 20px;*/
+	align-self: center;
+    padding: 12px;    
+    text-align: center;
     font-size: 16px;
     border: 0 none;
-    height: 52px;
-    margin: 0;
+/*    height: 36px;
+*/    margin: 0;
     color: black;
     outline: none;
-    background: green;                                /*SEARCH BOX COLOR (pre-hover)*/
+    background: green;                                /*SEARCH BOX COLOR (pre-focus)*/
     float: center;
     box-sizing: border-box;
     transition: all 0.15s;
+   	border-radius: 4px;
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
