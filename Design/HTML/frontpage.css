@@ -1,6 +1,5 @@
 html {
 	font-family: 'Open Sans', sans-serif;
-	--navheight:60px;
 }
 
 
@@ -38,11 +37,13 @@ html {
 
 
 /*NAVBAR*/
+/* Code mostly taken from: 
+https://designmodo.com/create-drop-down-menu-search-box/
+*/
 
 .navbar {
     background: blue; /*change to a gradient later*/
-    height: var(--navheight);
-    display: inline-block;
+    display: flex-inline;
 }
 
 .navbar li { /*indicating some vaguely grandparental but not necessarily parental relationship*/
@@ -57,10 +58,14 @@ html {
     color: white;
     display: block;
     line-height: var(--navheight)/2;
-    padding: 0 26px;
+    padding: 10px 26px;
+    border-style: round;
+    border-color: green;
+    background-color: purple;
     text-decoration: none;
 }
 
 .navbar li a:hover {
-    background-color: #2e2e2e;
+    background-color: red;
+    color: black;
 }
