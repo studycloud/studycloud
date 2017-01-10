@@ -1,4 +1,9 @@
 <!--Ok so not necessarily the front page, this is mostly just the top part that will be constant over most (all?) pages, then throw the content into main-->
+<!--Subtleties that I've missed:
+1) literally all the rounded rectangles. sorry.
+2) fonts
+3) colors
+-->
 <!DOCTYPE html> 
 <html>
 <head>
@@ -24,7 +29,11 @@
                 <li><a href="#">Topics</a></li>
                 <li><a class="active" href="#">Items</a></li> <!--is this really what it was called?-->
                 <li><a href="#">About</a></li>
-                <li class="search"><a href="#">Search</a></li>
+                <li id="search">
+                    <form action="" method="get">
+                        <input type="text" name="search_text" id="search_text" placeholder="Search"/>
+                    </form>
+                </li>
                 <li><a href="#">Log In</a></li>
             </ul>
         </div>
