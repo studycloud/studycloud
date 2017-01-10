@@ -42,7 +42,18 @@ https://designmodo.com/create-drop-down-menu-search-box/
 */
 
 .navbar {
-    display: flex-inline;
+/*	display: flex;
+    justify-content: space-around;
+    align-items: center;*/
+}
+
+.navbar ul { /*here is where you fix the thing*/
+	display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
 }
 
 .navbar li { 
@@ -73,24 +84,29 @@ https://designmodo.com/create-drop-down-menu-search-box/
 /*SEARCH BAR (inside navbar)*/
 
 #search {
-    width: 357px;
+    width: 220px;
+}
+
+#search_form {
+	display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 220px;
 }
 
 #search_text{
-/*    width: 297px;
-*/    /*padding: 10px 0 10px 20px;*/
-	align-self: center;
     padding: 12px;    
     text-align: center;
     font-size: 16px;
     border: 0 none;
-/*    height: 36px;
-*/    margin: 0;
+    margin: auto;
     color: black;
     outline: none;
     background: green;                                /*SEARCH BOX COLOR (pre-focus)*/
     float: center;
-    box-sizing: border-box;
+    /*box-sizing: border-box;*/
     transition: all 0.15s;
    	border-radius: 4px;
 }
