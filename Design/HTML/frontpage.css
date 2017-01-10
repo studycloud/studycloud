@@ -1,14 +1,29 @@
-.logos { 
-	display:inline-flex;
+.logos { /*alignment of logos*/
+	display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    /* Code snippet stolen from a comment here:
+    http://stackoverflow.com/questions/114543/horizontally-center-a-div-in-a-div
+    */
+
 	/*read up on flexbox if you want: 
 	https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 	*/
 }
 
 .logos > img { /*set height of header images; currently arbitrary as heck*/
-	height=90px
+	height: 90px;
+}
+
+.logos > * {
+	margin: 12px; /*we can make this more dynamic and less arbitrary later*/
 }
 
 .titletext { /*set font of Study Cloud at top of page*/
-
+	font-family: 'Fredericka the Great', cursive;
+	font-weight: normal;
+	font-size: 60px;
 }
