@@ -1,5 +1,6 @@
 html {
 	font-family: 'Open Sans', sans-serif;
+	border-radius: 10px; /*um if you were wondering lol*/
 }
 
 
@@ -57,7 +58,7 @@ https://designmodo.com/create-drop-down-menu-search-box/
     font-weight: bolder;
     color: white;
     display: block;
-    padding: 10px 26px;
+    padding: 10px 26px; 																		/*HELLO CONSTANTS*/
     background-color: purple;
     text-decoration: none;
 }
@@ -65,6 +66,7 @@ https://designmodo.com/create-drop-down-menu-search-box/
 .navbar li a:hover {
     background-color: red;
     color: black;
+    transition: all 0.15s;
 }
 
 
@@ -72,21 +74,19 @@ https://designmodo.com/create-drop-down-menu-search-box/
 
 #search {
     width: 357px;
-    margin: 4px;
 }
 
 #search_text{
     width: 297px;
     padding: 15px 0 15px 20px;
     font-size: 16px;
-    font-family: Montserrat, sans-serif;
     border: 0 none;
     height: 52px;
-    margin-right: 0;
+    margin: 0;
     color: white;
     outline: none;
-    background: #1f7f5c;
-    float: left;
+    background: green;
+    float: center;
     box-sizing: border-box;
     transition: all 0.15s;
 }
