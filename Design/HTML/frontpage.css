@@ -1,3 +1,11 @@
+html {
+	font-family: 'Open Sans', sans-serif;
+	--navheight:60px;
+}
+
+
+/*MASTHEAD*/
+
 .logos { /*alignment of logos*/
 	display: flex;
     flex-direction: row;
@@ -26,4 +34,33 @@
 	font-family: 'Fredericka the Great', cursive;
 	font-weight: normal;
 	font-size: 60px;
+}
+
+
+/*NAVBAR*/
+
+.navbar {
+    background: blue; /*change to a gradient later*/
+    height: var(--navheight);
+    display: inline-block;
+}
+
+.navbar li { /*indicating some vaguely grandparental but not necessarily parental relationship*/
+	float: left;
+    list-style-type: none; /*remove bullet points on nav items*/
+    position: relative;
+}
+
+.navbar li a {
+    font-size: 16px;
+    font-weight: bolder;
+    color: white;
+    display: block;
+    line-height: var(--navheight)/2;
+    padding: 0 26px;
+    text-decoration: none;
+}
+
+.navbar li a:hover {
+    background-color: #2e2e2e;
 }
