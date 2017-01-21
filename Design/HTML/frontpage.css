@@ -45,19 +45,22 @@ https://designmodo.com/create-drop-down-menu-search-box/
 /*	display: flex;
     justify-content: space-around;
     align-items: center;*/
+    background-color: purple;
+    width: 60%;
+    margin: auto;
 }
 
 .navbar ul { /*here is where you fix the thing*/
 	display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     width: 80%;
+    margin: auto;
 }
 
 .navbar li { 
-	float: left;
     list-style-type: none;
     position: relative;
     background-color: blue; 																		/*TODO:change to a gradient later*/
@@ -84,7 +87,7 @@ https://designmodo.com/create-drop-down-menu-search-box/
 /*SEARCH BAR (inside navbar)*/
 
 #search {
-    width: 220px;
+    width: 219px;
 }
 
 #search_form {
@@ -93,7 +96,7 @@ https://designmodo.com/create-drop-down-menu-search-box/
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    width: 220px;
+    width: 219px;
 }
 
 #search_text{
