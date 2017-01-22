@@ -15,7 +15,7 @@
    viewBox="0 0 744.09448819 1052.3622047"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92pre3 15195"
    sodipodi:docname="hexellation.svg"
    enable-background="new">
   <defs
@@ -146,7 +146,8 @@
     <filter
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
-       id="filter4166">
+       id="filter4166"
+       inkscape:label="filter4166">
       <feBlend
          inkscape:collect="always"
          mode="lighten"
@@ -273,119 +274,16 @@
     <filter
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
-       id="filter4578"
-       x="-0.085768334"
-       width="1.1715367"
-       y="-0.085768334"
-       height="1.1715367">
+       id="filter5481"
+       x="-0.10000000000000001"
+       width="1.2"
+       y="-0.10000000000000001"
+       height="1.2"
+       inkscape:label="Blur1">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="0.58888904"
-         id="feGaussianBlur4580" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       style="color-interpolation-filters:sRGB"
-       id="filter4582"
-       x="-0.060418677"
-       width="1.1208374"
-       y="-0.060418677"
-       height="1.1208374">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.41483721"
-         id="feGaussianBlur4584" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       style="color-interpolation-filters:sRGB"
-       id="filter4586"
-       x="-0.09567749"
-       width="1.191355"
-       y="-0.09567749"
-       height="1.191355">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.65692573"
-         id="feGaussianBlur4588" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       style="color-interpolation-filters:sRGB"
-       id="filter4590"
-       x="-0.051688881"
-       width="1.1033778"
-       y="-0.051688881"
-       height="1.1033778">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.35489806"
-         id="feGaussianBlur4592" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       style="color-interpolation-filters:sRGB"
-       id="filter4594"
-       x="-0.072696473"
-       width="1.1453929"
-       y="-0.072696473"
-       height="1.1453929">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.49913708"
-         id="feGaussianBlur4596" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       style="color-interpolation-filters:sRGB"
-       id="filter4598"
-       x="-0.091236897"
-       width="1.1824738"
-       y="-0.091236897"
-       height="1.1824738">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.62643642"
-         id="feGaussianBlur4600" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       style="color-interpolation-filters:sRGB"
-       id="filter4614"
-       x="-0.0299519"
-       width="1.0599038"
-       y="-0.0299519"
-       height="1.0599038">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.20565102"
-         id="feGaussianBlur4616" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       style="color-interpolation-filters:sRGB"
-       id="filter4618"
-       x="-0.019834674"
-       width="1.0396693"
-       y="-0.019834674"
-       height="1.0396693">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.13618572"
-         id="feGaussianBlur4620" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       style="color-interpolation-filters:sRGB"
-       id="filter4622"
-       x="-0.028156641"
-       width="1.0563133"
-       y="-0.028156641"
-       height="1.0563133">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.1933247"
-         id="feGaussianBlur4624" />
+         stdDeviation="0.080000000000000002"
+         id="feGaussianBlur5483" />
     </filter>
   </defs>
   <sodipodi:namedview
@@ -395,11 +293,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="203.20283"
-     inkscape:cy="686.33255"
+     inkscape:zoom="7.7600128"
+     inkscape:cx="238.65493"
+     inkscape:cy="734.57846"
      inkscape:document-units="px"
-     inkscape:current-layer="layer6"
+     inkscape:current-layer="g5214"
      showgrid="false"
      showguides="false"
      inkscape:guide-bbox="true"
@@ -436,7 +334,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -551,7 +449,8 @@
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="Internal Stars"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <circle
        transform="matrix(0.85551163,0,0,0.85551163,86.276495,141.59953)"
        r="8.2392511"
@@ -574,7 +473,7 @@
        id="circle5216-1"
        style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter7108-4)" />
     <circle
-       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter4618)"
+       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5481)"
        id="circle4199-3"
        cx="177.81114"
        cy="259.30524"
@@ -585,10 +484,10 @@
        cy="364.68759"
        cx="117.93609"
        id="circle4201-6"
-       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter4622)"
+       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5481)"
        transform="matrix(0.60265693,0,0,0.60265693,197.12049,91.633816)" />
     <circle
-       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter4614)"
+       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5481)"
        id="path4180-3"
        cx="179.05032"
        cy="467.21808"
@@ -599,8 +498,7 @@
      style="display:inline"
      inkscape:label="stars copy"
      id="g5214"
-     inkscape:groupmode="layer"
-     sodipodi:insensitive="true">
+     inkscape:groupmode="layer">
     <circle
        transform="matrix(0.56653484,0,0,0.56653484,77.358754,202.78856)"
        r="8.2392511"
@@ -647,9 +545,10 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="stars"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <circle
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter4598)"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5481)"
        id="path4180"
        cx="179.05032"
        cy="467.21808"
@@ -660,10 +559,10 @@
        cy="466.68237"
        cx="299.3306"
        id="circle4193"
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter4594)"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5481)"
        transform="matrix(0.71102323,0,0,0.71102323,85.871712,135.25326)" />
     <circle
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter4590)"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5481)"
        id="circle4195"
        cx="358.30173"
        cy="363.02957"
@@ -673,10 +572,10 @@
        cy="259.34857"
        cx="298.24646"
        id="circle4197"
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter4586)"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5481)"
        transform="matrix(0.54024077,0,0,0.54024077,136.87009,119.2818)" />
     <circle
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter4582)"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5481)"
        id="circle4199"
        cx="177.81114"
        cy="259.30524"
@@ -687,7 +586,7 @@
        cy="364.68759"
        cx="117.93609"
        id="circle4201"
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter4578)"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5481)"
        transform="matrix(0.60265693,0,0,0.60265693,47.415269,144.06528)" />
   </g>
 </svg>
