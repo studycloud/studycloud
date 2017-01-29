@@ -1,0 +1,136 @@
+html {
+	font-family: 'Open Sans', sans-serif;
+}
+
+
+/*MASTHEAD*/
+
+.logos { /*alignment of logos*/
+	display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    /* Code snippet stolen from a comment here:
+    http://stackoverflow.com/questions/114543/horizontally-center-a-div-in-a-div
+    */
+
+	/*read up on flexbox if you want: 
+	https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+	*/
+}
+
+.logos > img { /*set height of header images; currently arbitrary as heck*/
+	height: 90px;
+}
+
+.logos > * {
+	margin: 12px; /*we can make this more dynamic and less arbitrary later*/
+}
+
+.titletext { /*set font of Study Cloud at top of page*/
+	font-family: 'Fredericka the Great', cursive;
+	font-weight: normal;
+	font-size: 60px;
+}
+
+
+/*NAVBAR*/
+/* Code mostly taken from: 
+https://designmodo.com/create-drop-down-menu-search-box/
+*/
+
+.navbar {
+/*	display: flex;
+    justify-content: space-around;
+    align-items: center;*/
+    background-color: purple;
+    width: 60%;
+    margin: auto;
+}
+
+.navbar ul { /*here is where you fix the thing*/
+	display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    margin: auto;
+}
+
+.navbar li { 
+    list-style-type: none;
+    position: relative;
+    background-color: blue; 																		/*TODO:change to a gradient later*/
+    padding: 2px;
+}
+
+.navbar li a { /*default behavior of navbar items*/
+    font-size: 16px;
+    font-weight: bolder;
+    color: white;
+    display: block;
+    padding: 10px 26px; 																		/*HELLO CONSTANTS*/
+    text-decoration: none;
+}
+
+.navbar li a:hover {
+    background-color: red;
+    color: black;
+    transition: all 0.15s;
+    border-radius: 2px;                                                                                   /*Tweak corner rounding here*/
+}
+
+
+/*SEARCH BAR (inside navbar)*/
+
+#search {
+    width: 219px;
+}
+
+#search_form {
+	display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 219px;
+}
+
+#search_text{
+    padding: 12px;    
+    text-align: center;
+    font-size: 16px;
+    border: 0 none;
+    margin: auto;
+    color: black;
+    outline: none;
+    background: green;                                /*SEARCH BOX COLOR (pre-focus)*/
+    float: center;
+    /*box-sizing: border-box;*/
+    transition: all 0.15s;
+   	border-radius: 4px;
+}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: white;
+}
+
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: white;
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: white;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: white;
+}
+
+#search_text:focus {
+	color: black;
+    background: white;
+}
