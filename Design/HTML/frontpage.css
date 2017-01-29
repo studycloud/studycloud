@@ -23,18 +23,18 @@ html {
 	*/
 }
 
-.logos > img { /*set width of header images; currently arbitrary as heck*/
+.logos > img { 
 	width: 5%;
 }
 
 .logos > * {
-	margin: 1% /*we can make this more dynamic and less arbitrary later*/
+	margin: 1% 
 }
 
 .titletext { /*set font of Study Cloud at top of page*/
 	font-family: 'Fredericka the Great', cursive;
 	font-weight: normal;
-	font-size: 5vh;
+	font-size: 5vh;																			/*using vh here; possibly problematic for compatibility*/
 }
 
 
@@ -44,15 +44,12 @@ https://designmodo.com/create-drop-down-menu-search-box/
 */
 
 .navbar {
-/*	display: flex;
-    justify-content: space-around;
-    align-items: center;*/
     background-color: purple;
     width: 60%;
     margin: auto;
 }
 
-.navbar ul { /*here is where you fix the thing*/
+.navbar ul { /*here is where you fix the navbar items*/
 	display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -66,11 +63,11 @@ https://designmodo.com/create-drop-down-menu-search-box/
     list-style-type: none;
     position: relative;
     background-color: blue; 																		/*TODO:change to a gradient later*/
-    padding: 2px;
+    padding: 0.1%;																						/*rawr fix this padding to make the height consistent*/
+    font-size: 2vh;																				/* using vh here; possibly problematic*/
 }
 
 .navbar li a { /*default behavior of navbar items*/
-    font-size: 16px;
     font-weight: bolder;
     color: white;
     display: block;
@@ -89,7 +86,7 @@ https://designmodo.com/create-drop-down-menu-search-box/
 /*SEARCH BAR (inside navbar)*/
 
 #search {
-    width: 219px;
+    width: 219px; 														/*whoops idk how to make this responsive*/
 }
 
 #search_form {
@@ -98,7 +95,7 @@ https://designmodo.com/create-drop-down-menu-search-box/
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    width: 219px;
+    width: 219px;														/*whoops idk how to make this responsive*/
 }
 
 #search_text{
@@ -114,6 +111,7 @@ https://designmodo.com/create-drop-down-menu-search-box/
     /*box-sizing: border-box;*/
     transition: all 0.15s;
    	border-radius: 4px;
+   	font-size: 2vh;																				/* using vh here; possibly problematic*/
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
