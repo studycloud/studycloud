@@ -1,11 +1,13 @@
 html {
 	font-family: 'Open Sans', sans-serif;
+	/*font-size: 100%;*/
 }
 
 
 /*MASTHEAD*/
 
 .logos { /*alignment of logos*/
+	width: 100%;
 	display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -21,18 +23,18 @@ html {
 	*/
 }
 
-.logos > img { /*set height of header images; currently arbitrary as heck*/
-	height: 90px;
+.logos > img { /*set width of header images; currently arbitrary as heck*/
+	width: 5%;
 }
 
 .logos > * {
-	margin: 12px; /*we can make this more dynamic and less arbitrary later*/
+	margin: 1% /*we can make this more dynamic and less arbitrary later*/
 }
 
 .titletext { /*set font of Study Cloud at top of page*/
 	font-family: 'Fredericka the Great', cursive;
 	font-weight: normal;
-	font-size: 60px;
+	font-size: 5vh;
 }
 
 
