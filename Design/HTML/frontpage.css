@@ -45,7 +45,7 @@ https://designmodo.com/create-drop-down-menu-search-box/
 
 .navbar {
     background-color: purple;
-    width: 60%;
+    width: 80%; 																				/*im pretty sure this is awful sorry*/
     margin: auto;
 }
 
@@ -55,8 +55,9 @@ https://designmodo.com/create-drop-down-menu-search-box/
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    width: 80%;
+    /*width: 80%;																				/* is vh okay though*/*/
     margin: auto;
+    /*flex-basis: 200vh;*/
 }
 
 .navbar li { 
@@ -65,6 +66,10 @@ https://designmodo.com/create-drop-down-menu-search-box/
     background-color: blue; 																		/*TODO:change to a gradient later*/
     padding: 0.1%;																						/*rawr fix this padding to make the height consistent*/
     font-size: 2vh;																				/* using vh here; possibly problematic*/
+    /*height: 10px;*/
+    /*width: 10vh;*/
+    flex-grow: 0;
+    flex-basis: 15%;
 }
 
 .navbar li a { /*default behavior of navbar items*/
@@ -73,6 +78,7 @@ https://designmodo.com/create-drop-down-menu-search-box/
     display: block;
     padding: 10px 26px; 																		/*HELLO CONSTANTS*/
     text-decoration: none;
+    text-align: center;
 }
 
 .navbar li a:hover {
@@ -86,7 +92,7 @@ https://designmodo.com/create-drop-down-menu-search-box/
 /*SEARCH BAR (inside navbar)*/
 
 #search {
-    width: 219px; 														/*whoops idk how to make this responsive*/
+    width: 100px; 														/*whoops idk how to make this responsive*/
 }
 
 #search_form {
@@ -95,7 +101,7 @@ https://designmodo.com/create-drop-down-menu-search-box/
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    width: 219px;														/*whoops idk how to make this responsive*/
+    width: 100%;														/*whoops idk how to make this responsive*/
 }
 
 #search_text{
