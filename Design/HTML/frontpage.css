@@ -42,6 +42,10 @@ html {
 /* Code mostly taken from: 
 https://designmodo.com/create-drop-down-menu-search-box/
 */
+/* Read up on Flexbox: 
+http://webkit-flex.atomeye.com/
+http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
+*/
 
 .navbar {
     background-color: purple;
