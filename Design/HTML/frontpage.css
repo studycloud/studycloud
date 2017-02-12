@@ -3,6 +3,11 @@ html {
 	/*font-size: 100%;*/
 }
 
+#pageWidth { /*Limits width of page.*/
+	width: 80%;
+	margin: auto;
+}
+
 
 /*MASTHEAD*/
 
@@ -49,7 +54,6 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
 
 .navbar {
     background-color: purple;
-    width: 80%; 																				/*im pretty sure this is awful sorry*/
     margin: auto;
 }
 
@@ -89,7 +93,7 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
     background-color: red;
     color: black;
     transition: all 0.15s;
-    border-radius: 2px;                                                                                   /*Tweak corner rounding here*/
+    border-radius: .25vh;                                                                                   /*Tweak corner rounding here*/
 }
 
 
@@ -119,7 +123,7 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
     float: center;
     /*box-sizing: border-box;*/
     transition: all 0.15s;
-   	border-radius: 4px;
+   	border-radius: 1vh;
    	font-size: 2vh;																				/* using vh here; possibly problematic*/
    	padding: 10% 50%;
 }
@@ -144,3 +148,6 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
 	color: black;
     background: white;
 }
+
+/*list: display table
+element: display table-cell float none position relative padding none*/

@@ -1,9 +1,7 @@
 <!--Ok so not necessarily the front page, this is mostly just the top part that will be constant over most (all?) pages, then throw the content into main-->
 <!--Subtleties that I've missed:
-1) literally all the rounded rectangles. sorry.
-2) fonts
-3) colors
-4) the navbar is not centered in any sense of the word. I think there's extra space at the beginning. 
+1) fonts
+2) colors
 -->
 <!DOCTYPE html> 
 <html>
@@ -14,36 +12,37 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> <!--font for literally everything else-->
 </head>
 <body>
+	<div id="pageWidth">
+	    <header> <!--header tag necessary? idk. Consider removing?-->
 
-    <header> <!--header tag necessary? idk. Consider removing?-->
+	        <!--Logos (school logo, "Study Cloud", sheep) go here-->
+	        <div text-align="center" class="logos">
+	            <img src="school.png"/>
+	            <h1 class="titletext">Study Cloud</h1>
+	            <img src="hexellationInverted.png"/>
+	        </div>
+	        
+	        <!--Navbar goes here-->
+	        <div class="navbar"> 
+	            <ul>
+	                <li><a href="#">Topics</a></li>
+	                <li><a class="active" href="#">Items</a></li> <!--is this really what it was called?-->
+	                <li><a href="#">About</a></li>
+	                <li id="search">
+	                    <form action="" method="get" id="search_form">
+	                        <input type="text" name="search_text" id="search_text" placeholder="Search"/>
+	                    </form>
+	                </li>
+	                <li><a href="#">Log In</a></li>
+	            </ul>
+	        </div>
 
-        <!--Logos (school logo, "Study Cloud", sheep) go here-->
-        <div text-align="center" class="logos">
-            <img src="school.png"/>
-            <h1 class="titletext">Study Cloud</h1>
-            <img src="hexellationInverted.png"/>
-        </div>
-        
-        <!--Navbar goes here-->
-        <div class="navbar"> 
-            <ul>
-                <li><a href="#">Topics</a></li>
-                <li><a class="active" href="#">Items</a></li> <!--is this really what it was called?-->
-                <li><a href="#">About</a></li>
-                <li id="search">
-                    <form action="" method="get" id="search_form">
-                        <input type="text" name="search_text" id="search_text" placeholder="Search"/>
-                    </form>
-                </li>
-                <li><a href="#">Log In</a></li>
-            </ul>
-        </div>
+	    </header>
 
-    </header>
-
-    <!--Page content goes here-->
-    <div class="main"> 
-    </div>
+	    <!--Page content goes here-->
+	    <div class="main"> 
+	    </div>
+	</div>
 
 </body>
 </html>
