@@ -80,7 +80,7 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
     font-weight: bolder;
     color: white;
     display: block;
-    padding: 10px 26px; 																		/*HELLO CONSTANTS*/
+    padding: 10% 26%; 																		/*HELLO CONSTANTS*/
     text-decoration: none;
     text-align: center;
 }
@@ -109,7 +109,6 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
 }
 
 #search_text{
-    padding: 12px;    
     text-align: center;
     font-size: 16px;
     border: 0 none;
@@ -122,6 +121,7 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
     transition: all 0.15s;
    	border-radius: 4px;
    	font-size: 2vh;																				/* using vh here; possibly problematic*/
+   	padding: 10% 50%;
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
