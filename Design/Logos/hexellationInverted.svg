@@ -18,7 +18,10 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="hexellationInverted.svg"
-   style="enable-background:new">
+   style="enable-background:new"
+   inkscape:export-filename="C:\Users\gsera\Desktop\studycloud\Design\HTML\hexellationInverted.png"
+   inkscape:export-xdpi="219.474"
+   inkscape:export-ydpi="219.474">
   <defs
      id="defs4">
     <linearGradient
@@ -364,7 +367,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.64"
-     inkscape:cx="-221.50076"
+     inkscape:cx="-482.43826"
      inkscape:cy="179.64837"
      inkscape:document-units="px"
      inkscape:current-layer="layer5"
@@ -400,7 +403,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -439,7 +442,7 @@
        inkscape:flatsided="true"
        inkscape:rounded="0"
        inkscape:randomized="0"
-       d="m 297.99496,259.39246 60.30673,103.6371 -59.599,104.0457 -119.90572,0.40861 -60.30673,-103.63709 59.599,-104.04571 z" />
+       d="m 297.99496,259.39247 60.30673,103.63709 -59.599,104.04571 -119.90572,0.40861 -60.30673,-103.6371 59.599,-104.0457 z" />
   </g>
   <g
      inkscape:label="const lines"
