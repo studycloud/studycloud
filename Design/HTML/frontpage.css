@@ -96,7 +96,7 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
 /*SEARCH BAR (inside navbar)*/
 
 #search {
-    width: 100px; 														/*whoops idk how to make this responsive*/
+    width: 20vh; 														/*whoops idk how to make this responsive*/
 }
 
 #search_form {
@@ -105,7 +105,7 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    width: 100%;														/*whoops idk how to make this responsive*/
+    width: 20vh;														/*whoops idk how to make this responsive*/
 }
 
 #search_text{
