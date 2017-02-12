@@ -58,26 +58,30 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
 }
 
 .navbar ul { /*here is where you fix the navbar items*/
-	display: flex;
+	/*display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    /*width: 80%;																				/* is vh okay though*/*/
-    margin: auto;
-    /*flex-basis: 200vh;*/
+    margin: auto;*/
+    display: table;
+    text-align: center;
 }
 
 .navbar li { 
     list-style-type: none;
-    position: relative;
-    background-color: blue; 																		/*TODO:change to a gradient later*/
-    padding: 0.1%;																						/*rawr fix this padding to make the height consistent*/
-    font-size: 2vh;																				/* using vh here; possibly problematic*/
-    /*height: 10px;*/
-    /*width: 10vh;*/
+    /*position: relative;
+    padding: 0.1%;
+    font-size: 2vh;
     flex-grow: 0;
-    flex-basis: 15%;
+    flex-basis: 15%;*/
+    background-color: blue; 																		/*TODO:change to a gradient later*/
+    /*display: table-cell; */
+    float: none; 
+    position: relative;
+    padding: 0px;
+    box-sizing: border-box;
+    display: inline;
 }
 
 .navbar li a { /*default behavior of navbar items*/
@@ -100,32 +104,29 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
 /*SEARCH BAR (inside navbar)*/
 
 #search {
-    width: 20vh; 														/*whoops idk how to make this responsive*/
+    /*width: 20vh;*/
+    display: inline;
 }
 
 #search_form {
-	display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    width: 20vh;														/*whoops idk how to make this responsive*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    width: 20vh;
 }
 
 #search_text{
     text-align: center;
-    font-size: 16px;
     border: 0 none;
     margin: auto;
     color: black;
     outline: none;
     background: green;                                /*SEARCH BOX COLOR (pre-focus)*/
     float: center;
-    /*box-sizing: border-box;*/
     transition: all 0.15s;
    	border-radius: 1vh;
    	font-size: 2vh;																				/* using vh here; possibly problematic*/
-   	padding: 10% 50%;
+   	width: 20vh;
+   	padding: 10% 45%
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
