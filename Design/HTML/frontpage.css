@@ -60,6 +60,7 @@ html {
     display: block;
     text-decoration: none;
     text-align: center;
+    font-size: 2.5vh;
 }
 
 .navbar li a:hover {
@@ -83,14 +84,13 @@ html {
 #search_text{
     text-align: center;
     border: none;
-    /* margin: auto; */
     color: black;
     outline: none;
     background: green;                                /*SEARCH BOX COLOR (pre-focus)*/
     float: center;
     transition: all 0.15s;
     border-radius: 1vh; 
-    font-size: 4vh;																				/* using vh here; possibly problematic*/
+    font-size: 2.5vh;
     width: 100%;
 }
 
