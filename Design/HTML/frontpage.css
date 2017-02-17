@@ -18,14 +18,6 @@ html {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-
-    /* Code snippet stolen from a comment here:
-    http://stackoverflow.com/questions/114543/horizontally-center-a-div-in-a-div
-    */
-
-	/*read up on flexbox if you want: 
-	https://css-tricks.com/snippets/css/a-guide-to-flexbox/
-	*/
 }
 
 .logos > img { 
@@ -44,53 +36,32 @@ html {
 
 
 /*NAVBAR*/
-/* Code mostly taken from: 
-https://designmodo.com/create-drop-down-menu-search-box/
-*/
-/* Read up on Flexbox: 
-http://webkit-flex.atomeye.com/
-http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
-*/
 
 .navbar {
     background-color: purple;
-    /*margin: auto;*/
 }
 
 .navbar ul { /*here is where you fix the navbar items*/
-	/*display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    margin: auto;*/
-	/*display: table;*/
-	/*text-align: center;*/
+	text-align: center;
 	list-style-type: none;
 	padding-left: 0;
 }
 
 .navbar li {
-    /*list-style-type: none;*/
-    /*position: relative;
-    padding: 0.1%;
-    font-size: 2vh;
-    flex-grow: 0;
-    flex-basis: 15%;*/
-    background-color: blue; 																		/*TODO:change to a gradient later*/
-    /*display: table-cell; */
-    /*float: none; */
-    /* position: relative; */
-    padding: 0px;
-    /*box-sizing: border-box;*/
-    /*display: inline;*/
+    /* background-color: blue; */
+    display: inline-block;
+    width: 10%;
+    margin:  auto;
+    /* aligning and stuff*/
+    position: absolute;
+	top: 50%;
+	transform: translate(0, -50%)
 }
 
 .navbar li a { /*default behavior of navbar items*/
     font-weight: bolder;
     color: white;
     display: block;
-    /* padding: 0% 0%; */ 																		/*HELLO CONSTANTS*/
     text-decoration: none;
     text-align: center;
 }
@@ -106,14 +77,10 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
 /*SEARCH BAR (inside navbar)*/
 
 #search {
-    /*width: 20vh;*/
-    /*display: inline;*/
+    width: 20%;
 }
 
 #search_form {
-    /*justify-content: center;*/
-    /*align-items: center;*/
-    /* width: 20vh; */
 }
 
 #search_text{
@@ -125,10 +92,9 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
     background: green;                                /*SEARCH BOX COLOR (pre-focus)*/
     float: center;
     transition: all 0.15s;
-    /* border-radius: 1vh; */
+    border-radius: 1vh; 
     font-size: 4vh;																				/* using vh here; possibly problematic*/
     width: 100%;
-    /* padding: 10% 45%; */
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
@@ -151,6 +117,3 @@ http://webagility.com/posts/fluid-layouts-done-right-with-flexbox
 	color: black;
     background: white;
 }
-
-/*list: display table
-element: display table-cell float none position relative padding none*/
