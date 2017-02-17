@@ -51,7 +51,8 @@ html {
     /* background-color: blue; */
     display: inline-block;
     width: 10%;
-    margin:  auto;
+    margin: 0;
+    padding: 0;
 }
 
 .navbar li a { /*default behavior of navbar items*/
@@ -89,7 +90,7 @@ html {
     background: green;                                /*SEARCH BOX COLOR (pre-focus)*/
     float: center;
     transition: all 0.15s;
-    border-radius: 1vh; 
+    border-radius: 1vh;
     font-size: 2.5vh;
     width: 100%;
 }
@@ -114,3 +115,7 @@ html {
 	color: black;
     background: white;
 }
+
+/*  position: relative;
+  top: 50%;
+  transform: translateY(-50%);*/
