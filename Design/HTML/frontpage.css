@@ -53,9 +53,9 @@ html {
     width: 10%;
     margin:  auto;
     /* aligning and stuff*/
-    position: absolute;
+/*    position: absolute;
 	top: 50%;
-	transform: translate(0, -50%)
+	transform: translate(0, -50%)*/
 }
 
 .navbar li a { /*default behavior of navbar items*/
