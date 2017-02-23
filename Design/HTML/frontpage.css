@@ -1,6 +1,5 @@
 html {
 	font-family: 'Open Sans', sans-serif;
-	/*font-size: 100%;*/
 }
 
 #pageWidth { /*Limits width of page.*/
@@ -21,11 +20,11 @@ html {
 }
 
 .logos > img { 
-	width: 5%;
+	width: 5vh;
 }
 
 .logos > * {
-	margin: 1% 
+	margin: 2vh;
 }
 
 .titletext { /*set font of Study Cloud at top of page*/
@@ -37,19 +36,25 @@ html {
 
 /*NAVBAR*/
 
-.navbar {
-    background-color: purple;
+.navbar {																						/* GRADIENTSSSSS */
+    background: red; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(red, yellow); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(red, yellow); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(red, yellow); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(red, yellow); /* Standard syntax */
 }
 
 .navbar ul { /*here is where you fix the navbar items*/
 	text-align: center;
 	list-style-type: none;
 	padding-left: 0;
+	padding-top: 1vh;
+	padding-bottom: 1vh;
 }
 
 .navbar li {
     /* background-color: blue; */
-    display: inline-block;
+    display: inline-table;          /* this what i changed*/
     width: 10%;
     margin: 0;
     padding: 0;
@@ -62,6 +67,8 @@ html {
     text-decoration: none;
     text-align: center;
     font-size: 2.5vh;
+    padding: 0.5vh;
+    white-space: nowrap;
 }
 
 .navbar li a:hover {
@@ -71,18 +78,22 @@ html {
     border-radius: .25vh;                                                                                   /*Tweak corner rounding here*/
 }
 
-
-/*SEARCH BAR (inside navbar)*/
+/*SEARCH BAR (inside navbar)*/                    /* Scales ungracefully for zooming.*/
 
 #search {
-    width: 20%;
+    width: 20vh;
 }
 
-#search_form {
+#search_form { /*inherits from search*/
+	width: 100%;
 	margin-bottom: 0;
+	  -webkit-box-sizing: border-box; /* For legacy WebKit based browsers */
+     -moz-box-sizing: border-box; /* For legacy (Firefox <29) Gecko based browsers */
+          box-sizing: border-box;
+    height: inherit;
 }
 
-#search_text{
+#search_text{ /*inherits from search_form*/
     text-align: center;
     border: none;
     color: black;
@@ -91,8 +102,9 @@ html {
     float: center;
     transition: all 0.15s;
     border-radius: 1vh;
-    font-size: 2.5vh;
+    font-size: 2.5vh;            /* this seems to be how it's resizing the box, as em goes*/
     width: 100%;
+    resize: none;
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
@@ -116,6 +128,18 @@ html {
     background: white;
 }
 
-/*  position: relative;
-  top: 50%;
-  transform: translateY(-50%);*/
+
+/*MOBILE COMPATIBILITY*/
+
+@media (max-width: 1350px) {
+	/*Perhaps just make another layout for this width or smaller.*/
+}
+
+
+/*DEFAULT CONTENT*/
+.main {
+	background-color: hsla(360, 0%, 52%, 0.3);
+	width: 90%;
+	padding: 5%;
+	font-size: 3.5vh;
+}
