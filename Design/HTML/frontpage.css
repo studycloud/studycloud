@@ -20,7 +20,7 @@ html {
 }
 
 .logos > img { 
-	width: 5vh;
+	width: 10vh;
 }
 
 .logos > * {
@@ -37,11 +37,11 @@ html {
 /*NAVBAR*/
 
 .navbar {																						/* GRADIENTSSSSS */
-    background: red; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(red, yellow); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(red, yellow); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(red, yellow); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(red, yellow); /* Standard syntax */
+    background: hsla(247, 100%, 19%, 1); /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* Standard syntax */
 }
 
 .navbar ul { /*here is where you fix the navbar items*/
@@ -87,10 +87,10 @@ html {
 #search_form { /*inherits from search*/
 	width: 100%;
 	margin-bottom: 0;
+	margin-top: 0;
 	  -webkit-box-sizing: border-box; /* For legacy WebKit based browsers */
      -moz-box-sizing: border-box; /* For legacy (Firefox <29) Gecko based browsers */
           box-sizing: border-box;
-    height: inherit;
 }
 
 #search_text{ /*inherits from search_form*/
@@ -102,9 +102,9 @@ html {
     float: center;
     transition: all 0.15s;
     border-radius: 1vh;
-    font-size: 2.5vh;            /* this seems to be how it's resizing the box, as em goes*/
     width: 100%;
     resize: none;
+    font-size: 2.5vh;            /* this seems to be how it's resizing the box, as em goes*/
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
@@ -127,6 +127,8 @@ html {
 	color: black;
     background: white;
 }
+
+/* possible: increase size of text box when you click into it*/
 
 
 /*MOBILE COMPATIBILITY*/
