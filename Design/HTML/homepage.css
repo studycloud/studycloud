@@ -1,0 +1,37 @@
+#main {
+	text-align: center;
+}
+
+.elementBoxTwo { /*We are assuming 2 element boxes next to each other. There's extra space*/
+	display: inline-block;
+
+	width: 40%;
+	margin: 3%;
+	vertical-align: top;
+
+	/*borderyness*/
+	border: 0.5vh;
+	border-color: rgb(86, 175, 134);  											/*Change this color.*/
+	border-style: solid;
+
+	/*background-color: blue;*/
+}
+
+.boxTitle { /*Possibly you might make boxtitle font size respond to how much text there is?*/
+	font-size: 4vh;
+	font-color: white;
+	font-weight: bold;
+	text-align: center;
+
+	border: 0.5vh;
+	padding: 4vh;
+
+	background-color: rgb(86, 175, 134);
+}
+
+.boxText { /*Only for text content of elementboxes.*/
+	font-size: 3.5vh;
+	font-color: black;
+
+	padding: 2%;
+}
