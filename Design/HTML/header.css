@@ -50,12 +50,18 @@ html {
 	padding-left: 0;
 	padding-top: 1vh;
 	padding-bottom: 1vh;
+    width: 100%;
+    display: -webkit-flex;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
 }
 
 .navbar li {
     /* background-color: blue; */
-    display: inline-table;          /* this what i changed*/
-    width: 10%;
+    flex-grow: 1;
+
+    /*width: 10%;*/
     margin: 0;
     padding: 0;
 }
@@ -82,6 +88,7 @@ html {
 
 #search {
     width: 20vh;
+    flex-grow: 2;
 }
 
 #search_form { /*inherits from search*/
