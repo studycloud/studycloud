@@ -48,8 +48,8 @@ html {
 	text-align: center;
 	list-style-type: none;
 	padding-left: 0;
-	padding-top: 1vh;
-	padding-bottom: 1vh;
+	/*padding-top: 1vh;
+	padding-bottom: 1vh;*/
     width: 100%;
     display: -webkit-flex;
     justify-content: center;
@@ -59,11 +59,11 @@ html {
 
 .navbar li {
     /* background-color: blue; */
-    flex-grow: 1;
+    flex-grow: 2;
 
     /*width: 10%;*/
     margin: 0;
-    padding: 0;
+    padding: 1vh;
 }
 
 .navbar li a { /*default behavior of navbar items*/
@@ -84,11 +84,23 @@ html {
     border-radius: .25vh;                                                                                   /*Tweak corner rounding here*/
 }
 
+#logIn { /* this an li */
+    flex-grow: 1;
+}
+
+#logIn a {
+    background-color: green;
+}
+
+#logIn a:hover {
+    background-color: purple;
+}
+
 /*SEARCH BAR (inside navbar)*/                    /* Scales ungracefully for zooming.*/
 
 #search {
     width: 20vh;
-    flex-grow: 2;
+    flex-grow: 6;
 }
 
 #search_form { /*inherits from search*/
