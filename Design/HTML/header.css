@@ -37,11 +37,11 @@ html {
 /*NAVBAR*/
 
 .navbar {																						/* GRADIENTSSSSS */
-    background: hsla(247, 100%, 19%, 1); /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* Standard syntax */
+    background: #05031A; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#111338, #05031A); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#111338, #05031A); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#111338, #05031A); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#111338, #05031A); /* Standard syntax */
 }
 
 .navbar ul { /*here is where you fix the navbar items*/
@@ -98,15 +98,12 @@ html {
     background-color: purple;
 }
 
-/*SEARCH BAR (inside navbar)*/                    /* Scales ungracefully for zooming.*/
+/*SEARCH BAR (inside navbar)*/
 
 #search {
     width: 20vh;
     flex-grow: 50;
     flex-shrink: 1;
-
-    /*page-break-before: always;
-    break-before: always;*/
 }
 
 #search_form { /*inherits from search*/
