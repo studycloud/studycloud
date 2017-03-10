@@ -11,7 +11,7 @@
 
 	/*borderyness*/
 	border: 0.5vh;
-	border-color: rgb(86, 175, 134);  											/*Change this color.*/
+	border-color: #C24633;  											/*Change this color.*/
 	border-style: solid;
 
 	/*background-color: blue;*/
@@ -26,7 +26,7 @@
 	border: 0.5vh;
 	padding: 4vh;
 
-	background-color: rgb(86, 175, 134);
+	background-color: #C24633;
 }
 
 .boxText { /*Only for text content of elementboxes.*/
