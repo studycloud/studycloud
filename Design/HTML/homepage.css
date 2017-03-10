@@ -20,9 +20,14 @@
 	font-color: white;
 	font-weight: bold;
 	text-align: center;
+	
+	display: flex;
+  	align-items: center;
+  	justify-content: center;
 
 	border: 0.5vh;
-	padding: 4vh;
+	padding: 2vh;
+	height: 8vh; /*Space for two lines of text. Expand if necessary.*/
 
 	background-color: #C24633;
 }
@@ -30,6 +35,7 @@
 .boxText { /*Only for text content of elementboxes.*/
 	font-size: 3.5vh;
 	font-color: black;
+	text-align: left;
 
 	padding: 2%;
 }

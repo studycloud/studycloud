@@ -167,7 +167,5 @@ html {
 /*DEFAULT CONTENT*/
 #main {
 	background-color: hsla(360, 0%, 52%, 0.3);
-	/*width: 90%;*/
-	/*padding: 5%;*/
 	font-size: 3.5vh;
 }
