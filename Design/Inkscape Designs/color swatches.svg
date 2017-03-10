@@ -8,7 +8,6 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="210mm"
@@ -21,95 +20,59 @@
   <defs
      id="defs4">
     <linearGradient
-       id="Top_Grad-5"
-       osb:paint="solid">
+       id="Search"
+       osb:paint="solid"
+       gradientTransform="matrix(1,0,0,0.42296906,0,0.18300216)">
       <stop
          style="stop-color:#111338;stop-opacity:1;"
+         offset="0"
+         id="stop4177" />
+    </linearGradient>
+    <linearGradient
+       id="Top_Grad-5"
+       osb:paint="solid"
+       gradientTransform="matrix(1,0,0,0.45631066,0,-7.7130615)">
+      <stop
+         style="stop-color:#05031a;stop-opacity:1;"
          offset="0"
          id="stop4172" />
     </linearGradient>
     <linearGradient
        id="Bottom_Grad-1"
-       osb:paint="solid">
+       osb:paint="solid"
+       gradientTransform="matrix(1,0,0,0.86419753,0,-144.38628)">
       <stop
-         style="stop-color:#05031a;stop-opacity:1;"
+         style="stop-color:#29763d;stop-opacity:1;"
          offset="0"
          id="stop4164" />
     </linearGradient>
     <linearGradient
        id="Purple-6"
-       osb:paint="solid">
+       osb:paint="solid"
+       gradientTransform="matrix(1,0,0,0.49999997,0,18.107093)">
       <stop
-         style="stop-color:#73107d;stop-opacity:1;"
+         style="stop-color:#45266d;stop-opacity:1;"
          offset="0"
          id="stop4156" />
     </linearGradient>
     <linearGradient
        id="Green"
-       osb:paint="solid">
+       osb:paint="solid"
+       gradientTransform="matrix(1,0,0,0.36103674,-1.4285714,105.72539)">
       <stop
-         style="stop-color:#0a650c;stop-opacity:1;"
+         style="stop-color:#5a328f;stop-opacity:1;"
          offset="0"
          id="stop4148" />
     </linearGradient>
     <linearGradient
        id="Dark_Purple-4"
-       osb:paint="solid">
+       osb:paint="solid"
+       gradientTransform="translate(0,-435.71429)">
       <stop
-         style="stop-color:#23113d;stop-opacity:1;"
+         style="stop-color:#391c64;stop-opacity:1;"
          offset="0"
          id="stop4140" />
     </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#Dark_Purple-4"
-       id="linearGradient4142"
-       x1="-5.3571429"
-       y1="202.3622"
-       x2="751.07145"
-       y2="202.3622"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.9914137,0,0,0.48000617,2.7212069,-1.5024494)" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#Green"
-       id="linearGradient4150"
-       x1="-2.5"
-       y1="565.21936"
-       x2="748.21429"
-       y2="565.21936"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.99651721,0,0,1,0.33176154,-244.45693)" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#Purple-6"
-       id="linearGradient4158"
-       x1="0.35714293"
-       y1="850.93361"
-       x2="739.64285"
-       y2="850.93361"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.0123609,0,0,1.0289855,-2.5200885,-326.52704)" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#Bottom_Grad-1"
-       id="linearGradient4166"
-       x1="-2.5"
-       y1="1013.7908"
-       x2="685.35712"
-       y2="1013.7908"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.0893714,0,0,2.929193,-0.20938159,-2020.4479)" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#Dark_Purple-4"
-       id="linearGradient4174"
-       x1="-71.071426"
-       y1="908.07648"
-       x2="745.35718"
-       y2="908.07648"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.91603352,0,0,1.016105,63.324847,-174.82035)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -118,9 +81,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="-4.5246515"
-     inkscape:cy="700.61198"
+     inkscape:zoom="0.7"
+     inkscape:cx="355.29288"
+     inkscape:cy="398.97765"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -139,7 +102,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -148,39 +111,101 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="opacity:1;fill:url(#linearGradient4142);fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:url(#Search);fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4136"
        width="744.97675"
-       height="190.63103"
+       height="80.631027"
        x="-0.11140374"
        y="0.31714445" />
     <rect
-       style="opacity:1;fill:url(#linearGradient4150);fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:url(#Top_Grad-5);fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4144"
        width="743.11719"
-       height="260"
+       height="67.142853"
        x="0.33176157"
-       y="190.76245" />
+       y="79.333878" />
     <rect
-       style="opacity:1;fill:url(#linearGradient4158);fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:url(#Purple-6);fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4152"
        width="743.36218"
-       height="202.85713"
+       height="101.42856"
        x="0.37237278"
-       y="447.64273" />
+       y="241.92845" />
     <rect
-       style="opacity:1;fill:url(#linearGradient4166);fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:url(#Dark_Purple-4);fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4160"
        width="743.88507"
        height="209.22807"
        x="-0.2093814"
-       y="844.52698" />
+       y="408.81268" />
     <rect
-       style="opacity:1;fill:url(#linearGradient4174);fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:url(#Green);fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4168"
        width="743.29578"
-       height="194.51152"
-       x="0.51112264"
-       y="650.62488" />
-  </g>
+       height="70.225807"
+       x="-0.91744876"
+       y="340.62488" />
+    <rect
+       style="opacity:1;fill:url(#Bottom_Grad-1);fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4144-9"
+       width="743.11719"
+       height="100"
+       x="0.16113552"
+       y="145.88287" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="88.571426"
+       y="59.505062"
+       id="text4156"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4158"
+         x="88.571426"
+         y="59.505062">Upper navbar top gradient</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4160"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(-7.1428571,-148.57143)"><flowRegion
+         id="flowRegion4162"><rect
+           id="rect4164"
+           width="650"
+           height="85.714287"
+           x="72.85714"
+           y="233.79077" /></flowRegion><flowPara
+         id="flowPara4166">Lower navbar bottom gradient</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4168"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(44.285714,-187.14286)"><flowRegion
+         id="flowRegion4170"><rect
+           id="rect4172"
+           width="724.28571"
+           height="112.85714"
+           x="4.2857132"
+           y="330.93365" /></flowRegion><flowPara
+         id="flowPara4174">Login button and hover over nav items</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4176"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(87.142857,-225.71429)"><flowRegion
+         id="flowRegion4178"><rect
+           id="rect4180"
+           width="622.85712"
+           height="132.85715"
+           x="18.571428"
+           y="478.07648" /></flowRegion><flowPara
+         id="flowPara4182">Login hover top gradient</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4184"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(11.428571,-314.28571)"><flowRegion
+         id="flowRegion4186"><rect
+           id="rect4188"
+           width="617.14288"
+           height="81.428596"
+           x="54.285713"
+           y="659.50507" /></flowRegion><flowPara
+         id="flowPara4190">Login hover bottom gradient</flowPara></flowRoot>  </g>
 </svg>

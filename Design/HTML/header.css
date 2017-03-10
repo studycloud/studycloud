@@ -80,7 +80,7 @@ html {
 }
 
 .navbar li a:hover {
-    background-color: red;
+    background-color: #29763D;
     color: black;
     transition: all 0.15s;
 }
@@ -91,11 +91,15 @@ html {
 }
 
 #logIn a {
-    background-color: #0A650C;
+    background-color: #29763D;
 }
 
 #logIn a:hover {
-    background-color: purple;
+    background: #5A328F; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#45266d, #5A328F); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#45266d, #5A328F); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#45266d, #5A328F); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#45266d, #5A328F); /* Standard syntax */
 }
 
 /*SEARCH BAR (inside navbar)*/
@@ -120,7 +124,7 @@ html {
     border: none;
     color: white;
     outline: none;
-    background: hsla(121, 81%, 21%, 0.5);                                /*SEARCH BOX COLOR (pre-focus)*/
+    background: #2e1e43;                                /*SEARCH BOX COLOR (pre-focus)*/
     float: center;
     transition: all 0.15s;
     border-radius: 1vh;
@@ -146,8 +150,8 @@ html {
 }
 
 #search_text:focus {
-	color: none;
-    background: hsla(121, 81%, 21%, 1);
+	color: black;
+    background: white;
 }
 
 /* possible: increase size of text box when you click into it*/
