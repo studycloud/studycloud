@@ -13,8 +13,6 @@
 	border: 0.5vh;
 	border-color: #C24633;  											/*Change this color.*/
 	border-style: solid;
-
-	/*background-color: blue;*/
 }
 
 .boxTitle { /*Possibly you might make boxtitle font size respond to how much text there is?*/
