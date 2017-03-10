@@ -91,7 +91,7 @@ html {
 }
 
 #logIn a {
-    background-color: green;
+    background-color: #0A650C;
 }
 
 #logIn a:hover {
@@ -118,9 +118,9 @@ html {
 #search_text{ /*inherits from search_form*/
     text-align: center;
     border: none;
-    color: black;
+    color: white;
     outline: none;
-    background: green;                                /*SEARCH BOX COLOR (pre-focus)*/
+    background: hsla(121, 81%, 21%, 0.5);                                /*SEARCH BOX COLOR (pre-focus)*/
     float: center;
     transition: all 0.15s;
     border-radius: 1vh;
@@ -146,8 +146,8 @@ html {
 }
 
 #search_text:focus {
-	color: black;
-    background: white;
+	color: none;
+    background: hsla(121, 81%, 21%, 1);
 }
 
 /* possible: increase size of text box when you click into it*/
