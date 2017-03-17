@@ -1,6 +1,9 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
+/* The purpose of this file is to reset all CSS properties that the browser may otherwise want to reset. Taken directly from the webpage cited below.*/
+
+/*
+	http://meyerweb.com/eric/tools/css/reset/ 
+	v2.0 | 20110126
+	License: none (public domain)
 */
 
 html, body, div, span, applet, object, iframe,

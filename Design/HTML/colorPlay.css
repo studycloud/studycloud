@@ -1,49 +1,51 @@
-/*Navbar color----------------------------------------------*/
+/* Contains code for all colors on the homepage for color scheme playing. Uncomment as necessary. */
+
+/* Navbar color---------------------------------------------- */
 /*.navbar {
-    background: #1D181F;
-    background: -webkit-linear-gradient(#3B424C, #1D181F);
-    background: -o-linear-gradient(#3B424C, #1D181F);
-    background: -moz-linear-gradient(#3B424C, #1D181F);
-    background: linear-gradient(#3B424C, #1D181F);
+	background: #1D181F;
+	background: -webkit-linear-gradient(#3B424C, #1D181F);
+	background: -o-linear-gradient(#3B424C, #1D181F);
+	background: -moz-linear-gradient(#3B424C, #1D181F);
+	background: linear-gradient(#3B424C, #1D181F);
 }*/
 
 
-/*Navbar hover color----------------------------------------*/
+/* Navbar hover color---------------------------------------- */
 /*.navbar li a:hover {
-    background-color: #FF5335;
+	background-color: #FF5335;
 }
 */
 
-/*Login button default--------------------------------------*/
+/* Login button default-------------------------------------- */
 /*#logIn a {
-    background-color: #306E73;
+	background-color: #306E73;
 }*/
 
 
-/*Login button hover----------------------------------------*/
+/* Login button hover---------------------------------------- */
 /*#logIn a:hover {
-    background: #5A328F;
-    background: -webkit-linear-gradient(#45266d, #5A328F);
-    background: -o-linear-gradient(#45266d, #5A328F);
-    background: -moz-linear-gradient(#45266d, #5A328F);
-    background: linear-gradient(#45266d, #5A328F);
+	background: #5A328F;
+	background: -webkit-linear-gradient(#45266d, #5A328F);
+	background: -o-linear-gradient(#45266d, #5A328F);
+	background: -moz-linear-gradient(#45266d, #5A328F);
+	background: linear-gradient(#45266d, #5A328F);
 }*/
 
 
-/*Search box default---------------------------------------*/
+/* Search box default--------------------------------------- */
 /*#search_text{
-    background: #2e1e43;
+	background: #2e1e43;
 }
 */
 
-/*Search box focus-----------------------------------------*/
+/* Search box focus----------------------------------------- */
 /*#search_text:focus {
 	color: black;
-    background: white;
+	background: white;
 }
 */
 
-/*Content box border color----------------------------------*/
+/* Content box border color---------------------------------- */
 .elementBoxTwo { /*834E6B*/
 	border-color: #2AA993;
 }

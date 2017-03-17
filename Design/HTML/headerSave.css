@@ -1,22 +1,24 @@
+/* Contains old code. I'm not using this anymore. Why is this still here? It looks fine. Deleting. Soon. */
+
 html {
 	font-family: 'Open Sans', sans-serif;
 }
 
-#pageWidth { /*Limits width of page.*/
+#pageWidth { /* Limits width of page. */
 	width: 80%;
 	margin: auto;
 }
 
 
-/*MASTHEAD*/
+/* MASTHEAD */
 
 .logos { /*alignment of logos*/
 	width: 100%;
 	display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
 }
 
 .logos > img { 
@@ -37,11 +39,11 @@ html {
 /*NAVBAR*/
 
 .navbar {																						/* GRADIENTSSSSS */
-    background: hsla(247, 100%, 19%, 1); /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* Standard syntax */
+	background: hsla(247, 100%, 19%, 1); /* For browsers that do not support gradients */
+	background: -webkit-linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(hsla(247, 100%, 19%, 1), hsla(247, 100%, 12%, 1)); /* Standard syntax */
 }
 
 .navbar ul { /*here is where you fix the navbar items*/
@@ -53,35 +55,35 @@ html {
 }
 
 .navbar li {
-    /* background-color: blue; */
-    display: inline-table;          /* this what i changed*/
-    width: 10%;
-    margin: 0;
-    padding: 0;
+	/* background-color: blue; */
+	display: inline-table;          /* this what i changed*/
+	width: 10%;
+	margin: 0;
+	padding: 0;
 }
 
 .navbar li a { /*default behavior of navbar items*/
-    font-weight: bolder;
-    color: white;
-    display: block;
-    text-decoration: none;
-    text-align: center;
-    font-size: 2.5vh;
-    padding: 0.5vh;
-    white-space: nowrap;
+	font-weight: bolder;
+	color: white;
+	display: block;
+	text-decoration: none;
+	text-align: center;
+	font-size: 2.5vh;
+	padding: 0.5vh;
+	white-space: nowrap;
 }
 
 .navbar li a:hover {
-    background-color: red;
-    color: black;
-    transition: all 0.15s;
-    border-radius: .25vh;                                                                                   /*Tweak corner rounding here*/
+	background-color: red;
+	color: black;
+	transition: all 0.15s;
+	border-radius: .25vh;                                                                                   /*Tweak corner rounding here*/
 }
 
 /*SEARCH BAR (inside navbar)*/                    /* Scales ungracefully for zooming.*/
 
 #search {
-    width: 20vh;
+	width: 20vh;
 }
 
 #search_form { /*inherits from search*/
@@ -89,43 +91,43 @@ html {
 	margin-bottom: 0;
 	margin-top: 0;
 	  -webkit-box-sizing: border-box; /* For legacy WebKit based browsers */
-     -moz-box-sizing: border-box; /* For legacy (Firefox <29) Gecko based browsers */
-          box-sizing: border-box;
+	 -moz-box-sizing: border-box; /* For legacy (Firefox <29) Gecko based browsers */
+		  box-sizing: border-box;
 }
 
 #search_text{ /*inherits from search_form*/
-    text-align: center;
-    border: none;
-    color: black;
-    outline: none;
-    background: green;                                /*SEARCH BOX COLOR (pre-focus)*/
-    float: center;
-    transition: all 0.15s;
-    border-radius: 1vh;
-    width: 100%;
-    resize: none;
-    font-size: 2.5vh;            /* this seems to be how it's resizing the box, as em goes*/
+	text-align: center;
+	border: none;
+	color: black;
+	outline: none;
+	background: green;                                /*SEARCH BOX COLOR (pre-focus)*/
+	float: center;
+	transition: all 0.15s;
+	border-radius: 1vh;
+	width: 100%;
+	resize: none;
+	font-size: 2.5vh;            /* this seems to be how it's resizing the box, as em goes*/
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
-    color: white;
+	color: white;
 }
 
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-    color: white;
+	color: white;
 }
 
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-    color: white;
+	color: white;
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10+ */
-    color: white;
+	color: white;
 }
 
 #search_text:focus {
 	color: black;
-    background: white;
+	background: white;
 }
 
 /* possible: increase size of text box when you click into it*/

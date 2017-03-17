@@ -1,22 +1,24 @@
+/* Contains formatting for the header and navbar of each page and default formatting for the rest of the pages (fonts, etc.). */
+
 html {
 	font-family: 'Open Sans', sans-serif;
 }
 
-#pageWidth { /*Limits width of page.*/
+#pageWidth { /* Limits width of page. */
 	width: 80%;
 	margin: auto;
 }
 
 
-/*MASTHEAD*/
+/* MASTHEAD */
 
-.logos { /*alignment of logos*/
+.logos { /* alignment of logos */
 	width: 100%;
 	display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
 }
 
 .logos > img { 
@@ -27,144 +29,139 @@ html {
 	margin: 2vh;
 }
 
-.titletext { /*set font of Study Cloud at top of page*/
+.titletext { /* set font of Study Cloud at top of page */
 	font-family: 'Fredericka the Great', cursive;
 	font-weight: normal;
-	font-size: 5vh;																			/*using vh here; possibly problematic for compatibility*/
+	font-size: 5vh;																			/* using vh here; possibly problematic for compatibility */
 }
 
 
-/*NAVBAR*/
+/* NAVBAR */
 
 .navbar {																						/* GRADIENTSSSSS */
-    background: #05031A; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#111338, #05031A); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#111338, #05031A); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#111338, #05031A); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#111338, #05031A); /* Standard syntax */
+	background: #05031A; 									/* For browsers that do not support gradients */
+	background: -webkit-linear-gradient(#111338, #05031A); 	/* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#111338, #05031A); 		/* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#111338, #05031A); 	/* For Firefox 3.6 to 15 */
+	background: linear-gradient(#111338, #05031A); 			/* Standard syntax */
 }
 
-.navbar ul { /*here is where you fix the navbar items*/
+.navbar ul { /* here is where you fix the navbar items */
 	text-align: center;
 	list-style-type: none;
 	padding-left: 0;
-	/*padding-top: 1vh;
-	padding-bottom: 1vh;*/
-    width: 100%;
-    display: -webkit-flex;
-    justify-content: center;
-    display: flex;
-    flex-direction: row;
+	width: 100%;
+	display: -webkit-flex;
+	justify-content: center;
+	display: flex;
+	flex-direction: row;
 }
 
 .navbar li {
-    /* background-color: blue; */
-    flex-grow: 2;
-    flex-shrink: 0.7;
-
-    /*width: 10%;*/
-    margin: 0;
-    padding: 1vh;
+	/* background-color: blue; */
+	flex-grow: 2;
+	flex-shrink: 0.7;
+	margin: 0;
+	padding: 1vh;
 }
 
-.navbar li a { /*default behavior of navbar items*/
-    font-weight: bolder;
-    color: white;
-    display: block;
-    text-decoration: none;
-    text-align: center;
-    font-size: 2.5vh;
-    padding: 0.5vh;
-    white-space: nowrap;
-    border-radius: .25vh;                                                                                   /*Tweak corner rounding here*/
+.navbar li a { /* default behavior of navbar items */
+	font-weight: bolder;
+	color: white;
+	display: block;
+	text-decoration: none;
+	text-align: center;
+	font-size: 2.5vh;
+	padding: 0.5vh;
+	white-space: nowrap;
+	border-radius: .25vh;				/* Tweak corner rounding here */
 }
 
 .navbar li a:hover {
-    background-color: #29763D;
-    color: black;
-    transition: all 0.15s;
+	background-color: #29763D;
+	color: black;
+	transition: all 0.15s;
 }
 
 #logIn { /* this an li */
-    flex-grow: 1;
-    flex-shrink: 0.5;
+	flex-grow: 1;
+	flex-shrink: 0.5;
 }
 
 #logIn a {
-    background-color: #29763D;
+	background-color: #29763D;
 }
 
 #logIn a:hover {
-    background: #5A328F; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#45266d, #5A328F); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#45266d, #5A328F); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#45266d, #5A328F); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#45266d, #5A328F); /* Standard syntax */
+	background: #5A328F; 									/* For browsers that do not support gradients */
+	background: -webkit-linear-gradient(#45266d, #5A328F); 	/* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#45266d, #5A328F); 		/* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#45266d, #5A328F); 	/* For Firefox 3.6 to 15 */
+	background: linear-gradient(#45266d, #5A328F); 			/* Standard syntax */
 }
 
-/*SEARCH BAR (inside navbar)*/
+/* SEARCH BAR (inside navbar) */
 
 #search {
-    width: 20vh;
-    flex-grow: 50;
-    flex-shrink: 1;
+	width: 20vh;
+	flex-grow: 50;
+	flex-shrink: 1;
 }
 
-#search_form { /*inherits from search*/
+#search_form { /* inherits from search */
 	width: 100%;
 	margin-bottom: 0;
 	margin-top: 0;
-	  -webkit-box-sizing: border-box; /* For legacy WebKit based browsers */
-     -moz-box-sizing: border-box; /* For legacy (Firefox <29) Gecko based browsers */
-          box-sizing: border-box;
+	
+	-webkit-box-sizing: border-box; /* For legacy WebKit based browsers */
+	-moz-box-sizing: border-box; /* For legacy (Firefox <29) Gecko based browsers */
+	box-sizing: border-box;
 }
 
-#search_text{ /*inherits from search_form*/
-    text-align: center;
-    border: none;
-    color: white;
-    outline: none;
-    background: #2e1e43;                                /*SEARCH BOX COLOR (pre-focus)*/
-    float: center;
-    transition: all 0.15s;
-    border-radius: 1vh;
-    width: 100%;
-    resize: none;
-    font-size: 2.5vh;            /* this seems to be how it's resizing the box, as em goes*/
+#search_text{ /* inherits from search_form */
+	text-align: center;
+	border: none;
+	color: white;
+	outline: none;
+	background: #2e1e43;	/* search box color (pre-focus) */
+	float: center;
+	transition: all 0.15s;
+	border-radius: 1vh;
+	width: 100%;
+	resize: none;
+	font-size: 2.5vh;
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
-    color: white;
+	color: white;
 }
 
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-    color: white;
+	color: white;
 }
 
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-    color: white;
+	color: white;
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10+ */
-    color: white;
+	color: white;
 }
 
 #search_text:focus {
 	color: black;
-    background: white;
+	background: white;
 }
 
-/* possible: increase size of text box when you click into it*/
 
-
-/*MOBILE COMPATIBILITY*/
+/* MOBILE COMPATIBILITY */
 
 @media (max-width: 1350px) {
-	/*Perhaps just make another layout for this width or smaller.*/
+	/* Perhaps just make another layout for this width or smaller. */
 }
 
 
-/*DEFAULT CONTENT*/
+/* DEFAULT CONTENT */
 #main {
 	background-color: hsla(360, 0%, 52%, 0.3);
 	font-size: 3.5vh;
