@@ -16,9 +16,13 @@ html {
 	width: 100%;
 	display: flex;
 	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: center;
+	flex-wrap: nowrap;
+	justify-content: space-around;
 	align-items: center;
+}
+
+.logoSpacer {
+	flex-grow: 1000;
 }
 
 .logos > img { 
@@ -26,13 +30,14 @@ html {
 }
 
 .logos > * {
-	margin: 2vh;
+	margin: 1vh;
 }
 
 .titletext { /* set font of Study Cloud at top of page */
 	font-family: 'Fredericka the Great', cursive;
 	font-weight: normal;
-	font-size: 5vh;																			/* using vh here; possibly problematic for compatibility */
+	font-size: 5vh;
+	white-space: nowrap;
 }
 
 
@@ -157,7 +162,12 @@ html {
 /* MOBILE COMPATIBILITY */
 
 @media (max-width: 1350px) {
-	/* Perhaps just make another layout for this width or smaller. */
+	/* If the screen is so small the logos start to wrap inappropriately */
+
+	.logos > img { 
+		/*width: 200px;*/
+	}
+
 }
 
 
