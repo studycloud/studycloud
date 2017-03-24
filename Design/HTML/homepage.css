@@ -4,15 +4,15 @@
 	text-align: center;
 }
 
-.elementBoxTwo { /* We are assuming 2 element boxes next to each other. There's extra space */
+.elementBoxTwo { /* We are assuming 2 element boxes next to each other. Currently not responsive for more. */
 	display: inline-block;
-	width: 40%;
+	width: 40%;					/* Leave room for Jesus, and marginy border stuff. */
 	margin: 3%;
 	vertical-align: top;
 
-	/* borderyness */
+	/* Properties of the element box. */
 	border: 0.5vh;
-	border-color: #C24633;                                              /* Change this color. */
+	border-color: #C24633;
 	border-style: solid;
 }
 
@@ -42,7 +42,8 @@
 }
 
 @media (max-width: 900px) {
-	/* Perhaps just make another layout for this width or smaller. */
+	
+	/* This makes the second content box drop below the first one. */
 
 	#main {
 		display: -webkit-flex; /* Safari */
