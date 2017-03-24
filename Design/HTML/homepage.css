@@ -6,7 +6,6 @@
 
 .elementBoxTwo { /* We are assuming 2 element boxes next to each other. There's extra space */
 	display: inline-block;
-
 	width: 40%;
 	margin: 3%;
 	vertical-align: top;
@@ -19,7 +18,7 @@
 
 .boxTitle { /* Possibly you might make boxtitle font size respond to how much text there is? */
 	font-size: 4vh;
-	font-color: white;
+	color: white;
 	font-weight: bold;
 	text-align: center;
 	
@@ -36,8 +35,11 @@
 
 .boxText { /* Only for text content of elementboxes. */
 	font-size: 3.5vh;
-	font-color: black;
+	color: black;
 	text-align: left;
 
 	padding: 2%;
 }
+
+
+	/*display: inline-block;*/
