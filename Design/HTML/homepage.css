@@ -12,7 +12,7 @@
 
 	/* borderyness */
 	border: 0.5vh;
-	border-color: #C24633;  											/* Change this color. */
+	border-color: #C24633;                                              /* Change this color. */
 	border-style: solid;
 }
 
@@ -41,5 +41,20 @@
 	padding: 2%;
 }
 
+@media (max-width: 900px) {
+	/* Perhaps just make another layout for this width or smaller. */
 
-	/*display: inline-block;*/
+	#main {
+		display: -webkit-flex; /* Safari */
+		-webkit-flex-flow: row wrap; /* Safari 6.1+ */
+		display: flex;
+		flex-flow: row wrap;
+		justify-content: center;
+	}
+
+	.elementBoxTwo {
+		display: default;
+		width: 90%;
+	}
+
+}
