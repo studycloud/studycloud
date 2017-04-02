@@ -12,32 +12,33 @@ html {
 
 /* MASTHEAD */
 
-.logos { /* alignment of logos */
+.logos { /* alignment of logos */ 								/* turn into an svg*/
 	width: 100%;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
 	justify-content: space-around;
 	align-items: center;
+	font-size: 25px;
+	font-family: 'Fredericka the Great', cursive;
+	font-weight: normal;
+	white-space: nowrap;
 }
 
 .logoSpacer {
-	flex-grow: 1000;
+	flex-grow: 10;
 }
 
 .logos > img { 
-	width: 10vh;
+	width: 5em;
 }
 
 .logos > * {
-	margin: 1vh;
+	margin: 0.1em;
 }
 
-.titletext { /* set font of Study Cloud at top of page */
-	font-family: 'Fredericka the Great', cursive;
-	font-weight: normal;
-	font-size: 5vh;
-	white-space: nowrap;
+.logosContent {
+	max-width: 20%
 }
 
 
@@ -67,7 +68,7 @@ html {
 	flex-grow: 2;
 	flex-shrink: 0.7;
 	margin: 0;
-	padding: 1vh;
+	padding: 0.2em;
 }
 
 .navbar li a { /* default behavior of navbar items */
@@ -76,10 +77,11 @@ html {
 	display: block;
 	text-decoration: none;
 	text-align: center;
-	font-size: 2.5vh;
-	padding: 0.5vh;
+	font-size: 16px;
+	padding: 0.35em;
 	white-space: nowrap;
-	border-radius: .25vh;				/* Tweak corner rounding here */
+	border-radius: 0.1em;
+	baseline-shift: 
 }
 
 .navbar li a:hover {
@@ -108,33 +110,29 @@ html {
 /* SEARCH BAR (inside navbar) */
 
 #search {
-	width: 20vh;
-	flex-grow: 50;
+	flex-grow: 30;
 	flex-shrink: 1;
 }
 
 #search_form { /* inherits from search */
-	width: 100%;
-	margin-bottom: 0;
-	margin-top: 0;
-	
-	-webkit-box-sizing: border-box; /* For legacy WebKit based browsers */
+	-webkit-box-sizing: border-box; /* For legacy WebKit based browsers */							/*possibly we don't need this*/
 	-moz-box-sizing: border-box; /* For legacy (Firefox <29) Gecko based browsers */
 	box-sizing: border-box;
 }
 
 #search_text{ /* inherits from search_form */
 	text-align: center;
-	border: none;
+	border-color: transparent;
 	color: white;
 	outline: none;
 	background: #2e1e43;	/* search box color (pre-focus) */
 	float: center;
 	transition: all 0.15s;
-	border-radius: 1vh;
+	border-radius: 0.1em;
 	width: 100%;
 	resize: none;
-	font-size: 2.5vh;
+	font-size: inherit;
+	font-family: inherit;
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
