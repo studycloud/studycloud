@@ -12,6 +12,10 @@ html {
 
 /* MASTHEAD */
 
+.logoFull { /* for svg */
+	font-family: 'Fredericka the Great', cursive;
+}
+
 .logos { /* alignment of logos */ 								/* turn into an svg*/
 	width: 100%;
 	display: flex;
