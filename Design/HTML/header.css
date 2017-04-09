@@ -13,7 +13,11 @@ html {
 /* MASTHEAD */
 
 .logoFull { /* for svg */
-	font-family: 'Fredericka the Great', cursive;
+	/*font-family: 'Fredericka the Great', cursive;*/
+	display: block;
+	margin: auto;
+	padding: 10px;
+	width: 80%;
 }
 
 .logos { /* alignment of logos */ 								/* turn into an svg*/
