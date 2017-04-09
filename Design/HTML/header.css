@@ -137,13 +137,11 @@ html {
 
 /* MOBILE COMPATIBILITY */
 
-@media (max-width: 1350px) {
-	/* If the screen is so small the logos start to wrap inappropriately */
-
-	.logos > img { 
-		/*width: 200px;*/
+@media (max-width: 900px) {
+	/* Make the navbar stop zooming. */
+	#pageWidth {
+		width: 720px;
 	}
-
 }
 
 
