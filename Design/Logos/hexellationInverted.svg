@@ -17,7 +17,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="hexellationInverted.svg"
+   sodipodi:docname="hexellationInvertedBroken.svg"
    style="enable-background:new"
    inkscape:export-filename="C:\Users\gsera\Desktop\studycloud\Design\HTML\hexellationInverted.png"
    inkscape:export-xdpi="219.474"
@@ -81,7 +81,7 @@
     <linearGradient
        id="lines-9"
        osb:paint="solid"
-       gradientTransform="translate(-18.000229,-4.238685e-5)">
+       gradientTransform="translate(586.63407,1295.5485)">
       <stop
          style="stop-color:#00167a;stop-opacity:1;"
          offset="0"
@@ -358,6 +358,17 @@
        x2="461.96857"
        y2="201.41635"
        gradientUnits="userSpaceOnUse" />
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter4166-9"
+       inkscape:label="filter4166">
+      <feBlend
+         inkscape:collect="always"
+         mode="lighten"
+         in2="BackgroundImage"
+         id="feBlend4168-6" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -366,11 +377,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.64"
-     inkscape:cx="-482.43826"
-     inkscape:cy="179.64837"
+     inkscape:zoom="1.8101934"
+     inkscape:cx="129.35195"
+     inkscape:cy="155.93325"
      inkscape:document-units="px"
-     inkscape:current-layer="layer5"
+     inkscape:current-layer="layer1"
      showgrid="false"
      showguides="false"
      inkscape:guide-bbox="true"
@@ -452,13 +463,13 @@
      transform="translate(-73.249257,-220.86678)">
     <path
        style="fill:#ffffff;fill-rule:evenodd;stroke:url(#lines-9);stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 295.99496,259.39247 176.79697,467.48388"
+       d="m 236.39597,363.43818 -59.599,104.0457"
        id="path4144"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
     <path
        style="opacity:1;fill:#ffffff;fill-rule:evenodd;stroke:url(#lines-9);stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 296.70269,467.07527 176.08924,259.80108"
+       d="M 236.39597,363.43817 176.08924,259.80108"
        id="path4148"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -514,13 +525,38 @@
        d="m 266.54933,415.25672 -89.75236,52.22716 0,0"
        id="path8093"
        inkscape:connector-curvature="0" />
+    <path
+       style="display:inline;opacity:1;fill:#ffffff;fill-rule:evenodd;stroke:url(#lines-9);stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4166);enable-background:new"
+       d="M 266.54933,415.25672 236.39597,363.43818"
+       id="path4148-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="display:inline;fill:#ffffff;fill-rule:evenodd;stroke:url(#lines-9);stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4166);enable-background:new"
+       d="m 295.99496,259.39247 -29.7995,52.02285"
+       id="path4144-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="display:inline;fill:#ffffff;fill-rule:evenodd;stroke:url(#lines-9);stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4166);enable-background:new"
+       d="m 266.19546,311.41532 -29.79949,52.02285"
+       id="path4144-7"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="display:inline;opacity:1;fill:#ffffff;fill-rule:evenodd;stroke:url(#lines-9);stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4166-9);enable-background:new"
+       d="M 296.7027,467.07527 266.54934,415.25672"
+       id="path4148-3-7"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
   </g>
   <g
      style="display:inline"
      inkscape:label="halos"
      id="g5214"
      inkscape:groupmode="layer"
-     transform="translate(-73.249257,-220.86678)">
+     transform="translate(-73.249257,-220.86678)"
+     sodipodi:insensitive="true">
     <circle
        transform="matrix(1.3895409,0,0,1.3895409,-72.000773,-181.73475)"
        r="8.2392511"
@@ -590,7 +626,8 @@
      id="layer2"
      inkscape:label="stars"
      style="display:inline"
-     transform="translate(-73.249257,-220.86678)">
+     transform="translate(-73.249257,-220.86678)"
+     sodipodi:insensitive="true">
     <circle
        style="fill:url(#white-2);fill-opacity:1;stroke:url(#star-6);stroke-width:0.01765117;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5481)"
        id="path4180"
