@@ -16,7 +16,7 @@ html {
 	display: block;
 	margin: auto;
 	padding: 10px;
-	width: 80%;
+	width: 55%;
 }
 
 
@@ -42,7 +42,6 @@ html {
 }
 
 .navbar li {
-	/* background-color: blue; */
 	flex-grow: 2;
 	flex-shrink: 0.7;
 	margin: 0;
@@ -138,13 +137,9 @@ html {
 /* MOBILE COMPATIBILITY */
 
 @media (max-width: 900px) {
-	/* Make the navbar stop zooming. */
+	/* Make the navbar start zooming as expected. */
 	#pageWidth {
 		width: 720px;
-	}
-	/* signal for I am on mobile! */
-	.navbar {
-		background: blue;
 	}
 }
 
