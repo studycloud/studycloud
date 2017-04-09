@@ -11,9 +11,9 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="536.23633mm"
+   width="800mm"
    height="118.53333mm"
-   viewBox="0 0 1900.05 419.99997"
+   viewBox="0 0 2834.6457 419.99997"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -362,9 +362,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.24748737"
-     inkscape:cx="1277.5343"
-     inkscape:cy="-18.094811"
+     inkscape:zoom="0.35"
+     inkscape:cx="1484.3659"
+     inkscape:cy="437.44344"
      inkscape:document-units="px"
      inkscape:current-layer="layer3"
      showgrid="false"
@@ -416,7 +416,7 @@
     <g
        style="display:inline;enable-background:new"
        id="g4314"
-       transform="matrix(1.5132134,0,0,1.5132134,687.35906,489.4583)">
+       transform="matrix(1.5132134,0,0,1.5132134,1616.6995,489.4583)">
       <g
          transform="translate(-73.249257,-220.86678)"
          style="display:none"
@@ -669,13 +669,13 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-317.07709"
+       x="147.59314"
        y="747.15656"
        id="text4573"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4575"
-         x="-317.07709"
+         x="147.59314"
          y="747.15656"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:180px;font-family:'Fredericka the Great';-inkscape-font-specification:'Fredericka the Great'">Study Cloud</tspan></text>
   </g>

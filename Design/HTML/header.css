@@ -13,40 +13,10 @@ html {
 /* MASTHEAD */
 
 .logoFull { /* for svg */
-	/*font-family: 'Fredericka the Great', cursive;*/
 	display: block;
 	margin: auto;
 	padding: 10px;
 	width: 80%;
-}
-
-.logos { /* alignment of logos */ 								/* turn into an svg*/
-	width: 100%;
-	display: flex;
-	flex-direction: row;
-	flex-wrap: nowrap;
-	justify-content: space-around;
-	align-items: center;
-	font-size: 25px;
-	font-family: 'Fredericka the Great', cursive;
-	font-weight: normal;
-	white-space: nowrap;
-}
-
-.logoSpacer {
-	flex-grow: 10;
-}
-
-.logos > img { 
-	width: 5em;
-}
-
-.logos > * {
-	margin: 0.1em;
-}
-
-.logosContent {
-	max-width: 20%
 }
 
 
