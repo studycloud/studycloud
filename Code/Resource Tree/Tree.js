@@ -10,50 +10,40 @@ for(i=0; i<NodesNum; i++)
 	graph["links"].push({target:Math.floor(Math.random() * NodesNum) , source: i});
 }
 
-
 // Define the dimensions of the visualization.
 
-var width = window.innerWidth,
-    height = window.innerHeight,
-	center = {x: width/2, y: height/2},
+var Width = window.innerWidth,
+    Height = window.innerHeight,
+	center = {x: Width/2, y: Height/2},
 	scale = 1;
 
-
-
-var nodes = graph.nodes,
-    links = graph.links;
-
 var GraphSVG = d3.select('body').append('svg')
-	.attr('width', width)
-	.attr('height', height);
-	
-var GraphInnerFrame = GraphSVG.append("g");
+	.attr('width', Width)
+	.attr('height', Height);
 
-var GraphLayout = d3.layout.force()
-    .size([width, height])
-    .nodes(nodes)
-    .links(links);
+var GraphFrameInner = GraphSVG.append("g");
 
-GraphLayout.gravity(1);
-//force.linkDistance(width/3);
-//force.linkStrength(0.1);
-GraphLayout.charge(-1200);
-
-var link = GraphInnerFrame.selectAll('.link')
-    .data(links)
-    .enter().append('line')
-    .attr('class', 'link');
-
-var node = GraphInnerFrame.selectAll('.node')
-    .data(nodes)
-    .enter().append('circle')
-    .attr('class', 'node')
-    .attr('r', function()
-		{
-			return (width/100) * (Math.random() * 2 +0.5);
-		})
-	.style("fill", "magenta")
-	.on("click", CenterNode);
+var link =  GraphFrameInner.selectAll('.link')
+    .data(graph.links)
+    .enter()
+		.append('line')
+			.attr('class', 'link')
+			.attr('x1', function(d) { return d.source})
+			.attr('y1', function(d) { return d.source})
+			.attr('x2', function(d) { return d.target})
+			.attr('y2', function(d) { return d.target});
+			
+var node =  GraphFrameInner.selectAll('.node')
+    .data(graph.nodes)
+    .enter()
+		.append('circle')
+		.attr('class', 'node')
+		.attr('r', function()
+			{
+				return (Width/100) * (Math.random() * 2 +0.5);
+			})
+		.style("fill", "magenta")
+		.on("click", CenterNode);
 
 
 // We're about to tell the force layout to start its
@@ -62,8 +52,18 @@ var node = GraphInnerFrame.selectAll('.node')
 // we'll define a function that we want the layout to call
 // once the calculations are done.
 
-GraphLayout.on('tick', GraphUpdate);
+var SimulationForce = d3.forceSimulation()
+    .force("ForceLink", d3.forceLink())
+    .force("ForceCharge", d3.forceManyBody())
+    .force("ForceCenter", d3.forceCenter(Width / 2, Height / 2));
 
+SimulationForce
+	.nodes(graph.nodes)
+	.on('tick', GraphUpdate);
+
+SimulationForce.force("ForceLink")
+	.links();
+	
 function CenterNode(Node)
 	{
 		var TranslateX
@@ -82,28 +82,28 @@ function CenterNode(Node)
 				TranslateY = center.y - Node.y * scale;
 			}
 			
-		GraphInnerFrame.transition()
+		 GraphFrameInner.transition()
 			.duration(700)
 			.attr("transform", "translate("+ TranslateX + "," + TranslateY  + ")scale(" + scale +")");
 	}
 
 function GraphUpdate()
 	{
-		node.attr('cx', function(d) { return d.x; })
+		node
+			.attr('cx', function(d) {console.log(d); return d.x; })
 		    .attr('cy', function(d) { return d.y; });
 	
-		link.attr('x1', function(d) { return d.source.x; })
-			.attr('y1', function(d) { return d.source.y; })
-			.attr('x2', function(d) { return d.target.x; })
-			.attr('y2', function(d) { return d.target.y; });
+		link
+			.attr('x1', function(d) { return (graph.nodes[d.source]).x })
+			.attr('y1', function(d) { return (graph.nodes[d.source]).y  })
+			.attr('x2', function(d) { return (graph.nodes[d.target]).x  })
+			.attr('y2', function(d) { return (graph.nodes[d.target]).y  });
 	}
 
-
+	
+	
 // Okay, everything is set up now so it's time to turn
 // things over to the force layout. Here we go.
-
-GraphLayout.start();
-
 
 
 // By the time you've read this far in the code, the force
