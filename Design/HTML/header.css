@@ -77,11 +77,7 @@ html {
 }
 
 #logIn a:hover {
-	background: #5A328F; 									/* For browsers that do not support gradients */
-	background: -webkit-linear-gradient(#45266d, #5A328F); 	/* For Safari 5.1 to 6.0 */
-	background: -o-linear-gradient(#45266d, #5A328F); 		/* For Opera 11.1 to 12.0 */
-	background: -moz-linear-gradient(#45266d, #5A328F); 	/* For Firefox 3.6 to 15 */
-	background: linear-gradient(#45266d, #5A328F); 			/* Standard syntax */
+	
 }
 
 /* SEARCH BAR (inside navbar) */

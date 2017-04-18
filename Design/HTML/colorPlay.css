@@ -1,42 +1,38 @@
 /* Contains code for all colors on the homepage for color scheme playing. Uncomment and edit values as necessary. */
 
 /* Navbar color---------------------------------------------- */
-/*.navbar {
-	background: #1D181F;
-	background: -webkit-linear-gradient(#3B424C, #1D181F);
-	background: -o-linear-gradient(#3B424C, #1D181F);
-	background: -moz-linear-gradient(#3B424C, #1D181F);
-	background: linear-gradient(#3B424C, #1D181F);
-}*/
+.navbar {
+	background: #00167a;
+	background: -webkit-linear-gradient(#003180, #00167a);
+	background: -o-linear-gradient(#003180, #00167a);
+	background: -moz-linear-gradient(#003180, #00167a);
+	background: linear-gradient(#003180, #00167a);
+}
 
 
 /* Navbar hover color---------------------------------------- */
-/*.navbar li a:hover {
-	background-color: #FF5335;
+.navbar li a:hover {
+	background: #0044b3;
 }
-*/
+
 
 /* Login button default-------------------------------------- */
-/*#logIn a {
-	background-color: #306E73;
-}*/
+#logIn a {
+	background-color: #0044b3;
+}
 
 
 /* Login button hover---------------------------------------- */
-/*#logIn a:hover {
-	background: #5A328F;
-	background: -webkit-linear-gradient(#45266d, #5A328F);
-	background: -o-linear-gradient(#45266d, #5A328F);
-	background: -moz-linear-gradient(#45266d, #5A328F);
-	background: linear-gradient(#45266d, #5A328F);
-}*/
+#logIn a:hover {
+	background: #EAAA00;
+}
 
 
 /* Search box default--------------------------------------- */
-/*#search_text{
-	background: #2e1e43;
+#search_text{
+	background: #C8C8FF;
 }
-*/
+
 
 /* Search box focus----------------------------------------- */
 /*#search_text:focus {
