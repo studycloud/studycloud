@@ -13,10 +13,11 @@ class CreatePermissionRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('permission_role', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('permission_role', function (Blueprint $table)
+        {
             $table->integer('permission_id');
             $table->integer('role_id');
+            $table->primary(['permission_id','role_id']);
             $table->timestamp('created_at')->useCurrent();;
         });
     }

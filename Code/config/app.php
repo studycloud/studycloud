@@ -164,6 +164,11 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /*
+         * Laravel somethings (added by Arya Massarat on 5/2/17 when upgrading laravel to 5.4 from 5.3)...
+         */        
+        Laravel\Tinker\TinkerServiceProvider::class,
+
+        /*
          * Package Service Providers...
          */
 

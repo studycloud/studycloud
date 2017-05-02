@@ -48,7 +48,7 @@ class User extends Authenticatable
         }
         else
         {
-            return $this->roles()->save($role);
+            return $this->roles()->attach($role->id);
         }
         
     }
@@ -63,7 +63,7 @@ class User extends Authenticatable
         $role = User::roleAsStringWrapper($role);
         if ($this->hasRole($role))
         {
-            return $this->roles()->wherePivot('role_id',$role->id)->first()->pivot->delete();
+            return $this->roles()->detach($role->id);
         }
         else
         {
