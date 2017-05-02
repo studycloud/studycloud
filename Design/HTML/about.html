@@ -47,11 +47,20 @@
 	    		</div> 
 	    		<div class="boxText">
 	    			<form method="get" id="contactForm">
-	    				Name: <br>
+	    				Name: *<br>
 	    				<input type="text" name="contact" required> <br>
 	    				<br>
+	    				Email: *<br>
+	    				<input type="email" name="email" required> <br>
+	    				<br>
 	    				Comment: <br>
-	    				<textarea id="comment" rows=5></textarea>
+	    				<textarea id="comment" rows=5></textarea> <br>
+	    				<br>
+	    				I want to contact: *<br>
+						<input type="radio" name="recipient" value="creator" required> Site Creator (for technical problems with the site)<br>
+						<input type="radio" name="recipient" value="club" required> Club (for school-specific issues)<br>
+	    				<br>
+	    				<input type="submit"></input>
 	    			</form>
 	    		</div>
 	    	</div>
