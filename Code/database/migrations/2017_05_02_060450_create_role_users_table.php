@@ -17,7 +17,7 @@ class CreateRoleUsersTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->integer('role_id');
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

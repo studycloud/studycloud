@@ -17,7 +17,7 @@ class CreateTopicParentsTable extends Migration
             $table->increments('id');
             $table->integer('topic_id');
             $table->integer('parent_id');
-            $table->timestamp('creaated_at');
+            $table->timestamp('created_at')->useCurrent();;
         });
     }
 

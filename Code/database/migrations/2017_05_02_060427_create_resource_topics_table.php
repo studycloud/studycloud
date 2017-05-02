@@ -17,7 +17,7 @@ class CreateResourceTopicsTable extends Migration
             $table->increments('id');
             $table->integer('resource_id');
             $table->integer('topic_id');
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->useCurrent();;
         });
     }
 

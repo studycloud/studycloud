@@ -21,8 +21,8 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->enum('type',['student','teacher']);
-            $table->integer('status');
-            $table->date('graduation');
+            // $table->integer('status');
+            // $table->date('graduation');
             $table->timestamps();
         });
     }

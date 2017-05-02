@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'fname', 'lname', 'email', 'password',
     ];
 
     /**
@@ -28,46 +28,42 @@ class User extends Authenticatable
     ];
 
     /**
-     * returns the jobs of this user. make sure to call get on the result!
+     * returns the roles of this user. make sure to call get on the result!
      */
-    public function adminJobs()
+    public function roles()
     {
-        return $this->belongsToMany(AdminJob::class, 'admin_user_jobs', 'userid', 'jobid')->withTimestamps();
+        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
     }
 
     /**
-     * gives this user an admin job. returns false if the user already has it.
-     * addJob can take as input either a string representing a job (ex: "moderator") or an instance of AdminJob. An exception will be raised if these criteria are not met
+     * gives this user a role. returns false if the user already has it.
+     * addRole can take as input either a string representing a role (ex: "moderator") or an instance of Role. An exception will be raised if these criteria are not met
      */
-    public function addJob($job)
+    public function addRole($role)
     {
-        if (is_string($job))
+        $role = User::roleAsStringWrapper($role);
+        if ($this->hasRole($role))
         {
-            $job = AdminJob::getJob($job);
+            return false;   
         }
-        if (is_a($job, get_class(new AdminJob)))
+        else
         {
-            if ($this->hasJob($job))
-            {
-                return false;   
-            }
-            else
-            {
-                return $this->adminJobs()->save($job);
-            }
+            return $this->roles()->save($role);
         }
-        throw new \InvalidArgumentException("addJob function only accepts either a string representing a job or an instance of AdminJob");
         
     }
 
     /**
-     * removes one of the user's jobs. returns false if the user didn't have it to begin with
+     * removes one of the user's roles. returns false if the user didn't have it to begin with
+     * can take as input either a string representing a role (ex: "moderator") or an instance of Role. An exception will be raised if these criteria are not met
      */
-    public function deleteJob(AdminJob $job)
+    public function deleteRole($role)
+    // an idea! --> allow deleteRole to accept an array of Roles
     {
-        if ($this->hasJob($job))
+        $role = User::roleAsStringWrapper($role);
+        if ($this->hasRole($role))
         {
-            return $this->adminJobs()->wherePivot('jobid',$job->id)->first()->pivot->delete();
+            return $this->roles()->wherePivot('role_id',$role->id)->first()->pivot->delete();
         }
         else
         {
@@ -75,35 +71,46 @@ class User extends Authenticatable
         }
     }
 
-    /**
-     * returns true if this user is an administrator and false otherwise
-     */
-    public function isAdmin()
-    {
-        return !($this->adminJobs()->get()->isEmpty());
-    }
+    // again, I'm not sure if this is still relevant
+    // /**
+    //  * returns true if this user is an administrator and false otherwise
+    //  */
+    // public function isAdmin()
+    // {
+    //     return !($this->roles()->get()->isEmpty());
+    // }
 
     /**
-     * returns true if this user has the specified job and false otherwise
+     * returns true if this user has the specified role and false otherwise
+     * can take as input either a string representing a role (ex: "moderator") or an instance of Role. An exception will be raised if these criteria are not met
      */
-    public function hasJob(AdminJob $job)
+    public function hasRole($role)
     {
-        return $this->adminJobs()->get()->contains($job);
+        $role = User::roleAsStringWrapper($role);
+        return $this->roles()->get()->contains($role);
     }
 
-    /**
-     * returns true if this user is a dictator and false otherwise
-     */
-    public function isDictator()
-    {
-        return $this->hasJob(AdminJob::getJob("Dictator"));
-    }
+    // probs not relevant anymore
+    // /**
+    //  * returns all users as a collection of User objects
+    //  */
+    // public static function getAllAdmins()
+    // {
+    //     return AdminUserRole::getAllAdmins();
+    // }
 
     /**
-     * returns all admins as a collection of User objects
+     * wrapper function to map strings representing roles to their Role instance counterparts
      */
-    public static function getAllAdmins()
-    {
-        return AdminUserJob::getAllAdmins();
+    private static function roleAsStringWrapper($role){
+        if (is_string($role))
+        {
+            return Role::getRole($role);
+        }
+        elseif (is_a($role, get_class(new Role)))
+        {
+            return $role;
+        }
+        throw new \InvalidArgumentException("this function only accepts either a string representing a role or an instance of Role");
     }
 }
