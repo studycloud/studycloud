@@ -32,22 +32,32 @@ class User extends Authenticatable
      */
     public function adminJobs()
     {
-        return $this->belongsToMany(AdminJob::class, 'admin_user_jobs', 'userid', 'jobid');
+        return $this->belongsToMany(AdminJob::class, 'admin_user_jobs', 'userid', 'jobid')->withTimestamps();
     }
 
     /**
-     * gives this user an admin job. returns false if the user already has it
+     * gives this user an admin job. returns false if the user already has it.
+     * addJob can take as input either a string representing a job (ex: "moderator") or an instance of AdminJob. An exception will be raised if these criteria are not met
      */
-    public function addJob(AdminJob $job)
+    public function addJob($job)
     {
-        if ($this->hasJob($job))
+        if (is_string($job))
         {
-            return false;   
+            $job = AdminJob::getJob($job);
         }
-        else
+        if (is_a($job, get_class(new AdminJob)))
         {
-            return $this->adminJobs()->save($job);
+            if ($this->hasJob($job))
+            {
+                return false;   
+            }
+            else
+            {
+                return $this->adminJobs()->save($job);
+            }
         }
+        throw new \InvalidArgumentException("addJob function only accepts either a string representing a job or an instance of AdminJob");
+        
     }
 
     /**
@@ -86,8 +96,14 @@ class User extends Authenticatable
      */
     public function isDictator()
     {
-        return hasJob(App\AdminJob::find(1));
+        return $this->hasJob(AdminJob::getJob("Dictator"));
     }
 
-    // public function 
+    /**
+     * returns all admins as a collection of User objects
+     */
+    public static function getAllAdmins()
+    {
+        return AdminUserJob::getAllAdmins();
+    }
 }
