@@ -2,15 +2,17 @@
 
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class UsersTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      *
      * @return void
      */
-    public function run()
-    {
-        $this->call('UsersTableSeeder');
-    }
+	public function run()
+	{
+		factory('App\User', 25)->create();
+	}
 }
+
+?>
