@@ -92,15 +92,15 @@ html {
 .logInContent {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: #f9f9f9;																/* possibly a different gray for login box */
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+    z-index: 1; /* stacks box on top of page */
+    right: 0; /* right aligns login box */
 }
 
 #logInHidden { /* content box containing login form */
 	padding: 5px;
 	animation-duration: 2s;
-	right: 54px;
 	text-align: right;
 }
 
