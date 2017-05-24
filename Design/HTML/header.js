@@ -5,16 +5,16 @@ function dropLogIn() {
 }
 
 // Close the dropdown menu if the user clicks outside of it
-// window.onclick = function(event) {
-//   if (!event.target.matches('.logInHidden')) {
+window.onclick = function(event) {
+  if (!event.target.matches('.logInButton')) {
 
-//     var dropdowns = document.getElementsByClassName("logInContent");
-//     var i;
-//     for (i = 0; i < dropdowns.length; i++) {
-//       var openDropdown = dropdowns[i];
-//       if (openDropdown.classList.contains('show')) {
-//         openDropdown.classList.remove('show');
-//       }
-//     }
-//   }
-// }
+    var dropdowns = document.getElementsByClassName("logInContent");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
