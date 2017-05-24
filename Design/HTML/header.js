@@ -6,8 +6,8 @@ function dropLogIn() {
 
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = function(event) {
-  if (!event.target.matches('#logInButton') && !event.target.matches('.logInForm')) {
-
+  if (!event.target.matches('.logInContent') && !event.target.matches('#logInButton')) {
+    alert(event.target.Id)
     var dropdowns = document.getElementsByClassName("logInContent");
     var i;
     for (i = 0; i < dropdowns.length; i++) {

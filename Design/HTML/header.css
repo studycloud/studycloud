@@ -93,17 +93,14 @@ html {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
-    /*min-width: 160px;*/
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
-    /*display: inline;*/
 }
 
 #logInHidden { /* content box containing login form */
 	padding: 5px;
 	animation-duration: 2s;
 	right: 54px;
-	/*display: inline;*/
 	text-align: right;
 }
 
@@ -112,13 +109,11 @@ html {
     border: none;
     color: white;
     text-decoration: none;
-    /*display: inline-block;*/
     text-align: center;
     background: blue;
 }
 
 /* Reset behavior of links inside the dropdown (create account, forgot details) */
-/*.logInContent a {*/
 #logInHidden > .linkDefault {
     color: blue;																			/* Definitely change this link color! */
     padding-top: 2px;
