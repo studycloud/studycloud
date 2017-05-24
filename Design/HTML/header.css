@@ -90,32 +90,31 @@ html {
 
 /* Dropdown Content (Hidden by Default) */
 .logInContent {
-    display: none;
+    /*display: none;*/
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 160px;
+    /*min-width: 160px;*/
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
+    display: inline;
 }
 
 #logInHidden { /* content box containing login form */
 	padding: 5px;
 	animation-duration: 2s;
 	right: 54px;
+	display: inline;
+	text-align: right;
 }
 
 #logInSub { /* style your submit button */
 	text-align: right;
-	width: 150px;
     border: none;
     color: white;
     text-decoration: none;
     display: inline-block;
- 	background: blue; /* For browsers that do not support gradients */
-	background: -webkit-linear-gradient(45deg, white, blue); /* For Safari 5.1 to 6.0 */
-	background: -o-linear-gradient(45deg, white, blue); /* For Opera 11.1 to 12.0 */
-	background: -moz-linear-gradient(45deg, white, blue); /* For Firefox 3.6 to 15 */
-	background: linear-gradient(45deg, white, blue); /* Standard syntax */
+    text-align: center;
+    background: blue;
 }
 
 /* Reset behavior of links inside the dropdown (create account, forgot details) */
@@ -144,11 +143,11 @@ html {
 }
 
 #logInUser {
-	width: 150px;
+	/*width: 150px;*/
 }
 
 #logInPwd {
-	width: 150px;
+	/*width: 150px;*/
 }
 
 
