@@ -90,20 +90,20 @@ html {
 
 /* Dropdown Content (Hidden by Default) */
 .logInContent {
-    /*display: none;*/
+    display: none;
     position: absolute;
     background-color: #f9f9f9;
     /*min-width: 160px;*/
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
-    display: inline;
+    /*display: inline;*/
 }
 
 #logInHidden { /* content box containing login form */
 	padding: 5px;
 	animation-duration: 2s;
 	right: 54px;
-	display: inline;
+	/*display: inline;*/
 	text-align: right;
 }
 
@@ -112,7 +112,7 @@ html {
     border: none;
     color: white;
     text-decoration: none;
-    display: inline-block;
+    /*display: inline-block;*/
     text-align: center;
     background: blue;
 }
@@ -124,7 +124,6 @@ html {
     padding-top: 2px;
     padding-bottom: 2px;
     text-decoration: none;
-    display: block;
     border-radius: 0;
     background: none;
     font-size: 12px;
