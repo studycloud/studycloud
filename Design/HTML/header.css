@@ -98,22 +98,58 @@ html {
     z-index: 1;
 }
 
-/* Links inside the dropdown (create account, forgot details) */
-/*.logInContent a {*/
-#logInHidden > .linkDefault {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    border-radius: none;
-    background: green;
+#logInHidden { /* content box containing login form */
+	padding: 5px;
+	animation-duration: 2s;
+	right: 54px;
 }
 
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #f1f1f1}
+#logInSub { /* style your submit button */
+	text-align: right;
+	width: 150px;
+    border: none;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+ 	background: blue; /* For browsers that do not support gradients */
+	background: -webkit-linear-gradient(45deg, white, blue); /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(45deg, white, blue); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(45deg, white, blue); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(45deg, white, blue); /* Standard syntax */
+}
+
+/* Reset behavior of links inside the dropdown (create account, forgot details) */
+/*.logInContent a {*/
+#logInHidden > .linkDefault {
+    color: blue;																			/* Definitely change this link color! */
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-decoration: none;
+    display: block;
+    border-radius: 0;
+    background: none;
+    font-size: 12px;
+    font-weight: normal;
+    text-align: right;
+}
+
+#logInHidden > .linkDefault:hover {
+	color: red;																				/* Also change this link color. */
+	background: none;
+}
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-.show {display:block;}
+.show {
+	display:block;
+}
+
+#logInUser {
+	width: 150px;
+}
+
+#logInPwd {
+	width: 150px;
+}
 
 
 /* SEARCH BAR (inside navbar) */
