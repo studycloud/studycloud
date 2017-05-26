@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="colorPlay.css">
     <link href="https://fonts.googleapis.com/css?family=Fredericka+the+Great" rel="stylesheet"> <!-- font for header -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> <!-- font for literally everything else -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- for jQuery -->
     <script type="text/javascript" src="header.js"></script> <!-- javascript for header but mostly for login drop down -->
     <meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
 </head>
@@ -27,7 +28,7 @@
 	                        <input type="text" name="search_text" id="search_text" placeholder="search">
 	                    </form>
 	                </li>
-	                <li id="logIn" class="logIn"><a onclick="dropLogIn()" id="logInButton">Log In</a>
+	                <li id="logIn" class="logIn"><a id="logInButton">Log In</a>
 	                	<div id="logInHidden" class="logInContent"> <!--why it gotta have an id and a class dude-->
 						    <form action="" method="get" id="logInForm">
 						    	<input type="text" name="username" id="logInUser" placeholder="username">
