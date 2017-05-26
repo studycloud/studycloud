@@ -89,10 +89,6 @@ html {
 /* LOGIN DROPDOWN */
 
 /* Dropdown Content (Hidden by Default) */
-.logInContent {
-
-}
-
 #logInHidden { /* content box containing login form */
 	padding: 5px;
 	animation-duration: 2s;
