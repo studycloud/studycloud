@@ -1,18 +1,22 @@
 // Right, jQuery is a thing. 
 $(document).ready(function(){ 
 
-	$("#logInButton").click(function(){ // Show/hide if you click on button. 
-		$("#logInHidden").show(1000);
+	$("#logInButton").click(function(event){ // Show/hide dialog if you click on the log in button. 
+		event.stopPropagation();
+		$("#logInHidden").toggle(1000);
 	});
 
-	$("body").on("click", ":not(#logInButton, #logInHidden, #logInHidden *)", function(){ 
-		if ( $("#logInHidden").css('display') != 'none' ){
-			$("#logInHidden").hide(1000); 
-		}
+	$("*:not(#logInButton, #logInButton *)").click(function(event){ // Show/hide dialog if you click on the log in button. 
+		event.stopPropagation();
+		$("#logInHidden").hide(1000);
 	});
+
+
+	// $(document).keypress(function(event){ // Show/hide if you click on button. 
+	// 	if(event.which == 27){
+	// 		$("#logInHidden").hide(1000);
+	// 	}
+	// 	event.stopPropagation();
+	// });
 
 });
-
-
-// Attempting to make dialog hide when you click outside. Currently, shows and immediately hides. I think click events aren't separate. 
-// if this doesn't work change the show in line 5 to a toggle and take out lines 8-12 and everything should be fine. 
