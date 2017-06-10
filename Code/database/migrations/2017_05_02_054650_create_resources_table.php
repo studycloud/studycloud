@@ -17,8 +17,10 @@ class CreateResourcesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('author_id');
+            $table->foreign('author_id')->references('id')->on('users');
             $table->longText('content');
             $table->integer('type_id');
+            $table->foreign('type_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

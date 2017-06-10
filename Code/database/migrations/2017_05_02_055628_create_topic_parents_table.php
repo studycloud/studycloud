@@ -15,9 +15,11 @@ class CreateTopicParentsTable extends Migration
     {
         Schema::create('topic_parent', function (Blueprint $table) {
             $table->integer('topic_id');
+            $table->foreign('topic_id')->references('id')->on('topics');
             $table->integer('parent_id');
+            $table->foreign('parent_id')->references('id')->on('topics');
             $table->primary(['topic_id','parent_id']);
-            $table->timestamp('created_at')->useCurrent();;
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

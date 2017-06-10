@@ -13,12 +13,13 @@ class CreateResourceTopicsTable extends Migration
      */
     public function up()
     {
-        Schema::create('resource_topic', function (Blueprint $table)
-        {
+        Schema::create('resource_topic', function (Blueprint $table) {
             $table->integer('resource_id');
+            $table->foreign('resource_id')->references('id')->on('resources');
             $table->integer('topic_id');
+            $table->foreign('topic_id')->references('id')->on('topics');
             $table->primary(['resource_id','topic_id']);
-            $table->timestamp('created_at')->useCurrent();;
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

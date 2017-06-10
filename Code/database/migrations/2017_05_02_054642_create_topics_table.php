@@ -17,6 +17,7 @@ class CreateTopicsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('author_id');
+            $table->foreign('author_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

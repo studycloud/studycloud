@@ -17,7 +17,8 @@ class CreateResourceUsesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('author_id');
-            $table->timestamp('created_at')->useCurrent();;
+            $table->foreign('author_id')->references('id')->on('users');
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 
