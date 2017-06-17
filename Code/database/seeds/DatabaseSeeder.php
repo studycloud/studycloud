@@ -11,6 +11,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call('UsersTableSeeder');
+    	if (!App::environment('production','staging'))
+    	{
+    		$this->call('UsersTableSeeder');
+    	}
+    	// call the seeders that populate roles and permissions and whatnot
     }
 }
