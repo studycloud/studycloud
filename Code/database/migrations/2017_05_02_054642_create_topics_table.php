@@ -16,7 +16,7 @@ class CreateTopicsTable extends Migration
         Schema::create('topics', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('author_id');
+            $table->integer('author_id')->unsigned();
             $table->foreign('author_id')->references('id')->on('users');
             $table->timestamps();
         });

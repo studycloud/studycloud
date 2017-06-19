@@ -14,9 +14,9 @@ class CreateRoleUsersTable extends Migration
     public function up()
     {
         Schema::create('role_user', function (Blueprint $table) {
-            $table->integer('user_id');
+            $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('role_id');
+            $table->integer('role_id')->unsigned();
             $table->foreign('role_id')->references('id')->on('roles');
             $table->primary(['user_id','role_id']);
             $table->timestamp('created_at')->useCurrent();

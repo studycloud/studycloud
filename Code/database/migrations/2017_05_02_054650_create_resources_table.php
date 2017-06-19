@@ -16,10 +16,10 @@ class CreateResourcesTable extends Migration
         Schema::create('resources', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('author_id');
+            $table->integer('author_id')->unsigned();
             $table->foreign('author_id')->references('id')->on('users');
             $table->longText('content');
-            $table->integer('type_id');
+            $table->integer('type_id')->unsigned();
             $table->foreign('type_id')->references('id')->on('users');
             $table->timestamps();
         });
