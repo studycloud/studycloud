@@ -20,7 +20,7 @@ class CreateResourcesTable extends Migration
             $table->foreign('author_id')->references('id')->on('users');
             $table->longText('content');
             $table->integer('type_id')->unsigned();
-            $table->foreign('type_id')->references('id')->on('users');
+            $table->foreign('type_id')->references('id')->on('resource_types');
             $table->timestamps();
         });
     }

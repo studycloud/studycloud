@@ -16,7 +16,7 @@ class CreateResourceUsesTable extends Migration
         Schema::create('resource_uses', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('author_id')->unsigned();
+            $table->integer('author_id')->unsigned()->nullable();
             $table->foreign('author_id')->references('id')->on('users');
             $table->timestamp('created_at')->useCurrent();
         });
