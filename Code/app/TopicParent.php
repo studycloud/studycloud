@@ -21,7 +21,7 @@ class TopicParent extends Model
     public $timestamps = false;
 
     /**
-     * Makes an array that representing the topic tree.
+     * Makes an array representing the topic tree.
      *
      * @return array $tree
      */
