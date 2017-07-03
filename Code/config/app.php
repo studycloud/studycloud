@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Laravel',
+    'name' => 'Study Cloud',
 
     /*
     |--------------------------------------------------------------------------
@@ -164,7 +164,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /*
-         * Laravel somethings (added by Arya Massarat on 5/2/17 when upgrading laravel to 5.4 from 5.3)...
+         * Laravel\ somethings (added by Arya Massarat on 5/2/17 when upgrading laravel to 5.4 from 5.3)...
          */        
         Laravel\Tinker\TinkerServiceProvider::class,
 
