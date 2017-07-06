@@ -21,6 +21,10 @@ Route::get('about', function(){
 	return view('about');
 });
 
+Route::get('tree', function(){
+	return view('tree');
+});
+
 Route::get('admins/{userid}', function($userid){
 	$user = App\User::find($userid);
 	// return $user;
