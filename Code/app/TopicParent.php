@@ -19,23 +19,4 @@ class TopicParent extends Model
      * @var bool
      */
     public $timestamps = false;
-
-    /**
-     * Makes an array representing the topic tree.
-     *
-     * @return array $tree
-     */
-    // public static function generateArrayTree($topics = [])
-    // {
-    //     $tree = [];
-    //     if ($topics = [])
-    //     {
-    //         $topics = Topic::getTopLevelTopics()->pluck('id')->all();
-    //     }
-    //     foreach ($topics as $topic) {
-    //         $children = $topic->children()->pluck('id')->all();
-    //         $tree[$topic->id] = self::generateArrayTree($children);
-    //     }
-    //     return $tree;
-    // }
 }
