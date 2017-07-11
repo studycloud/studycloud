@@ -64,25 +64,7 @@ SimulationForce.force("ForceLink")
 	
 SimulationForce.force("ForceCharge")
 	.strength(-50);
-
 	
-function Ticker()
-{
-	SimulationForce.tick();
-	GraphUpdate();
-}	
-
-function Starter()
-{
-	SimulationForce.restart();
-
-}	
-
-function Stopper()
-{
-	SimulationForce.stop();
-}	
-
 function CenterNode(Node)
 	{
 		var TranslateX

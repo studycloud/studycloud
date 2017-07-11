@@ -1,0 +1,228 @@
+
+//var graph = {"nodes": [], "links": [] };
+var LogoSVG = d3.select("#svg5045");
+
+var LogoData = 
+{
+	"Nodes":
+	[
+		{"id":"star1"},
+		{"id":"star2"},
+		{"id":"star3"},
+		{"id":"star4"},
+		{"id":"star5"},
+		{"id":"star6"},
+		{"id":"star7"},
+		{"id":"star8"},
+		{"id":"star9"}
+	], 
+	"Links":
+	[
+		{"id":"line1_2", "source":"star1", "target":"star2"},
+		{"id":"line1_3", "source":"star1", "target":"star3"},
+		{"id":"line2_7", "source":"star2", "target":"star7"},
+		{"id":"line2_5", "source":"star2", "target":"star5"},
+		{"id":"line2_4", "source":"star2", "target":"star4"},
+		{"id":"line3_4", "source":"star3", "target":"star4"},
+		{"id":"line3_6", "source":"star3", "target":"star6"},
+		{"id":"line3_8", "source":"star3", "target":"star8"},
+		{"id":"line4_5", "source":"star4", "target":"star5"},
+		{"id":"line4_6", "source":"star4", "target":"star6"},
+		{"id":"line5_7", "source":"star5", "target":"star7"},
+		{"id":"line5_9", "source":"star5", "target":"star9"},
+		{"id":"line6_8", "source":"star6", "target":"star8"},
+		{"id":"line6_9", "source":"star6", "target":"star9"},
+		{"id":"line7_9", "source":"star7", "target":"star9"},
+		{"id":"line8_9", "source":"star8", "target":"star9"}
+	]
+};
+
+var Stars = LogoSVG.selectAll("#layer2 > circle");
+	
+Stars.data(LogoData.Nodes, function(d, i, nodes)
+	{	
+		if(d)
+		{
+			return d.id;
+		}else
+		{
+			return this.id;
+		}
+	}
+);
+ 
+Stars.each(function(d, i, nodes)
+	{
+		d.x = this.cx.baseVal.value;
+		d.y = this.cy.baseVal.value;
+		//console.log(d);
+		
+	}
+);
+ 
+//console.log(Stars.data());
+ 
+var Halos = LogoSVG.selectAll("#layer3 > circle");
+
+var Lines = LogoSVG.selectAll("#layer1 > path");
+
+Lines.data(LogoData.Links, function(d, i, nodes)
+	{	
+		if(d)
+		{
+			return d.id;
+		}else
+		{
+			return this.id;
+		}
+	}
+); 
+
+//console.log(Lines.data());
+//console.log(Lines.nodes());
+ 
+ // Stars.each(function(p, j) {
+	// console.log(p);
+	// console.log(this)
+ // });
+
+ var SimulationForce = d3.forceSimulation()
+	.force("ForceLink", d3.forceLink())
+	.stop()
+	.force("ForceCharge", d3.forceManyBody());
+
+ SimulationForce
+	 .nodes(LogoData.Nodes)
+	 .on('tick', GraphUpdate);
+
+ SimulationForce.force("ForceLink")
+	 .id(function(d) { return d.id; })
+	 .links(LogoData.Links)
+	 .strength(.3);
+	 
+SimulationForce.force("ForceCharge")
+	.strength(-10);
+	
+function Ticker()
+{
+	SimulationForce.tick();
+	GraphUpdate();
+}	
+
+function Starter()
+{
+	SimulationForce.restart();
+
+}	
+
+function Stopper()
+{
+	SimulationForce.stop();
+}	
+
+function GraphUpdate()
+	{
+		
+		Stars
+			.attr('cx', function(d) { return d.x; })
+		    .attr('cy', function(d) { return d.y; });
+	
+		Lines
+			.attr('d', function(d) { string = "M " + d.source.x + "," + d.source.y + " " + d.target.x + "," + d.target.y; return string })
+	}
+
+
+// for(i=0; i<NodesNum; i++)
+// {	
+	// graph["nodes"].push({id: i});
+	// graph["links"].push({target:Math.floor(Math.random() * NodesNum) , source: i});
+// }
+
+
+// var Width = window.innerWidth,
+    // Height = window.innerHeight,
+	// center = {x: Width/2, y: Height/2},
+	// scale = 1;
+
+
+
+// var GraphFrameInner = GraphSVG.append("g");
+
+// var link =  GraphFrameInner
+	// .selectAll('.link')
+    // .data(graph.links)
+    // .enter()
+		// .append('line')
+			// .attr('class', 'link')
+			
+// var node =  GraphFrameInner
+	// .selectAll('.node')
+    // .data(graph.nodes)
+    // .enter()
+		// .append('circle')
+		// .attr('class', 'node')
+		// .attr('r', function()
+			// {
+				// return (Width/100) * (Math.random() * 2 +0.5);
+			// })
+		// .style("fill", "magenta")
+		// .on("click", CenterNode);
+
+
+// We're about to tell the force layout to start its
+// calculations. We do, however, want to know when those
+// calculations are complete, so before we kick things off
+// we'll define a function that we want the layout to call
+// once the calculations are done.
+
+// var SimulationForce = d3.forceSimulation()
+    // .force("ForceLink", d3.forceLink())
+    // .force("ForceCharge", d3.forceManyBody())
+    // .force("ForceCenter", d3.forceCenter(Width / 2, Height / 2));
+
+// SimulationForce
+	// .nodes(graph.nodes)
+	// .on('tick', GraphUpdate);
+
+// SimulationForce.force("ForceLink")
+	// .links(graph.links)
+	// .strength(.3);
+	
+// SimulationForce.force("ForceCharge")
+	// .strength(-50);
+	
+// function CenterNode(Node)
+	// {
+		// var TranslateX
+		// var TranslateY
+		
+		// if (d3.event.ctrlKey) 
+			// {
+				// scale = 1
+				// TranslateX = 0
+				// TranslateY = 0
+			// }
+		// else
+			// {
+				// scale = scale * 4
+				// TranslateX = center.x - Node.x * scale;
+				// TranslateY = center.y - Node.y * scale;
+			// }
+			
+		 // GraphFrameInner.transition()
+			// .duration(700)
+			// .attr("transform", "translate("+ TranslateX + "," + TranslateY  + ")scale(" + scale +")");
+	// }
+
+// function GraphUpdate()
+	// {
+		// node
+			// .attr('cx', function(d) { return d.x; })
+		    // .attr('cy', function(d) { return d.y; });
+	
+		// link
+			// .attr('x1', function(d) { return d.source.x })
+			// .attr('y1', function(d) { return d.source.y  })
+			// .attr('x2', function(d) { return d.target.x  })
+			// .attr('y2', function(d) { return d.target.y  });
+	// }
