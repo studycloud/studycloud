@@ -133,7 +133,6 @@ Lines.each(function(d,i,nodes)
  // });
 
  var SimulationForce = d3.forceSimulation()
-	.stop()
 	.alphaDecay(0)
 	.force("ForceLink", d3.forceLink())
 	// .force("ForceCharge", d3.forceManyBody())
