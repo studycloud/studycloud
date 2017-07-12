@@ -44,12 +44,20 @@ var LogoData =
 		{"id":"halo7", "star":"star7"},
 		{"id":"halo8", "star":"star8"},
 		{"id":"halo9", "star":"star9"}
+	],
+	"LinkGradients":
+	[
+		{"id":"linearGradient6748", "link":"line7_9"},
+		{"id":"linearGradient6760", "link":"line5_9"},
+		{"id":"linearGradient6768", "link":"line6_9"},
+		{"id":"linearGradient6776", "link":"line8_9"}
 	]
 	
 	
 };
 
 var IDStarMap = d3.map(LogoData.Stars, getID);
+var IDLinkMap = d3.map(LogoData.Links, getID)
 
 var Stars = LogoSVG.selectAll("#layer2 > circle");
 	
@@ -75,8 +83,6 @@ Stars.each(function(d, i, nodes)
 	}
 );
  
-//console.log(Stars.data());
- 
 var Halos = LogoSVG.selectAll("#layer3 > circle");
 
 Halos.data(LogoData.Halos, function(d, i, nodes)
@@ -100,8 +106,6 @@ Halos.each(function(d,i,nodes)
 	}
 );
 
-console.log(Halos.data());
-
 var Lines = LogoSVG.selectAll("#layer1 > path");
 
 Lines.data(LogoData.Links, function(d, i, nodes)
@@ -121,6 +125,28 @@ Lines.each(function(d,i,nodes)
 		d.InitialLength = this.getTotalLength();
 	}
 );
+
+LinkGradients = LogoSVG.selectAll("defs > linearGradient[gradientUnits]");
+
+LinkGradients.data(LogoData.LinkGradients, function(d, i, nodes)
+	{	
+		if(d)
+		{
+			return d.id;
+		}else
+		{
+			return this.id;
+		}
+	}
+);
+
+LinkGradients.each(function(d,i,nodes)
+	{
+		d.link = IDLinkMap.get(d.link);
+	}
+);
+
+
 
 //console.log(Lines.data());
 //console.log(Lines.nodes());
@@ -222,5 +248,10 @@ function GraphUpdate()
 				
 			}
 		);
+	LinkGradients
+		.attr("x1", function(d) { return d.link.source.x; })
+		.attr("y1", function(d) { return d.link.source.y; })
+		.attr("x2", function(d) { return d.link.target.x; })
+		.attr("y2", function(d) { return d.link.target.y; });
 	
 }
