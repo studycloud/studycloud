@@ -4,7 +4,7 @@ var LogoSVG = d3.select("#svg5045");
 
 var LogoData = 
 {
-	"Nodes":
+	"Stars":
 	[
 		{"id":"star1"},
 		{"id":"star2"},
@@ -34,12 +34,28 @@ var LogoData =
 		{"id":"line6_9", "source":"star6", "target":"star9"},
 		{"id":"line7_9", "source":"star7", "target":"star9"},
 		{"id":"line8_9", "source":"star8", "target":"star9"}
+	],
+	"Halos":
+	[
+		{"id":"halo1", "star":"star1"},
+		{"id":"halo2", "star":"star2"},
+		{"id":"halo3", "star":"star3"},
+		{"id":"halo4", "star":"star4"},
+		{"id":"halo5", "star":"star5"},
+		{"id":"halo6", "star":"star6"},
+		{"id":"halo7", "star":"star7"},
+		{"id":"halo8", "star":"star8"},
+		{"id":"halo9", "star":"star9"}
 	]
+	
+	
 };
+
+var IDStarMap = d3.map(LogoData.Stars, getID);
 
 var Stars = LogoSVG.selectAll("#layer2 > circle");
 	
-Stars.data(LogoData.Nodes, function(d, i, nodes)
+Stars.data(LogoData.Stars, function(d, i, nodes)
 	{	
 		if(d)
 		{
@@ -55,7 +71,6 @@ Stars.each(function(d, i, nodes)
 	{
 		d.x = this.cx.baseVal.value;
 		d.y = this.cy.baseVal.value;
-		//console.log(d);
 		
 	}
 );
@@ -63,6 +78,29 @@ Stars.each(function(d, i, nodes)
 //console.log(Stars.data());
  
 var Halos = LogoSVG.selectAll("#layer3 > circle");
+
+Halos.data(LogoData.Halos, function(d, i, nodes)
+	{	
+		if(d)
+		{
+			return d.id;
+		}else
+		{
+			return this.id;
+		}
+	}
+);
+
+Halos.each(function(d,i,nodes)
+	{
+		d.star = IDStarMap.get(d.star);
+		d.OffsetX = this.transform.baseVal[0].matrix.e - d.star.x;
+		d.OffsetY = this.transform.baseVal[0].matrix.f - d.star.y;
+		
+	}
+);
+
+console.log(Halos.data());
 
 var Lines = LogoSVG.selectAll("#layer1 > path");
 
@@ -92,17 +130,22 @@ Lines.data(LogoData.Links, function(d, i, nodes)
 	.force("ForceCharge", d3.forceManyBody());
 
  SimulationForce
-	 .nodes(LogoData.Nodes)
+	 .nodes(LogoData.Stars)
 	 .on('tick', GraphUpdate);
 
  SimulationForce.force("ForceLink")
-	 .id(function(d) { return d.id; })
+	 .id(getID)
 	 .links(LogoData.Links)
 	 .strength(.3);
 	 
 SimulationForce.force("ForceCharge")
 	.strength(-10);
 	
+function getID(d) 
+{ 
+	return d.id; 
+}	
+
 function Ticker()
 {
 	SimulationForce.tick();
@@ -129,6 +172,16 @@ function GraphUpdate()
 	
 		Lines
 			.attr('d', function(d) { string = "M " + d.source.x + "," + d.source.y + " " + d.target.x + "," + d.target.y; return string })
+			
+		Halos
+			.each(function(d, i, nodes) 
+				{ 
+					this.transform.baseVal[0].matrix.e = d.star.x + d.OffsetX;
+					this.transform.baseVal[0].matrix.f = d.star.y + d.OffsetY;
+					
+				}
+		    );
+		
 	}
 
 
