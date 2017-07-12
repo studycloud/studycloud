@@ -1,10 +1,10 @@
-{{-- Note that this code was adapted (with very minor changes) from http://bl.ocks.org/d3noob/8329447 and is only for demonstration purposes. --}}
+{{-- Note that this code was adapted (with very minor changes) from http://bl.ocks.org/d3noob/8329447 and is only for demonstration purposes as a proof of concept. --}}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
 
-    <title>Tree Example</title>
+    <title>Topic Tree Example</title>
 
     <style>
 
@@ -52,7 +52,7 @@ var svg = d3.select("body").append("svg")
   .append("g")
 	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-treeData = [{ "id":0,"name":"root", "children": {!! App\Topic::getTree()->toJson() !!} }];
+treeData = [{ "id":0, "name":"root", "children":{!! App\Topic::getTree()->toJson() !!} }];
 
 
 root = treeData[0];
@@ -61,7 +61,7 @@ update(root);
 function update(source) {
 
   // Compute the new tree layout.
-  var nodes = tree.nodes(root).reverse(),
+  var nodes = tree.nodes(source).reverse(),
 	  links = tree.links(nodes);
 
   // Normalize for fixed-depth.
@@ -83,10 +83,10 @@ function update(source) {
 
   nodeEnter.append("text")
 	  .attr("x", function(d) { 
-		  return d.children || d._children ? -13 : 13; })
+		  return ((d.children && d.children != []) || d._children) ? -13 : 13; })
 	  .attr("dy", ".35em")
 	  .attr("text-anchor", function(d) { 
-		  return d.children || d._children ? "end" : "start"; })
+		  return ((d.children && d.children != []) || d._children) ? "end" : "start"; })
 	  .text(function(d) { return d.name; })
 	  .style("fill-opacity", 1);
 

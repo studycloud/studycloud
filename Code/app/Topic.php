@@ -7,13 +7,28 @@ use Illuminate\Database\Eloquent\Model;
 class Topic extends Model
 {
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+	protected $appends = ['children'];
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Collection
+	 */
+    public function getChildrenAttribute()
+    {
+    	return $this->children()->get();
+    }
+
+    /**
      * Returns the updated tree.
      *
      * @return \Illuminate\Database\Eloquent\Collection $tree
      */
     public static function getTree()
     {
-        return TopicTree::all();
+        return self::getTopLevelTopics();
     }
 
 	/**
