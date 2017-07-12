@@ -170,7 +170,7 @@ LinkGradients.each(function(d,i,nodes)
  SimulationForce.force("ForceLink")
 	 .id(getID)
 	 .links(LogoData.Links)
-	 .strength(.1)
+	 .strength(.12)
 	 .distance(function(d){return d.InitialLength;});
 	 
 	 
@@ -179,11 +179,11 @@ LinkGradients.each(function(d,i,nodes)
 	
 SimulationForce.force("HomingX")
 	.x(function(node, index){return node.InitialX;})
-	.strength(.1);
+	.strength(.05);
 	
 SimulationForce.force("HomingY")
 	.y(function(node, index){return node.InitialY;})
-	.strength(.1);
+	.strength(.05);
 
 Stars.call(d3.drag()
           .on("start", DragStart)
