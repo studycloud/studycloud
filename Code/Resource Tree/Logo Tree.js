@@ -71,6 +71,8 @@ Stars.each(function(d, i, nodes)
 	{
 		d.x = this.cx.baseVal.value;
 		d.y = this.cy.baseVal.value;
+		d.InitialX = d.x;
+		d.InitialY = d.y;
 		
 	}
 );
@@ -125,9 +127,12 @@ Lines.data(LogoData.Links, function(d, i, nodes)
  // });
 
  var SimulationForce = d3.forceSimulation()
-	.force("ForceLink", d3.forceLink())
 	.stop()
-	.force("ForceCharge", d3.forceManyBody());
+	.alphaDecay(0)
+	.force("ForceLink", d3.forceLink())
+	// .force("ForceCharge", d3.forceManyBody())
+	.force("HomingX", d3.forceX())
+	.force("HomingY", d3.forceY());
 
  SimulationForce
 	 .nodes(LogoData.Stars)
@@ -136,11 +141,42 @@ Lines.data(LogoData.Links, function(d, i, nodes)
  SimulationForce.force("ForceLink")
 	 .id(getID)
 	 .links(LogoData.Links)
-	 .strength(.3);
+	 .strength(.1);
 	 
-SimulationForce.force("ForceCharge")
-	.strength(-10);
+// SimulationForce.force("ForceCharge")
+	// .strength(-10);
 	
+SimulationForce.force("HomingX")
+	.x(function(node, index){return node.InitialX;})
+	.strength(.1);
+	
+SimulationForce.force("HomingY")
+	.y(function(node, index){return node.InitialY;})
+	.strength(.1);
+
+Stars.call(d3.drag()
+          .on("start", DragStart)
+          .on("drag", Dragging)
+          .on("end", DragEnd));	
+
+function DragStart(d)
+{
+	d.fx = d.x;
+	d.fy = d.y;
+}	
+
+function Dragging(d)
+{
+	d.fx = d3.event.x;
+	d.fy = d3.event.y;
+}
+
+function DragEnd(d)
+{
+	d.fx = null;
+	d.fy = null;
+}
+		  
 function getID(d) 
 { 
 	return d.id; 
