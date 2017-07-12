@@ -129,6 +129,21 @@ html {
 	background: none;
 }
 
+#logInUser, #logInPwd {
+	text-align: center;	
+	border-color: transparent;
+	color: white;
+	outline: none;
+	background: #2e1e43;	/* search box color (pre-focus) */
+	float: center;
+	transition: all 0.15s;
+	border-radius: 0.1em;
+/*	width: 100%;
+*/	resize: none;
+	font-size: inherit;
+	font-family: inherit;
+}
+
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {
 	display:block;
