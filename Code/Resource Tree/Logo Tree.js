@@ -118,6 +118,12 @@ Lines.data(LogoData.Links, function(d, i, nodes)
 	}
 ); 
 
+Lines.each(function(d,i,nodes)
+	{
+		d.InitialLength = this.getTotalLength();
+	}
+);
+
 //console.log(Lines.data());
 //console.log(Lines.nodes());
  
@@ -141,7 +147,9 @@ Lines.data(LogoData.Links, function(d, i, nodes)
  SimulationForce.force("ForceLink")
 	 .id(getID)
 	 .links(LogoData.Links)
-	 .strength(.1);
+	 .strength(.1)
+	 .distance(function(d){return d.InitialLength;});
+	 
 	 
 // SimulationForce.force("ForceCharge")
 	// .strength(-10);
