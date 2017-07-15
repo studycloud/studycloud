@@ -13,7 +13,8 @@ class CreatePermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('permissions', function (Blueprint $table) {
+        Schema::create('permissions', function (Blueprint $table)
+        {
             $table->increments('id');
             $table->string('name')->unique();
             $table->timestamp('created_at')->useCurrent();

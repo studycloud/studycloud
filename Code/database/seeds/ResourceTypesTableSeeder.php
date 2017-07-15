@@ -4,6 +4,14 @@ use Illuminate\Database\Seeder;
 
 class ResourceTypesTableSeeder extends Seeder
 {
+	/**
+	 * A list of the names of each resource type
+	 * Note that implicit in this list are the ids
+	 * (defined by the order of each resource_type in the array)
+	 * @var array
+	 */
+	private $resource_types = ['link', 'video'];
+
     /**
      * Run the database seeds.
      *
@@ -11,6 +19,9 @@ class ResourceTypesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory('App\ResourceType', 10)->create();
+        foreach($this->resource_types as $type)
+        {
+        	App\ResourceType::firstOrCreate(['name' => $type]);
+        }
     }
 }

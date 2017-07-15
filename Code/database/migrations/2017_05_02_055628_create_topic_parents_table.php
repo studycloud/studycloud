@@ -13,7 +13,8 @@ class CreateTopicParentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('topic_parent', function (Blueprint $table) {
+        Schema::create('topic_parent', function (Blueprint $table)
+        {
             $table->integer('topic_id')->unsigned();
             $table->foreign('topic_id')->references('id')->on('topics');
             $table->integer('parent_id')->unsigned();

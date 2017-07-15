@@ -13,9 +13,10 @@ class CreateResourceTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('resource_types', function (Blueprint $table) {
+        Schema::create('resource_types', function (Blueprint $table)
+        {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->timestamp('created_at')->useCurrent();
         });
     }

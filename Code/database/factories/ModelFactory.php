@@ -42,15 +42,6 @@ $factory->define(App\Topic::class, function (Faker\Generator $faker){
     ];
 });
 
-// Resource Type Factory
-$factory->define(App\ResourceType::class, function (Faker\Generator $faker) {
-    return [
-        'name' => ucwords(
-            $faker->words($nb = 2, $asText = true)
-        )
-    ];
-});
-
 // Resource Factory
 $factory->define(App\Resource::class, function (Faker\Generator $faker){
     return [
@@ -59,11 +50,10 @@ $factory->define(App\Resource::class, function (Faker\Generator $faker){
         ),
         'author_id' => $faker->randomElement(App\User::select('id')->get()->toArray())['id'],
         'content' => $faker->paragraph,
-        'type_id' => $faker->randomElement(App\ResourceType::select('id')->get()->toArray())['id']
+        'type_id' => $faker->randomElement(App\ResourceType::select('id')->get()->toArray())['id'],
+        'use_id' => $faker->randomElement(App\ResourceUse::select('id')->get()->toArray())['id']
     ];
 });
-
-// Resource Uses Factory
 
 // Topic-Parents Factory
 // This model doesn't have a factory definition. All of it's seeding happens in the TopicParentTableSeeder.

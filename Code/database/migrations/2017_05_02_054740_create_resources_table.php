@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTopicsTable extends Migration
+class CreateResourcesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,17 @@ class CreateTopicsTable extends Migration
      */
     public function up()
     {
-        Schema::create('topics', function (Blueprint $table)
+        Schema::create('resources', function (Blueprint $table)
         {
             $table->increments('id');
             $table->string('name');
             $table->integer('author_id')->unsigned();
             $table->foreign('author_id')->references('id')->on('users');
+            $table->longText('content');
+            $table->integer('type_id')->unsigned();
+            $table->foreign('type_id')->references('id')->on('resource_types');
+            $table->integer('use_id')->unsigned();
+            $table->foreign('use_id')->references('id')->on('resource_uses');            
             $table->timestamps();
         });
     }
@@ -30,6 +35,6 @@ class CreateTopicsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('topics');
+        Schema::dropIfExists('resources');
     }
 }
