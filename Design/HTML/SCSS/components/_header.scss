@@ -1,6 +1,6 @@
 // Contains formatting for the header and navbar of each page.
 
-@import "helpers/color.scss"
+@import "../helpers/color.scss";
 
 
 // Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button).
@@ -27,7 +27,7 @@
 // NAVBAR
 
 .navbar {
-	@extend navbar-gradient
+	@extend %navbar-gradient;
 	.navbar ul {
 		text-align: center;
 		list-style-type: none;
@@ -52,7 +52,6 @@
 				padding: 0.35em;
 				white-space: nowrap;
 				border-radius: 0.1em;
-				baseline-shift: 
 				&:hover {
 					background-color: $navbar-hover-color;
 					color: black;
