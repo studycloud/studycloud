@@ -1,0 +1,29 @@
+// Contains default formatting for every page (fonts, etc.)
+
+@import "cleanup/reset.css"
+@import "components/header.scss"
+
+html {
+	font-family: 'Open Sans', sans-serif;
+}
+
+#pageWidth { // Limits width of page.
+	width: 80%;
+	margin: auto;
+	max-width: 1200px;
+}
+
+#main {
+	background-color: hsla(360, 0%, 52%, 0.3);
+	font-size: 16px;
+}
+
+
+// MOBILE COMPATIBILITY
+
+@media (max-width: 900px) {
+	// Make the navbar start zooming as expected.
+	#pageWidth {
+		width: 720px;
+	}
+}
