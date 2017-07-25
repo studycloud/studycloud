@@ -6,20 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Topic extends Model
 {
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-	protected $appends = ['children'];
+ //    /**
+ //     * The accessors to append to the model's array form.
+ //     *
+ //     * @var array
+ //     */
+	// protected $appends = ['children'];
 
-	/**
-	 * @return \Illuminate\Database\Eloquent\Collection
-	 */
-    public function getChildrenAttribute()
-    {
-    	return $this->children()->get();
-    }
+	// /**
+	//  * @return \Illuminate\Database\Eloquent\Collection
+	//  */
+ //    public function getChildrenAttribute()
+ //    {
+ //    	return $this->children()->get();
+ //    }
 
     /**
      * Returns the updated tree.
@@ -55,5 +55,10 @@ class Topic extends Model
 	public static function getTopLevelTopics()
 	{
 		return self::whereNotIn('id', TopicParent::pluck('topic_id')->all())->get();
+	}
+
+	public function resources()
+	{
+		return $this->belongsToMany(Resource::class, 'resource_topic', 'topic_id', 'resource_id');
 	}
 }

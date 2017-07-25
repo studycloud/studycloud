@@ -12,9 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome', compact('people'));
-
-   	
+    return view('welcome', compact('people'));   	
 });
 
 Route::get('about', function(){
@@ -23,6 +21,14 @@ Route::get('about', function(){
 
 Route::get('tree', function(){
 	return view('tree');
+});
+
+Route::get('tree/connections', function(){
+	return App\TopicParent::all();
+});
+
+Route::get('tree/data', function(){
+	return App\Topic::all();
 });
 
 Route::get('admins/{userid}', function($userid){
