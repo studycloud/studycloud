@@ -12,7 +12,8 @@
 */
 
 // User Factory
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(App\User::class, function (Faker\Generator $faker)
+{
     static $password;
 
     return [
@@ -21,19 +22,22 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('password'),
         'remember_token' => str_random(10),
+        // TODO: update this enum to dynamically retrieve whatever enum options are in the database
         'type' => $faker->randomElement(['student','teacher'])
     ];
 });
 
 // Academic_Class Factory
-$factory->define(App\Academic_Class::class, function (Faker\Generator $faker) {
+$factory->define(App\Academic_Class::class, function (Faker\Generator $faker)
+{
     return [
         'name' => $faker->text($maxNbChars = 46)
     ];
 });
 
 // Topic Factory
-$factory->define(App\Topic::class, function (Faker\Generator $faker){
+$factory->define(App\Topic::class, function (Faker\Generator $faker)
+{
     return [
         'name' => ucwords(
             $faker->words($nb = 3, $asText = true)
@@ -42,8 +46,23 @@ $factory->define(App\Topic::class, function (Faker\Generator $faker){
     ];
 });
 
+// Resource Content Factory
+$factory->define(App\ResourceContent::class, function (Faker\Generator $faker)
+{
+    return [
+        'name' => ucwords(
+            $faker->words($nb = 3, $asText = true)
+        ),
+        // TODO: update this enum to dynamically retrieve whatever enum options are in the database
+        'type' => $faker->randomElement(['text', 'link', 'file']),
+        'content' => $faker->paragraph,
+        'resource_id' => 0, // this will get overridden by the ResourcesTableSeeder
+    ];
+});
+
 // Resource Factory
-$factory->define(App\Resource::class, function (Faker\Generator $faker){
+$factory->define(App\Resource::class, function (Faker\Generator $faker)
+{
     return [
         'name' => ucwords(
             $faker->words($nb = 3, $asText = true)
@@ -53,11 +72,12 @@ $factory->define(App\Resource::class, function (Faker\Generator $faker){
     ];
 });
 
-// Topic-Parents Factory
+// Topic-Parent Factory
 // This model doesn't have a factory definition. All of it's seeding happens in the TopicParentTableSeeder.
 
 // Resource-Topic Factory
-$factory->define(App\ResourceTopic::class, function (Faker\Generator $faker){
+$factory->define(App\ResourceTopic::class, function (Faker\Generator $faker)
+{
     return [
         'resource_id' => 0, // this will get overridden by the ResourceTopicTableSeeder
         'topic_id' => function(array $curr_ResourceTopic)
@@ -79,7 +99,8 @@ $factory->define(App\ResourceTopic::class, function (Faker\Generator $faker){
 });
 
 // Role-User Factory
-$factory->define(App\RoleUser::class, function (Faker\Generator $faker){
+$factory->define(App\RoleUser::class, function (Faker\Generator $faker)
+{
     return [
         'user_id' => 0, // this will get overridden by the RoleUserTableSeeder
         'role_id' => function(array $curr_RoleUser)

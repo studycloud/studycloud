@@ -21,7 +21,7 @@ class CreateResourceContentsTable extends Migration
             $table->longText('content');
             $table->integer('resource_id')->unsigned();
             $table->foreign('resource_id')->references('id')->on('resources');
-            $table->timestamp('created_at')->useCurrent();
+            $table->timestamps();
         });
     }
 

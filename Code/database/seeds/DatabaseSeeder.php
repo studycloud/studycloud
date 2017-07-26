@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
 			$this->call('UsersTableSeeder');
 			$this->call('ClassesTableSeeder');
 			$this->call('TopicsTableSeeder');
-			$this->call('ResourcesTableSeeder');
+			$this->call('ResourcesTableSeeder'); // note that resource contents are created in the ResourcesTableSeeder
 			$this->call('TopicParentTableSeeder');
 			$this->call('ResourceTopicTableSeeder');
 			$this->call('RoleUserTableSeeder');
