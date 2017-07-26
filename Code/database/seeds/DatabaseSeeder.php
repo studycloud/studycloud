@@ -41,7 +41,6 @@ class DatabaseSeeder extends Seeder
 		| Note that the nature of these seeders means that they
 		| don't have corresponding factories.
 		*/
-		$this->call('ResourceTypesTableSeeder');
 		$this->call('ResourceUsesTableSeeder');
 		$this->call('RolesTableSeeder');
 		$this->call('PermissionsTableSeeder');

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateResourceTypesTable extends Migration
+class CreateResourceContentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class CreateResourceTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('resource_types', function (Blueprint $table)
+        Schema::create('resource_contents', function (Blueprint $table)
         {
             $table->increments('id');
             $table->string('name')->unique();
+            $table->enum('type', ['text', 'link', 'file']);
+            $table->longText('content');
+            $table->integer('resource_id')->unsigned();
+            $table->foreign('resource_id')->references('id')->on('resources');
             $table->timestamp('created_at')->useCurrent();
         });
     }
@@ -28,6 +32,6 @@ class CreateResourceTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('resource_types');
+        Schema::dropIfExists('resource_contents');
     }
 }

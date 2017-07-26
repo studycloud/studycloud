@@ -49,8 +49,6 @@ $factory->define(App\Resource::class, function (Faker\Generator $faker){
             $faker->words($nb = 3, $asText = true)
         ),
         'author_id' => $faker->randomElement(App\User::select('id')->get()->toArray())['id'],
-        'content' => $faker->paragraph,
-        'type_id' => $faker->randomElement(App\ResourceType::select('id')->get()->toArray())['id'],
         'use_id' => $faker->randomElement(App\ResourceUse::select('id')->get()->toArray())['id']
     ];
 });

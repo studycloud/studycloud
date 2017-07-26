@@ -19,9 +19,6 @@ class CreateResourcesTable extends Migration
             $table->string('name');
             $table->integer('author_id')->unsigned();
             $table->foreign('author_id')->references('id')->on('users');
-            $table->longText('content');
-            $table->integer('type_id')->unsigned();
-            $table->foreign('type_id')->references('id')->on('resource_types');
             $table->integer('use_id')->unsigned();
             $table->foreign('use_id')->references('id')->on('resource_uses');            
             $table->timestamps();
