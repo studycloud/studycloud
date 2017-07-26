@@ -11,12 +11,6 @@ class ResourcesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Resource::class, 40)->create()->each(function ($resource)
-        {
-        	$num_contents = rand(1, 5);
-        	$resource->contents()->saveMany(
-        		factory(App\ResourceContent::class, $num_contents)->make()
-        	);
-        });
+        factory(App\Resource::class, 40)->create();
     }
 }
