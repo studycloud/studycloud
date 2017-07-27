@@ -57,8 +57,36 @@ class Topic extends Model
 		return self::whereNotIn('id', TopicParent::pluck('topic_id')->all())->get();
 	}
 
-	public function resources()
+	private function resources()
 	{
 		return $this->belongsToMany(Resource::class, 'resource_topic', 'topic_id', 'resource_id');
+	}
+
+	/**
+	 * get the parents of each parent of each parent (etc) of this topic in a flat collection
+	 * @return Illuminate\Database\Eloquent\Collection
+	 */
+	public function ancestors()
+	{
+		$parents = $this->parents()->get();
+		$ancestors = $parents;
+		foreach ($parents as $parent) {
+			$ancestors = $ancestors->merge($parent->ancestors());
+		}
+		return $ancestors;
+	}
+
+	/**
+	 * get all the descendants of this topic in a flat collection
+	 * @return Illuminate\Database\Eloquent\Collection
+	 */
+	public function descendants()
+	{
+		$children = $this->children()->get();
+		$descendants = $children;
+		foreach ($children as $child) {
+			$descendants = $descendants->merge($child->descendants());
+		}
+		return $descendants;
 	}
 }
