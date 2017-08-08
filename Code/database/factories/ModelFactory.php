@@ -33,13 +33,13 @@ $factory->define(App\Academic_Class::class, function (Faker\Generator $faker)
     return [
         'name' => function(array $curr_class)
         {
-            global $count;
-            if (!$count)
+            global $academic_class_count;
+            if (!$academic_class_count)
             {
-                $count = 0;
+                $academic_class_count = 0;
             }
-            $count++;
-            return 'Class '.$count;
+            $academic_class_count++;
+            return 'Class '.$academic_class_count;
         }
     ];
 });
@@ -50,13 +50,13 @@ $factory->define(App\Topic::class, function (Faker\Generator $faker)
     return [
         'name' => function(array $curr_topic)
         {
-            global $count;
-            if (!$count)
+            global $topic_count;
+            if (!$topic_count)
             {
-                $count = 0;
+                $topic_count = 0;
             }
-            $count++;
-            return 'Topic '.$count;
+            $topic_count++;
+            return 'Topic '.$topic_count;
         },
         'author_id' => $faker->randomElement(App\User::select('id')->get()->toArray())['id']
     ];
@@ -68,13 +68,13 @@ $factory->define(App\ResourceContent::class, function (Faker\Generator $faker)
     return [
         'name' => function(array $curr_content)
         {
-            global $count;
-            if (!$count)
+            global $resource_content_count;
+            if (!$resource_content_count)
             {
-                $count = 0;
+                $resource_content_count = 0;
             }
-            $count++;
-            return 'Resource Content '.$count;
+            $resource_content_count++;
+            return 'Resource Content '.$resource_content_count;
         },
         // TODO: update this enum to dynamically retrieve whatever enum options are in the database
         'type' => $faker->randomElement(['text', 'link', 'file']),
@@ -89,13 +89,13 @@ $factory->define(App\Resource::class, function (Faker\Generator $faker)
     return [
         'name' => function(array $curr_resource)
         {
-            global $count;
-            if (!$count)
+            global $resource_count;
+            if (!$resource_count)
             {
-                $count = 0;
+                $resource_count = 0;
             }
-            $count++;
-            return 'Topic '.$count;
+            $resource_count++;
+            return 'Topic '.$resource_count;
         },
         'author_id' => $faker->randomElement(App\User::select('id')->get()->toArray())['id'],
         'use_id' => $faker->randomElement(App\ResourceUse::select('id')->get()->toArray())['id']
