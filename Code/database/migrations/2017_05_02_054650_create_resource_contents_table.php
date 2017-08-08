@@ -20,7 +20,6 @@ class CreateResourceContentsTable extends Migration
             $table->enum('type', ['text', 'link', 'file']); //if you change this enum, make sure you also change it in the ResourceContent factory
             $table->longText('content');
             $table->integer('resource_id')->unsigned();
-            $table->foreign('resource_id')->references('id')->on('resources');
             $table->timestamps();
         });
     }
