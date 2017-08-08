@@ -23,7 +23,7 @@ class Role extends Model
 	/**
 	 * given a string representating a role, returns the corresponding instance as a role or null if it does not exist
 	 */
-	public static function getRole($role)
+	public static function getRole(\string $role)
 	{
 		// get the role where the 'name' column from the database matches the specified role name
 		// ucwords() is used so that the function can accept uncapatilized role names
