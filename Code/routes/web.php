@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome', compact('people'));   	
+    return view('home');   	
 });
 
 Route::get('about', function(){
