@@ -6,14 +6,14 @@
     <link href="https://fonts.googleapis.com/css?family=Fredericka+the+Great" rel="stylesheet"> <!-- font for header -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> <!-- font for literally everything else -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- for jQuery -->
-    <script type="text/javascript" src="header.js"></script> <!-- javascript for header but mostly for login drop down -->
+    <script type="text/javascript" src="js/header.js"></script> <!-- javascript for header but mostly for login drop down -->
     <meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
 </head>
 <body>
 	<div id="pageWidth">
 	    <header> <!-- header tag necessary? idk. Consider removing? -->
 	        
-	        <object type="image/svg+xml" class="logoFull" data="../Logos/header.svg" alt="School logo, Study Cloud header, and logo"> </object>
+	        <object type="image/svg+xml" class="logoFull" data="{{ URL::asset('storage/Logos/header.svg') }}" alt="School logo, Study Cloud header, and logo"> </object>
 
 	        <!-- Navbar goes here -->
 	        <div class="navbar"> 
