@@ -32,7 +32,7 @@ class Resource extends Model
 	/**
 	 * a wrapper function for the attaching topics to prevent disallowedTopics from being added
 	 * @param  Illuminate\Database\Eloquent\Collection $new_topics the topics to be attached
-	 * @return void
+	 * @return 
 	 */
 	public function attachTopics($new_topics)
 	{
@@ -42,18 +42,18 @@ class Resource extends Model
 		});
 		if ($topics_are_allowed)
 		{
-			$this->topics()->attach($new_topics);
+			return $this->topics()->attach($new_topics);
 		}
 		else
 		{
-			throw new Exception("One of the desired topics cannot be attached because it is an ancestor or descendant of one of this resource's current topics. You can use the allowedTopics() method to see which topics can be attached to this resource.");
+			throw new \Exception("One of the desired topics cannot be attached because it is an ancestor or descendant of one of this resource's current topics. You can use the allowedTopics() method to see which topics can be attached to this resource.");
 			
 		}
 	}
 
 	public function detachTopics($old_topics)
 	{
-		$this->topics()->detach($old_topics);
+		return $this->topics()->detach($old_topics);
 	}
 
 	/**

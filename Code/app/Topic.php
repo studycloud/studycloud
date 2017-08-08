@@ -62,6 +62,30 @@ class Topic extends Model
 		return $this->belongsToMany(Resource::class, 'resource_topic', 'topic_id', 'resource_id');
 	}
 
+	public function getResources()
+	{
+		return $this->resources()->get();
+	}
+
+	/**
+	 * a wrapper function for the attaching resources to prevent disallowedTopics from being added
+	 * @param  Illuminate\Database\Eloquent\Collection $new_resources the resources to be attached
+	 * @return void
+	 */
+	public function attachResources($new_resources)
+	{
+		foreach ($new_resources as $new_resource)
+		{
+			// print_r(collect([Topic::find($this->id)]));
+			$new_resource->attachTopics(Topic::find($this->id));
+		}
+	}
+
+	public function detachResources($old_resources)
+	{
+		return $this->resources()->detachResources($old_resources);
+	}
+
 	/**
 	 * get the parents of each parent of each parent (etc) of this topic in a flat collection
 	 * @return Illuminate\Database\Eloquent\Collection

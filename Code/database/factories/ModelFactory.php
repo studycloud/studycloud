@@ -31,7 +31,16 @@ $factory->define(App\User::class, function (Faker\Generator $faker)
 $factory->define(App\Academic_Class::class, function (Faker\Generator $faker)
 {
     return [
-        'name' => $faker->text($maxNbChars = 46)
+        'name' => function(array $curr_class)
+        {
+            global $count;
+            if (!$count)
+            {
+                $count = 0;
+            }
+            $count++;
+            return 'Class '.$count;
+        }
     ];
 });
 
@@ -39,9 +48,16 @@ $factory->define(App\Academic_Class::class, function (Faker\Generator $faker)
 $factory->define(App\Topic::class, function (Faker\Generator $faker)
 {
     return [
-        'name' => ucwords(
-            $faker->words($nb = 3, $asText = true)
-        ),
+        'name' => function(array $curr_topic)
+        {
+            global $count;
+            if (!$count)
+            {
+                $count = 0;
+            }
+            $count++;
+            return 'Topic '.$count;
+        },
         'author_id' => $faker->randomElement(App\User::select('id')->get()->toArray())['id']
     ];
 });
@@ -50,9 +66,16 @@ $factory->define(App\Topic::class, function (Faker\Generator $faker)
 $factory->define(App\ResourceContent::class, function (Faker\Generator $faker)
 {
     return [
-        'name' => ucwords(
-            $faker->words($nb = 3, $asText = true)
-        ),
+        'name' => function(array $curr_content)
+        {
+            global $count;
+            if (!$count)
+            {
+                $count = 0;
+            }
+            $count++;
+            return 'Resource Content '.$count;
+        },
         // TODO: update this enum to dynamically retrieve whatever enum options are in the database
         'type' => $faker->randomElement(['text', 'link', 'file']),
         'content' => $faker->paragraph,
@@ -64,9 +87,16 @@ $factory->define(App\ResourceContent::class, function (Faker\Generator $faker)
 $factory->define(App\Resource::class, function (Faker\Generator $faker)
 {
     return [
-        'name' => ucwords(
-            $faker->words($nb = 3, $asText = true)
-        ),
+        'name' => function(array $curr_resource)
+        {
+            global $count;
+            if (!$count)
+            {
+                $count = 0;
+            }
+            $count++;
+            return 'Topic '.$count;
+        },
         'author_id' => $faker->randomElement(App\User::select('id')->get()->toArray())['id'],
         'use_id' => $faker->randomElement(App\ResourceUse::select('id')->get()->toArray())['id']
     ];
