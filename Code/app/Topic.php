@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Topic extends Model
 {
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['name', 'author_id'];
+	
  //    /**
  //     * The accessors to append to the model's array form.
  //     *
@@ -21,15 +28,15 @@ class Topic extends Model
  //    	return $this->children()->get();
  //    }
 
-    /**
-     * Returns the updated tree.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection $tree
-     */
-    public static function getTree()
-    {
-        return self::getTopLevelTopics();
-    }
+	/**
+	 * Returns the updated tree.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Collection $tree
+	 */
+	public static function getTree()
+	{
+		return self::getTopLevelTopics();
+	}
 
 	/**
 	 * returns all topics that have this topic as their parent
@@ -47,11 +54,11 @@ class Topic extends Model
 		return $this->belongsToMany(Topic::class, 'topic_parent', 'topic_id',  'parent_id');
 	}
 
-    /**
-     * Finds the topics that are at the root (very top) of the tree.
-     *
-     * @return Illuminate\Database\Eloquent\Collection
-     */
+	/**
+	 * Finds the topics that are at the root (very top) of the tree.
+	 *
+	 * @return Illuminate\Database\Eloquent\Collection
+	 */
 	public static function getTopLevelTopics()
 	{
 		return self::whereNotIn('id', TopicParent::pluck('topic_id')->all())->get();

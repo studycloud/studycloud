@@ -14,7 +14,16 @@ class Permission extends Model
 	public $timestamps = false;
 
 	/**
-	 * given a string representating a permission, returns the corresponding instance as a permission or null if it does not exist
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['name'];
+
+	/**
+	 * given a string representating a permission, returns the
+	 * corresponding instance as a permission or null if it
+	 * does not exist
 	 */
 	public static function getPermission($permission)
 	{

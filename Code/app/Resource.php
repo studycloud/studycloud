@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Resource extends Model
 {
 	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['name', 'author_id', 'use_id'];
+	
+	/**
 	 * define the one-to-many relationship between a resource and its contents
 	 * @return \Illuminate\Database\Eloquent\Relations\HasMany the relationship accessor
 	 */

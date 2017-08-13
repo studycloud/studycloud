@@ -14,6 +14,13 @@ class Role extends Model
 	public $timestamps = false;
 
 	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['name'];
+
+	/**
 	 * returns all users with this role
 	 */
 	public function getUsers(){
