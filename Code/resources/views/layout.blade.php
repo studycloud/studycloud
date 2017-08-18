@@ -2,7 +2,7 @@
 <html><head>
     <title>Study Cloud</title>
     <link rel="stylesheet" type="text/css" href="css/index.css">
-    <link rel="stylesheet" type="text/css" href="css/homepage.css">
+    @stack('styles') {{-- include whatever code has been pushed to the styles stack --}}
     <link href="https://fonts.googleapis.com/css?family=Fredericka+the+Great" rel="stylesheet"> <!-- font for header -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> <!-- font for literally everything else -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- for jQuery -->
