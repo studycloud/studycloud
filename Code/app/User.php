@@ -71,7 +71,7 @@ class User extends Authenticatable
         }
     }
 
-    // again, I'm not sure if this is still relevant
+    // I'm not sure if this is still relevant
     // /**
     //  * returns true if this user is an administrator and false otherwise
     //  */
@@ -90,7 +90,7 @@ class User extends Authenticatable
         return $this->roles()->get()->contains($role);
     }
 
-    // probs not relevant anymore
+    // again, probs not relevant anymore
     // /**
     //  * returns all users as a collection of User objects
     //  */
@@ -98,19 +98,4 @@ class User extends Authenticatable
     // {
     //     return AdminUserRole::getAllAdmins();
     // }
-
-    /**
-     * wrapper function to map strings representing roles to their Role instance counterparts
-     */
-    private static function roleAsStringWrapper($role){
-        if (is_string($role))
-        {
-            return Role::getRole($role);
-        }
-        elseif (is_a($role, get_class(new Role)))
-        {
-            return $role;
-        }
-        throw new \InvalidArgumentException("this function only accepts either a string representing a role or an instance of Role");
-    }
 }
