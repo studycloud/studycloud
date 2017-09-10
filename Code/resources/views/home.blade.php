@@ -1,3 +1,7 @@
+@push('styles')
+	<link rel="stylesheet" type="text/css" href="css/homepage.css">
+@endpush
+
 @extends('layout')
 
 @section('content')

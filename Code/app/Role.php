@@ -14,6 +14,13 @@ class Role extends Model
 	public $timestamps = false;
 
 	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['name'];
+
+	/**
 	 * returns all users with this role
 	 */
 	public function getUsers(){
@@ -23,8 +30,13 @@ class Role extends Model
 	/**
 	 * given a string representating a role, returns the corresponding instance as a role or null if it does not exist
 	 */
-	public static function getRole(\string $role)
+	public static function getRole($role)
 	{
+		if (!is_string($role))
+		{
+			throw new Exception("Argument $role must be a string.");
+			
+		}
 		// get the role where the 'name' column from the database matches the specified role name
 		// ucwords() is used so that the function can accept uncapatilized role names
 		return Role::where('name',ucwords($role))->first();
