@@ -108,16 +108,29 @@ class Topic extends Model
 	}
 
 	/**
-	 * get all the descendants of this topic in a flat collection
+	 * get the descendants of this topic in a flat collection
+	 * @param  int $levels the number of levels of descendants to get; 0 is infinite
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function descendants()
+	public function descendants($levels = 0)
 	{
 		$children = $this->children()->get();
-		$descendants = $children;
-		foreach ($children as $child) {
-			$descendants = $descendants->merge($child->descendants());
+		// if $levels was 0, this base case will never run
+		if ($levels == 1)
+		{
+			return $children;
 		}
-		return $descendants;
+		else
+		{
+			$descendants = $children;
+			// iterate through each child and find its descendants
+			foreach ($children as $child) {
+				// add the subsequent descendants to the flat collection. RECURSION!
+				// make sure to increment the $levels
+				$descendants = $descendants->merge($child->descendants($levels - 1));
+			}
+			// we make sure to call unique, in case there are duplicates
+			return $descendants->unique();
+		}
 	}
 }

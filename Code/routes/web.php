@@ -31,8 +31,12 @@ Route::get('tree/data', function(){
 	return App\Topic::all();
 });
 
-Route::get('admins/{userid}', function($userid){
-	$user = App\User::find($userid);
+Route::get('tree/data/{topic_id}/{levels?}', function($topic_id, $levels = 0){
+	return App\Topic::find($topic_id)->descendants($levels);
+});
+
+Route::get('admins/{userid}', function($user_id){
+	$user = App\User::find($user_id);
 	// return $user;
 	return view('admins', compact('user'));
 });
