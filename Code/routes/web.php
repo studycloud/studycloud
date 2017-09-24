@@ -19,6 +19,17 @@ Route::get('about', function(){
 	return view('about');
 });
 
+Route::get('profile/{id}', 'UserController@show');
+
+
+
+
+
+
+/* The following are test routes that exist simply
+|  for our own use right now. We'll delete them later.
+*/
+
 Route::get('tree', function(){
 	return view('tree');
 });
