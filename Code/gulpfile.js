@@ -21,8 +21,6 @@ require('laravel-elixir-vue-2');
 
 // Updated to try to compile sass files.
 elixir(function(mix) {
-	mix.sass([
-		'./public/css/SCSS/main.scss',
-		'./public/css/SCSS/helpers/color.scss'
-		], './public/css/index.css');
+	mix.sass('./public/css/SCSS/main.scss', './public/css/index.css');
+	mix.sass('./public/css/SCSS/components/_homepage.scss', './public/css/homepage.css');
 });

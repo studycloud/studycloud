@@ -118,7 +118,7 @@
 }
 
 #logInHidden .linkDefault {
-  color: purple;
+  color: blue;
   padding-top: 2px;
   padding-bottom: 2px;
   text-decoration: none;
@@ -159,7 +159,6 @@
 
 html {
   font-family: 'Open Sans', sans-serif;
-  color: purple;
 }
 
 #pageWidth {
@@ -178,7 +177,5 @@ html {
     width: 720px;
   }
 }
-
-/* Navbar color---------------------------------------------- */
 
 /*# sourceMappingURL=index.css.map */
