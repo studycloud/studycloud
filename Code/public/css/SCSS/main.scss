@@ -1,6 +1,6 @@
 // Contains default formatting for every page (fonts, etc.)
 
-@import "cleanup/reset.css"; // TODO Convert reset to an scss file.
+@import "cleanup/reset.scss"; 
 @import "components/_header.scss";
 
 html {
