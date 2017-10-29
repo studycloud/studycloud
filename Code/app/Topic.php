@@ -133,4 +133,12 @@ class Topic extends Model
 			return $descendants->unique();
 		}
 	}
+
+	public function getJSONData($levels = 0)
+	{
+		$tree_data = collect();
+		$tree_data->put("nodes", $this->descendants($levels));
+		$tree_data->put("connections", TopicParent::all());
+		return $tree_data;
+	}
 }

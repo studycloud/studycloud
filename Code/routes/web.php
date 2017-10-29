@@ -32,7 +32,7 @@ Route::get('tree/data', function(){
 });
 
 Route::get('tree/data/{topic_id}/{levels?}', function($topic_id, $levels = 0){
-	return App\Topic::find($topic_id)->descendants($levels);
+	return App\Topic::find($topic_id)->getJSONData($levels);
 });
 
 Route::get('admins/{userid}', function($user_id){
