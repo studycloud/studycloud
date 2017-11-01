@@ -12,21 +12,15 @@ class Topic extends Model
 	 * @var array
 	 */
 	protected $fillable = ['name', 'author_id'];
-	
- //    /**
- //     * The accessors to append to the model's array form.
- //     *
- //     * @var array
- //     */
-	// protected $appends = ['children'];
 
-	// /**
-	//  * @return \Illuminate\Database\Eloquent\Collection
-	//  */
- //    public function getChildrenAttribute()
- //    {
- //    	return $this->children()->get();
- //    }
+	protected $appends = ['unique_id'];
+
+	protected $hidden = ['unique_id'];
+ 
+ 	public function getUniqueIdAttribute()
+ 	{
+ 		return "t".($this->attributes['id']);
+ 	}
 
 	/**
 	 * Returns the updated tree.
@@ -132,13 +126,5 @@ class Topic extends Model
 			// we make sure to call unique, in case there are duplicates
 			return $descendants->unique();
 		}
-	}
-
-	public function getJSONData($levels = 0)
-	{
-		$tree_data = collect();
-		$tree_data->put("nodes", $this->descendants($levels));
-		$tree_data->put("connections", TopicParent::all());
-		return $tree_data;
 	}
 }

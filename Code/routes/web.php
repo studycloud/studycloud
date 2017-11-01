@@ -31,9 +31,7 @@ Route::get('tree/data', function(){
 	return App\Topic::all();
 });
 
-Route::get('tree/data/{topic_id}/{levels?}', function($topic_id, $levels = 0){
-	return App\Topic::find($topic_id)->getJSONData($levels);
-});
+Route::get('tree/data/{topic_id}/{levels?}', 'TreeController@getJSONData');
 
 Route::get('admins/{userid}', function($user_id){
 	$user = App\User::find($user_id);
