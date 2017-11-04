@@ -21,19 +21,9 @@ class TreeController extends Controller
     	$this->nodes = collect();
     	$this->connections = collect();
 
-		$this->topicNodes($topic, $levels);
-		
+		$this->addNodes($topic->descendants($levels));
+
 		return collect(["nodes" => $this->nodes, "connections" => $this->connections]);
-    }
-
-    private function topicNodes(Topic $topic, $levels)
-    {
-		return $this->addNodes($topic->descendants($levels));
-    }
-
-    private function resourceNodes(Topic $topic)
-    {
-		return $this->addNodes($topic->getResources());
     }
 
     private function addNodes($nodes)
@@ -50,7 +40,7 @@ class TreeController extends Controller
 
     			if (is_a($node, "App\Topic"))
     			{
-    				$this->resourceNodes($node);
+    				$this->addNodes($node->getResources());
     			}
     		}
     	);
