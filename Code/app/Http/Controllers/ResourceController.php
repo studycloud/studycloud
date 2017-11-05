@@ -70,7 +70,7 @@ class ResourceController extends Controller
      */
     public function show(Resource $resource)
     {
-        return view('resource', ['resource' fdskoafkeiopsajefiwaojfeiowajfeopwuaj8feo[waujf8eioajfo]]    )
+        return view('resource', ['resource' : $resource->name]    )
     }
 
     /**
