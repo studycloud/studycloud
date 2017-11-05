@@ -23,15 +23,7 @@ Route::get('tree', function(){
 	return view('tree');
 });
 
-Route::get('tree/connections', function(){
-	return App\TopicParent::all();
-});
-
-Route::get('tree/data', function(){
-	return App\Topic::all();
-});
-
-Route::get('tree/data/{topic_id}/{levels?}', 'TreeController@getJSONData');
+Route::get('tree/data/{topic_id?}/{levels?}', 'TreeController@toJson');
 
 Route::get('admins/{userid}', function($user_id){
 	$user = App\User::find($user_id);
