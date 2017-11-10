@@ -15,7 +15,7 @@ class Topic extends Model
 
 	protected $appends = ['unique_id'];
 
-	protected $hidden = ['unique_id'];
+    protected $hidden = ['unique_id'];
  
  	public function getUniqueIdAttribute()
  	{
@@ -103,14 +103,18 @@ class Topic extends Model
 
 	/**
 	 * get the descendants of this topic in a flat collection
-	 * @param  int $levels the number of levels of descendants to get; 0 is infinite
+	 * @param  int $levels the number of levels of descendants to get; returns all if $levels is not specified or is less than 0
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function descendants($levels = 0)
+	public function descendants($levels = null)
 	{
 		$children = $this->children()->get();
-		// if $levels was 0, this base case will never run
-		if ($levels == 1)
+
+		if (!is_null($levels) && $levels == 0)
+		{
+			return collect();
+		}
+		elseif ($levels == 1)
 		{
 			return $children;
 		}
@@ -121,7 +125,7 @@ class Topic extends Model
 			foreach ($children as $child) {
 				// add the subsequent descendants to the flat collection. RECURSION!
 				// make sure to increment the $levels
-				$descendants = $descendants->merge($child->descendants($levels - 1));
+				$descendants = $descendants->merge($child->descendants($levels - 1)); // note that if $levels is null, $levels - 1 = -1
 			}
 			// we make sure to call unique, in case there are duplicates
 			return $descendants->unique();

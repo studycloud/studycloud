@@ -13,14 +13,14 @@ class Resource extends Model
 	 */
 	protected $fillable = ['name', 'author_id', 'use_id'];
 
-	protected $appends = ['unique_id'];
+    protected $appends = ['unique_id'];
 
-	protected $hidden = ['unique_id'];
+    protected $hidden = ['unique_id'];
  
- 	public function getUniqueIdAttribute()
- 	{
- 		return "r".($this->attributes['id']);
- 	}
+    public function getUniqueIdAttribute()
+    {
+        return "r".($this->attributes['id']);
+    }
 	
 	/**
 	 * define the one-to-many relationship between a resource and its contents
