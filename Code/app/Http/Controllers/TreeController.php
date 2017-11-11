@@ -76,7 +76,7 @@ class TreeController extends Controller
             // if this node is a topic, we'll also have to add it's resources to the list of nodes
             if (is_a($node, "App\Topic"))
             {
-                $this->addNodes($node->resources);
+                $this->addNodes($node->resources()->get());
                 //recursion sucks - amp
             }
         }
@@ -90,7 +90,7 @@ class TreeController extends Controller
      */
     private function processNode($node)
     {
-        return $node->makeHidden('pivot')->makeVisible('unique_id')->makeHidden('id');
+        return $node->makeHidden('pivot')->makeVisible('node_id')->makeHidden('id');
     }
 
     /**

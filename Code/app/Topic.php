@@ -13,11 +13,11 @@ class Topic extends Model
 	 */
 	protected $fillable = ['name', 'author_id'];
 
-	protected $appends = ['unique_id'];
+	protected $appends = ['node_id'];
 
-    protected $hidden = ['unique_id'];
+    protected $hidden = ['node_id'];
  
- 	public function getUniqueIdAttribute()
+ 	public function getNodeIdAttribute()
  	{
  		return "t".($this->attributes['id']);
  	}
@@ -112,7 +112,7 @@ class Topic extends Model
 	 */
 	public function descendants($levels = null)
 	{
-		$children = $this->children;
+		$children = $this->children()->get();
 
 		if (!is_null($levels) && $levels == 0)
 		{

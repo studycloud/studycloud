@@ -13,11 +13,11 @@ class Resource extends Model
 	 */
 	protected $fillable = ['name', 'author_id', 'use_id'];
 
-    protected $appends = ['unique_id'];
+    protected $appends = ['node_id'];
 
-    protected $hidden = ['unique_id'];
+    protected $hidden = ['node_id'];
  
-    public function getUniqueIdAttribute()
+    public function getNodeIdAttribute()
     {
         return "r".($this->attributes['id']);
     }
