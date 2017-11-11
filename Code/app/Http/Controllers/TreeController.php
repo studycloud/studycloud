@@ -90,7 +90,7 @@ class TreeController extends Controller
      */
     private function processNode($node)
     {
-        return $node->makeHidden('pivot')->makeVisible('node_id')->makeHidden('id');
+        return $node->makeHidden('pivot')->makeVisible('target')->makeHidden('id');
     }
 
     /**
@@ -105,17 +105,17 @@ class TreeController extends Controller
         // between a topic and its parent
         if ($pivot->parent_id)
         {
-            $parent_id = "t".($pivot->parent_id);
-            $node_id = "t".($pivot->topic_id);
+            $source = "t".($pivot->parent_id);
+            $target = "t".($pivot->topic_id);
         }
         // otherwise, we know that it's a connection between a
         // resource and its topic
         elseif ($pivot->resource_id)
         {
-            $parent_id = "t".($pivot->topic_id);
-            $node_id = "r".($pivot->resource_id);
+            $source = "t".($pivot->topic_id);
+            $target = "r".($pivot->resource_id);
         }
 
-        return collect(['parent_id' => $parent_id, 'node_id' => $node_id]);
+        return collect(['source' => $source, 'target' => $target]);
     }
 }

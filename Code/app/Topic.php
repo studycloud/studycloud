@@ -13,11 +13,15 @@ class Topic extends Model
 	 */
 	protected $fillable = ['name', 'author_id'];
 
-	protected $appends = ['node_id'];
+	protected $appends = ['target'];
 
-    protected $hidden = ['node_id'];
+    protected $hidden = ['target'];
  
- 	public function getNodeIdAttribute()
+ 	/**
+ 	 * Add a unique id attribute so that JavaScript can distinguish between different models
+ 	 * @return string the string representing the unique id
+ 	 */
+ 	public function getTargetAttribute()
  	{
  		return "t".($this->attributes['id']);
  	}
