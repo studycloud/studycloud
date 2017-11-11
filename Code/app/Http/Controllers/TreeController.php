@@ -15,6 +15,12 @@ class TreeController extends Controller
     protected $connections;
 
 
+    /**
+     * converts a portion of the tree to JSON for traversal by the JavaScript team
+     * @param  integer $topic_id the id of the current topic in the tree; defaults to the root of the tree, which has an id of 0
+     * @param  int     $levels   the number of levels of the tree to return; defaults to infinity
+     * @return \Illuminate\Database\Eloquent\Collection            the nodes and connections of the target portion of the tree
+     */
     public function toJson($topic_id = 0, $levels = null)
     {
         // initialize our data members to empty collections
@@ -43,11 +49,14 @@ class TreeController extends Controller
             // add the descendants of the current topic to the list of nodes
             $this->addNodes($nodes);
         }
-
         // return a collection of the resulting lists of nodes and connections
         return collect(["nodes" => $this->nodes->unique(), "connections" => $this->connections]);
     }
 
+    /**
+     * adds the given nodes and any connections to the appropriate $nodes and $connections collections
+     * @param \Illuminate\Database\Eloquent\Collection $nodes the nodes to add
+     */
     private function addNodes($nodes)
     {
         // add each node and its connections to the $nodes and $connections data members
@@ -67,19 +76,29 @@ class TreeController extends Controller
             // if this node is a topic, we'll also have to add it's resources to the list of nodes
             if (is_a($node, "App\Topic"))
             {
-                $this->addNodes($node->getResources());
+                $this->addNodes($node->resources);
                 //recursion sucks - amp
             }
         }
     }
 
-    // process this node so that it shows the correct attributes when the request is returned to the user
+    /**
+     * process this node so that it shows the correct 
+     * attributes when the request is returned to the user
+     * @param  \Illuminate\Database\Eloquent\Collection $node the nodes to process
+     * @return \Illuminate\Database\Eloquent\Collection       the processed nodes
+     */
     private function processNode($node)
     {
         return $node->makeHidden('pivot')->makeVisible('unique_id')->makeHidden('id');
     }
 
-    // process this connection so that it shows the correct attributes when the request is returned to the user
+    /**
+     * process this connection so that it shows the correct 
+     * attributes when the request is returned to the user
+     * @param  Illuminate\Database\Eloquent\Relations\Pivot $pivot the pivot to process
+     * @return \Illuminate\Database\Eloquent\Collection        the processed pivot as a collection
+     */
     private function processPivot($pivot)
     {
         // if the pivot object has a parent_id, we know that it's a connection

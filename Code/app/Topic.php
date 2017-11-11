@@ -55,10 +55,14 @@ class Topic extends Model
 	 */
 	public static function getTopLevelTopics()
 	{
-		return self::whereNotIn('id', TopicParent::pluck('topic_id')->all())->get();
+		return self::whereNotExists(function ($query)
+			{
+				$query->select('topic_id')->distinct()->from('topic_parent')->whereRaw('topic_parent.topic_id = topics.id');
+			}
+		)->get();
 	}
 
-	private function resources()
+	public function resources()
 	{
 		return $this->belongsToMany(Resource::class, 'resource_topic', 'topic_id', 'resource_id');
 	}
@@ -108,7 +112,7 @@ class Topic extends Model
 	 */
 	public function descendants($levels = null)
 	{
-		$children = $this->children()->get();
+		$children = $this->children;
 
 		if (!is_null($levels) && $levels == 0)
 		{
