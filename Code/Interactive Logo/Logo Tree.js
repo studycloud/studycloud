@@ -230,11 +230,16 @@ function Stopper()
 	SimulationForce.stop();
 }	
 
+function returnX(d)
+{
+	return d.x;
+}
+
 function GraphUpdate()
 {
 	
 	Stars
-		.attr('cx', function(d) { return d.x; })
+		.attr('cx', returnX)
 		.attr('cy', function(d) { return d.y; });
 
 	Lines

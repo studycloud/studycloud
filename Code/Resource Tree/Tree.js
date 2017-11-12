@@ -10,6 +10,33 @@ for(i=0; i<NodesNum; i++)
 	graph["links"].push({target:Math.floor(Math.random() * NodesNum) , source: i});
 }
 
+class Server
+{
+	//Provides methods for interfacing with the Laravel php server.
+	requestTreeLayers(n, node, callback)
+	{
+		//requests the next data on the next n levels below the specified nodes
+
+		ajax(function (data) 
+			{
+				return formatTreeData(data, callback)
+			}
+		)
+
+	formatTreeData(data, callback);
+	}
+
+
+}
+
+class Tree
+{
+		
+}
+
+TreeData.Nodes = "";
+TreeData.Connections = "";
+Tree.Blah = function(){};
 
 var Width = window.innerWidth,
     Height = window.innerHeight,
