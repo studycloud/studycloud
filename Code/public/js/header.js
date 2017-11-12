@@ -6,9 +6,9 @@ $(document).ready(function(){
 		$("#logInHidden").toggle(1000);
 	});
 
-	$("*:not(#logInHidden).find(*), *:not(#logInButton).find(*)").click(function(event){ // Show/hide dialog if you click on the log in button. 
-		event.stopPropagation();
-		$("#logInHidden").hide(1000);
-	});
+	// $("*:not(#logInHidden).find(*), *:not(#logInButton).find(*)").click(function(event){ // Show/hide dialog if you click on the log in button. 
+	// 	event.stopPropagation();
+	// 	$("#logInHidden").hide(1000);
+	// });
 
 });
