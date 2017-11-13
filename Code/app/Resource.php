@@ -50,7 +50,7 @@ class Resource extends Model
 	}
 
 	/**
-	 * a wrapper function for the attaching topics to prevent disallowedTopics from being added
+	 * a wrapper function for attaching topics to prevent disallowedTopics from being added
 	 * @param  Illuminate\Database\Eloquent\Collection $new_topics the topics to be attached
 	 * @return 
 	 */

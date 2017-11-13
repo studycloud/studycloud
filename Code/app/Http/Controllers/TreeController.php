@@ -31,26 +31,48 @@ class TreeController extends Controller
         // note that $levels can't be 0 because then descendants() won't do the right things
         if ($topic_id == 0 && ($levels != 0 || is_null($levels)))
         {
-            // get the nodes right underneath the root
-            $nodes = Topic::getTopLevelTopics();
-            // add them to the collection of nodes
-            $this->addNodes($nodes);
-            // add their children to the list of nodes if $levels > 1
-            foreach ($nodes as $node) {
-                $this->addNodes($node->descendants($levels - 1));
-            }
+
         }
         // otherwise, we want the children of the current topic
         elseif ($topic_id != 0)
         {
             // get the current topic the tree is pointing to
             $topic = Topic::find($topic_id);
-            $nodes = $topic->descendants($levels);
-            // add the descendants of the current topic to the list of nodes
-            $this->addNodes($nodes);
+            $nodes = $this->addDescendants($levels);
         }
         // return a collection of the resulting lists of nodes and connections
         return collect(["nodes" => $this->nodes->unique(), "connections" => $this->connections]);
+    }
+
+    /**
+     * get the descendants of a topic in a flat collection
+     * @param  integer $topic_id the id of the current topic in the tree; defaults to the root of the tree, which has an id of 0
+     * @param  int $levels the number of levels of descendants to get; returns all if $levels is not specified or is less than 0
+     */
+    public function addDescendants($topic = null, $levels = null)
+    {
+        // base case: $levels == 0
+        if ($levels > 0)
+        {
+            if (is_null($topic))
+            {
+                $children = Topic::getTopLevelTopics();
+            }
+            else
+            {
+                $children = $topic->children()->get();
+            }
+            foreach ($children as $child) {
+                // this is a memoization check
+                // it prevents us from calling addDescendants on any topic more than once
+                if (!$this->nodes->contains($child)) // TODO: make sure this works even though "pivot" is different
+                {
+                    $this->addNode($child);
+                    // RECURSION!
+                    $this->addDescendants($child, $levels - 1);
+                }
+            }
+        }
     }
 
     /**

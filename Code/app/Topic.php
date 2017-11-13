@@ -77,7 +77,7 @@ class Topic extends Model
 	}
 
 	/**
-	 * a wrapper function for the attaching resources to prevent disallowedTopics from being added
+	 * a wrapper function for attaching resources to prevent disallowedTopics from being added
 	 * @param  Illuminate\Database\Eloquent\Collection $new_resources the resources to be attached
 	 * @return void
 	 */
@@ -107,36 +107,5 @@ class Topic extends Model
 			$ancestors = $ancestors->merge($parent->ancestors());
 		}
 		return $ancestors;
-	}
-
-	/**
-	 * get the descendants of this topic in a flat collection
-	 * @param  int $levels the number of levels of descendants to get; returns all if $levels is not specified or is less than 0
-	 * @return Illuminate\Database\Eloquent\Collection
-	 */
-	public function descendants($levels = null)
-	{
-		$children = $this->children()->get();
-
-		if (!is_null($levels) && $levels == 0)
-		{
-			return collect();
-		}
-		elseif ($levels == 1)
-		{
-			return $children;
-		}
-		else
-		{
-			$descendants = $children;
-			// iterate through each child and find its descendants
-			foreach ($children as $child) {
-				// add the subsequent descendants to the flat collection. RECURSION!
-				// make sure to increment the $levels
-				$descendants = $descendants->merge($child->descendants($levels - 1)); // note that if $levels is null, $levels - 1 = -1
-			}
-			// we make sure to call unique, in case there are duplicates
-			return $descendants->unique();
-		}
 	}
 }
