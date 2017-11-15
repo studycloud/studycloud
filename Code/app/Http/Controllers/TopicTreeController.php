@@ -8,7 +8,7 @@ use App\Resource;
 // use Barryvdh\Debugbar\Facade as Debugbar;
 use Illuminate\Http\Request;
 
-class TreeController extends Controller
+class TopicTreeController extends Controller
 {
     protected $nodes;
 
@@ -36,6 +36,7 @@ class TreeController extends Controller
         }
         $this->addDescendants($topic, $levels);
 
+        // return "hi";
         // return a collection of the resulting lists of nodes and connections
         return collect(["nodes" => $this->nodes->unique(), "connections" => $this->connections]);
     }
@@ -48,7 +49,7 @@ class TreeController extends Controller
     private function addDescendants($topic = null, $levels = null)
     {
         // base case: $levels == 0
-        if ($levels > 0)
+        if ($levels != 0 || is_null($levels))
         {
             if (is_null($topic))
             {
@@ -59,11 +60,11 @@ class TreeController extends Controller
                 $children = $topic->children()->get();
             }
             foreach ($children as $child) {
-                $this->add($child);
                 // this is a memoization check
                 // it prevents us from calling addDescendants on any topic more than once
-                if (!$this->nodes->contains($child)) // TODO: make sure this works even though "pivot" is different
+                if (!$this->nodes->pluck('target')->contains($child->target))
                 {
+                    $this->add($child);
                     // RECURSION!
                     $this->addDescendants($child, $levels - 1);
                 }
@@ -75,7 +76,7 @@ class TreeController extends Controller
      * adds the given node and any connections to the appropriate $nodes and $connections collections
      * @param \Illuminate\Database\Eloquent\Collection $nodes the nodes to add
      */
-    private function add($nodes)
+    private function add($node)
     {
         $this->nodes->push(
             $this->processNode($node)
@@ -91,7 +92,10 @@ class TreeController extends Controller
         // if this node is a topic, we'll also have to add it's resources to the list of nodes
         if (is_a($node, "App\Topic"))
         {
-            $this->addNodes($node->resources()->get());
+            $resources = $node->resources()->get();
+            foreach ($resources as $resource) {
+                $this->add($resource);
+            }
             //recursion sucks - amp
         }
     }
