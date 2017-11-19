@@ -161,7 +161,7 @@ table {
   width: 55%;
 }
 
-.navbar .navbar ul {
+.navbar ul {
   text-align: center;
   list-style-type: none;
   padding-left: 0;
@@ -179,7 +179,7 @@ table {
           flex-direction: row;
 }
 
-.navbar .navbar ul li {
+.navbar ul li {
   -webkit-box-flex: 2;
       -ms-flex-positive: 2;
           flex-grow: 2;
@@ -189,7 +189,7 @@ table {
   padding: 0.2em;
 }
 
-.navbar .navbar ul li a {
+.navbar ul li a {
   font-weight: bolder;
   color: white;
   display: block;
@@ -201,14 +201,14 @@ table {
   border-radius: 0.1em;
 }
 
-.navbar .navbar ul li a:hover {
+.navbar ul li a:hover {
   background-color: #0044b3;
   color: black;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
 }
 
-.navbar .navbar ul #search {
+.navbar ul #search {
   -webkit-box-flex: 30;
       -ms-flex-positive: 30;
           flex-grow: 30;
@@ -216,12 +216,12 @@ table {
       flex-shrink: 1;
 }
 
-.navbar .navbar ul #search #search_form {
+.navbar ul #search #search_form {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-.navbar .navbar ul #search #search_form #search_text {
+.navbar ul #search #search_form #search_text {
   text-align: center;
   border-color: transparent;
   color: white;
@@ -237,12 +237,12 @@ table {
   font-family: inherit;
 }
 
-.navbar .navbar ul #search #search_form #search_text:focus {
+.navbar ul #search #search_form #search_text:focus {
   color: black;
   background: white;
 }
 
-.navbar .navbar ul #logIn {
+.navbar ul #logIn {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
@@ -252,7 +252,7 @@ table {
   display: inline-block;
 }
 
-.navbar .navbar ul #logIn #logInButton {
+.navbar ul #logIn #logInButton {
   background-color: #0044b3;
 }
 
