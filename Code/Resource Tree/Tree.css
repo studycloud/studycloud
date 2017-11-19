@@ -1,15 +1,26 @@
 
 .node {
-    fill: #ccc;
-    stroke: #fff;
-    stroke-width: 2px;
 }
 
-.link {
+.link { 
     stroke: #777;
     stroke-width: 2px;
 }
 
 #svg5045 {
 	overflow:visible;
+}
+
+#tree 
+{
+	width: 50%;
+	height: 400px;
+	margin: auto;
+}
+	
+.tree 
+{
+	width: 100%;
+	height: 100%;
+	overflow: none;x
 }

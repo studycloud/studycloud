@@ -1,45 +1,178 @@
-NodesNum = 100
-
-var graph = {"nodes": [], "links": [] };
-
-graph["nodes"] = new Array(NodesNum);
-
-for(i=0; i<NodesNum; i++)
-{	
-	graph["nodes"][i] = {id: i} 
-	graph["links"].push({target:Math.floor(Math.random() * NodesNum) , source: i});
-}
-
-class Server
+function Tree(type, frame_id)
 {
-	//Provides methods for interfacing with the Laravel php server.
-	requestTreeLayers(n, node, callback)
+	//Creates a tree visualization with a type of <type> inside the DOM element <frame_id>
+	var self = this;
+	
+	
+	self.debug = true;
+
+	self.data = {};
+	self.data.nodes = [];
+	self.data.links = [];
+
+	if (self.debug)
 	{
-		//requests the next data on the next n levels below the specified nodes
+		self.nodes_count = 10;
+		self.nodes = new Array(self.nodes_count);
 
-		ajax(function (data) 
-			{
-				return formatTreeData(data, callback)
-			}
-		)
+		for(i = 0; i < self.nodes_count; i++)
+		{	
+			self.data.nodes[i] = {id: i};
+			self.data.links.push({target:Math.floor(Math.random() * self.nodes_count) , source: i, id:i});
+			self.data.links.push({target:Math.floor(Math.random() * self.nodes_count) , source: i, id:-i});
+		}
 
-	formatTreeData(data, callback);
 	}
 
-
+	self.frame = d3.select("#" + frame_id);
+	self.frame.boundary = self.frame.node().getBoundingClientRect();
+	
+	self.frame.svg = self.frame.append("svg");
+	
+	self.frame.svg.center = 
+	{
+		x: self.frame.boundary.width/2, 
+		y: self.frame.boundary.height/2 
+	};
+	
+	self.frame.svg
+		.attr("class", "tree");
+	
+	// this.frame.svg.append("circle")
+	// .attr("fill", "red")
+	// .attr("r", this.frame.boundary.height/2)
+	// .attr("cx", this.frame.svg.center.x)
+	// .attr("cy", this.frame.svg.center.y);
+	
+	self.nodes = self.frame.svg
+		.append("g")
+			.attr("class", "layer_nodes")
+			.selectAll(".node")
+			
+	self.links = self.frame.svg
+		.append("g")
+			.attr("class", "layer_links")
+			.selectAll(".link")
+				
+	self.dataUpdate(self, self.data);
+	
+	self.simulationInitialize(self);
+	
 }
 
-class Tree
+Tree.prototype.simulationInitialize = function(self)
 {
-		
+	self.simulation = d3.forceSimulation()
+	
+	self.simulation
+		.alphaTarget(-1)
+		.alphaDecay(0)
+		.force("ForceLink", d3.forceLink())
+		.force("ForceCharge", d3.forceManyBody())
+		.force("ForceCenter", d3.forceCenter(self.frame.boundary.width / 2, self.frame.boundary.height / 2));
+
+	self.simulation
+		.nodes(self.data.nodes)
+		.on('tick', function(){self.draw(self)});
+
+	self.simulation
+		.force("ForceLink")
+			.links(self.data.links)
+			.id(function(d){return d.id;})
+			.strength(.3);
+			
+	self.simulation
+		.force("ForceCharge")
+			.strength(-10);
+
 }
 
-TreeData.Nodes = "";
-TreeData.Connections = "";
-Tree.Blah = function(){};
+Tree.prototype.simulationRestart = function(self)
+{
+	self.simulation.nodes(self.data.nodes);
+	self.simulation.force("ForceLink").links(self.data.links)
+	self.simulation.restart();
+}
+
+Tree.prototype.dataAdd = function(self, data) 
+{
+	self.data.nodes = self.data.nodes.concat(data.nodes);
+	self.data.links = self.data.links.concat(data.links);
+	
+	self.dataUpdate(self, self.data);
+	self.simulationRestart(self);
+	
+};
+
+Tree.prototype.dataUpdate = function(self, data)
+{	
+	var nodes = self.nodes.data(data.nodes, function(d){return d ? d.id : this.data_id; });
+	
+	console.log(nodes);
+	
+	nodes
+		.enter()
+			.append("g")
+				.attr("class", "node")
+				.attr("data_id", function(d){return d.id;})
+				.append("circle")
+					//.attr("cx", function(){return Math.random() * self.frame.boundary.width})
+					//.attr("cy", function(){return Math.random() * self.frame.boundary.height})
+					.attr("fill", "blue")
+					.attr("r", 15);
+		
+	nodes
+		.exit()
+			.transition()
+				.duration(300)
+				.style("display", "none")
+				.remove();
+	
+	self.nodes = self.frame.select(".layer_nodes").selectAll(".node");
+				
+	var links = self.links.data(data.links, function(d){return d ? d.id : this.data_id; });
+	
+	links
+		.enter()
+			.append("g")
+				.attr("class", "link")
+				.attr("data_id", function(d){return d.id;})
+				.append('line');
+								
+	links	
+		.exit()
+			.transition()
+				.duration(300)
+				.style("display", "none")
+				.remove();
+				
+	self.links = self.frame.select(".layer_links").selectAll(".link");
+	
+}
+
+Tree.prototype.draw = function(self)
+{
+	console.log("tick");
+		
+	self.nodes.selectAll("circle")
+		.attr('cx', function(d) { return d.x; })
+		.attr('cy', function(d) { return d.y; });
+	
+	self.links.selectAll("line")
+		.attr('x1', function(d) { return d.source.x })
+		.attr('y1', function(d) { return d.source.y  })
+		.attr('x2', function(d) { return d.target.x  })
+		.attr('y2', function(d) { return d.target.y  });
+}
+
+
+
+tree_1 = new Tree("Blah", "tree");
+/*
+
 
 var Width = window.innerWidth,
-    Height = window.innerHeight,
+	Height = window.innerHeight,
 	center = {x: Width/2, y: Height/2},
 	scale = 1;
 
@@ -51,15 +184,15 @@ var GraphFrameInner = GraphSVG.append("g");
 
 var link =  GraphFrameInner
 	.selectAll('.link')
-    .data(graph.links)
-    .enter()
+	.data(graph.links)
+	.enter()
 		.append('line')
 			.attr('class', 'link')
 			
 var node =  GraphFrameInner
 	.selectAll('.node')
-    .data(graph.nodes)
-    .enter()
+	.data(graph.nodes)
+	.enter()
 		.append('circle')
 		.attr('class', 'node')
 		.attr('r', function()
@@ -77,9 +210,9 @@ var node =  GraphFrameInner
 // once the calculations are done.
 
 var SimulationForce = d3.forceSimulation()
-    .force("ForceLink", d3.forceLink())
-    .force("ForceCharge", d3.forceManyBody())
-    .force("ForceCenter", d3.forceCenter(Width / 2, Height / 2));
+	.force("ForceLink", d3.forceLink())
+	.force("ForceCharge", d3.forceManyBody())
+	.force("ForceCenter", d3.forceCenter(Width / 2, Height / 2));
 
 SimulationForce
 	.nodes(graph.nodes)
@@ -112,18 +245,19 @@ function Stopper()
 
 function CenterNode(Node)
 	{
-		var TranslateX
-		var TranslateY
-		
+		var TranslateX;
+		var TranslateY;
+		var scale
+
 		if (d3.event.ctrlKey) 
 			{
-				scale = 1
-				TranslateX = 0
-				TranslateY = 0
+				scale = 1;
+				TranslateX = 0;
+				TranslateY = 0;
 			}
 		else
 			{
-				scale = scale * 4
+				scale = scale * 4;
 				TranslateX = center.x - Node.x * scale;
 				TranslateY = center.y - Node.y * scale;
 			}
@@ -145,3 +279,4 @@ function GraphUpdate()
 			.attr('x2', function(d) { return d.target.x  })
 			.attr('y2', function(d) { return d.target.y  });
 	}
+*/

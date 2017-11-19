@@ -1,13 +1,15 @@
 <head>
+<meta charset="UTF-8">
 <script src="https://d3js.org/d3.v4.js"></script>
 <link rel="stylesheet" type="text/css" href="Tree.css">
 </head>
 <body>
-<div>What!</div>
-<div style="width:50; height:50; background-color:green" onclick = "Starter()"></div>
-<div style="width:50; height:50; background-color:yellow" onclick = "Ticker()"></div>
-<div style="width:50; height:50; background-color:red" onclick = "Stopper()"></div>
+<div id="tree"></div>
+<div style="width:50; height:50; background-color:green" onclick = "Starter()" id="start"></div>
+<div style="width:50; height:50; background-color:yellow" onclick = "Ticker()" id="tick"></div>
+<div style="width:50; height:50; background-color:red" onclick = "Stopper()" id="stop"></div>
 </body>
 <footer>
+<script src="Server.js"></script>
 <script src="Tree.js"></script>
 </footer>
