@@ -1,3 +1,4 @@
+/*
 var LogoSVG = d3.select("#svg5045");
 
 var LogoData = 
@@ -243,7 +244,7 @@ function GraphUpdate()
 		.attr('cy', function(d) { return d.y; });
 
 	Lines
-		.attr('d', function(d) { string = "M " + d.source.x + "," + d.source.y + " " + d.target.x + "," + d.target.y; return string })
+		.attr('d', function(d) { string = "M " + d.source.x + "," + d.source.y + " L" + d.target.x + "," + d.target.y; return string })
 		
 	Halos
 		.each(function(d, i, nodes) 
