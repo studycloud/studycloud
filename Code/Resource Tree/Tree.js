@@ -96,6 +96,7 @@ Tree.prototype.simulationRestart = function(self)
 
 Tree.prototype.dataAdd = function(self, data) 
 {
+	
 	self.data.nodes = self.data.nodes.concat(data.nodes);
 	self.data.links = self.data.links.concat(data.links);
 	
@@ -106,6 +107,27 @@ Tree.prototype.dataAdd = function(self, data)
 
 Tree.prototype.dataUpdate = function(self, data)
 {	
+
+	/*TODO: Implement this for real
+	
+		When we get data back from the server for children of a Node, 
+		we need to do so voodoo in order for everything to merge and update correctly
+		
+		1: Find all of the connections that have "source" as the ID of the Node that we're finding children of
+		2: For each of those connections, find the ids of the "target" nodes 
+			a: Repeat step 1 for each of those target nodes
+			b: Add the target nodes ids to a d3.set of found nodes
+			c: Add the connection id to a d3 set of found connections
+		3: Create a new selection of nodes that is a filter of all nodes to only those in the found nodes set
+		4: Create a new selection of connections that is a filter of all connections to only those in the found connections set
+		5: Set the data of the new nodes selection to the newly recieved node data
+			a: create new DOM visual elements for each of the new nodes
+			b: cleanly remove DOM visual elements for nonexistant nodes
+		6: Set the data of the new connections selection to the newly recieved connections data
+			a: create new DOM visual elements for each of the new connections
+			b: cleanly remove DOM visual elements for nonexistant connections
+	*/
+
 	var nodes = self.nodes.data(data.nodes, function(d){return d ? d.id : this.data_id; });
 	
 	console.log(nodes);
@@ -152,7 +174,7 @@ Tree.prototype.dataUpdate = function(self, data)
 
 Tree.prototype.draw = function(self)
 {
-	console.log("tick");
+	//console.log("tick");
 		
 	self.nodes.selectAll("circle")
 		.attr('cx', function(d) { return d.x; })
@@ -162,12 +184,13 @@ Tree.prototype.draw = function(self)
 		.attr('x1', function(d) { return d.source.x })
 		.attr('y1', function(d) { return d.source.y  })
 		.attr('x2', function(d) { return d.target.x  })
-		.attr('y2', function(d) { return d.target.y  });
+		.attr('y2', function(d) { return d.target.y  });	
 }
 
 
 
 tree_1 = new Tree("Blah", "tree");
+
 /*
 
 
