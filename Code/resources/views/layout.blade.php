@@ -13,14 +13,14 @@
 	<div id="pageWidth">
 	    <header> <!-- header tag necessary? idk. Consider removing? -->
 	        
-	        <object type="image/svg+xml" class="logoFull" data="{{ URL::asset('storage/images/header.svg') }}" alt="School logo, Study Cloud header, and logo"> </object>
+	        <a href=""><object type="image/svg+xml" class="logoFull" data="{{ URL::asset('storage/images/header.svg') }}" alt="School logo, Study Cloud header, and logo"> </object></a>
 
 	        <!-- Navbar goes here -->
 	        <div class="navbar"> 
 	            <ul>
 	                <li><a href="#">Topics</a></li>
 	                <li><a class="active" href="#">Items</a></li> <!-- is this really what it was called? -->
-	                <li><a href="#">About</a></li>
+	                <li><a href="about">About</a></li>
 	                <li id="search">
 	                    <form action="" method="get" id="search_form">
 	                        <input type="text" name="search_text" id="search_text" placeholder="search">
