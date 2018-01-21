@@ -13,7 +13,7 @@
 	<div id="pageWidth">
 	    <header> <!-- header tag necessary? idk. Consider removing? -->
 	        
-	        <a href=""><object type="image/svg+xml" class="logoFull" data="{{ URL::asset('storage/images/header.svg') }}" alt="School logo, Study Cloud header, and logo"> </object></a>
+	        <a href="about"><object href="about" style="pointer-events: none;" type="image/svg+xml" class="logoFull" data="{{ URL::asset('storage/images/header.svg') }}" alt="School logo, Study Cloud header, and logo"> </object></a>
 
 	        <!-- Navbar goes here -->
 	        <div class="navbar"> 
