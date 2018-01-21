@@ -1,3 +1,6 @@
+// DO NOT USE THIS FILE
+// We didn't want to delete it, but use webpack.mix.js. 
+
 const elixir = require('laravel-elixir');
 
 require('laravel-elixir-vue-2');
@@ -23,4 +26,5 @@ require('laravel-elixir-vue-2');
 elixir(function(mix) {
 	mix.sass('./public/css/SCSS/main.scss', './public/css/index.css');
 	mix.sass('./public/css/SCSS/components/_homepage.scss', './public/css/_homepage.css');
+	mix.sass('./public/css/SCSS/components/_resource.scss', './public/css/_resource.scss');
 });
