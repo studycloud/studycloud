@@ -43,7 +43,7 @@ class ResourceController extends Controller
      */
     public function create()
     {
-        //
+  
     }
 
     /**
@@ -99,6 +99,8 @@ class ResourceController extends Controller
         $resource->name = $request->name;
         $resource->author_id = $request->author_id;
         $resource->use_id = $request->use_id;
+
+        $resource->save();
     }
 
     /**
@@ -109,8 +111,8 @@ class ResourceController extends Controller
      */
     public function destroy(Resource $resource)
     {
-        $deletedResource = $resource->id;
-        $deletedResource->delete();
+       
+        $resource->delete();
 
     }
 }
