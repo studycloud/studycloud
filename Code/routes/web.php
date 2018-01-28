@@ -19,6 +19,10 @@ Route::get('about', function(){
 	return view('about');
 });
 
+Route::get('resource', function(){
+	return view('resource');
+});
+
 Route::get('tree', function(){
 	return view('tree');
 });
