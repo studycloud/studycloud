@@ -69,8 +69,10 @@ class ResourceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Resource $resource)
-    {
-        return view('resource', ['resource' : $resource->name]    )
+    {	
+
+    	return view('resource', ['resource' => $resource]    );
+        
     }
 
     /**
