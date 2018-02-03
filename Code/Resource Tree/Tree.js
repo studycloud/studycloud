@@ -1,15 +1,26 @@
 function Tree(type, frame_id)
-{
+{		
 	//Creates a tree visualization with a type of <type> inside the DOM element <frame_id>
+	
+	//The job of this constructor is to set up a new tree and 
+	//	allocate memory for all of the class level variables that this class uses
+	
+	//self is a special variable that contains a reference to the class instance itself. 
+	//	This is passed from function to function to allow everything to access the class's members
 	var self = this;
 	
+	//These sets contain ids of elements to update when we get new data
+	self.updated_node_ids = new Set();
+	self.updated_link_ids = new Set();
 	
 	self.debug = true;
 
+	//This contains all of the data associated with links and nodes
 	self.data = {};
 	self.data.nodes = [];
 	self.data.links = [];
 
+	
 	if (self.debug)
 	{
 		self.nodes_count = 10;
@@ -24,6 +35,7 @@ function Tree(type, frame_id)
 
 	}
 
+	
 	self.frame = d3.select("#" + frame_id);
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
 	
@@ -37,12 +49,6 @@ function Tree(type, frame_id)
 	
 	self.frame.svg
 		.attr("class", "tree");
-	
-	// this.frame.svg.append("circle")
-	// .attr("fill", "red")
-	// .attr("r", this.frame.boundary.height/2)
-	// .attr("cx", this.frame.svg.center.x)
-	// .attr("cy", this.frame.svg.center.y);
 	
 	self.nodes = self.frame.svg
 		.append("g")
@@ -85,14 +91,14 @@ Tree.prototype.simulationInitialize = function(self)
 		.force("ForceCharge")
 			.strength(-10);
 
-}
+};
 
 Tree.prototype.simulationRestart = function(self)
 {
 	self.simulation.nodes(self.data.nodes);
 	self.simulation.force("ForceLink").links(self.data.links)
 	self.simulation.restart();
-}
+};
 
 Tree.prototype.dataAdd = function(self, data) 
 {
@@ -102,16 +108,67 @@ Tree.prototype.dataAdd = function(self, data)
 	
 	self.dataUpdate(self, self.data);
 	self.simulationRestart(self);
+
+};
+
+
+//This function is a recursive function that loops through all links, 
+//and gets the children the node with id:node_id
+Tree.prototype.getNChildrenRecurse = function(self, node_id, children_levels_num)
+{	
+	//return early, because we have already seen this node before
+	if (self.updated_node_ids.has(node_id))
+	{
+		return;
+	}
+	
+	
+	self.updated_node_ids.add(node_id);
+	
+	if (children_levels_num = 0)
+	{
+		//there are no more children to find
+		return;
+	}
+	
+	
+	self.data.links.forEach(function(link)
+		{
+			if (link.source.id == node_id)
+			{	
+				//we found a child, add the id of the link and recurse
+				self.updated_link_ids.add(link.id);
+				
+				self.getNChildren(self, link.target.id, children_levels_num-1);
+			}
+		}
+	);
+};
+
+Tree.prototype.getNChildren = function(self, node_id, children_levels_num)
+{
+	self.updated_node_ids.clear();
+	self.updated_link_ids.clear();
+	
+	getNChildrenRecurse(self, node_id, children_levels_num);
+	
+	
 	
 };
 
 Tree.prototype.dataUpdate = function(self, data)
 {	
-
+	//debugging stuffs
+	//self.getNChildren(self, 1, 2);
+	
+	//console.log(self.updated_node_ids);
+	
 	/*TODO: Implement this for real
 	
 		When we get data back from the server for children of a Node, 
 		we need to do so voodoo in order for everything to merge and update correctly
+		
+		request is for n children of given node including root
 		
 		1: Find all of the connections that have "source" as the ID of the Node that we're finding children of
 		2: For each of those connections, find the ids of the "target" nodes 
@@ -129,7 +186,7 @@ Tree.prototype.dataUpdate = function(self, data)
 	*/
 
 	var nodes = self.nodes.data(data.nodes, function(d){return d ? d.id : this.data_id; });
-	
+
 	console.log(nodes);
 	
 	nodes
@@ -170,7 +227,7 @@ Tree.prototype.dataUpdate = function(self, data)
 				
 	self.links = self.frame.select(".layer_links").selectAll(".link");
 	
-}
+};
 
 Tree.prototype.draw = function(self)
 {
@@ -185,7 +242,7 @@ Tree.prototype.draw = function(self)
 		.attr('y1', function(d) { return d.source.y  })
 		.attr('x2', function(d) { return d.target.x  })
 		.attr('y2', function(d) { return d.target.y  });	
-}
+};
 
 
 
