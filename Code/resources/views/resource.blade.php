@@ -5,22 +5,23 @@
 	<link rel="stylesheet" type="text/css" href="css/_resource.css">
 @endpush
 
-
-<!-- <link rel="stylesheet" type="text/css" href="public/css/_resource.css"> -->
-
-<div class = "resource-background">
-	<h1>
-		Resource Name
-	</h1>
-	<p>
-		<a href="https://google.com">Resource Topic</a> <!-- Eventually link out to the topic. -->
-		Resource Use(s)
-		Author Name
-		Date
-	</p>
-	<div> <!-- Module that varies: text/link/file -->
-		<a href = "amazon.com">
-			Amazon
-		</a>
+<!-- When you inject this as a component into a parent, remove this particular line because it's gonna go into the component that embeds this. -->
+@stack('styles')
+<div class="temp-container"> <!-- My container. Remove when you embed. -->
+	<div class="resource-background">
+		<h1>
+			Resource Name
+		</h1>
+		<p>
+			<a href="https://google.com">Resource Topic</a> <!-- Eventually link out to the topic. -->
+			Resource Use(s)
+			Author Name
+			Date
+		</p>
+		<div> <!-- Module that varies: text/link/file -->
+			<a href = "amazon.com">
+				Amazon
+			</a>
+		</div>
 	</div>
 </div>

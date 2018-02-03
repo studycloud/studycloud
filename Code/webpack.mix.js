@@ -18,4 +18,4 @@ let mix = require('laravel-mix');
 // Updated to try to compile sass files.
 mix.sass('resources/assets/sass/main.scss', 'public/css/index.css')
 	.sass('resources/assets/sass/components/_homepage.scss', 'public/css/_homepage.css')
-	.sass('resources/assets/sass/components/_resource.scss', 'public/css/_resource.scss');
+	.sass('resources/assets/sass/components/_resource.scss', 'public/css/_resource.css');
