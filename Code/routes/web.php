@@ -32,3 +32,7 @@ Route::get('admins/{userid}', function($user_id){
 	// return $user;
 	return view('admins', compact('user'));
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
