@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('home');   	
-})->name('home');
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::redirect('/', '/home', 301);
 
 Route::get('about', function(){
 	return view('about');
@@ -45,3 +45,5 @@ Route::get('admins/{userid}', function($user_id){
 	// return $user;
 	return view('admins', compact('user'));
 });
+
+Auth::routes();
