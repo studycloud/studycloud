@@ -1,3 +1,5 @@
+<!--Example from laravel about login component.-->
+
 @extends('layouts.app')
 
 @section('content')
