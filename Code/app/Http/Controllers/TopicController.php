@@ -37,7 +37,7 @@ class TopicController extends Controller
     {
         $newTopic = new Topic;
         $newTopic->name = $request->name;
-        $newTopic->author_id = $request->author_id;
+        $newTopic->author_id = Auth::id();
 
         $newTopic->save();
     }
@@ -74,7 +74,7 @@ class TopicController extends Controller
     public function update(Request $request, Topic $topic)
     {
         $topic->name = $request->name;
-        $topic->author_id = $request->author_id;
+        $topic->author_id = Auth::id();
 
         $topic->save();
     }

@@ -56,7 +56,7 @@ class ResourceController extends Controller
     {
         $newResource = new Resource;
         $newResource->name = $request->name;
-        $newResource->author_id = $request->author_id;
+        $newResource->author_id = Auth::id();
         $newResource->use_id = $request->use_id;
 
         $newResource->save();
@@ -97,7 +97,7 @@ class ResourceController extends Controller
     {
         //Request must have information about name, author_id, and use_id.
         $resource->name = $request->name;
-        $resource->author_id = $request->author_id;
+        $resource->author_id = Auth::id();
         $resource->use_id = $request->use_id;
 
         $resource->save();
