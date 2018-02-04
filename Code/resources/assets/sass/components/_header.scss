@@ -42,7 +42,7 @@
 			flex-shrink: 0.7;
 			margin: 0;
 			padding: 0.2em;
-			a { // Default behavior of navbar items.
+			a, input { // Default behavior of navbar items.
 				font-weight: bolder;
 				color: white;
 				display: block;
@@ -52,6 +52,9 @@
 				padding: 0.35em;
 				white-space: nowrap;
 				border-radius: 0.1em;
+				// My attempts to make the logout button behave follow. 
+				border: none;
+				margin: auto;
 				&:hover {
 					background-color: $navbar-hover-color;
 					color: black;

@@ -189,7 +189,8 @@ table {
   padding: 0.2em;
 }
 
-.navbar ul li a {
+.navbar ul li a,
+.navbar ul li input {
   font-weight: bolder;
   color: white;
   display: block;
@@ -199,9 +200,12 @@ table {
   padding: 0.35em;
   white-space: nowrap;
   border-radius: 0.1em;
+  border: none;
+  margin: auto;
 }
 
-.navbar ul li a:hover {
+.navbar ul li a:hover,
+.navbar ul li input:hover {
   background-color: #0044b3;
   color: black;
   -webkit-transition: all 0.15s;

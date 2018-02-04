@@ -15,12 +15,10 @@
 		</div>
 	</li>
 @else
-	<li id="logIn" class="logIn"><a id="logInButton">Log Out</a>
-		<div id="logInHidden">
-			<form action="{{ route('logout') }}" method="POST" id="logInForm">
-				{{ csrf_field() }}
-				<input type="submit" id="logInSub" value=">">
-			</form>
-		</div>
+	<li id="logIn" class="logIn">
+		<form action="{{ route('logout') }}" method="POST">
+			{{ csrf_field() }}
+			<input type="submit" id="logInButton" value="Log Out">
+		</form>
 	</li>
 @endif
