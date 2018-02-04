@@ -71,6 +71,51 @@ class Resource extends Model
 		}
 	}
 
+	/**
+	 * Moves the resource into the desired topic newTopic. If attempting to 
+	 * move into a topic that is an ancestor or child of the resource's
+	 * current topics, the current topic will be replaced by the newTopic.
+	 * 
+	 * @param 
+	 * @return
+	 * 
+	 */
+
+	public function moveTopics($newTopic)
+	{	
+
+		$disallowedTopics = $this->disallowedTopics();
+		$allowed = !$disallowedTopics->contains($newTopic);
+		
+
+		if($allowed){
+			$this->attachTopics($newTopic);
+		}
+		elseif(!$allowed)
+		{
+			$this->removeFamily($newTopic);
+			$this->attachTopics($newTopic);
+			
+		}
+	}
+
+//CHECK FOR ALL THE PARENTS AND STUFF...
+	private function removeFamily($newTopic){
+
+		$currentTopics = $this->getTopics();
+		$familyMembers = $newTopic->parents()->merge($newTopic->children()); //THIS DOES NOT CHECK FOR ALL ANCESTORS/DESCENDANTS, ONLY ONE LEVEL ABOVE.
+		foreach($currentTopics as $currentTopic)
+		{
+			foreach($familyMembers as $familyMember)
+			{
+				if($currentTopic == $familyMember)
+				{
+					$this->detachTopics($currentTopic);
+				}
+			}
+		}
+	}
+
 	public function detachTopics($old_topics)
 	{
 		return $this->topics()->detach($old_topics);

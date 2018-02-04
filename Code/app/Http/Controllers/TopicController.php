@@ -50,7 +50,7 @@ class TopicController extends Controller
      */
     public function show(Topic $topic)
     {
-        return view('topic', ['topic' => $topic]    );
+        //
     }
 
     /**
@@ -89,4 +89,5 @@ class TopicController extends Controller
     {
         $topic->delete();
     }
+
 }
