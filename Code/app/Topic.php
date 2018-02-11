@@ -108,4 +108,19 @@ class Topic extends Model
 		}
 		return $ancestors;
 	}
+
+
+	/**
+	 * Get the children of each child of this topic in a flat collection
+	 * @return Illuminate\Database\Eloquent\Collection
+	 */
+	public function descendants()
+	{
+		$children = $this->children->get();
+		$descendants = $children;
+		foreach ($children as $child) {
+			$descendants = $descendants->merge($child->children());
+		}
+		return $children;
+	}
 }

@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use  App\Topic;
+
 class Resource extends Model
 {
 	/**
@@ -80,7 +82,7 @@ class Resource extends Model
 	 * @return
 	 * 
 	 */
-
+//check to see if this actually works 
 	public function moveTopics($newTopic)
 	{	
 
@@ -99,11 +101,12 @@ class Resource extends Model
 		}
 	}
 
-//CHECK FOR ALL THE PARENTS AND STUFF...
+//Check to see if this actually works
+//aka NO INCEST--make sure an ancestor and a descendant topic do not share the same resource
 	private function removeFamily($newTopic){
 
 		$currentTopics = $this->getTopics();
-		$familyMembers = $newTopic->parents()->merge($newTopic->children()); //THIS DOES NOT CHECK FOR ALL ANCESTORS/DESCENDANTS, ONLY ONE LEVEL ABOVE.
+		$familyMembers = $newTopic->ancestors()->merge($newTopic->descendants()); //THIS DOES NOT CHECK FOR ALL ANCESTORS/DESCENDANTS, ONLY ONE LEVEL ABOVE.
 		foreach($currentTopics as $currentTopic)
 		{
 			foreach($familyMembers as $familyMember)

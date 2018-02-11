@@ -104,6 +104,21 @@ class ResourceController extends Controller
     }
 
     /**
+     *Moves the resource under a specific named topic
+     * 
+     * @param \App\Resource $resource
+     * @param \App\Topic $topic
+     * @return \Illuminate\Http\Response
+     *
+     *  
+     */
+    public function move(Resource $resource, Topic $topic)
+    {
+        $resourc
+    }
+
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Resource  $resource
