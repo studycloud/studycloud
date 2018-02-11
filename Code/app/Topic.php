@@ -119,8 +119,8 @@ class Topic extends Model
 		$children = $this->children->get();
 		$descendants = $children;
 		foreach ($children as $child) {
-			$descendants = $descendants->merge($child->children());
+			$descendants = $descendants->merge($child->descendants());
 		}
-		return $children;
+		return $descendants;
 	}
 }
