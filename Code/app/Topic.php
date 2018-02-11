@@ -12,21 +12,19 @@ class Topic extends Model
 	 * @var array
 	 */
 	protected $fillable = ['name', 'author_id'];
-	
- //    /**
- //     * The accessors to append to the model's array form.
- //     *
- //     * @var array
- //     */
-	// protected $appends = ['children'];
 
-	// /**
-	//  * @return \Illuminate\Database\Eloquent\Collection
-	//  */
- //    public function getChildrenAttribute()
- //    {
- //    	return $this->children()->get();
- //    }
+	protected $appends = ['target'];
+
+    protected $hidden = ['target'];
+ 
+ 	/**
+ 	 * Add a unique id attribute so that JavaScript can distinguish between different models
+ 	 * @return string the string representing the unique id
+ 	 */
+ 	public function getTargetAttribute()
+ 	{
+ 		return "t".($this->attributes['id']);
+ 	}
 
 	/**
 	 * Returns the updated tree.
@@ -61,10 +59,14 @@ class Topic extends Model
 	 */
 	public static function getTopLevelTopics()
 	{
-		return self::whereNotIn('id', TopicParent::pluck('topic_id')->all())->get();
+		return self::whereNotExists(function ($query)
+			{
+				$query->select('topic_id')->distinct()->from('topic_parent')->whereRaw('topic_parent.topic_id = topics.id');
+			}
+		)->get();
 	}
 
-	private function resources()
+	public function resources()
 	{
 		return $this->belongsToMany(Resource::class, 'resource_topic', 'topic_id', 'resource_id');
 	}
@@ -75,7 +77,7 @@ class Topic extends Model
 	}
 
 	/**
-	 * a wrapper function for the attaching resources to prevent disallowedTopics from being added
+	 * a wrapper function for attaching resources to prevent disallowedTopics from being added
 	 * @param  Illuminate\Database\Eloquent\Collection $new_resources the resources to be attached
 	 * @return void
 	 */
@@ -105,32 +107,5 @@ class Topic extends Model
 			$ancestors = $ancestors->merge($parent->ancestors());
 		}
 		return $ancestors;
-	}
-
-	/**
-	 * get the descendants of this topic in a flat collection
-	 * @param  int $levels the number of levels of descendants to get; 0 is infinite
-	 * @return Illuminate\Database\Eloquent\Collection
-	 */
-	public function descendants($levels = 0)
-	{
-		$children = $this->children()->get();
-		// if $levels was 0, this base case will never run
-		if ($levels == 1)
-		{
-			return $children;
-		}
-		else
-		{
-			$descendants = $children;
-			// iterate through each child and find its descendants
-			foreach ($children as $child) {
-				// add the subsequent descendants to the flat collection. RECURSION!
-				// make sure to increment the $levels
-				$descendants = $descendants->merge($child->descendants($levels - 1));
-			}
-			// we make sure to call unique, in case there are duplicates
-			return $descendants->unique();
-		}
 	}
 }

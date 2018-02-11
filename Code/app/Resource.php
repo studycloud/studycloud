@@ -12,6 +12,19 @@ class Resource extends Model
 	 * @var array
 	 */
 	protected $fillable = ['name', 'author_id', 'use_id'];
+
+    protected $appends = ['target'];
+
+    protected $hidden = ['target'];
+ 
+  	/**
+ 	 * Add a unique id attribute so that JavaScript can distinguish between different models
+ 	 * @return string the string representing the unique id
+ 	 */
+    public function getTargetAttribute()
+    {
+        return "r".($this->attributes['id']);
+    }
 	
 	/**
 	 * define the one-to-many relationship between a resource and its contents
@@ -37,7 +50,7 @@ class Resource extends Model
 	}
 
 	/**
-	 * a wrapper function for the attaching topics to prevent disallowedTopics from being added
+	 * a wrapper function for attaching topics to prevent disallowedTopics from being added
 	 * @param  Illuminate\Database\Eloquent\Collection $new_topics the topics to be attached
 	 * @return 
 	 */
