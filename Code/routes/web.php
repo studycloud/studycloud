@@ -23,7 +23,7 @@ Route::get('tree', function(){
 	return view('tree');
 });
 
-Route::get('tree/data/topic/{topic_id?}/levels/{levels?}', 'TopicTreeController@show');
+Route::get('tree/data', 'TopicTreeController');
 
 Route::get('admins/{userid}', function($user_id){
 	$user = App\User::find($user_id);

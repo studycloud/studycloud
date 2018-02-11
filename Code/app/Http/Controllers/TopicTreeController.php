@@ -16,6 +16,27 @@ class TopicTreeController extends Controller
 
 
     /**
+     * a wrapper for show() that parses the query string. This
+     * function is automatically invoked by Laravel when the 
+     * controller is called.
+     * @return \Illuminate\Database\Eloquent\Collection            the return value of show()
+     */
+    public function __invoke(Request $request)
+    {
+        $topic_id = $request->query('topic');
+        if ($topic_id == "")
+        {
+            $topic_id = null;
+        }
+        $levels = $request->query('levels');
+        if ($levels == "")
+        {
+            $levels = null;
+        }
+        return $this->show($topic_id, $levels);
+    }
+
+    /**
      * converts a portion of the tree to JSON for traversal by the JavaScript team
      * @param  integer $topic_id the id of the current topic in the tree; defaults to the root of the tree, which has an id of 0
      * @param  int     $levels   the number of levels of the tree to return; defaults to infinity
@@ -36,7 +57,6 @@ class TopicTreeController extends Controller
         }
         $this->addDescendants($topic, $levels);
 
-        // return "hi";
         // return a collection of the resulting lists of nodes and connections
         return collect(["nodes" => $this->nodes->unique(), "connections" => $this->connections]);
     }
