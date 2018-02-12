@@ -69,7 +69,7 @@ Tree.prototype.simulationInitialize = function()
 	
 	self.simulation
 		.alphaTarget(-1)
-		.alphaDecay(0)
+		.alphaDecay(0.01)
 		.force("ForceLink", d3.forceLink())
 		.force("ForceCharge", d3.forceManyBody())
 		.force("ForceCenter", d3.forceCenter(self.frame.boundary.width / 2, self.frame.boundary.height / 2));
@@ -82,11 +82,12 @@ Tree.prototype.simulationInitialize = function()
 		.force("ForceLink")
 			.links(self.links.data())
 			.id(function(d){return d.id;})
-			.strength(.3);
+			.strength(.6)
+			.distance(10);
 			
 	self.simulation
 		.force("ForceCharge")
-			.strength(-10);
+			.strength(-200);
 
 };
 
@@ -94,9 +95,12 @@ Tree.prototype.simulationRestart = function()
 {
 	var self = this
 	
+	console.log(self.nodes.data());
+	console.log(self.simulation.nodes());
 	self.simulation.nodes(self.nodes.data());
 	self.simulation.force("ForceLink").links(self.links.data())
 	self.simulation.restart();
+	self.simulation.alpha(1);
 };
 
 //Wrapper for getNChildrenRecurse
@@ -187,13 +191,21 @@ Tree.prototype.updateDataNodes = function(selection, data)
 					//.attr("cx", function(){return Math.random() * self.frame.boundary.width})
 					//.attr("cy", function(){return Math.random() * self.frame.boundary.height})
 					.attr("fill", "blue")
-					.attr("r", 5);
+					.attr("r", 10);
 		
+	selection	
+		.exit()
+			.select("circle")
+				.transition()
+					.duration(500)
+					.attr("r", "0");
+	
 	selection
 		.exit()
+			.attr("class", "node-deleted")
 			.transition()
-				.duration(300)
-				.style("display", "none")
+				.duration(500)
+				.style("opacity", "0")
 				.remove();
 	
 	self.nodes = self.frame.select(".layer_nodes").selectAll(".node");
@@ -214,10 +226,19 @@ Tree.prototype.updateDataLinks = function(selection, data)
 								
 	selection	
 		.exit()
+			.select("line")
+				.transition()
+					.duration(500)
+					.style("stroke", "transparent");
+	
+	selection	
+		.exit()
+			.attr("class", "link-deleted")
 			.transition()
-				.duration(300)
-				.style("display", "none")
+				.duration(500)
+				.style("opacity", "0")
 				.remove();
+
 				
 	self.links = self.frame.select(".layer_links").selectAll(".link");
 }
@@ -260,13 +281,11 @@ Tree.prototype.updateDataNChildren = function(node_id, children_levels_num, data
 };
 
 
-
-
 Tree.prototype.draw = function()
 {
 	
 	var self = this
-		
+
 	self.nodes.select("circle")
 		.attr('cx', function(d) { return d.x; })
 		.attr('cy', function(d) { return d.y; });
@@ -279,3 +298,114 @@ Tree.prototype.draw = function()
 };
 
 tree_1 = new Tree("Blah", "tree");
+
+var data=
+{
+  "nodes": [
+    {
+      "name": "Topic Root",
+      "author_id": 9,
+      "created_at": "2017-11-02 21:02:03",
+      "updated_at": "2017-11-02 21:02:03",
+      "id": "t1"
+    },
+    {
+      "name": "Topic A",
+      "author_id": 19,
+      "use_id": 1,
+      "created_at": "2017-11-02 21:02:03",
+      "updated_at": "2017-11-02 21:02:03",
+      "id": "t2"
+    },
+    {
+      "name": "Topic B",
+      "author_id": 16,
+      "use_id": 3,
+      "created_at": "2017-11-02 21:02:03",
+      "updated_at": "2017-11-02 21:02:03",
+      "id": "t3"
+    },
+    {
+      "name": "Topic AA",
+      "author_id": 17,
+      "use_id": 3,
+      "created_at": "2017-11-02 21:02:03",
+      "updated_at": "2017-11-02 21:02:03",
+      "id": "t4"
+    },
+    {
+      "name": "Topic BA",
+      "author_id": 24,
+      "use_id": 1,
+      "created_at": "2017-11-02 21:02:03",
+      "updated_at": "2017-11-02 21:02:03",
+      "id": "t5"
+    },
+    {
+      "name": "Topic AB",
+      "author_id": 2,
+      "use_id": 3,
+      "created_at": "2017-11-02 21:02:03",
+      "updated_at": "2017-11-02 21:02:03",
+      "id": "t6"
+    },
+    {
+      "name": "Topic AC",
+      "author_id": 9,
+      "use_id": 3,
+      "created_at": "2017-11-02 21:02:03",
+      "updated_at": "2017-11-02 21:02:03",
+      "id": "t7"
+    },
+    {
+      "name": "Topic BB",
+      "author_id": 15,
+      "use_id": 3,
+      "created_at": "2017-11-02 21:02:03",
+      "updated_at": "2017-11-02 21:02:03",
+      "id": "t8"
+    },
+    {
+      "name": "Topic BBA",
+      "author_id": 3,
+      "use_id": 2,
+      "created_at": "2017-11-02 21:02:03",
+      "updated_at": "2017-11-02 21:02:03",
+      "id": "t9"
+    }
+  ],
+  "links": [
+    {
+      "source": "t1",
+      "target": "t2"
+    },
+    {
+      "source": "t1",
+      "target": "t3"
+    },
+    {
+      "source": "t2",
+      "target": "t4"
+    },
+    {
+      "source": "t3",
+      "target": "t5"
+    },
+    {
+      "source": "t2",
+      "target": "t6"
+    },
+    {
+      "source": "t2",
+      "target": "t7"
+    },
+    {
+      "source": "t3",
+      "target": "t8"
+    },
+    {
+      "source": "t8",
+      "target": "t9"
+    }
+  ]
+};	

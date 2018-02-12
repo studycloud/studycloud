@@ -1,9 +1,9 @@
 
-.node 
+.node, .node-deleted
 {
 }
 
-.link 
+.link, .link-deleted
 { 
     stroke: #777;
     stroke-width: 2px;
@@ -16,8 +16,8 @@
 
 #tree 
 {
-	width: 50%;
-	height: 400px;
+	width: 80%;
+	height: 600px;
 	margin: auto;
 }
 	
