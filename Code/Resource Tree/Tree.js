@@ -377,35 +377,43 @@ var data=
   "links": [
     {
       "source": "t1",
-      "target": "t2"
+      "target": "t2",
+	  "id": "l1"
     },
     {
       "source": "t1",
-      "target": "t3"
+      "target": "t3",
+	  "id": "l2"
     },
     {
       "source": "t2",
-      "target": "t4"
+      "target": "t4",
+	  "id": "l3"
     },
     {
       "source": "t3",
-      "target": "t5"
+      "target": "t5",
+	  "id": "l4"
     },
     {
       "source": "t2",
-      "target": "t6"
+      "target": "t6",
+	  "id": "l5"
     },
     {
       "source": "t2",
-      "target": "t7"
+      "target": "t7",
+	  "id": "l6"
     },
     {
       "source": "t3",
-      "target": "t8"
+      "target": "t8",
+	  "id": "l7"
     },
     {
       "source": "t8",
-      "target": "t9"
+      "target": "t9",
+	  "id": "l8"
     }
   ]
 };	
