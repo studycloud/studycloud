@@ -38,7 +38,7 @@ class TopicParentTableSeeder extends Seeder
 		if (count($curr_topics)>0)
 		{
 			// how many topics should be at this level of the "tree"?
-			$num_topics_level = rand($num_topics_level_min, count($curr_topics));
+			$num_topics_level = rand($num_topics_level_min, count($curr_topics))/2;
 			// delegate the task of assigning children and get the ids of the chosen children
 			$curr_topic_ids = $this->assignChildren($parent_topic, $curr_topics, $num_topics_level);
 			// get the leftover topics that haven't been chosen as children yet
