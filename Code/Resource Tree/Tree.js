@@ -45,15 +45,18 @@ function Tree(type, frame_id)
 	self.frame.svg
 		.attr("class", "tree");
 	
+	
+	self.links = self.frame.svg
+		.append("g")
+			.attr("class", "layer_links")
+			.selectAll(".link")
+	
 	self.nodes = self.frame.svg
 		.append("g")
 			.attr("class", "layer_nodes")
 			.selectAll(".node")
 			
-	self.links = self.frame.svg
-		.append("g")
-			.attr("class", "layer_links")
-			.selectAll(".link")
+
 	
 	self.simulationInitialize();			
 	
@@ -95,8 +98,6 @@ Tree.prototype.simulationRestart = function()
 {
 	var self = this
 	
-	console.log(self.nodes.data());
-	console.log(self.simulation.nodes());
 	self.simulation.nodes(self.nodes.data());
 	self.simulation.force("ForceLink").links(self.links.data())
 	self.simulation.restart();
