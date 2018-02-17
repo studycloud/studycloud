@@ -41,7 +41,7 @@
 			flex-grow: 2;
 			flex-shrink: 0.7;
 			margin: 0;
-			padding: 0.2em;
+			padding: 0.3em;
 			a, input { // Default behavior of navbar items.
 				font-weight: bolder;
 				color: white;
@@ -67,6 +67,7 @@
 		#search {
 			flex-grow: 30;
 			flex-shrink: 1;
+			padding: 0.2em 0;
 			#search_form {
 				-webkit-box-sizing: border-box; // For legacy WebKit based browsers.							/*possibly we don't need this*/
 				-moz-box-sizing: border-box; 	// For legacy (Firefox <29) Gecko based browsers.
@@ -97,6 +98,7 @@
 			flex-shrink: 0.5;
 			position: relative;
 		    display: inline-block;
+		    padding: 0.3em;
 		    #logInButton {
 				background-color: $login-button-default-color;
 

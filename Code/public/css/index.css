@@ -186,7 +186,7 @@ table {
   -ms-flex-negative: 0.7;
       flex-shrink: 0.7;
   margin: 0;
-  padding: 0.2em;
+  padding: 0.3em;
 }
 
 .navbar ul li a,
@@ -218,6 +218,7 @@ table {
           flex-grow: 30;
   -ms-flex-negative: 1;
       flex-shrink: 1;
+  padding: 0.2em 0;
 }
 
 .navbar ul #search #search_form {
@@ -254,6 +255,7 @@ table {
       flex-shrink: 0.5;
   position: relative;
   display: inline-block;
+  padding: 0.3em;
 }
 
 .navbar ul #logIn #logInButton {
