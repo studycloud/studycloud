@@ -49,26 +49,27 @@ function Tree(type, frame_id)
 	self.links = self.frame.svg
 		.append("g")
 			.attr("class", "layer_links")
-			.selectAll(".link")
+			.selectAll(".link");
 	
 	self.nodes = self.frame.svg
 		.append("g")
 			.attr("class", "layer_nodes")
-			.selectAll(".node")
+			.selectAll(".node");
 			
-
+	self.nodes_simulated = {};
+	self.links_simulated = {};
 	
 	self.simulationInitialize();			
 	
-	self.setData(data);	
+	self.setData(data);
 }
 
 
 Tree.prototype.simulationInitialize = function()
 {
-	var self = this
+	var self = this;
 	
-	self.simulation = d3.forceSimulation()
+	self.simulation = d3.forceSimulation();
 	
 	self.simulation
 		.alphaTarget(-1)
@@ -94,20 +95,47 @@ Tree.prototype.simulationInitialize = function()
 
 };
 
+
 Tree.prototype.simulationRestart = function()
 {
-	var self = this
+	var self = this;
 	
-	self.simulation.nodes(self.nodes.data());
-	self.simulation.force("ForceLink").links(self.links.data())
+	self.simulation.nodes(self.nodes_simulated.data());
+	self.simulation.force("ForceLink").links(self.links_simulated.data())
+	
 	self.simulation.restart();
 	self.simulation.alpha(1);
 };
 
-//Wrapper for getNChildrenRecurse
-Tree.prototype.getNChildren = function(node_id, children_levels_num)
+
+Tree.prototype.getNChildrenSelections = function(node_id, children_levels_num)
 {
-	var self = this
+	var self = this;
+	var node_ids; 
+	var link_ids;
+	
+	[node_ids, link_ids] = self.getNChildrenIds(node_id, children_levels_num)
+	
+	var nodes_selection = self.nodes.filter(function()
+		{
+			return node_ids.has(this.getAttribute("data_id"));
+		}
+	);
+	
+	var links_selection = self.links.filter(function()
+		{
+			return link_ids.has(this.getAttribute("data_id"));
+		}
+	);
+	
+	return [nodes_selection, links_selection];
+};
+
+
+//Wrapper for getNChildrenRecurse
+Tree.prototype.getNChildrenIds = function(node_id, children_levels_num)
+{
+	var self = this;
 	
 	//These sets contain ids of elements to update when we get new data
 	var node_ids_updated = new Set();
@@ -143,7 +171,7 @@ Tree.prototype.getNChildren = function(node_id, children_levels_num)
 //and gets the children the node with id:node_id
 Tree.prototype.getNChildrenRecurse = function(node_ids_updated, link_ids_updated, node_id, children_levels_num)
 {	
-	var self = this
+	var self = this;
 	
 	//return early, because we have already seen this node before
 	if (node_ids_updated.has(node_id))
@@ -179,7 +207,7 @@ Tree.prototype.getNChildrenRecurse = function(node_ids_updated, link_ids_updated
 Tree.prototype.updateDataNodes = function(selection, data)
 {
 	
-	var self = this
+	var self = this;
 	
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
 	
@@ -192,7 +220,8 @@ Tree.prototype.updateDataNodes = function(selection, data)
 					//.attr("cx", function(){return Math.random() * self.frame.boundary.width})
 					//.attr("cy", function(){return Math.random() * self.frame.boundary.height})
 					.attr("fill", "blue")
-					.attr("r", 10);
+					.attr("r", 10)
+					.on("click", function(d){self.NodeClicked(d)});
 		
 	selection	
 		.exit()
@@ -210,11 +239,11 @@ Tree.prototype.updateDataNodes = function(selection, data)
 				.remove();
 	
 	self.nodes = self.frame.select(".layer_nodes").selectAll(".node");
-}
+};
 
 Tree.prototype.updateDataLinks = function(selection, data)
 {
-	var self = this
+	var self = this;
 	
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
 	
@@ -242,38 +271,29 @@ Tree.prototype.updateDataLinks = function(selection, data)
 
 				
 	self.links = self.frame.select(".layer_links").selectAll(".link");
-}
+};
 
 Tree.prototype.setData = function(data)
 {
-	var self = this
+	var self = this;
 	
 	self.updateDataNodes(self.nodes, data.nodes);
 	self.updateDataLinks(self.links, data.links);
 	
-	self.simulationRestart()
+	self.nodes_simulated = self.nodes;
+	self.links_simulated = self.links;
+	
+	self.simulationRestart();
 }
 
 
 Tree.prototype.updateDataNChildren = function(node_id, children_levels_num, data)
 {	
-	var self = this
-	var node_ids_updated;
-	var link_ids_updated;
+	var self = this;
+	var nodes_updated;
+	var links_updated;
 	
-	[node_ids_updated, link_ids_updated] = self.getNChildren(node_id,children_levels_num)
-	
-	var nodes_updated = self.nodes.filter(function()
-		{
-			return node_ids_updated.has(this.getAttribute("data_id"));
-		}
-	);
-	
-	var links_updated = self.links.filter(function()
-		{
-			return link_ids_updated.has(this.getAttribute("data_id"));
-		}
-	);
+	[nodes_updated, links_updated] = getNChildrenSelections(node_id, children_levels_num);
 				
 	self.updateDataNodes(nodes_updated, data.nodes);
 	self.updateDataLinks(links_updated, data.links);
@@ -285,7 +305,7 @@ Tree.prototype.updateDataNChildren = function(node_id, children_levels_num, data
 Tree.prototype.draw = function()
 {
 	
-	var self = this
+	var self = this;
 
 	self.nodes.select("circle")
 		.attr('cx', function(d) { return d.x; })
@@ -297,6 +317,43 @@ Tree.prototype.draw = function()
 		.attr('x2', function(d) { return d.target.x  })
 		.attr('y2', function(d) { return d.target.y  });	
 };
+
+Tree.prototype.NodeClicked = function(d)
+{
+	self = this;
+	
+	[nodes_selection, links_selection] = self.getNChildrenSelections(d.id, 2);
+	
+	nodes_selection
+		.transition()
+			.duration(1000)
+			.attr("visibility", "unset");
+	
+	links_selection
+		.transition()
+			.duration(1000)
+			.attr("visibility", "unset");
+	
+	nodes_hidden = SelectionSubtract(self.nodes,nodes_selection);
+	links_hidden = SelectionSubtract(self.links,links_selection);
+	
+	nodes_hidden
+		.transition()
+			.duration(1000)
+			.attr("visibility", "hidden");
+	
+	links_hidden
+		.transition()
+			.duration(1000)
+			.attr("visibility", "hidden");
+	
+	self.links_simulated = links_selection;
+	self.nodes_simulated = nodes_selection;
+
+	self.simulationRestart();
+}
+
+
 
 tree_1 = new Tree("Blah", "tree");
 
