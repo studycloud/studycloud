@@ -1,0 +1,45 @@
+// Contains colors and gradient definitions. 
+
+
+// BACKGROUNDS
+
+/* Navbar color---------------------------------------------- */
+%navbar-gradient {
+	background: #00167a; 									// For browsers that do not support gradients.
+	background: -webkit-linear-gradient(#003180, #00167a); 	// For Safari 5.1 to 6.0.
+	background: -o-linear-gradient(#003180, #00167a);		// For Opera 11.1 to 12.0.
+	background: -moz-linear-gradient(#003180, #00167a); 	// For Firefox 3.6 to 15.
+	background: linear-gradient(#003180, #00167a);			// Standard syntax.
+}
+
+// Navbar hover color.
+$navbar-hover-color: #0044b3;
+
+// Login button default.
+$login-button-default-color: #0044b3;
+
+// Login button hover.
+$login-button-hover-color: #EAAA00;
+
+// Search box default.
+$search-box-default-color: #C8C8FF;
+
+// Search box focus.
+$search-box-focus-color: white;
+
+// Login dropdown color.
+$login-dropdown-color: #f9f9f9;
+
+
+// TEXT
+$default-link: blue;
+$hover-link: red;
+
+
+// CONTENT
+
+// Content box border color
+$content-border-color: #2AA993;
+
+// Box title textcolor
+$content-title-color: #2AA993;

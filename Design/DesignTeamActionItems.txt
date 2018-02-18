@@ -1,2 +1,3 @@
--Integrate light on dark logo
--Mobile compatibility? 
+-Make about page: include contact form, include blurb
+	-pictures? 
+-Discuss design of sign in page/popup
