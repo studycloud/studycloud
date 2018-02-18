@@ -56,9 +56,9 @@ class TopicTreeController extends Controller
             $topic = Topic::find($topic_id);
         }
         $this->addDescendants($topic, $levels);
-
+        
         // return a collection of the resulting lists of nodes and connections
-        return collect(["nodes" => $this->nodes->unique(), "connections" => $this->connections]);
+        return collect(["nodes" => $this->nodes, "connections" => $this->connections]);
     }
 
     /**
@@ -98,9 +98,13 @@ class TopicTreeController extends Controller
      */
     private function add($node)
     {
-        $this->nodes->push(
-            $this->processNode($node)
-        );
+        // double check that this node hasn't already been added to $this->nodes. handles duplicate resources
+        if (!$this->nodes->pluck('target')->contains($node->target))
+        {
+            $this->nodes->push(
+                $this->processNode($node)
+            );
+        }
 
         if (!is_null($node->pivot))
         {
