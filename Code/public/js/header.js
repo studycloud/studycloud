@@ -2,8 +2,7 @@
 $(document).ready(function(){ 
 
 	$("#logInButton").click(function(event){ // Show/hide dialog if you click on the log in button. 
-		event.stopPropagation();
-		$("#logInHidden").toggle(1000);
+		$('.swing-in-top-bck').toggleClass('swing-in-top-bck-post');
 	});
 
 	// TODO: Real freakin buggy. I'll come back and either fix this or refactor and delete it. 

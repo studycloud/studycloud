@@ -1,6 +1,7 @@
 // Contains formatting for the header and navbar of each page.
 
 @import "../helpers/color.scss";
+@import "../helpers/animations.scss";
 
 
 // Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button).
@@ -113,18 +114,38 @@
 
 /* LOGIN DROPDOWN */
 
+
+
 // Dropdown content (hidden by default).
 #logInHidden { // Content box containing login form.
 	padding: 5px;
-	animation-duration: 2s;
 	text-align: right;
 
-	display: none;
+	// -webkit-animation: swing-in-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
+	//         animation: swing-in-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
+	visibility: hidden;
+
     position: absolute;
     background-color: $login-dropdown-color;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1; 	// Stacks box on top of page.
     right: 0; 		// Right aligns login box.
+
+	&.swing-in-top-bck-active {
+
+	}
+
+	&.swing-in-top-bck {
+		-webkit-animation: swing-in-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
+		        animation: swing-in-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
+	  // -webkit-transition: all 2s ease;  
+	  // -moz-transition: all 2s ease;  
+	  // -o-transition: all 2s ease;  
+	  // -ms-transition: all 2s ease;  
+	  // transition: all 2s ease;
+	  visibility: visible;
+	  background-color: green;
+	}
 
     .linkDefault { // Reset behavior of links inside the dropdown (create account, forgot details).
 	    color: $default-link;
