@@ -1,0 +1,29 @@
+
+.node, .node-deleted
+{
+}
+
+.link, .link-deleted
+{ 
+    stroke: #777;
+    stroke-width: 2px;
+}
+
+#svg5045 
+{
+	overflow:visible;
+}
+
+#tree 
+{
+	width: 80%;
+	height: 600px;
+	margin: auto;
+}
+	
+.tree 
+{
+	width: 100%;
+	height: 100%;
+	overflow: none;x
+}
