@@ -12,7 +12,15 @@ function Server(node, handleError, handleSuccess)
 Server.prototype.getData = function(node, levels)
 {
     var self = this;
-    var url = "/tree/data/?topic="+node+"&levels="+levels;
+	var url;
+	if(node && levels)
+		url = "/tree/data/?topic="+node+"&levels="+levels;
+	else if(levels)
+		url = "/tree/data/?topic=&levels="+levels;
+	else if(node)
+		url = "/tree/data/?topic="+node;
+	else
+		url = "tree/data";
     return d3.json(url);
 
 };
