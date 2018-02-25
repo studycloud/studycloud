@@ -22,6 +22,7 @@ Server.prototype.getData = function(node, levels)
 	else
 		url = "tree/data";
     return d3.json(url);
+	
 
 };
 
