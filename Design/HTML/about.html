@@ -1,0 +1,87 @@
+<!-- this is the about page. start header stuff. Header stuff copied in 17.05.24, before login edits were made.-->
+<html><head>
+    <title>Study Cloud</title>
+    <link rel="stylesheet" type="text/css" href="reset.css">
+    <link rel="stylesheet" type="text/css" href="header.css">
+    <link rel="stylesheet" type="text/css" href="homepage.css">
+    <link rel="stylesheet" type="text/css" href="about.css">
+    <link rel="stylesheet" type="text/css" href="colorPlay.css">
+    <link href="https://fonts.googleapis.com/css?family=Fredericka+the+Great" rel="stylesheet"> <!-- font for header -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> <!-- font for literally everything else -->
+    <meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
+</head>
+<body>
+	<div id="pageWidth">
+	    <header> <!-- header tag necessary? idk. Consider removing? -->
+	        
+	        <object type="image/svg+xml" class="logoFull" data="../Logos/header.svg" alt="School logo, Study Cloud header, and logo"> </object>
+
+	        <!-- Navbar goes here -->
+	        <div class="navbar"> 
+	            <ul>
+	                <li><a href="#">Topics</a></li>
+	                <li><a class="active" href="#">Items</a></li> <!-- is this really what it was called? -->
+	                <li><a href="#">About</a></li>
+	                <li id="search">
+	                    <form action="" method="get" id="search_form">
+	                        <input type="text" name="search_text" id="search_text" placeholder="search">
+	                    </form>
+	                </li>
+	                <li id="logIn"><a href="#">Log In</a></li>
+	            </ul>
+	        </div>
+
+	    </header>
+
+	    <!-- ABOUT Page content begins here -->
+	    <div id="main">
+	    	<div class="elementBoxTwo">
+	    		<div class="boxTitle">
+	    			<p>Why Study Cloud?</p>
+	    		</div>
+	    		<img class="picture" src="happyPeople.jpg"/>
+	    		<div class="boxText">Study Cloud is useful for Reasons which are Important and it's just useful guys you should like try it.</div>
+	    	</div>
+	    	<div class="elementBoxTwo">
+	    		<div class="boxTitle">
+	    			<p>Contact Us</p>
+	    		</div> 
+	    		<div class="boxText">
+	    			<form method="get" id="contactForm">
+	    				Name: *<br>
+	    				<input type="text" name="contact" required> <br>
+	    				<br>
+	    				Email: *<br>
+	    				<input type="email" name="email" required> <br>
+	    				<br>
+	    				Comment: <br>
+	    				<textarea id="comment" rows=5></textarea> <br>
+	    				<br>
+	    				I want to contact: *<br>
+						<input type="radio" name="recipient" value="creator" required checked="checked"> Site Creator (for technical problems with the site)<br>
+						<input type="radio" name="recipient" value="club" required> Club (for school-specific issues)<br>
+	    				<br>
+	    				<input type="submit"></input>
+	    			</form>
+	    		</div>
+	    	</div>
+
+	    	<div class="elementBoxTwo">
+	    		<div class="boxTitle">
+	    			<p>What is Study Cloud?</p>
+	    		</div>
+	    		<div class="boxText">We are sharing resources. Join us!</div>
+	    	</div>
+	    	<div class="elementBoxTwo">
+	    		<div class="boxTitle">
+	    			<p>What belongs on Study Cloud?</p>
+	    		</div> 
+	    		<div class="boxText">
+	    			<p>Please don't cheat. We don't like cheating.</p>
+	    		</div>
+	    	</div>
+	    </div>
+	</div>
+
+
+</body></html>

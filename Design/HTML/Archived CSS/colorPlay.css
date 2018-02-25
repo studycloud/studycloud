@@ -1,0 +1,50 @@
+/* Contains code for all colors on the homepage for color scheme playing. Uncomment and edit values as necessary. */
+
+/* Navbar color---------------------------------------------- */
+.navbar {
+	background: #00167a;
+	background: -webkit-linear-gradient(#003180, #00167a);
+	background: -o-linear-gradient(#003180, #00167a);
+	background: -moz-linear-gradient(#003180, #00167a);
+	background: linear-gradient(#003180, #00167a);
+}
+
+
+/* Navbar hover color---------------------------------------- */
+.navbar li a:hover {
+	background: #0044b3;
+}
+
+
+/* Login button default-------------------------------------- */
+#logIn a {
+	background-color: #0044b3;
+}
+
+
+/* Login button hover---------------------------------------- */
+#logIn a:hover {
+	background: #EAAA00;
+}
+
+
+/* Search box default--------------------------------------- */
+#search_text{
+	background: #C8C8FF;
+}
+
+
+/* Search box focus----------------------------------------- */
+/*#search_text:focus {
+	color: black;
+	background: white;
+}
+*/
+
+/* Content box border color---------------------------------- */
+.elementBoxTwo { /*834E6B*/
+	border-color: #2AA993;
+}
+.boxTitle {
+	background-color: #2AA993;
+}
