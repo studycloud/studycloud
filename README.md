@@ -1,3 +1,0 @@
-# studycloud
-
-The Study Cloud Club is an organization of Harvey Mudd College students devoted to the development of a website called Study Cloud. This site will provide a public space for students to share study resources (notes, quizlets, etc.) with one another. By uploading their resources to Study Cloud, students can then have their materials archived, organized, and made searchable for future students as well.
