@@ -27,16 +27,6 @@ class Topic extends Model
 	}
 
 	/**
-	 * Returns the updated tree.
-	 *
-	 * @return \Illuminate\Database\Eloquent\Collection $tree
-	 */
-	public static function getTree()
-	{
-		return self::getTopLevelTopics();
-	}
-
-	/**
 	 * returns all topics that have this topic as their parent
 	 */
 	public function children()

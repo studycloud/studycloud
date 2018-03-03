@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Topic;
 use App\TopicParent;
 use App\Resource;
+use App\Repositories\TopicRepository;
 // use Barryvdh\Debugbar\Facade as Debugbar;
 use Illuminate\Http\Request;
 
 class TopicTreeController extends Controller
 {
-	protected $nodes;
-
-	protected $connections;
+	/**
+	 * The nodes and connections for this tree.
+	 *
+	 * @var \Illuminate\Database\Eloquent\Collection
+	 */
+	protected $tree;
 
 
 	/**
@@ -45,20 +49,14 @@ class TopicTreeController extends Controller
 	public function show($topic_id = 0, $levels = null)
 	{
 		// initialize our data members to empty collections
-		$this->nodes = collect();
-		$this->connections = collect();
+		$this->tree = collect();
 
-		// get the current topic the tree is pointing to
-		// if the topic_id is 0, the user wants the root of the tree
-		$topic = null;
-		if ($topic_id != 0)
-		{
-			$topic = Topic::find($topic_id);
-		}
-		$this->addDescendants($topic, $levels);
+		// get the descendants of this topic in a flat collection and load them into our tree data member
+		$this->tree = TopicRepository::descendants($topic, $levels);
+		// TODO: get the resources for each Topic in $tree and process each node
 		
-		// return a collection of the resulting lists of nodes and connections
-		return collect(["nodes" => $this->nodes, "connections" => $this->connections]);
+		// return the tree data: a collection of the resulting lists of nodes and connections
+		return $this->tree;
 	}
 
 	/**
@@ -67,17 +65,17 @@ class TopicTreeController extends Controller
 	 */
 	private function add($node)
 	{
-		// double check that this node hasn't already been added to $this->nodes. handles duplicate resources
-		if (!$this->nodes->pluck('target')->contains($node->target))
+		// double check that this node hasn't already been added to $this->tree.get("nodes"). handles duplicate resources
+		if (!$this->tree.get("nodes")->pluck('target')->contains($node->target))
 		{
-			$this->nodes->push(
+			$this->tree.get("nodes")->push(
 				$this->processNode($node)
 			);
 		}
 
 		if (!is_null($node->pivot))
 		{
-			$this->connections->push(
+			$this->tree.get("connections")->push(
 				$this->processPivot($node->pivot)
 			);
 		}
