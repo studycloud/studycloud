@@ -12,6 +12,7 @@ $(document).ready(function(){
 
 	$("#logInButton").click(function(event){ // Show/hide dialog if you click on the log in button. 
 		document.getElementById('logInHidden').classList.toggle('swing-in-top-bck');
+		document.getElementById('logInHidden').classList.toggle('swing-out-top-bck');
 		// $('#logInHidden').playKeyframe({
 		// 	name: 'flippy',
 		// 	duration: 2000

@@ -2,7 +2,7 @@
 
 @if (!Auth::check())
 	<li id="logIn" class="logIn"><a id="logInButton">Log In</a>
-		<div id="logInHidden">
+		<div id="logInHidden" class="swing-out-top-bck"> <!-- Start with swing-out-top-bck so toggling works -->
 			<form action="{{ route('login') }}" method="POST" id="logInForm">
 				{{ csrf_field() }}
 				<input type="text" name="email" id="logInUser" placeholder="username">
