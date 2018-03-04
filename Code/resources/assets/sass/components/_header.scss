@@ -121,29 +121,21 @@
 	padding: 5px;
 	text-align: right;
 
-	visibility: hidden; // The box should initially not be visible. 
-
     position: absolute;
     background-color: $login-dropdown-color;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1; 	// Stacks box on top of page.
     right: 0; 		// Right aligns login box.
 
-	// animation: swing-in-top-bck 6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
-	// -moz-animation: swing-in-top-bck 6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both; /* Firefox */
-	// -webkit-animation: swing-in-top-bck 6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both; /* Safari and Chrome */
-
-	&.swing-in-top-bck { // Class for animating the entry of the login box. 
+	&.swing-in-top-bck { // Class for animating the entry of the login box. Holds attributes of box when visible. 
 		visibility: visible;
-		background-color: green;
 		animation: swing-in-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
 		-moz-animation: swing-in-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both; /* Firefox */
 		-webkit-animation: swing-in-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both; /* Safari and Chrome */
 	}
 
-	&.swing-out-top-bck { // Class for animating the exit of the login box. 
+	&.swing-out-top-bck { // Class for animating the exit of the login box. Holds attributes of box when hidden. 
 		visibility: hidden;
-		background-color: red;
 		animation: swing-out-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
 		-moz-animation: swing-out-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both; /* Firefox */
 		-webkit-animation: swing-out-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both; /* Safari and Chrome */

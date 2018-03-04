@@ -3,11 +3,9 @@
  * w: http://animista.net, t: @cssanimista
  * ---------------------------------------------- */
 
-/**
- * ----------------------------------------
- * animation swing-in-top-bck
- * ----------------------------------------
- */
+
+// Defines swing in entrance for login drop down. 
+
 @-webkit-keyframes swing-in-top-bck {
   0% {
     -webkit-transform: rotateX(70deg);
@@ -24,6 +22,7 @@
     opacity: 1;
   }
 }
+
 @keyframes swing-in-top-bck {
   0% {
     -webkit-transform: rotateX(70deg);
@@ -41,7 +40,8 @@
   }
 }
 
-// TODO: trying from/to. delete either above or below this depending on what works. 
+
+// Defines swing out exit for login drop down. 
 
 @-webkit-keyframes swing-out-top-bck {
   100% {
@@ -59,6 +59,7 @@
     opacity: 1;
   }
 }
+
 @keyframes swing-out-top-bck {
   100% {
     -webkit-transform: rotateX(70deg);
