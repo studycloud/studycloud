@@ -16,7 +16,7 @@ class Topic extends Model
 	protected $appends = ['target'];
 
 	protected $hidden = ['target'];
- 
+
 	/**
 	 * Add a unique id attribute so that JavaScript can distinguish between different models
 	 * @return string the string representing the unique id
@@ -40,20 +40,6 @@ class Topic extends Model
 	public function parents()
 	{
 		return $this->belongsToMany(Topic::class, 'topic_parent', 'topic_id',  'parent_id');
-	}
-
-	/**
-	 * Finds the topics that are at the root (very top) of the tree.
-	 *
-	 * @return Illuminate\Database\Eloquent\Collection
-	 */
-	public static function getTopLevelTopics()
-	{
-		return self::whereNotExists(function ($query)
-			{
-				$query->select('topic_id')->distinct()->from('topic_parent')->whereRaw('topic_parent.topic_id = topics.id');
-			}
-		)->get();
 	}
 
 	public function resources()

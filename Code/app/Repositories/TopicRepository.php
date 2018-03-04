@@ -148,13 +148,13 @@ class TopicRepository
 	private function add($node)
 	{
 		$this->nodes->push(
-			$node
+			collect($node)
 		);
 
 		if (!is_null($node->pivot))
 		{
 			$this->connections->push(
-				$node->pivot
+				collect($node->pivot)
 			);
 		}
 	}
