@@ -40,3 +40,38 @@
     opacity: 1;
   }
 }
+
+// TODO: trying from/to. delete either above or below this depending on what works. 
+
+@-webkit-keyframes swing-in-top-bck-fr {
+  from {
+    -webkit-transform: rotateX(70deg);
+            transform: rotateX(70deg);
+    -webkit-transform-origin: top;
+            transform-origin: top;
+    opacity: 0;
+  }
+  to {
+    -webkit-transform: rotateX(0deg);
+            transform: rotateX(0deg);
+    -webkit-transform-origin: top;
+            transform-origin: top;
+    opacity: 1;
+  }
+}
+@keyframes swing-in-top-bck-fr {
+  from {
+    -webkit-transform: rotateX(70deg);
+            transform: rotateX(70deg);
+    -webkit-transform-origin: top;
+            transform-origin: top;
+    opacity: 0;
+  }
+  to {
+    -webkit-transform: rotateX(0deg);
+            transform: rotateX(0deg);
+    -webkit-transform-origin: top;
+            transform-origin: top;
+    opacity: 1;
+  }
+}
