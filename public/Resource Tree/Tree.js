@@ -87,12 +87,19 @@ Tree.prototype.simulationInitialize = function()
 			.links(self.links.data())
 			.id(function(d){return d.id;})
 			.strength(.6)
-			.distance(10);
+			.distance(120);
 			
 	self.simulation
 		.force("ForceCharge")
 			.strength(-200);
 
+};
+
+Tree.prototype.simulationReheat = function()
+{
+	var self = this;
+	self.simulation.restart();
+	self.simulation.alpha(1);
 };
 
 
@@ -103,8 +110,7 @@ Tree.prototype.simulationRestart = function()
 	self.simulation.nodes(self.nodes_simulated.data());
 	self.simulation.force("ForceLink").links(self.links_simulated.data())
 	
-	self.simulation.restart();
-	self.simulation.alpha(1);
+	self.simulationReheat();
 };
 
 
@@ -220,8 +226,8 @@ Tree.prototype.updateDataNodes = function(selection, data)
 					//.attr("cx", function(){return Math.random() * self.frame.boundary.width})
 					//.attr("cy", function(){return Math.random() * self.frame.boundary.height})
 					.attr("fill", "blue")
-					.attr("r", 10)
-					.on("click", function(d){self.NodeClicked(d)});
+					.attr("r", "1%")
+					.on("click", function(d){self.nodeClicked(d, this)});
 		
 	selection	
 		.exit()
@@ -318,21 +324,53 @@ Tree.prototype.draw = function()
 		.attr('y2', function(d) { return d.target.y  });	
 };
 
-Tree.prototype.NodeClicked = function(d)
+Tree.prototype.nodeClicked = function(d, node)
 {
 	self = this;
 	
+	//Get the children of the clicked node 2 layers deep to display them
+	
+	[nodes_selection_primary, links_selection_primary] = self.getNChildrenSelections(d.id, 1);
 	[nodes_selection, links_selection] = self.getNChildrenSelections(d.id, 2);
+	
+	nodes_selection_secondary = SelectionSubtract(nodes_selection,nodes_selection_primary);
+	links_selection_secondary = SelectionSubtract(links_selection,links_selection_primary);
+	
+	
+	//Get selections of the circle that we clicked on, and the parent node of that circle
+	node_selection_clicked = d3.select(node.parentNode);
+	node_selection_clicked_circle = d3.select(node);
+	
+	//Make all of the animations to get things done!
+	
+	nodes_selection_secondary
+		.selectAll("circle")
+			.transition(1000)
+				.attr("r", "1%");
+	
+	nodes_selection_primary
+		.selectAll("circle")
+			.transition(1000)
+				.attr("r", "3%");
+	
+	
+	node_selection_clicked_circle
+		.transition(1000)
+			.attr("r", "10%");			
+	
+	
+	
+	
 	
 	nodes_selection
 		.transition()
 			.duration(1000)
-			.attr("visibility", "unset");
-	
+			.style("visibility", "unset");
+			
 	links_selection
 		.transition()
 			.duration(1000)
-			.attr("visibility", "unset");
+			.style("visibility", "unset");
 	
 	nodes_hidden = SelectionSubtract(self.nodes,nodes_selection);
 	links_hidden = SelectionSubtract(self.links,links_selection);
@@ -340,12 +378,12 @@ Tree.prototype.NodeClicked = function(d)
 	nodes_hidden
 		.transition()
 			.duration(1000)
-			.attr("visibility", "hidden");
+			.style("visibility", "hidden");
 	
 	links_hidden
 		.transition()
 			.duration(1000)
-			.attr("visibility", "hidden");
+			.style("visibility", "hidden");
 	
 	self.links_simulated = links_selection;
 	self.nodes_simulated = nodes_selection;
