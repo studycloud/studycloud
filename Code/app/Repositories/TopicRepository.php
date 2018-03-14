@@ -71,11 +71,14 @@ class TopicRepository
 				$children = $topic->children()->get();
 			}
 			foreach ($children as $child) {
+				// check whether the node has been added already
+				$addedAlready = $this->nodes->pluck('id')->contains($child->id);
+				// add the node and its connections to the corresponding data members
+				$this->add($child);
 				// this is a memoization check
 				// it prevents us from calling addDescendants on any topic more than once
-				if (!$this->nodes->pluck('target')->contains($child->target))
+				if (!$addedAlready)
 				{
-					$this->add($child);
 					// RECURSION!
 					$this->addDescendants($child, $levels - 1);
 				}
@@ -129,13 +132,16 @@ class TopicRepository
 				$parents = $topic->parents()->get();
 			}
 			foreach ($parents as $parent) {
+				// check whether the node has been added already
+				$addedAlready = $this->nodes->pluck('id')->contains($parent->id);
+				// add the node and its connections to the corresponding data members
+				$this->add($parent);
 				// this is a memoization check
 				// it prevents us from calling addAncestors on any topic more than once
-				if (!$this->nodes->pluck('target')->contains($parent->target))
+				if (!$addedAlready)
 				{
-					$this->add($parent);
 					// RECURSION!
-					$this->addAncestors($parent, $levels - 1);
+					$this->addAncestors($child, $levels - 1);
 				}
 			}
 		}
@@ -147,10 +153,15 @@ class TopicRepository
 	 */
 	private function add($node)
 	{
-		$this->nodes->push(
-			collect($node)
-		);
+		// check whether the node has been added already before adding it
+		if (!$this->nodes->pluck('id')->contains($node->id))
+		{
+			$this->nodes->push(
+				collect($node)
+			);
+		}
 
+		// add any connections the node may have
 		if (!is_null($node->pivot))
 		{
 			$this->connections->push(

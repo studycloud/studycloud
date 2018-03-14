@@ -48,22 +48,69 @@ class TopicTreeController extends Controller
 	 */
 	public function show($topic_id = 0, $levels = null)
 	{
-		// initialize our data members to empty collections
-		$this->tree = collect();
-
 		// get the descendants of this topic in a flat collection and load them into our tree data member
-		$this->tree = TopicRepository::descendants($topic, $levels);
-		// TODO: get the resources for each Topic in $tree and process each node
+		$this->tree = (new TopicRepository)->descendants($topic_id, $levels);
+		$topic_ids = $this->tree->get("nodes")->pluck("id");
+		// get each topic in the tree and process it
+		$this->tree->get("nodes")->transform(function($node)
+		{
+			return $this->processTopic($node);
+		});
+		// get each connection in the tree and process it
+		$this->tree->get("connections")->transform(function($connection)
+		{
+			return $this->processTopicConnection($connection);
+		});
+
+		return $this->tree;
 		
+		// add the resources of each topic to the tree
+		foreach ($topic_ids as $topic_id) {
+			// TODO: make sure that using find() doesn't cause an additional query to get the topic
+			$resources = App\Topic::find($topic_id)->resources()->get();
+			foreach ($resources as $resource) {
+				$this->addResource($resource);
+			}
+		}
 		// return the tree data: a collection of the resulting lists of nodes and connections
 		return $this->tree;
+	}
+
+	/**
+	 * process this node so that it shows the correct 
+	 * attributes when the request is returned to the user
+	 * @param  \Illuminate\Database\Eloquent\Collection $node the node to process
+	 * @return \Illuminate\Database\Eloquent\Collection       the processed node
+	 */
+	private function processTopic($node)
+	{
+		// add a 't' to the beginnning of the id
+		$node->prepend('t'.$node->pull('id'), 'target');
+		// remove the pivot attribute
+		$node = $node->except(['pivot']);
+		return $node;
+	}
+
+	/**
+	 * process this connection so that it shows the correct 
+	 * attributes when the request is returned to the user
+	 * @param  Illuminate\Database\Eloquent\Collection $connection the connection to process
+	 * @return \Illuminate\Database\Eloquent\Collection        the processed pivot as a collection
+	 */
+	private function processTopicConnection($connection)
+	{
+		// make "parent_id" into "source" and "topic_id" into "target"
+		// also add 't' to the id's
+		$connection->prepend('t'.$connection->pull('topic_id'), 'target');
+		$connection->prepend('t'.$connection->pull('parent_id'), 'source');
+		return $connection;
 	}
 
 	/**
 	 * adds the given node and any connections to the appropriate $nodes and $connections collections
 	 * @param \Illuminate\Database\Eloquent\Collection $nodes the nodes to add
 	 */
-	private function add($node)
+	private function addResource($node)
 	{
 		// double check that this node hasn't already been added to $this->tree.get("nodes"). handles duplicate resources
 		if (!$this->tree.get("nodes")->pluck('target')->contains($node->target))
@@ -76,55 +123,38 @@ class TopicTreeController extends Controller
 		if (!is_null($node->pivot))
 		{
 			$this->tree.get("connections")->push(
-				$this->processPivot($node->pivot)
+				$this->processConnection($node->pivot)
 			);
-		}
-
-		// if this node is a topic, we'll also have to add it's resources to the list of nodes
-		if (is_a($node, "App\Topic"))
-		{
-			$resources = $node->resources()->get();
-			foreach ($resources as $resource) {
-				$this->add($resource);
-			}
-			//recursion sucks - amp
 		}
 	}
 
 	/**
 	 * process this node so that it shows the correct 
 	 * attributes when the request is returned to the user
-	 * @param  \Illuminate\Database\Eloquent\Collection $node the nodes to process
-	 * @return \Illuminate\Database\Eloquent\Collection       the processed nodes
+	 * @param  \Illuminate\Database\Eloquent\Collection $node the node to process
+	 * @return \Illuminate\Database\Eloquent\Collection       the processed node
 	 */
-	private function processNode($node)
+	private function processResource($node)
 	{
-		return $node->makeHidden('pivot')->makeVisible('target')->makeHidden('id');
+		// add an 'r' to the beginnning of the id
+		$node->prepend('r'.$node->pull('id'), 'target');
+		// remove the pivot attribute
+		$node = $node->except(['pivot']);
+		return $node;
 	}
 
 	/**
 	 * process this connection so that it shows the correct 
 	 * attributes when the request is returned to the user
-	 * @param  Illuminate\Database\Eloquent\Relations\Pivot $pivot the pivot to process
+	 * @param  Illuminate\Database\Eloquent\Collection $connection the connection to process
 	 * @return \Illuminate\Database\Eloquent\Collection        the processed pivot as a collection
 	 */
-	private function processPivot($pivot)
+	private function processResourceConnection($connection)
 	{
-		// if the pivot object has a parent_id, we know that it's a connection
-		// between a topic and its parent
-		if ($pivot->parent_id)
-		{
-			$source = "t".($pivot->parent_id);
-			$target = "t".($pivot->topic_id);
-		}
-		// otherwise, we know that it's a connection between a
-		// resource and its topic
-		elseif ($pivot->resource_id)
-		{
-			$source = "t".($pivot->topic_id);
-			$target = "r".($pivot->resource_id);
-		}
-
-		return collect(['source' => $source, 'target' => $target]);
+		// make "topic_id" into "source" and "resource_id" into "target"
+		// also add 't' to the topic_id and 'r' to the resource_id
+		$connection->prepend('r'.$connection->pull('resource_id'), 'target');
+		$connection->prepend('t'.$connection->pull('topic_id'), 'source');
+		return $connection;
 	}
 }
