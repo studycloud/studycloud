@@ -9,6 +9,24 @@ use App\Repositories\TopicRepository;
 class ResourceRepository
 {
 	/**
+	 * In a single query, get the resources of all of the topics in a collection of topic ids.
+	 * @param  array $topic_ids the topic ids of the resources you want returned
+	 * @return Illuminate\Database\Eloquent\Collection         the resources as Collections
+	 */
+	public function getByTopics($topic_ids)
+	{
+		// TODO: check that this actually executes only one query
+		// TODO: return as nodes and connections?
+		return Topic::whereIn('id', $topic_ids)->with('resources')->get()->pluck('resources')->collapse()->map(
+			function ($topic)
+			{
+				// return the topic as a collection
+				return collect($topic);
+			}
+		);
+	}
+
+	/**
 	 * a wrapper function for attaching topics to prevent disallowedTopics from being added
 	 * @param  App\Resource $resource the resource to attach topics to
 	 * @param  Illuminate\Database\Eloquent\Collection $new_topics the topics to be attached

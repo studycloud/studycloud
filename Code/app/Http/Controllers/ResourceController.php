@@ -114,7 +114,7 @@ class ResourceController extends Controller
      */
     public function move(Resource $resource, Topic $topic)
     {
-        $resourc
+        
     }
 
 
