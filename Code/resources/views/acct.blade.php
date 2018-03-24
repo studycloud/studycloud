@@ -6,8 +6,8 @@
 			<form action="{{ route('login') }}" method="POST" id="logInForm">
 				{{ csrf_field() }}
 				<input type="text" name="email" id="logInUser" placeholder="username">
-				<input type="text" name="password" id="logInPwd" placeholder="password">
-				<label><input type="checkbox" name="remember">Remember Me</label>
+				<input type="password" name="password" id="logInPwd" placeholder="password">
+				<label id="remember"><input type="checkbox" name="remember">Remember Me</label>
 				<input type="submit" id="logInSub" value="Go">
 			</form>
 			<a href="#" class="linkDefault">Create account!</a> <!-- links to a new page on the website as it'll be annoying if you lose your progress creating an account -->

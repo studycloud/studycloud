@@ -164,20 +164,28 @@
 		color: white;
 		outline: none;
 		background: $search-box-default-color;	// Search box color (pre-focus).
-		float: center;
 		transition: all 0.15s;
 		border-radius: 0.1em;
 		resize: none;
 		font-size: inherit;
 		font-family: inherit;
+		margin-bottom: 2%;
+	}
+
+	#remember {
+		margin: 0 0 0 auto;
+		input {
+			margin: 2%;
+			display: inline;
+		}
 	}
 
 	#logInSub { // Style your submit button.
-		text-align: right;
 	    border: none;
 	    color: white;
 	    text-decoration: none;
-	    text-align: center;
+	    text-align: right;
 	    background: blue;
+	    margin: 2% 0 2% auto; // Right align button and top/bottom space it. 
 	}
 }

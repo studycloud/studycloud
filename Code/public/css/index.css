@@ -394,22 +394,31 @@ table {
   color: white;
   outline: none;
   background: #C8C8FF;
-  float: center;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
   border-radius: 0.1em;
   resize: none;
   font-size: inherit;
   font-family: inherit;
+  margin-bottom: 2%;
+}
+
+#logInHidden #remember {
+  margin: 0 0 0 auto;
+}
+
+#logInHidden #remember input {
+  margin: 2%;
+  display: inline;
 }
 
 #logInHidden #logInSub {
-  text-align: right;
   border: none;
   color: white;
   text-decoration: none;
-  text-align: center;
+  text-align: right;
   background: blue;
+  margin: 2% 0 2% auto;
 }
 
 html {
