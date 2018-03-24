@@ -19,7 +19,7 @@
 			<div class="navbar"> 
 				<ul>
 					<li><a href="#">Topics</a></li>
-					<li><a class="active" href="#">Items</a></li> <!-- is this really what it was called? -->
+					<li><a href="#">Classes</a></li>
 					<li><a href="{{ route('about') }}">About</a></li>
 					<li id="search">
 						<form action="" method="get" id="search_form">
