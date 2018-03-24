@@ -35,4 +35,6 @@
 		</header>
 		@yield('content')
 	</div>
+	@component('loginmodal')
+	@endcomponent
 </body></html>
