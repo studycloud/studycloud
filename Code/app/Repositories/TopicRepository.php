@@ -141,7 +141,7 @@ class TopicRepository
 				if (!$addedAlready)
 				{
 					// RECURSION!
-					$this->addAncestors($child, $levels - 1);
+					$this->addAncestors($parent, $levels - 1);
 				}
 			}
 		}

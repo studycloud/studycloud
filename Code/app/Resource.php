@@ -18,7 +18,7 @@ class Resource extends Model
     protected $appends = ['target'];
 
     protected $hidden = ['target'];
- 
+
   	/**
  	 * Add a unique id attribute so that JavaScript can distinguish between different models
  	 * @return string the string representing the unique id
@@ -41,7 +41,7 @@ class Resource extends Model
 	 * define the many-to-many relationship between resources and the topics they belong to
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany the relationship accessor
 	 */
-	private function topics()
+	public function topics()
 	{
 		return $this->belongsToMany(Topic::class, 'resource_topic', 'resource_id', 'topic_id');
 	}

@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Resource;
+use App\Topic;
+use App\Repositories\TopicRepository;
 
 class ResourceRepository
 {
@@ -14,17 +16,18 @@ class ResourceRepository
 	 */
 	public function attachTopics($resource, $new_topics)
 	{
-		$topics_are_allowed = $new_topics->every(function($topic)
+		$disallowed_topics = $this->disallowedTopics($resource)->pluck('id');
+		$notAllowed = $new_topics->reduce(function($carry, $topic) use ($disallowed_topics)
 		{
-			return $this->allowedTopics()->contains($topic);
-		});
-		if ($topics_are_allowed)
+			return $carry || $disallowed_topics->contains($topic->id);
+		}, false);
+		if ($notAllowed)
 		{
-			return $this->topics()->attach($new_topics);
+			throw new \Exception("One of the desired topics cannot be attached because it is an ancestor or descendant of one of this resource's current topics. You can use the allowedTopics() method to see which topics can be attached to this resource.");
 		}
 		else
 		{
-			throw new \Exception("One of the desired topics cannot be attached because it is an ancestor or descendant of one of this resource's current topics. You can use the allowedTopics() method to see which topics can be attached to this resource.");
+			return $resource->topics()->attach($new_topics);
 		}
 	}
 
@@ -32,21 +35,18 @@ class ResourceRepository
 	 * Moves the resource into the desired topic newTopic. If attempting to 
 	 * move into a topic that is an ancestor or child of the resource's
 	 * current topics, the current topic will be replaced by the newTopic.
-	 * 
-	 * @param 
-	 * @return
-	 * 
+	 * @param App\Resource $resource the resource to move
 	 */
 //check to see if this actually works 
-	public function moveTopics($newTopic)
+	public function moveTopics($resource, $newTopic)
 	{	
 
-		$disallowedTopics = $this->disallowedTopics();
+		$disallowedTopics = $this->disallowedTopics($resource);
 		$allowed = !$disallowedTopics->contains($newTopic);
 		
 
 		if($allowed){
-			$this->attachTopics($newTopic);
+			$this->attachTopics($resource, $newTopic);
 		}
 		elseif(!$allowed)
 		{
@@ -74,34 +74,63 @@ class ResourceRepository
 		}
 	}
 
-	public function detachTopics($old_topics)
+	/**
+	 * a wrapper function for detaching topics for ease of use
+	 * @param  App\Resource $resource the resource whose topics you'd like to detach
+	 * @param  Illuminate\Database\Eloquent\Collection $new_topics the Topics to detach
+	 * @return 
+	 */
+	public function detachTopics($resource, $old_topics)
 	{
-		return $this->topics()->detach($old_topics);
+		return $resource->topics()->detach($old_topics);
 	}
 
 	/**
 	 * which topics isn't this resource allowed to be added to?
+	 * @param  App\Resource $resource the resource whose disallowedTopics you'd like to get
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function disallowedTopics()
+	public function disallowedTopics($resource)
 	{
-		$topics = $this->topics()->get();
-		$disallowed_topics = $topics;
+		$topics = $resource->topics()->get();
+		$disallowed_topics = $topics->map(
+			function ($topic)
+			{
+				// return the topic as a collection without its pivot attribute
+				return collect($topic)->except(['pivot']);
+			}
+		);
 		foreach ($topics as $topic) {
 			// this resource can't be added to the ancestors or descendants of any of the topics it's already in
 			// adding to an ancestor is redundant information
 			// so the resource must be removed from a topic before the resource can be added to one of that topic's descendants
-			$disallowed_topics = $disallowed_topics->merge($topic->ancestors())->merge($topic->descendants());
+			$ancestors = (new TopicRepository)->ancestors($topic->id)->get("nodes")->map(
+				function ($topic)
+				{
+					// return the topic as a collection without its pivot attribute
+					return $topic->except(['pivot']);
+				}
+			);
+			$descendants = (new TopicRepository)->descendants($topic->id)->get("nodes")->map(
+				function ($topic)
+				{
+					// return the topic as a collection without its pivot attribute
+					return $topic->except(['pivot']);
+				}
+			);
+			$disallowed_topics = $disallowed_topics->merge($ancestors)->merge($descendants)->unique();
 		}
 		return $disallowed_topics;
 	}
 
 	/**
 	 * which topics is this resource allowed to be added to?
+	 * Note: this function executes one more query than disallowedTopics() and is therefore a bit slower. don't use it if you don't have to
+	 * @param  App\Resource $resource the resource whose allowedTopics you'd like to get
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function allowedTopics()
+	public function allowedTopics($resource)
 	{
-		return Topic::all()->diff($this->disallowedTopics());
+		return collect(Topic::whereNotIn('id', $this->disallowedTopics($resource)->pluck('id'))->get());
 	}
 }
