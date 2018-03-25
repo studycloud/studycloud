@@ -34,11 +34,14 @@ class ResourceRepository
 	 */
 	public function attachTopics($resource, $new_topics)
 	{
+		// get the ids of the topics that we can't attach
 		$disallowed_topics = $this->disallowedTopics($resource)->pluck('id');
-		$notAllowed = $new_topics->reduce(function($carry, $topic) use ($disallowed_topics)
-		{
-			return $carry || $disallowed_topics->contains($topic->id);
-		}, false);
+		// iterate through each topic that we want to attach and make sure it can be added
+		$notAllowed = false;
+		foreach ($topic as $new_topics) {
+			$notAllowed = $notAllowed && $disallowed_topics->contains($topic->id);
+		}
+		// if any of the topics can't be added
 		if ($notAllowed)
 		{
 			throw new \Exception("One of the desired topics cannot be attached because it is an ancestor or descendant of one of this resource's current topics. You can use the allowedTopics() method to see which topics can be attached to this resource.");
