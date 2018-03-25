@@ -21,3 +21,16 @@ function SelectionSubtract(SelectionA, SelectionB)
 	
 	return SelectionResult;
 }
+
+function SelectionAdd(SelectionA, SelectionB)
+{
+	//Returns the sum of Selection A and Selection B. 
+	//A+B = Result
+	
+	var NodesB = SelectionB.nodes();
+	var NodesA = SelectionA.nodes();
+	
+	var nodes_combined = NodesA.concat(NodesB);
+	
+	return d3.selectAll(nodes_combined);
+}

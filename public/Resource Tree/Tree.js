@@ -62,6 +62,8 @@ function Tree(type, frame_id)
 	self.simulationInitialize();			
 	
 	self.setData(data);
+	
+	self.breadcrumbStack = [0];
 }
 
 
@@ -76,22 +78,29 @@ Tree.prototype.simulationInitialize = function()
 		.alphaDecay(0.01)
 		.force("ForceLink", d3.forceLink())
 		.force("ForceCharge", d3.forceManyBody())
-		.force("ForceCenter", d3.forceCenter(self.frame.boundary.width / 2, self.frame.boundary.height / 2));
+		.force("ForceCenterX", d3.forceX(self.frame.boundary.width / 2))
+		.force("ForceCenterY", d3.forceY(self.frame.boundary.height / 2));
 
 	self.simulation
 		.nodes(self.nodes.data())
 		.on('tick', function(){self.draw()});
 
+	self.simulation.force("ForceCenterX")
+		.strength(0.1);
+	
+	self.simulation.force("ForceCenterY")
+		.strength(0.1);	
+		
 	self.simulation
 		.force("ForceLink")
+			.strength(1)
 			.links(self.links.data())
 			.id(function(d){return d.id;})
-			.strength(.6)
-			.distance(120);
+			.distance(80);
 			
 	self.simulation
 		.force("ForceCharge")
-			.strength(-200);
+			.strength(-1500);
 
 };
 
@@ -112,6 +121,42 @@ Tree.prototype.simulationRestart = function()
 	
 	self.simulationReheat();
 };
+
+
+Tree.prototype.getParentsSelection = function(node_id)
+{
+	var self = this;
+	
+	var node_ids = new Set();
+	var link_ids = new Set();
+	
+	
+	self.links.data().forEach(function(link)
+		{
+			if (link.target.id == node_id)
+			{	
+				//we found a parent, record the id
+				node_ids.add(link.source.id);
+				link_ids.add(link.id);
+			}
+		}
+	);
+	
+	var nodes_selection = self.nodes.filter(function()
+		{
+			return node_ids.has(this.getAttribute("data_id"));
+		}
+	);
+	
+	var links_selection = self.links.filter(function()
+		{
+			return link_ids.has(this.getAttribute("data_id"));
+		}
+	);
+	
+	return [nodes_selection, links_selection];
+	
+}
 
 
 Tree.prototype.getNChildrenSelections = function(node_id, children_levels_num)
@@ -227,20 +272,20 @@ Tree.prototype.updateDataNodes = function(selection, data)
 					//.attr("cy", function(){return Math.random() * self.frame.boundary.height})
 					.attr("fill", "blue")
 					.attr("r", "1%")
-					.on("click", function(d){self.nodeClicked(d, this)});
+					.on("click", function(d){self.nodeClicked(this)});
 		
 	selection	
 		.exit()
 			.select("circle")
 				.transition()
-					.duration(500)
-					.attr("r", "0");
+					.duration(1000)
+					.attr("r", "0%");
 	
 	selection
 		.exit()
 			.attr("class", "node-deleted")
 			.transition()
-				.duration(500)
+				.duration(1000)
 				.style("opacity", "0")
 				.remove();
 	
@@ -264,14 +309,14 @@ Tree.prototype.updateDataLinks = function(selection, data)
 		.exit()
 			.select("line")
 				.transition()
-					.duration(500)
+					.duration(1000)
 					.style("stroke", "transparent");
 	
 	selection	
 		.exit()
 			.attr("class", "link-deleted")
 			.transition()
-				.duration(500)
+				.duration(1000)
 				.style("opacity", "0")
 				.remove();
 
@@ -307,90 +352,268 @@ Tree.prototype.updateDataNChildren = function(node_id, children_levels_num, data
 	self.simulationRestart();
 };
 
-
-Tree.prototype.draw = function()
+Tree.prototype.drawLinks = function()
 {
+	var self = this;
 	
+	self.links.select("line")
+		.attr('x1', function(d) { return d.source.x })
+		.attr('y1', function(d) { return d.source.y })
+		.attr('x2', function(d) { return d.target.x })
+		.attr('y2', function(d) { return d.target.y });
+};
+
+Tree.prototype.drawNodes = function()
+{
 	var self = this;
 
 	self.nodes.select("circle")
 		.attr('cx', function(d) { return d.x; })
 		.attr('cy', function(d) { return d.y; });
-	
-	self.links.select("line")
-		.attr('x1', function(d) { return d.source.x })
-		.attr('y1', function(d) { return d.source.y  })
-		.attr('x2', function(d) { return d.target.x  })
-		.attr('y2', function(d) { return d.target.y  });	
 };
 
-Tree.prototype.nodeClicked = function(d, node)
+Tree.prototype.draw = function()
 {
+	var self = this;
+	
+	self.drawNodes();
+	self.drawLinks();
+		
+};
+
+Tree.prototype.nodeCoordinateInterpolater = function(d)
+{
+	var coordinate = {};
+	
+	switch(d.level)
+	{
+		case -1:
+			coordinate.x = 0;
+			coordinate.y = 0;
+			break;
+		case 0:
+			coordinate.x = self.frame.svg.center.x;
+			coordinate.y = self.frame.svg.center.y;
+			break;
+		case 1:
+		case 2:
+		case 3:
+			return;
+	}
+
+	var interpolate_x = d3.interpolateNumber(d.x, coordinate.x);
+	var interpolate_y = d3.interpolateNumber(d.y, coordinate.y);
+		
+	switch(d.level)
+	{
+		case -1:
+		case 0:				
+			return function(t)
+			{
+				d.fx = interpolate_x(t);
+				d.fy = interpolate_y(t);
+				d.x = d.fx;
+				d.y = d.fy;
+				
+				self.draw();
+			};	
+	}
+	
+	
+}
+
+
+Tree.prototype.centerOnNode = function(node)
+{	//This function centers the tree visualization on a node.
+	
 	self = this;
 	
-	//Get the children of the clicked node 2 layers deep to display them
+	data_id = node.__data__.id;
 	
-	[nodes_selection_primary, links_selection_primary] = self.getNChildrenSelections(d.id, 1);
-	[nodes_selection, links_selection] = self.getNChildrenSelections(d.id, 2);
+	var nodes_selection_primary, links_selection_primary;
+	var nodes_selection_children, links_selection_children;
+	var nodes_selection_parents, links_selection_parents;
 	
-	nodes_selection_secondary = SelectionSubtract(nodes_selection,nodes_selection_primary);
-	links_selection_secondary = SelectionSubtract(links_selection,links_selection_primary);
+	//Get selections of the circle we are centering on, and the parent DOM element of that circle
+	var node_selection_clicked = d3.select(node.parentNode);
+
+	[nodes_selection_primary, links_selection_primary] = self.getNChildrenSelections(data_id, 1);
+	[nodes_selection_children, links_selection_children] = self.getNChildrenSelections(data_id, 2);
 	
+	//Get the parent nodes of the circle
+	[nodes_selection_parents, links_selection_parents] = self.getParentsSelection(data_id);
+
 	
-	//Get selections of the circle that we clicked on, and the parent node of that circle
-	node_selection_clicked = d3.select(node.parentNode);
-	node_selection_clicked_circle = d3.select(node);
+	self.nodes.each(function(d){d.level = 3;});
+	self.links.each(function(d){d.level = 3;});
 	
-	//Make all of the animations to get things done!
+	nodes_selection_children.each(function(d){d.level = 2;});
+	links_selection_children.each(function(d){d.level = 2;});
 	
-	nodes_selection_secondary
-		.selectAll("circle")
-			.transition(1000)
-				.attr("r", "1%");
+	nodes_selection_primary.each(function(d){d.level = 1});
+	links_selection_primary.each(function(d){d.level = 1;});
 	
-	nodes_selection_primary
-		.selectAll("circle")
-			.transition(1000)
-				.attr("r", "3%");
+	node_selection_clicked.each(function(d){d.level = 0;});
 	
+	nodes_selection_parents.each(function(d){d.level = -1;});
+	links_selection_parents.each(function(d){d.level = -1;});
 	
-	node_selection_clicked_circle
-		.transition(1000)
-			.attr("r", "10%");			
+
+	//All of the nodes and links together.
+	var nodes_selection = SelectionAdd(nodes_selection_children, nodes_selection_parents);
+	var links_selection = SelectionAdd(links_selection_children, links_selection_parents);
 	
+	//Make all of the animations!
+	var transition = d3.transition();
 	
+	transition.duration(500);
 	
+	self.simulation.stop();
 	
+	//Clear the fixed position nodes except center or parents
+	self.nodes.each(function(d)
+		{
+			switch (d.level)
+			{
+				case -1:
+				case 0: 
+					break;
+				case 1:
+				case 2: 
+				case 3: 
+					d.fx = null;
+					d.fy = null;
+					break;
+			}
+		}
+	);
 	
-	nodes_selection
-		.transition()
-			.duration(1000)
-			.style("visibility", "unset");
-			
-	links_selection
-		.transition()
-			.duration(1000)
-			.style("visibility", "unset");
+	self.nodes
+		.select("circle")
+		.transition(transition)
+			.attr("r", function(d)
+				{
+					switch (d.level)
+					{
+						case -1: return "15%";
+						case 0: return "5%";
+						case 1: return "3%";
+						case 2: return "1%";
+						case 3: return this.getAttribute("r");
+					}
+				}
+			)
+			.style("opacity", function(d)
+				{
+					switch (d.level)
+					{
+						case -1:
+						case 0: 
+						case 1: 
+						case 2: return 1;
+						case 3: return 0;
+					}
+				}
+			)
+			.on("start", function(d)
+				{
+					self.simulationRestart();
+					//self.simulation.stop();
+					
+					switch (d.level)
+					{
+						case -1:
+						case 0: 
+						case 1: 
+						case 2: 
+							this.style.visibility = "unset";
+							break;
+						case 3:
+							break;
+					}
+				}
+			)
+			.on("end", function(d)
+				{
+					//self.simulationRestart()
+					switch (d.level)
+					{
+						case -1:
+						case 0: 
+						case 1: 
+						case 2: 
+							break;
+						case 3:
+							this.style.visibility = "hidden";
+							break;
+					}
+				}
+			)
+			.on("interrupt", function(){console.log("aaa");})
+			.tween("coordinates", self.nodeCoordinateInterpolater);
 	
-	nodes_hidden = SelectionSubtract(self.nodes,nodes_selection);
-	links_hidden = SelectionSubtract(self.links,links_selection);
+	self.links
+		.transition(transition)
+			.style("opacity", function(d)
+				{
+					switch (d.level)
+					{
+						case -1:
+						case 0: 
+						case 1: 
+						case 2: return 1;
+						case 3: return 0;
+					}
+				}
+			)
+			.on("start", function(d)
+				{
+					switch (d.level)
+					{
+						case -1:
+						case 0: 
+						case 1: 
+						case 2: 
+							this.style.visibility = "unset";
+							break;
+						case 3:
+							break;
+					}
+				}
+			)
+			.on("end", function(d)
+				{
+					switch (d.level)
+					{
+						case -1:
+						case 0: 
+						case 1: 
+						case 2: 
+							break;
+						case 3:
+							this.style.visibility = "hidden";
+							break;
+					}
+				}
+			);
 	
-	nodes_hidden
-		.transition()
-			.duration(1000)
-			.style("visibility", "hidden");
-	
-	links_hidden
-		.transition()
-			.duration(1000)
-			.style("visibility", "hidden");
 	
 	self.links_simulated = links_selection;
 	self.nodes_simulated = nodes_selection;
 
-	self.simulationRestart();
+	
 }
 
+Tree.prototype.BreadcrumbStackUpdate = function(id)
+{
+	self = this;
+}
+
+Tree.prototype.nodeClicked = function(node)
+{
+	self = this;
+	self.centerOnNode(node);
+}
 
 
 tree_1 = new Tree("Blah", "tree");
@@ -513,3 +736,5 @@ var data=
     }
   ]
 };	
+
+tree_1.setData(data);
