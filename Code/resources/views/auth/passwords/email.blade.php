@@ -1,3 +1,5 @@
+<!-- This component requests a password reset. Displays inside a modal. -->
+
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">

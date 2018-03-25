@@ -1,3 +1,5 @@
+<!-- You're going to need to set this page up; I think it's a landing page for when you reset the password. Currently extends layouts.app and that's overriding like all the fonts but we should really not override all the fonts. -->
+
 @extends('layouts.app')
 
 @section('content')
