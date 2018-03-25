@@ -10,8 +10,8 @@
 				<label id="remember"><input type="checkbox" name="remember">Remember Me</label>
 				<input type="submit" id="logInSub" value="Go">
 			</form>
-			<a href="#" class="linkDefault">Create account!</a> <!-- links to a new page on the website as it'll be annoying if you lose your progress creating an account -->
-			<a href="#" class="linkDefault">Forgot login?</a>
+			<a href="#" id="register-btn" class="linkDefault">Create account!</a> <!-- links to a new page on the website as it'll be annoying if you lose your progress creating an account -->
+			<a href="#" id="forget-btn" class="linkDefault">Forgot login?</a>
 		</div>
 	</li>
 @else

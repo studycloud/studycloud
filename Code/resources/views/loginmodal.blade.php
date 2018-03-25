@@ -4,12 +4,17 @@
 <button id="myBtn">Open Modal</button>
 
 <!-- The Modal -->
-<div id="myModal" class="modal">
+<div id="my-modal" class="modal">
 
   <!-- Modal content -->
   <div class="modal-content">
-    <span id="closeModal">&times;</span>
-    <p>Some text in the Modal..</p>
+  	<span id="close-modal">&times;</span>
+    <div id="forget-content">
+    	<p>YOU FORGOT YOUR PASSWORD HOW COULD YOU :'(</p>
+    </div>
+    <div id="register-content">
+    	<p>welcome happy account-make</p>
+    </div>
   </div>
 
 </div>
