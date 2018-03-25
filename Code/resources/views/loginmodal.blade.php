@@ -11,9 +11,14 @@
   	<span id="close-modal">&times;</span>
     <div id="forget-content">
     	<p>YOU FORGOT YOUR PASSWORD HOW COULD YOU :'(</p>
+     	@component('auth/passwords/email')
+    	@endcomponent
+    	<p>whati s reset lol </p>
     </div>
     <div id="register-content">
     	<p>welcome happy account-make</p>
+    	@component('auth/register')
+    	@endcomponent
     </div>
   </div>
 
