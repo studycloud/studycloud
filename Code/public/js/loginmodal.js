@@ -15,7 +15,7 @@ $(document).ready(function(){
 	});
 
 	// When the user clicks on <span> (x), close the modal
-	$(".close-modal").click(function(event) { // TODO: MAKE THIS LESS GENERAL
+	$("#close-modal").click(function(event) { // TODO: MAKE THIS LESS GENERAL
 	    document.getElementById('my-modal').style.display = "none";
 	});
 

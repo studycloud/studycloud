@@ -13,7 +13,7 @@
 	<div id="pageWidth">
 		<header> <!-- header tag necessary? idk. Consider removing? -->
 			
-			<a href="{{ route('home') }}"><object style="pointer-events: none;" type="image/svg+xml" class="logoFull" data="{{ URL::asset('storage/images/header.svg') }}" alt="School logo, Study Cloud header, and logo"> </object></a>
+			<a href="{{ route('home') }}"><object style="pointer-events: none;" type="image/svg+xml" class="logo-full" data="{{ URL::asset('storage/images/header.svg') }}" alt="School logo, Study Cloud header, and logo"> </object></a>
 
 			<!-- Navbar goes here -->
 			<div class="navbar"> 
@@ -22,8 +22,8 @@
 					<li><a href="#">Classes</a></li>
 					<li><a href="{{ route('about') }}">About</a></li>
 					<li id="search">
-						<form action="" method="get" id="search_form">
-							<input type="text" name="search_text" id="search_text" placeholder="search">
+						<form action="" method="get" id="search-form">
+							<input type="text" name="search-text" id="search-text" placeholder="search">
 						</form>
 					</li>
 					<!--Component for login/logout.-->

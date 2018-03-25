@@ -231,7 +231,7 @@ table {
   color: white;
 }
 
-.logoFull {
+.logo-full {
   display: block;
   margin: auto;
   padding: 10px;
@@ -298,12 +298,12 @@ table {
   padding: 0.2em 0;
 }
 
-.navbar ul #search #search_form {
+.navbar ul #search #search-form {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-.navbar ul #search #search_form #search_text {
+.navbar ul #search #search-form #search-text {
   text-align: center;
   border-color: transparent;
   color: white;
@@ -319,12 +319,12 @@ table {
   font-family: inherit;
 }
 
-.navbar ul #search #search_form #search_text:focus {
+.navbar ul #search #search-form #search-text:focus {
   color: black;
   background: white;
 }
 
-.navbar ul #logIn {
+.navbar ul #log-in {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
@@ -335,13 +335,13 @@ table {
   padding: 0.3em;
 }
 
-.navbar ul #logIn #logInButton {
+.navbar ul #log-in #log-in-button {
   background-color: #0044b3;
 }
 
 /* LOGIN DROPDOWN */
 
-#logInHidden {
+#log-in-hidden {
   padding: 5px;
   text-align: right;
   position: absolute;
@@ -352,7 +352,7 @@ table {
   right: 0;
 }
 
-#logInHidden.swing-in-top-bck {
+#log-in-hidden.swing-in-top-bck {
   visibility: visible;
   animation: swing-in-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
   -moz-animation: swing-in-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
@@ -361,7 +361,7 @@ table {
   /* Safari and Chrome */
 }
 
-#logInHidden.swing-out-top-bck {
+#log-in-hidden.swing-out-top-bck {
   visibility: hidden;
   animation: swing-out-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
   -moz-animation: swing-out-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
@@ -370,7 +370,7 @@ table {
   /* Safari and Chrome */
 }
 
-#logInHidden .linkDefault {
+#log-in-hidden .link-default {
   color: blue;
   padding-top: 2px;
   padding-bottom: 2px;
@@ -382,13 +382,13 @@ table {
   text-align: right;
 }
 
-#logInHidden .linkDefault:hover {
+#log-in-hidden .link-default:hover {
   color: red;
   background: none;
 }
 
-#logInHidden #logInUser,
-#logInHidden #logInPwd {
+#log-in-hidden #log-in-user,
+#log-in-hidden #log-in-pwd {
   text-align: center;
   border-color: transparent;
   color: white;
@@ -403,16 +403,16 @@ table {
   margin-bottom: 2%;
 }
 
-#logInHidden #remember {
+#log-in-hidden #remember {
   margin: 0 0 0 auto;
 }
 
-#logInHidden #remember input {
+#log-in-hidden #remember input {
   margin: 2%;
   display: inline;
 }
 
-#logInHidden #logInSub {
+#log-in-hidden #logInSub {
   border: none;
   color: white;
   text-decoration: none;
@@ -464,15 +464,15 @@ table {
 
 /* The Close Button */
 
-.close {
+#close-modal {
   color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
+#close-modal:hover,
+#close-modal:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;
