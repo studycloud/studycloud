@@ -100,7 +100,7 @@ Tree.prototype.simulationInitialize = function()
 			
 	self.simulation
 		.force("ForceCharge")
-			.strength(-1500);
+			.strength(-1000);
 
 };
 
@@ -268,9 +268,14 @@ Tree.prototype.updateDataNodes = function(selection, data)
 				.attr("class", "node")
 				.attr("data_id", function(d){return d.id;})
 				.append("circle")
-					//.attr("cx", function(){return Math.random() * self.frame.boundary.width})
-					//.attr("cy", function(){return Math.random() * self.frame.boundary.height})
-					.attr("fill", "blue")
+					.attr("fill", function(d)
+					{
+						//generate our fill color based on the date created, author, and name
+						var random_number_generator = new Math.seedrandom(d.created_at + d.author_id + d.name);
+						var color = d3.interpolateRainbow(random_number_generator());
+						return color;
+					}
+					)
 					.attr("r", "1%")
 					.on("click", function(d){self.nodeClicked(this)});
 		
@@ -397,8 +402,11 @@ Tree.prototype.nodeCoordinateInterpolater = function(d)
 			break;
 		case 1:
 		case 2:
-		case 3:
 			return;
+		case 3:
+			coordinate.x = 0;
+			coordinate.y = 0;
+			break;
 	}
 
 	var interpolate_x = d3.interpolateNumber(d.x, coordinate.x);
@@ -407,7 +415,8 @@ Tree.prototype.nodeCoordinateInterpolater = function(d)
 	switch(d.level)
 	{
 		case -1:
-		case 0:				
+		case 0:
+		case 3:
 			return function(t)
 			{
 				d.fx = interpolate_x(t);
@@ -509,9 +518,12 @@ Tree.prototype.centerOnNode = function(node)
 					{
 						case -1:
 						case 0: 
-						case 1: 
-						case 2: return 1;
-						case 3: return 0;
+						case 1:
+							return 1;
+						case 2: 
+							return 0.2;
+						case 3: 
+							return 0;
 					}
 				}
 			)
@@ -520,6 +532,7 @@ Tree.prototype.centerOnNode = function(node)
 					self.simulationRestart();
 					//self.simulation.stop();
 					
+					//set the visibility
 					switch (d.level)
 					{
 						case -1:
@@ -531,6 +544,7 @@ Tree.prototype.centerOnNode = function(node)
 						case 3:
 							break;
 					}
+					
 				}
 			)
 			.on("end", function(d)
@@ -549,10 +563,18 @@ Tree.prototype.centerOnNode = function(node)
 					}
 				}
 			)
-			.on("interrupt", function(){console.log("aaa");})
+			.on("interrupt", function(d)
+			{	
+				//we got interrupted, clear the fixed position of the circles so that they animate correctly
+				d.fx = null;
+				d.fy = null;
+				console.log("Animation Interrupted");
+			}
+			)
 			.tween("coordinates", self.nodeCoordinateInterpolater);
 	
-	self.links
+	
+	//Not animating links since they aren't shown now
 		.transition(transition)
 			.style("opacity", function(d)
 				{
@@ -597,6 +619,20 @@ Tree.prototype.centerOnNode = function(node)
 				}
 			);
 	
+	//Set the lengths of the links
+	self.simulation.force("ForceLink").distance(function(d)
+	{
+		switch (d.level)
+		{
+			case -1:
+				return 600;
+			case 1: 
+				return 100; 
+			case 2: 
+				return 0;
+		}
+	}
+	);
 	
 	self.links_simulated = links_selection;
 	self.nodes_simulated = nodes_selection;
