@@ -45,7 +45,7 @@
 			padding: 0.3em;
 			a, input { // Default behavior of navbar items.
 				font-weight: bolder;
-				color: white;
+				color: $navbar-text-color;
 				display: block;
 				text-decoration: none;
 				text-align: center;
@@ -58,7 +58,7 @@
 				margin: auto;
 				&:hover {
 					background-color: $navbar-hover-color;
-					color: black;
+					color: $navbar-text-hover-color;
 					transition: all 0.15s;
 				}
 
@@ -76,9 +76,9 @@
 				#search-text {
 					text-align: center;
 					border-color: transparent;
-					color: white;
+					color: $search-box-text-color;
 					outline: none;
-					background: $search-box-default-color;
+					background: $search-box-bg-color;
 					float: center;
 					transition: all 0.15s;
 					border-radius: 0.1em;
@@ -87,8 +87,8 @@
 					font-size: inherit;
 					font-family: inherit;
 					&:focus {
-						color: black;
-						background: $search-box-focus-color;
+						color: $search-box-text-focus-color;
+						background: $search-box-bg-focus-color;
 					}
 				}
 			}
@@ -101,10 +101,10 @@
 		    display: inline-block;
 		    padding: 0.3em;
 		    #log-in-button {
-				background-color: $login-button-default-color;
+				background-color: $login-button-color;
 
 				&:hover, &:focus {
-					// background-color: $login-button-hover-color;
+					background-color: $login-button-hover-color;
 				}
 			}
 		}
@@ -142,7 +142,7 @@
 	}
 
     .link-default { // Reset behavior of links inside the dropdown (create account, forgot details).
-	    color: $default-link;
+	    color: $link-default;
 	    padding-top: 2px;
 	    padding-bottom: 2px;
 	    text-decoration: none;
@@ -153,17 +153,18 @@
 	    text-align: right;
 
 		&:hover {
-			color: $hover-link;
+			color: $link-hover;
 			background: none;
 		}
 	}
 
+	// Use colors for search box. 
 	#log-in-user, #log-in-pwd {
 		text-align: center;	
 		border-color: transparent;
-		color: white;
+		color: $search-box-text-color;
 		outline: none;
-		background: $search-box-default-color;	// Search box color (pre-focus).
+		background: $search-box-default-color;
 		transition: all 0.15s;
 		border-radius: 0.1em;
 		resize: none;
@@ -213,7 +214,7 @@
 
 /* Modal Content/Box */
 .modal-content {
-    background-color: #fefefe;
+    background-color: $content-bg-color;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
@@ -222,7 +223,7 @@
 
 /* The Close Button */
 #close-modal {
-    color: #aaa;
+    color: $text-light;
     float: right;
     font-size: 28px;
     font-weight: bold;
