@@ -5,8 +5,8 @@ function Server(node, handleError, handleSuccess)
     // no data member needed 
 
     var self = this;
-
-
+    self.treeHandleError = handleError;
+    self.treeHandleSuccess = handleSuccess;
 }
 
 Server.prototype.getData = function(node, levels)
@@ -21,24 +21,34 @@ Server.prototype.getData = function(node, levels)
 		url = "/tree/data/?topic="+node;
 	else
 		url = "tree/data";
-    return d3.json(url);
+    return d3.json(url, function(error, data){
+    	if (error){
+    		return self.handleError(error);
+
+    	}
+    	else {
+    		return self.handleSuccess(data);
+		}	
+    });
 	
 
 };
 
 
-Server.prototype.handleError = function()
+Server.prototype.handleError = function(error)
 {
     var self = this;
+    return self.treeHandleError(error);
 
 
 
 };
 
 
-Server.prototype.handleSuccess = function()
+Server.prototype.handleSuccess = function(data)
 {
     var self = this;
+    return self.treeHandleSuccess(data);
 
 
 
