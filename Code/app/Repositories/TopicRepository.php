@@ -24,8 +24,7 @@ class TopicRepository
 
 	/**
 	 * get the descendants of a topic in a flat collection
-	 * this is a wrapper for the addDescendants function
-	 * @param  integer $topic_id the id of the current topic in the tree; defaults to the root of the tree, which has an id of 0
+	 * @param  App\Topic the current topic in the tree; defaults to the root of the tree
 	 * @param  int $levels the number of levels of descendants to get; returns all if $levels is not specified or is less than 0
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
@@ -33,7 +32,9 @@ class TopicRepository
 	{
 		$tree = collect();
 		// base case: $levels == 0
-		if ($levels != 0 || is_null($levels))
+		// also do a memoization check to prevent us from
+		// executing a query for a topic that we've already found
+		if (($levels != 0 || is_null($levels)) && !in_array($topic->id, $this->memoize))
 		{
 			if (is_null($topic))
 			{
@@ -42,65 +43,19 @@ class TopicRepository
 			else
 			{
 				$children = $topic->children()->get();
+				// add the topic id to the list of topics that have already been called
+				array_push($this->memoize, $topic->id);
 			}
 			foreach ($children as $child) {
 				// add the child to the tree
 				$tree->push(collect($child));
-				// this is a memoization check
-				// it prevents us from calling addDescendants on any topic more than once
-				if (!in_array($child->id, $this->memoize))
-				{
-					// add the topic id to the list of topics that have already been called
-					array_push($this->memoize, $child->id);
-					$tree->merge(
-						// RECURSION!
-						$this->descendants($child, $levels - 1)->map(function ($item)
-							{
-								// TODO: what the heck are you doing? is this needed?
-								return collect($item);
-							}
-						)
-					);
-				}
+				$tree = $tree->merge(
+					// RECURSION!
+					$this->descendants($child, $levels - 1)
+				);
 			}
 		}
 		return $tree;
-	}
-
-
-	/**
-	 * load the descendants of a topic in a flat collection
-	 * into the nodes and connections data members
-	 * @param  App\Topic the current topic in the tree; defaults to the root of the tree
-	 * @param  int $levels the number of levels of descendants to get; returns all if $levels is not specified or is less than 0
-	 */
-	private function addDescendants(Topic $topic = null, int $levels = null)
-	{
-		// base case: $levels == 0
-		if ($levels != 0 || is_null($levels))
-		{
-			if (is_null($topic))
-			{
-				$children = self::getTopLevelTopics();
-			}
-			else
-			{
-				$children = $topic->children()->get();
-			}
-			foreach ($children as $child) {
-				// check whether the node has been added already
-				$addedAlready = $this->nodes->pluck('id')->contains($child->id);
-				// add the node and its connections to the corresponding data members
-				$this->add($child);
-				// this is a memoization check
-				// it prevents us from calling addDescendants on any topic more than once
-				if (!$addedAlready)
-				{
-					// RECURSION!
-					$this->addDescendants($child, $levels - 1);
-				}
-			}
-		}
 	}
 
 	/**
