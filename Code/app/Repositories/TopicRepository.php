@@ -6,9 +6,7 @@ use App\Topic;
 
 class TopicRepository
 {
-	protected $nodes;
-
-	protected $connections;
+	protected $memoize = [];
 
 	/**
 	 * Finds the topics that are at the root (very top) of the tree.
@@ -31,23 +29,42 @@ class TopicRepository
 	 * @param  int $levels the number of levels of descendants to get; returns all if $levels is not specified or is less than 0
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function descendants(int $topic_id = 0, int $levels = null)
+	public function descendants(Topic $topic = null, int $levels = null)
 	{
-		// initialize our data members to empty collections
-		$this->nodes = collect();
-		$this->connections = collect();
-
-		// get the current topic the tree is pointing to
-		// if the topic_id is 0, the user wants the root of the tree
-		$topic = null;
-		if ($topic_id != 0)
+		$tree = collect();
+		// base case: $levels == 0
+		if ($levels != 0 || is_null($levels))
 		{
-			$topic = Topic::find($topic_id);
+			if (is_null($topic))
+			{
+				$children = self::getTopLevelTopics();
+			}
+			else
+			{
+				$children = $topic->children()->get();
+			}
+			foreach ($children as $child) {
+				// add the child to the tree
+				$tree->push(collect($child));
+				// this is a memoization check
+				// it prevents us from calling addDescendants on any topic more than once
+				if (!in_array($child->id, $this->memoize))
+				{
+					// add the topic id to the list of topics that have already been called
+					array_push($this->memoize, $child->id);
+					$tree->merge(
+						// RECURSION!
+						$this->descendants($child, $levels - 1)->map(function ($item)
+							{
+								// TODO: what the heck are you doing? is this needed?
+								return collect($item);
+							}
+						)
+					);
+				}
+			}
 		}
-
-		$this->addDescendants($topic, $levels);
-
-		return collect(["nodes" => $this->nodes, "connections" => $this->connections]);
+		return $tree;
 	}
 
 

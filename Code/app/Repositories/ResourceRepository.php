@@ -147,6 +147,7 @@ class ResourceRepository
 	/**
 	 * which topics is this resource allowed to be added to?
 	 * Note: this function executes one more query than disallowedTopics() and is therefore a bit slower. don't use it if you don't have to
+	 * Note also: the topics returned in this function won't have pivots
 	 * @param  App\Resource $resource the resource whose allowedTopics you'd like to get
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
