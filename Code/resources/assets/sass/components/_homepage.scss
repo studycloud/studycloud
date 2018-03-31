@@ -1,5 +1,7 @@
 /* Contains formatting for the homepage content. */
 
+@import "../helpers/color.scss";
+
 #main {
 	text-align: center;
 }
@@ -12,7 +14,7 @@
 
 	/* Properties of the element box. */
 	border: 3px;
-	border-color: #C24633;
+	border-color: $accent-2;
 	border-style: solid;
 }
 
@@ -30,7 +32,7 @@
 	padding: 3px;
 	height: 40px; /* Space for two lines of text. Expand if necessary. */
 
-	background-color: #C24633;
+	background-color: $accent-2;
 }
 
 .boxText { /* Only for text content of elementboxes. */

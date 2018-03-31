@@ -138,12 +138,10 @@ table {
   border-spacing: 0;
 }
 
-/* Navbar color---------------------------------------------- */
-
 .navbar {
-  background: #00167a;
-  background: -webkit-gradient(linear, left top, left bottom, from(#003180), to(#00167a));
-  background: linear-gradient(#003180, #00167a);
+  background: #1B3B6F;
+  background: -webkit-gradient(linear, left top, left bottom, from(#348AA7), to(#1B3B6F));
+  background: linear-gradient(#348AA7, #1B3B6F);
 }
 
 /* ----------------------------------------------
@@ -283,7 +281,7 @@ table {
 
 .navbar ul li a:hover,
 .navbar ul li input:hover {
-  background-color: #0044b3;
+  background-color: #5DD39E;
   color: black;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
@@ -308,8 +306,7 @@ table {
   border-color: transparent;
   color: white;
   outline: none;
-  background: #C8C8FF;
-  float: center;
+  background: #bddfea;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
   border-radius: 0.1em;
@@ -336,7 +333,12 @@ table {
 }
 
 .navbar ul #log-in #log-in-button {
-  background-color: #0044b3;
+  background-color: #5DD39E;
+}
+
+.navbar ul #log-in #log-in-button:hover,
+.navbar ul #log-in #log-in-button:focus {
+  background-color: #BCE784;
 }
 
 /* LOGIN DROPDOWN */
@@ -345,7 +347,7 @@ table {
   padding: 5px;
   text-align: right;
   position: absolute;
-  background-color: #f9f9f9;
+  background-color: #fefefe;
   -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
           box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
@@ -371,7 +373,7 @@ table {
 }
 
 #log-in-hidden .link-default {
-  color: blue;
+  color: #1B3B6F;
   padding-top: 2px;
   padding-bottom: 2px;
   text-decoration: none;
@@ -383,7 +385,7 @@ table {
 }
 
 #log-in-hidden .link-default:hover {
-  color: red;
+  color: purple;
   background: none;
 }
 
@@ -393,7 +395,7 @@ table {
   border-color: transparent;
   color: white;
   outline: none;
-  background: #C8C8FF;
+  background: #bddfea;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
   border-radius: 0.1em;
@@ -417,14 +419,14 @@ table {
   color: white;
   text-decoration: none;
   text-align: right;
-  background: blue;
+  background: #BCE784;
   margin: 2% 0 2% auto;
 }
 
 /* LOGIN MODALNESS */
 
 #myBtn {
-  color: blue;
+  color: pink;
 }
 
 /* The Modal (background) */

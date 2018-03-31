@@ -1,43 +1,38 @@
 // Contains colors and gradient definitions. 
 
-@import "./warm.scss";
+// Import a color scheme. 
+// @import "./original.scss";
+// @import "./umbrella.scss";
+@import "./bold.scss";
 
 // NAVBAR
 
 %navbar-gradient {
-	background: #00167a; 									// For browsers that do not support gradients.
-	background: -webkit-linear-gradient(#003180, #00167a); 	// For Safari 5.1 to 6.0.
-	background: -o-linear-gradient(#003180, #00167a);		// For Opera 11.1 to 12.0.
-	background: -moz-linear-gradient(#003180, #00167a); 	// For Firefox 3.6 to 15.
-	background: linear-gradient(#003180, #00167a);			// Standard syntax.
+	background: $primary-0; 									// For browsers that do not support gradients.
+	background: -webkit-linear-gradient($primary-0-light, $primary-0); 	// For Safari 5.1 to 6.0.
+	background: -o-linear-gradient($primary-0-light, $primary-0);		// For Opera 11.1 to 12.0.
+	background: -moz-linear-gradient($primary-0-light, $primary-0); 	// For Firefox 3.6 to 15.
+	background: linear-gradient($primary-0-light, $primary-0);			// Standard syntax.
 }
 
-$navbar-text-color: black;
-$navbar-text-hover-color: white;
-$navbar-hover-color: #0044b3;
+$navbar-text-color: $text-invert;
+$navbar-text-hover-color: $text-default;
+$navbar-hover-color: $accent-0;
 
-$login-button-color: #0044b3;
-$login-button-hover-color: #EAAA00;
+$login-button-color: $accent-0;
+$login-button-hover-color: $accent-1;
 
-$search-box-text-color: white;
-$search-box-bg-color: #C8C8FF;
-$search-box-bg-focus-color: white;
+$search-box-text-color: $text-invert;
+$search-box-bg-color: $input-minimal;
+$search-box-text-focus-color: $text-default;
+$search-box-bg-focus-color: $text-invert;
 
-$login-dropdown-color: #f9f9f9;
-
-
-// TEXT
-$text-default: black;
-$link-default: blue;
-$link-hover: red;
-
-$text-light: #aaa;
+$login-dropdown-color: $bg-light;
 
 
 // CONTENT
 
-$content-bg-color: #fefefe;
+$content-bg-color: $bg-light;
 
-$content-border-color: #2AA993;
-
-$content-title-color: #2AA993;
+$content-title-color: $accent-2;
+$content-border-color: $accent-2;

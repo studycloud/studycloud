@@ -79,7 +79,6 @@
 					color: $search-box-text-color;
 					outline: none;
 					background: $search-box-bg-color;
-					float: center;
 					transition: all 0.15s;
 					border-radius: 0.1em;
 					width: 100%;
@@ -164,7 +163,7 @@
 		border-color: transparent;
 		color: $search-box-text-color;
 		outline: none;
-		background: $search-box-default-color;
+		background: $search-box-bg-color;
 		transition: all 0.15s;
 		border-radius: 0.1em;
 		resize: none;
@@ -183,10 +182,10 @@
 
 	#logInSub { // Style your submit button.
 	    border: none;
-	    color: white;
+	    color: $text-invert;
 	    text-decoration: none;
 	    text-align: right;
-	    background: blue;
+	    background: $accent-1;
 	    margin: 2% 0 2% auto; // Right align button and top/bottom space it. 
 	}
 }
@@ -195,7 +194,7 @@
 /* LOGIN MODALNESS */
 
 #myBtn {
-	color: blue;
+	color: pink;
 }
 
 /* The Modal (background) */
