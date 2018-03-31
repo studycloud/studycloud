@@ -575,6 +575,7 @@ Tree.prototype.centerOnNode = function(node)
 	
 	
 	//Not animating links since they aren't shown now
+	/*self.links
 		.transition(transition)
 			.style("opacity", function(d)
 				{
@@ -596,7 +597,7 @@ Tree.prototype.centerOnNode = function(node)
 						case 0: 
 						case 1: 
 						case 2: 
-							this.style.visibility = "unset";
+							this.style.visibility = "hidden";
 							break;
 						case 3:
 							break;
@@ -618,6 +619,7 @@ Tree.prototype.centerOnNode = function(node)
 					}
 				}
 			);
+	*/
 	
 	//Set the lengths of the links
 	self.simulation.force("ForceLink").distance(function(d)

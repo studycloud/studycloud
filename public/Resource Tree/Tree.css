@@ -6,8 +6,7 @@
 
 .link, .link-deleted
 { 
-    stroke: #777;
-    stroke-width: 2px;
+	display:none;
 }
 
 #svg5045 
