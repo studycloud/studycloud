@@ -23,7 +23,7 @@ Server.prototype.getData = function(node, levels)
 		url = "tree/data";
     return d3.json(url, function(error, data){
     	if (error){
-    		return self.handleError(error);
+    		return self.handleError(url, error);
 
     	}
     	else {
@@ -35,10 +35,24 @@ Server.prototype.getData = function(node, levels)
 };
 
 
-Server.prototype.handleError = function(error)
+Server.prototype.handleError = function(url, error)
 {
-    var self = this;
-    return self.treeHandleError(error);
+	var self = this;
+	if (error == "Error: Internal Server Error")
+		return d3.json(url, function(error, data){
+			if (error){
+				return self.handleError(url, error);
+	
+			}
+			else {
+				return self.handleSuccess(data);
+			}	
+		});
+	else{
+		alert(error);
+		throw(error);
+	}
+    return self.treeHandleError(url, error);
 
 
 
