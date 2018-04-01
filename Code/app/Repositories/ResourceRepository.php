@@ -13,10 +13,9 @@ class ResourceRepository
 	 * @param  array $topic_ids the topic ids of the resources you want returned
 	 * @return Illuminate\Database\Eloquent\Collection         the resources as Collections
 	 */
-	public function getByTopics($topic_ids)
+	public static function getByTopics($topic_ids)
 	{
-		// TODO: check that this actually executes only one query
-		// TODO: return as nodes and connections?
+		// TODO: possibly reduce this to one query? it currently executes two
 		return Topic::whereIn('id', $topic_ids)->with('resources')->get()->pluck('resources')->collapse()->map(
 			function ($topic)
 			{
@@ -44,7 +43,7 @@ class ResourceRepository
 		// if any of the topics can't be added
 		if ($notAllowed)
 		{
-			throw new \Exception("One of the desired topics cannot be attached because it is an ancestor or descendant of one of this resource's current topics. You can use the allowedTopics() method to see which topics can be attached to this resource.");
+			throw new \Exception("One of the desired topics cannot be attached because it is an ancestor or descendant of one of this resource's current topics. You can use the disallowedTopics() method to see which topics cannot be attached to this resource.");
 		}
 		else
 		{
@@ -112,7 +111,7 @@ class ResourceRepository
 	private function parseChildren($topic, $resourceTopics, $disallowedTopics){
 
 		$topic_id = $topic->get("pivot")->get("topic_id");
-		foreach
+		// foreach
 		
 
 	}

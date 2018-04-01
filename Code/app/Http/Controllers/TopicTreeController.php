@@ -6,6 +6,7 @@ use App\Topic;
 use App\TopicParent;
 use App\Resource;
 use App\Repositories\TopicRepository;
+use App\Repositories\ResourceRepository;
 use App\Helpers\NodesAndConnections;
 // use Barryvdh\Debugbar\Facade as Debugbar;
 use Illuminate\Http\Request;
@@ -43,9 +44,9 @@ class TopicTreeController extends Controller
 
 	/**
 	 * converts a portion of the tree to JSON for traversal by the JavaScript team
-	 * @param  integer $topic_id the id of the current topic in the tree; defaults to the root of the tree, which has an id of 0
-	 * @param  int     $levels   the number of levels of the tree to return; defaults to infinity
-	 * @return \Illuminate\Database\Eloquent\Collection            the nodes and connections of the target portion of the tree
+	 * @param  integer $topic_id 							the id of the current topic in the tree; defaults to the root of the tree, which has an id of 0
+	 * @param  int     $levels   							the number of levels of the tree to return; defaults to infinity
+	 * @return \Illuminate\Database\Eloquent\Collection     the nodes and connections of the target portion of the tree
 	 */
 	public function show($topic_id = 0, $levels = null)
 	{
@@ -71,15 +72,17 @@ class TopicTreeController extends Controller
 			return $this->processTopicConnection($connection);
 		});
 
-		return $this->tree;
+		// return $this->tree;
 		
-		// add the resources of each topic to the tree
-		foreach ($topic_ids as $topic_id) {
-			// TODO: make sure that using find() doesn't cause an additional query to get the topic
-			$resources = App\Topic::find($topic_id)->resources()->get();
-			foreach ($resources as $resource) {
-				$this->addResource($resource);
-			}
+		// get the resources of each topic
+		$resources = NodesAndConnections::convertTo(ResourceRepository::getByTopics($topic_ids));
+
+		// return "hi";
+		return $resources;
+
+		// and add them to the tree
+		foreach ($resources as $resource) {
+			$this->addResource($resource);
 		}
 		// return the tree data: a collection of the resulting lists of nodes and connections
 		return $this->tree;
