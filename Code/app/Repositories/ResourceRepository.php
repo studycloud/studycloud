@@ -59,7 +59,7 @@ class ResourceRepository
 	 * @param App\Resource $resource the resource to move
 	 */
 //check to see if this actually works 
-	public function moveTopics($resource, $newTopic)
+	public function moveTopics($newTopic, $resource)
 	{	
 
 		$disallowedTopics = $this->disallowedTopics($resource);
@@ -71,28 +71,53 @@ class ResourceRepository
 		}
 		elseif(!$allowed)
 		{
-			$this->removeFamily($newTopic);
-			$this->attachTopics($newTopic);
+			$this->removeFamily($newTopic, $resource, $disallowedTopics);
+			$this->attachTopics($newTopic, $resource);
 			
 		}
 	}
 
 //Check to see if this actually works
+//Detaches any relatives of $resource that are related to $newTopic. 
 //aka NO INCEST--make sure an ancestor and a descendant topic do not share the same resource
-	private function removeFamily($newTopic){
+	private function removeFamily($newTopic, $resource, $disallowedTopics){
 
-		$currentTopics = $this->getTopics();
-		$familyMembers = $newTopic->ancestors()->merge($newTopic->descendants()); //THIS DOES NOT CHECK FOR ALL ANCESTORS/DESCENDANTS, ONLY ONE LEVEL ABOVE.
-		foreach($currentTopics as $currentTopic)
-		{
-			foreach($familyMembers as $familyMember)
-			{
-				if($currentTopic == $familyMember)
-				{
-					$this->detachTopics($currentTopic);
-				}
+
+		$relativeResource = checkRelatives($newTopic, $resource, $disallowedTopics);
+
+
+
+	}
+
+	private function checkRelatives($newTopic, $resource, $disallowedTopics){
+		$newTopicParent = $newTopic->pivot->parent_id;
+		$newTopicSelf = $newTopic->pivot->topic_id;
+
+		foreach($topic as $disallowedTopics){
+			$currentTopicParent = $topic->get("pivot")->get("parent_id");
+			$currentTopicSelf = $topic->get("pivot")->get("topic_id");
+			if($currentTopicParent == $newTopicSelf){
+				$resourceTopics = $resource->topics->get();
+				return parseChildren($topic, $resourceTopics, $disallowedTopics);
+			}
+			elseif($currentTopicSelf == $newTopicParent){
+				$resourceTopics = $resource->topics->get();
+				return parseParents($topic, $resourceTopics, $disallowedTopics);
+
 			}
 		}
+		return null;
+	}
+
+	private function parseChildren($topic, $resourceTopics, $disallowedTopics){
+
+		$topic_id = $topic->get("pivot")->get("topic_id");
+		foreach
+		
+
+	}
+	private function parseParents($topic, $resourceTopics, $disallowedTopics){
+
 	}
 
 	/**
@@ -129,14 +154,14 @@ class ResourceRepository
 				function ($topic)
 				{
 					// return the topic as a collection without its pivot attribute
-					return $topic->except(['pivot']);
+					return $topic;
 				}
 			);
 			$descendants = (new TopicRepository)->descendants($topic->id)->get("nodes")->map(
 				function ($topic)
 				{
 					// return the topic as a collection without its pivot attribute
-					return $topic->except(['pivot']);
+					return $topic;
 				}
 			);
 			$disallowed_topics = $disallowed_topics->merge($ancestors)->merge($descendants)->unique();
