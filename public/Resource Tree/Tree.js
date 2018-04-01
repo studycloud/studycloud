@@ -262,22 +262,36 @@ Tree.prototype.updateDataNodes = function(selection, data)
 	
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
 	
-	selection
+	var nodes = selection
 		.enter()
 			.append("g")
-				.attr("class", "node")
-				.attr("data_id", function(d){return d.id;})
-				.append("circle")
-					.attr("fill", function(d)
-					{
-						//generate our fill color based on the date created, author, and name
-						var random_number_generator = new Math.seedrandom(d.created_at + d.author_id + d.name);
-						var color = d3.interpolateRainbow(random_number_generator());
-						return color;
-					}
-					)
-					.attr("r", "1%")
-					.on("click", function(d){self.nodeClicked(this)});
+			.attr("class", "node")
+			.attr("data_id", function(d){return d.id;})
+			.on("click", function(d){self.nodeClicked(this)});
+
+			
+	nodes
+		.append("circle")
+			.attr("fill", function(d)
+			{
+				//generate our fill color based on the date created, author, and name
+				var random_number_generator = new Math.seedrandom(d.created_at + d.author_id + d.name);
+				var color = d3.interpolateRainbow(random_number_generator());
+				return color;
+			}
+			)
+			.attr("r", "1%")
+	
+	nodes
+		.append("text")
+			.attr("text-anchor", "middle")
+			.attr("fill", "white")
+			.attr("stroke", "black")
+			.attr("stroke-width", "0.02em")
+			.attr("font-size", "22")
+			.attr("font-family", "sans-serif")
+			.attr("font-weight", "bold")
+			.text(function(d){return d.name;});
 		
 	selection	
 		.exit()
@@ -375,6 +389,11 @@ Tree.prototype.drawNodes = function()
 	self.nodes.select("circle")
 		.attr('cx', function(d) { return d.x; })
 		.attr('cy', function(d) { return d.y; });
+	
+	self.nodes.select("text")
+		.attr('x', function(d) { return d.x; })
+		.attr('y', function(d) { return d.y; });
+	
 };
 
 Tree.prototype.draw = function()
@@ -444,7 +463,7 @@ Tree.prototype.centerOnNode = function(node)
 	var nodes_selection_parents, links_selection_parents;
 	
 	//Get selections of the circle we are centering on, and the parent DOM element of that circle
-	var node_selection_clicked = d3.select(node.parentNode);
+	var node_selection_clicked = d3.select(node);
 
 	[nodes_selection_primary, links_selection_primary] = self.getNChildrenSelections(data_id, 1);
 	[nodes_selection_children, links_selection_children] = self.getNChildrenSelections(data_id, 2);
@@ -479,6 +498,7 @@ Tree.prototype.centerOnNode = function(node)
 	
 	self.simulation.stop();
 	
+	
 	//Clear the fixed position nodes except center or parents
 	self.nodes.each(function(d)
 		{
@@ -497,6 +517,58 @@ Tree.prototype.centerOnNode = function(node)
 		}
 	);
 	
+	
+	self.nodes
+		.select("text")
+		.transition(transition)
+			.style("opacity", function(d)
+				{
+					switch (d.level)
+					{
+						case -1:
+						case 0: 
+						case 1:
+							return 1;
+						case 2:
+						case 3: 
+							return 0;
+					}
+				}
+			)
+			.on("start", function(d)
+				{
+					//set the visibility
+					switch (d.level)
+					{
+						case -1:
+						case 0: 
+						case 1: 
+							this.style.visibility = "unset";
+							break;
+						case 2:
+						case 3:
+							break;
+					}
+					
+				}
+			)
+			.on("end", function(d)
+				{
+					//set the visibility
+					switch (d.level)
+					{
+						case -1:
+						case 0: 
+						case 1: 
+							break;
+						case 2:
+						case 3:
+							this.style.visibility = "hidden";
+							break;
+					}
+				}
+			);
+	
 	self.nodes
 		.select("circle")
 		.transition(transition)
@@ -505,8 +577,8 @@ Tree.prototype.centerOnNode = function(node)
 					switch (d.level)
 					{
 						case -1: return "15%";
-						case 0: return "5%";
-						case 1: return "3%";
+						case 0: return "8%";
+						case 1: return "5%";
 						case 2: return "1%";
 						case 3: return this.getAttribute("r");
 					}
@@ -528,10 +600,7 @@ Tree.prototype.centerOnNode = function(node)
 				}
 			)
 			.on("start", function(d)
-				{
-					self.simulationRestart();
-					//self.simulation.stop();
-					
+				{	
 					//set the visibility
 					switch (d.level)
 					{
@@ -627,11 +696,11 @@ Tree.prototype.centerOnNode = function(node)
 		switch (d.level)
 		{
 			case -1:
-				return 600;
+				return 500;
 			case 1: 
-				return 100; 
+				return 200; 
 			case 2: 
-				return 0;
+				return 30;
 		}
 	}
 	);
@@ -639,7 +708,7 @@ Tree.prototype.centerOnNode = function(node)
 	self.links_simulated = links_selection;
 	self.nodes_simulated = nodes_selection;
 
-	
+	self.simulationRestart();
 }
 
 Tree.prototype.BreadcrumbStackUpdate = function(id)
