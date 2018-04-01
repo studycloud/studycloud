@@ -9,3 +9,15 @@
   max-width: 500px;
 }
 
+#resource-name {
+  font-size: 30px;
+}
+
+.student {
+  color: purple;
+}
+
+.teacher {
+  color: green;
+}
+

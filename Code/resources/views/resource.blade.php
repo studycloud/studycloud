@@ -9,23 +9,26 @@
 <script type="text/javascript" src="js/resource_viewer.js"></script>
 @endpush
 
-<!-- When you inject this as a component into a parent, remove this particular line because it's gonna go into the component that embeds this. -->
-@stack('styles')
+<!-- When you inject this as a component into a parent, remove next two lines because it's gonna go into the component that embeds this. -->
+@extends('layout')
+
+@section('content')
+
 <div class="temp-container"> <!-- My container. Remove when you embed. -->
 	<div class="resource-background">
-		<h1>
+		<h1 id="resource-name">
 			Resource Name
 		</h1>
-		<p>
-			<a href="https://google.com">Resource Topic</a> <!-- Eventually link out to the topic. -->
-			Resource Use(s)
-			Author Name
-			Date
-		</p>
+		<div>
+			<div id="author-name">Author Name</div>
+
+		</div>
 		<div> <!-- Module that varies: text/link/file -->
-			<a href = "amazon.com">
-				Amazon
-			</a>
+			<div id="content-0"></div>
+			<div id="date-created">Date Created</div>
+			<div id="date-modified">Date Modified</div>
 		</div>
 	</div>
 </div>
+
+@stop
