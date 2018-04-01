@@ -1,12 +1,9 @@
 .temp-container {
   background: blue;
-  max-width: 800px;
 }
 
 .resource-background {
   background: red;
-  margin: 10px auto;
-  max-width: 500px;
 }
 
 #resource-name {
