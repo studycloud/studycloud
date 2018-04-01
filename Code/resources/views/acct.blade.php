@@ -1,4 +1,7 @@
 <!--Login/logout component.-->
+@push('scripts')
+<script type="text/javascript" src="js/header.js"></script> <!-- javascript for header but mostly for login drop down -->
+@endpush
 
 @if (!Auth::check())
 	<li id="log-in"><a id="log-in-button">Log In</a>
