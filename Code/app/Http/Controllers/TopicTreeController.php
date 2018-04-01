@@ -6,6 +6,7 @@ use App\Topic;
 use App\TopicParent;
 use App\Resource;
 use App\Repositories\TopicRepository;
+use App\Helpers\NodesAndConnections;
 // use Barryvdh\Debugbar\Facade as Debugbar;
 use Illuminate\Http\Request;
 
@@ -48,8 +49,16 @@ class TopicTreeController extends Controller
 	 */
 	public function show($topic_id = 0, $levels = null)
 	{
+		$topic = null;
+		if ($topic_id != 0)
+		{
+			$topic = Topic::find($topic_id);
+		}
 		// get the descendants of this topic in a flat collection and load them into our tree data member
-		$this->tree = (new TopicRepository)->descendants($topic_id, $levels);
+		$this->tree = (new TopicRepository)->descendants($topic, $levels);
+		// convert the data to the nodes/connections format
+		$this->tree = NodesAndConnections::convertTo($this->tree);
+		// get all of the topic_ids
 		$topic_ids = $this->tree->get("nodes")->pluck("id");
 		// get each topic in the tree and process it
 		$this->tree->get("nodes")->transform(function($node)

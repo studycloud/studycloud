@@ -143,7 +143,7 @@ class ResourceRepository
 			function ($topic)
 			{
 				// return the topic as a collection without its pivot attribute
-				return collect($topic)->except(['pivot']);
+				return collect($topic);
 			}
 		);
 		foreach ($topics as $topic) {
