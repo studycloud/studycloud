@@ -1,0 +1,236 @@
+// Contains formatting for the header and navbar of each page.
+
+@import "../helpers/color.scss";
+@import "../helpers/animations.scss";
+
+
+// Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button).
+.show {
+	display:block;
+}
+
+// Respectively: WebKit browsers, Mozilla Firefox 4 to 18, Mozilla Firefox 19+, Internet Explorer 10+.
+::-webkit-input-placeholder :-moz-placeholder ::-moz-placeholder :-ms-input-placeholder { // Formats placeholder text. 
+	color: white;
+}
+
+
+// MASTHEAD
+
+.logo-full { // For svg.
+	display: block;
+	margin: auto;
+	padding: 10px;
+	width: 55%;
+}
+
+
+// NAVBAR
+
+.navbar {
+	@extend %navbar-gradient;
+	ul {
+		text-align: center;
+		list-style-type: none;
+		padding-left: 0;
+		width: 100%;
+		display: -webkit-flex;
+		justify-content: center;
+		display: flex;
+		flex-direction: row;
+		li {
+			flex-grow: 2;
+			flex-shrink: 0.7;
+			margin: 0;
+			padding: 0.3em;
+			a, input { // Default behavior of navbar items.
+				font-weight: bolder;
+				color: $navbar-text-color;
+				display: block;
+				text-decoration: none;
+				text-align: center;
+				font-size: 16px;
+				padding: 0.35em;
+				white-space: nowrap;
+				border-radius: 0.1em;
+				// My attempts to make the logout button behave follow. 
+				border: none;
+				margin: auto;
+				&:hover {
+					background-color: $navbar-hover-color;
+					color: $navbar-text-hover-color;
+					transition: all 0.15s;
+				}
+
+			}
+		}
+
+		#search {
+			flex-grow: 30;
+			flex-shrink: 1;
+			padding: 0.2em 0;
+			#search-form {
+				-webkit-box-sizing: border-box; // For legacy WebKit based browsers.							/*possibly we don't need this*/
+				-moz-box-sizing: border-box; 	// For legacy (Firefox <29) Gecko based browsers.
+				box-sizing: border-box;
+				#search-text {
+					text-align: center;
+					border-color: transparent;
+					color: $search-box-text-color;
+					outline: none;
+					background: $search-box-bg-color;
+					transition: all 0.15s;
+					border-radius: 0.1em;
+					width: 100%;
+					resize: none;
+					font-size: inherit;
+					font-family: inherit;
+					&:focus {
+						color: $search-box-text-focus-color;
+						background: $search-box-bg-focus-color;
+					}
+				}
+			}
+		}
+
+		#log-in { // This login button is an li.
+			flex-grow: 1;
+			flex-shrink: 0.5;
+			position: relative;
+		    display: inline-block;
+		    padding: 0.3em;
+		    #log-in-button {
+				background-color: $login-button-color;
+
+				&:hover, &:focus {
+					background-color: $login-button-hover-color;
+				}
+			}
+		}
+	}
+}
+
+
+/* LOGIN DROPDOWN */
+
+
+
+// Dropdown content (hidden by default).
+#log-in-hidden { // Content box containing login form.
+	padding: 5px;
+	text-align: right;
+
+    position: absolute;
+    background-color: $login-dropdown-color;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1; 	// Stacks box on top of page.
+    right: 0; 		// Right aligns login box.
+
+	&.swing-in-top-bck { // Class for animating the entry of the login box. Holds attributes of box when visible. 
+		visibility: visible;
+		animation: swing-in-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
+		-moz-animation: swing-in-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both; /* Firefox */
+		-webkit-animation: swing-in-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both; /* Safari and Chrome */
+	}
+
+	&.swing-out-top-bck { // Class for animating the exit of the login box. Holds attributes of box when hidden. 
+		visibility: hidden;
+		animation: swing-out-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
+		-moz-animation: swing-out-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both; /* Firefox */
+		-webkit-animation: swing-out-top-bck 0.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both; /* Safari and Chrome */
+	}
+
+    .link-default { // Reset behavior of links inside the dropdown (create account, forgot details).
+	    color: $link-default;
+	    padding-top: 2px;
+	    padding-bottom: 2px;
+	    text-decoration: none;
+	    border-radius: 0;
+	    background: none;
+	    font-size: 12px;
+	    font-weight: normal;
+	    text-align: right;
+
+		&:hover {
+			color: $link-hover;
+			background: none;
+		}
+	}
+
+	// Use colors for search box. 
+	#log-in-user, #log-in-pwd {
+		text-align: center;	
+		border-color: transparent;
+		color: $search-box-text-color;
+		outline: none;
+		background: $search-box-bg-color;
+		transition: all 0.15s;
+		border-radius: 0.1em;
+		resize: none;
+		font-size: inherit;
+		font-family: inherit;
+		margin-bottom: 2%;
+	}
+
+	#remember {
+		margin: 0 0 0 auto;
+		input {
+			margin: 2%;
+			display: inline;
+		}
+	}
+
+	#logInSub { // Style your submit button.
+	    border: none;
+	    color: $text-invert;
+	    text-decoration: none;
+	    text-align: right;
+	    background: $accent-1;
+	    margin: 2% 0 2% auto; // Right align button and top/bottom space it. 
+	}
+}
+
+
+/* LOGIN MODALNESS */
+
+#myBtn {
+	color: pink;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: $content-bg-color;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+#close-modal {
+    color: $text-light;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#close-modal:hover,
+#close-modal:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

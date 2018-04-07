@@ -11,12 +11,17 @@
 |
 */
 
-Route::get('/', function () {
-    return view('home');   	
-});
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::redirect('/', '/home', 301);
 
 Route::get('about', function(){
 	return view('about');
+})->name('about');
+
+// TEMPORARY FOR TESTING
+Route::get('resource', function(){
+	return view('resource');
 });
 
 Route::get('tree', function(){
@@ -32,5 +37,3 @@ Route::get('admins/{userid}', function($user_id){
 });
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

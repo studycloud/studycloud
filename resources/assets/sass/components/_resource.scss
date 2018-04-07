@@ -1,0 +1,24 @@
+// Sass file for the resource viewer. 
+
+.temp-container { // For now. 
+	background: blue;
+	// max-width: 800px;
+}
+
+.resource-background {
+	background: red;
+	// margin: 10px auto; 	// Head/foot space; centers.
+	// max-width: 500px;	// Play with this value to figure out an appropriate max-width. 
+}
+
+#resource-name {
+	font-size: 30px;
+}
+
+.student {
+	color: purple;
+}
+
+.teacher {
+	color: green;
+}

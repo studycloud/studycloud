@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1920 1080" style="enable-background:new 0 0 1920 1080;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#D6D6D6;}
+	.st1{fill:#00A1C6;}
+	.st2{font-family:'Consolas';}
+	.st3{font-size:40px;}
+	.st4{fill:#FFFFFF;}
+	.st5{fill:none;enable-background:new    ;}
+	.st6{fill:#B5B5B6;}
+	.st7{font-family:'Century';}
+	.st8{font-size:22px;}
+	.st9{font-size:138px;}
+	.st10{font-size:138.53px;}
+	.st11{font-size:22.4866px;}
+</style>
+<g id="Background_Gray">
+	<rect id="XMLID_1_" x="267.1" class="st0" width="1421.9" height="1080"/>
+	<rect id="XMLID_3_" x="267.1" y="157.7" class="st1" width="1421.9" height="101.4"/>
+	<rect id="XMLID_6_" x="267.1" width="1421.9" height="157.7"/>
+	<rect id="XMLID_24_" x="772.1" y="195.3" class="st0" width="111" height="27.9"/>
+</g>
+<g id="Header">
+	<text id="XMLID_20_" transform="matrix(1 0 0 1 1192.7007 757.2672)" class="st2 st3">?</text>
+	
+		<image style="overflow:visible;enable-background:new    ;" width="756" height="678" id="XMLID_4_" xlink:href="1E5A44A2.png"  transform="matrix(0.193 0 0 0.193 911.6904 13.4022)">
+	</image>
+	<path id="XMLID_12_" class="st4" d="M1656.1,227.1h-209.4c-10.5,0-18.9-8.5-18.9-18.9v-4.1c0-10.5,8.5-18.9,18.9-18.9h209.4
+		c10.5,0,18.9,8.5,18.9,18.9v4.1C1675,218.6,1666.5,227.1,1656.1,227.1z"/>
+	
+		<image style="overflow:visible;" width="1260" height="1260" xlink:href="1E5A44A6.png"  transform="matrix(7.047720e-002 0 0 7.047720e-002 1320.5638 161.7189)">
+	</image>
+	<path class="st5" d="z"/>
+	<text id="XMLID_15_" transform="matrix(1 0 0 1 1461.3367 213.0485)" class="st6 st7 st8">Search the Cloud</text>
+	<text transform="matrix(1 0 0 1 798.0085 592.3484)" class="st1 st2 st9">Study</text>
+	<text transform="matrix(1 0 0 1 1177.4084 592.3484)" class="st1 st2 st10"> </text>
+	<text transform="matrix(1 0 0 1 798.0085 757.9484)" class="st1 st2 st9">Cloud</text>
+	<text id="XMLID_8_" transform="matrix(1 0 0 1 1000.9327 -105.8773)" style="font-family:'ArialMT'; font-size:30px;">Topics</text>
+	<text id="XMLID_9_" transform="matrix(1 0 0 1 1364.9645 -105.8771)" style="font-family:'ArialMT'; font-size:30px;">Items</text>
+	<text id="XMLID_10_" transform="matrix(1 0 0 1 1183.4591 -105.8772)" style="font-family:'ArialMT'; font-size:30px;">About</text>
+	<text id="XMLID_11_" transform="matrix(1 0 0 1 1552.4473 -105.8774)" style="font-family:'ArialMT'; font-size:30px;">Stats</text>
+	<rect id="XMLID_16_" x="911.7" y="-84.9" class="st1" width="730" height="2.5"/>
+	<rect id="XMLID_17_" x="291.1" y="184.4" class="st4" width="60" height="4.5"/>
+	<rect id="XMLID_18_" x="291.1" y="206.1" class="st4" width="60" height="4.5"/>
+	<rect id="XMLID_19_" x="291.1" y="227.9" class="st4" width="60" height="4.5"/>
+	<text id="XMLID_2_" transform="matrix(1 0 0 1 798.0085 453.0946)" class="st2 st3">What is</text>
+	<path id="XMLID_28_" class="st4" d="M728.8,227.3H593c-10.5,0-18.9-8.5-18.9-18.9l0,0c0-10.5,8.5-18.9,18.9-18.9h135.7
+		c10.5,0,18.9,8.5,18.9,18.9l0,0C747.7,218.8,739.2,227.3,728.8,227.3z"/>
+	<path id="XMLID_27_" class="st4" d="M543.9,227.3H408.2c-10.5,0-18.9-8.5-18.9-18.9l0,0c0-10.5,8.5-18.9,18.9-18.9h135.7
+		c10.5,0,18.9,8.5,18.9,18.9l0,0C562.9,218.8,554.4,227.3,543.9,227.3z"/>
+	<text id="XMLID_26_" transform="matrix(1 0 0 1 789.0922 214.8805)" class="st2 st11">Log-in</text>
+	<g id="XMLID_21_">
+		<text id="XMLID_42_" transform="matrix(1 0 0 1 421.9995 214.8804)" class="st6 st7 st8">Username</text>
+	</g>
+	<g id="XMLID_22_">
+		<text id="XMLID_43_" transform="matrix(1 0 0 1 609.5315 214.8804)" class="st6 st7 st8">Password</text>
+	</g>
+</g>
+<g id="Layer_3">
+</g>
+</svg>
