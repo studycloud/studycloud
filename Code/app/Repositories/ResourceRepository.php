@@ -15,7 +15,8 @@ class ResourceRepository
 	 */
 	public static function getByTopics($topic_ids)
 	{
-		// TODO: possibly reduce this to one query? it currently executes two
+		// to do: possibly reduce this to one query? it currently executes two
+		// it wouldn't be a huge performance boost. not really worth my time
 		return Topic::whereIn('id', $topic_ids)->with('resources')->get()->pluck('resources')->collapse()->map(
 			function ($topic)
 			{
@@ -31,10 +32,10 @@ class ResourceRepository
 	 * @param  Illuminate\Database\Eloquent\Collection $new_topics the topics to be attached
 	 * @return 
 	 */
-	public function attachTopics($resource, $new_topics)
+	public static function attachTopics($resource, $new_topics)
 	{
 		// get the ids of the topics that we can't attach
-		$disallowed_topics = $this->disallowedTopics($resource)->pluck('id');
+		$disallowed_topics = self::disallowedTopics($resource)->pluck('id');
 		// iterate through each topic that we want to attach and make sure it can be added
 		$notAllowed = false;
 		foreach ($topic as $new_topics) {
@@ -61,17 +62,17 @@ class ResourceRepository
 	public function moveTopics($newTopic, $resource)
 	{	
 
-		$disallowedTopics = $this->disallowedTopics($resource);
+		$disallowedTopics = self::disallowedTopics($resource);
 		$allowed = !$disallowedTopics->contains($newTopic);
 		
 
 		if($allowed){
-			$this->attachTopics($resource, $newTopic);
+			self::attachTopics($resource, $newTopic);
 		}
 		elseif(!$allowed)
 		{
 			$this->removeFamily($newTopic, $resource, $disallowedTopics);
-			$this->attachTopics($newTopic, $resource);
+			self::attachTopics($newTopic, $resource);
 			
 		}
 	}
@@ -135,7 +136,7 @@ class ResourceRepository
 	 * @param  App\Resource $resource the resource whose disallowedTopics you'd like to get
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function disallowedTopics($resource)
+	public static function disallowedTopics($resource)
 	{
 		$topics = $resource->topics()->get();
 		$disallowed_topics = $topics->map(
@@ -175,8 +176,8 @@ class ResourceRepository
 	 * @param  App\Resource $resource the resource whose allowedTopics you'd like to get
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function allowedTopics($resource)
+	public static function allowedTopics($resource)
 	{
-		return collect(Topic::whereNotIn('id', $this->disallowedTopics($resource)->pluck('id'))->get());
+		return collect(Topic::whereNotIn('id', self::disallowedTopics($resource)->pluck('id'))->get());
 	}
 }

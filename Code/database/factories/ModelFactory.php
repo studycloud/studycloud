@@ -91,7 +91,7 @@ $factory->define(App\ResourceTopic::class, function (Faker\Generator $faker)
 			}
 			$old_resource_id = $curr_ResourceTopic['resource_id'];
 			$topic_id = $hacky_faker->unique()->randomElement(
-				App\Resource::find($old_resource_id)->allowedTopics()->pluck('id')->all()
+				App\Repositories\ResourceRepository::allowedTopics(App\Resource::find($old_resource_id))->pluck('id')->all()
 			);
 			return $topic_id;
 		}
