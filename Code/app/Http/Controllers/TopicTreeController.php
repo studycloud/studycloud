@@ -71,19 +71,23 @@ class TopicTreeController extends Controller
 		{
 			return $this->processTopicConnection($connection);
 		});
-
-		// return $this->tree;
 		
-		// get the resources of each topic
+		// get the resources of each topic in the nodes/connections format
 		$resources = NodesAndConnections::convertTo(ResourceRepository::getByTopics($topic_ids));
+		// get each resource in the tree and transform it
+		$resources->get("nodes")->transform(function($node)
+		{
+			return $this->processResource($node);
+		});
+		// get each connection in the tree and transform it
+		$resources->get("connections")->transform(function($connection)
+		{
+			return $this->processResourceConnection($connection);
+		});
+		// add the resources and connections to the tree
+		$this->tree->put("nodes", $this->tree->get("nodes")->merge($resources->get("nodes")));
+		$this->tree->put("connections", $this->tree->get("connections")->merge($resources->get("connections")));
 
-		// return "hi";
-		return $resources;
-
-		// and add them to the tree
-		foreach ($resources as $resource) {
-			$this->addResource($resource);
-		}
 		// return the tree data: a collection of the resulting lists of nodes and connections
 		return $this->tree;
 	}
@@ -97,7 +101,7 @@ class TopicTreeController extends Controller
 	private function processTopic($node)
 	{
 		// add a 't' to the beginnning of the id
-		$node->prepend('t'.$node->pull('id'), 'target');
+		$node->put('id', 't'.$node->get('id'));
 		// remove the pivot attribute
 		$node = $node->except(['pivot']);
 		return $node;
@@ -125,17 +129,17 @@ class TopicTreeController extends Controller
 	private function addResource($node)
 	{
 		// double check that this node hasn't already been added to $this->tree.get("nodes"). handles duplicate resources
-		if (!$this->tree.get("nodes")->pluck('target')->contains($node->target))
+		if (!$this->tree->get("nodes")->pluck('target')->contains('r'.$node->get("id")))
 		{
-			$this->tree.get("nodes")->push(
-				$this->processNode($node)
+			$this->tree->get("nodes")->push(
+				$this->processResource($node)
 			);
 		}
 
-		if (!is_null($node->pivot))
+		if (!is_null($node->get("pivot")))
 		{
 			$this->tree.get("connections")->push(
-				$this->processConnection($node->pivot)
+				$this->processResourceConnectionConnection($node->get("pivot"))
 			);
 		}
 	}
@@ -149,7 +153,7 @@ class TopicTreeController extends Controller
 	private function processResource($node)
 	{
 		// add an 'r' to the beginnning of the id
-		$node->prepend('r'.$node->pull('id'), 'target');
+		$node->put('id', 'r'.$node->get('id'));
 		// remove the pivot attribute
 		$node = $node->except(['pivot']);
 		return $node;
