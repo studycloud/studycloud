@@ -27,7 +27,7 @@
 						</form>
 					</li>
 					<!--Component for login/logout.-->
-					@component('acct')
+					@component('auth/acct')
 					@endcomponent
 				</ul>
 			</div>
@@ -35,6 +35,6 @@
 		</header>
 		@yield('content')
 	</div>
-	@component('loginmodal')
+	@component('auth/loginmodal')
 	@endcomponent
 </body></html>

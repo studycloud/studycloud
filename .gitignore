@@ -8,3 +8,4 @@ Homestead.yaml
 .env
 /public/css/.sasscache
 /public/css/.sass-cache
+/storage/framework/views/*.php
