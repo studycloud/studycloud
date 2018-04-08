@@ -82,16 +82,21 @@ class ResourceRepository
 //aka NO INCEST--make sure an ancestor and a descendant topic do not share the same resource
 	private function removeFamily($newTopic, $resource, $disallowedTopics){
 
+		//Getting the pivot of topic ID
+		$newTopicId = $newTopic->get("id");
+		$disTopicId = $disallowedTopics->pluck("id");
+		$idx = $disTopicId->search($newTopicId, true); // The true field enables a direct comparison between integers
+		$newTopicPivot = $disallowedTopics[$idx]->get("pivot");
 
-		$relativeResource = checkRelatives($newTopic, $resource, $disallowedTopics);
+		$relativeResource = checkRelatives($newTopicPivot, $resource, $disallowedTopics);
 
 
 
 	}
 
-	private function checkRelatives($newTopic, $resource, $disallowedTopics){
-		$newTopicParent = $newTopic->pivot->parent_id;
-		$newTopicSelf = $newTopic->pivot->topic_id;
+	private function checkRelatives($newTopicPivot, $resource, $disallowedTopics){
+		$newTopicParent = $newTopicPivot->parent_id;
+		$newTopicSelf = $newTopicPivot->topic_id;
 
 		foreach($topic as $disallowedTopics){
 			$currentTopicParent = $topic->get("pivot")->get("parent_id");
@@ -110,9 +115,26 @@ class ResourceRepository
 	}
 
 	private function parseChildren($topic, $resourceTopics, $disallowedTopics){
+		//End result: compare the topic of the recursion to the 
+		$topicId = $topic->get("id");
+		$resourceId = $resourceTopics->pluck("id");
+		$idx = $resourceId->search($topicId);
+		if($idx){
+			return $resourceTopics[$idx];
+		}
+		else{
+			//The next three lines are the same plucking code that was used in the removeFamily function.
+			$disTopicId = $disallowedTopics->pluck("id");
+			$idx = $disTopicId->search($topicId);
+			$disTopicPivot = $disallowedTopics[$idx]->get("pivot")->get("topic_id");
+			//Looking for parent that has the same topic id
+			foreach($topic as $disallowedTopics){
+				$parentIdPivots = $topic->get("pivot")->get("parent_id");
 
-		$topic_id = $topic->get("pivot")->get("topic_id");
-		foreach
+			}
+		}
+
+		
 		
 
 	}
