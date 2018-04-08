@@ -34,6 +34,12 @@ function Tree(type, frame_id)
 	self.frame = d3.select("#" + frame_id);
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
 	
+	self.frame.on("resize", self.resizeFrame);
+	
+	resizeFrame2 = function(){self.resizeFrame()};
+	
+	self.frame.node().onResize = "Tree.resizeFrame2";
+	
 	self.frame.svg = self.frame.append("svg");
 	
 	self.frame.svg.center = 
@@ -269,7 +275,7 @@ Tree.prototype.updateDataNodes = function(selection, data)
 			.attr("data_id", function(d){return d.id;})
 			.on("click", function(d){self.nodeClicked(this)});
 
-			
+
 	nodes
 		.append("circle")
 			.attr("fill", function(d)
@@ -443,7 +449,7 @@ Tree.prototype.nodeCoordinateInterpolater = function(d)
 				d.x = d.fx;
 				d.y = d.fy;
 				
-				self.draw();
+				//self.draw();
 			};	
 	}
 	
@@ -451,6 +457,28 @@ Tree.prototype.nodeCoordinateInterpolater = function(d)
 }
 
 
+Tree.prototype.linkLengthInterpolater = function(d)
+{
+	currentLength = 
+	
+	interpolate_x = d3.interpolateNumber(d.x, coordinate.x)
+	
+	//Set the lengths of the links
+	self.simulation.force("ForceLink").distance(function(d)
+	{
+		switch (d.level)
+		{
+			case -1:
+				return 500;
+			case 1: 
+				return 200; 
+			case 2: 
+				return 30;
+		}
+	}
+	);
+}
+	
 Tree.prototype.centerOnNode = function(node)
 {	//This function centers the tree visualization on a node.
 	
@@ -642,6 +670,11 @@ Tree.prototype.centerOnNode = function(node)
 			)
 			.tween("coordinates", self.nodeCoordinateInterpolater);
 	
+	self.frame.svg
+		.transition(transition)
+			.on();
+	
+	
 	
 	//Not animating links since they aren't shown now
 	/*self.links
@@ -690,20 +723,7 @@ Tree.prototype.centerOnNode = function(node)
 			);
 	*/
 	
-	//Set the lengths of the links
-	self.simulation.force("ForceLink").distance(function(d)
-	{
-		switch (d.level)
-		{
-			case -1:
-				return 500;
-			case 1: 
-				return 200; 
-			case 2: 
-				return 30;
-		}
-	}
-	);
+
 	
 	self.links_simulated = links_selection;
 	self.nodes_simulated = nodes_selection;
