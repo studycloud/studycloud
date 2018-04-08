@@ -13,10 +13,10 @@ class ResourceRepository
 	 * @param  array $topic_ids the topic ids of the resources you want returned
 	 * @return Illuminate\Database\Eloquent\Collection         the resources as Collections
 	 */
-	public function getByTopics($topic_ids)
+	public static function getByTopics($topic_ids)
 	{
-		// TODO: check that this actually executes only one query
-		// TODO: return as nodes and connections?
+		// to do: possibly reduce this to one query? it currently executes two
+		// it wouldn't be a huge performance boost. not really worth my time
 		return Topic::whereIn('id', $topic_ids)->with('resources')->get()->pluck('resources')->collapse()->map(
 			function ($topic)
 			{
@@ -32,10 +32,10 @@ class ResourceRepository
 	 * @param  Illuminate\Database\Eloquent\Collection $new_topics the topics to be attached
 	 * @return 
 	 */
-	public function attachTopics($resource, $new_topics)
+	public static function attachTopics($resource, $new_topics)
 	{
 		// get the ids of the topics that we can't attach
-		$disallowed_topics = $this->disallowedTopics($resource)->pluck('id');
+		$disallowed_topics = self::disallowedTopics($resource)->pluck('id');
 		// iterate through each topic that we want to attach and make sure it can be added
 		$notAllowed = false;
 		foreach ($topic as $new_topics) {
@@ -44,7 +44,7 @@ class ResourceRepository
 		// if any of the topics can't be added
 		if ($notAllowed)
 		{
-			throw new \Exception("One of the desired topics cannot be attached because it is an ancestor or descendant of one of this resource's current topics. You can use the allowedTopics() method to see which topics can be attached to this resource.");
+			throw new \Exception("One of the desired topics cannot be attached because it is an ancestor or descendant of one of this resource's current topics. You can use the disallowedTopics() method to see which topics cannot be attached to this resource.");
 		}
 		else
 		{
@@ -62,17 +62,17 @@ class ResourceRepository
 	public function moveTopics($newTopic, $resource)
 	{	
 
-		$disallowedTopics = $this->disallowedTopics($resource);
+		$disallowedTopics = self::disallowedTopics($resource);
 		$allowed = !$disallowedTopics->contains($newTopic);
 		
 
 		if($allowed){
-			$this->attachTopics($resource, $newTopic);
+			self::attachTopics($resource, $newTopic);
 		}
 		elseif(!$allowed)
 		{
 			$this->removeFamily($newTopic, $resource, $disallowedTopics);
-			$this->attachTopics($newTopic, $resource);
+			self::attachTopics($newTopic, $resource);
 			
 		}
 	}
@@ -131,10 +131,15 @@ class ResourceRepository
 			foreach($topic as $disallowedTopics){
 				$parentIdPivots = $topic->get("pivot")->get("parent_id");
 
+<<<<<<< HEAD
 			}
 		}
 
 		
+=======
+		$topic_id = $topic->get("pivot")->get("topic_id");
+		// foreach
+>>>>>>> 3cf29f27fe6f44d9db3e3fb1c38c041e60c32492
 		
 
 	}
@@ -158,14 +163,14 @@ class ResourceRepository
 	 * @param  App\Resource $resource the resource whose disallowedTopics you'd like to get
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function disallowedTopics($resource)
+	public static function disallowedTopics($resource)
 	{
 		$topics = $resource->topics()->get();
 		$disallowed_topics = $topics->map(
 			function ($topic)
 			{
 				// return the topic as a collection without its pivot attribute
-				return collect($topic)->except(['pivot']);
+				return collect($topic);
 			}
 		);
 		foreach ($topics as $topic) {
@@ -198,8 +203,8 @@ class ResourceRepository
 	 * @param  App\Resource $resource the resource whose allowedTopics you'd like to get
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function allowedTopics($resource)
+	public static function allowedTopics($resource)
 	{
-		return collect(Topic::whereNotIn('id', $this->disallowedTopics($resource)->pluck('id'))->get());
+		return collect(Topic::whereNotIn('id', self::disallowedTopics($resource)->pluck('id'))->get());
 	}
 }

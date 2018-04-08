@@ -28,7 +28,7 @@ class NodesAndConnections
 			// add any connections the node may have
 			if (!is_null($node->get('pivot')))
 			{
-				$connections->push($node->get('pivot'));
+				$connections->push(collect($node->get('pivot')));
 			}
 		}
 
