@@ -1,17 +1,17 @@
 
-function Server(node, handleError, handleSuccess)
+function Server()
 {
     // class Server handles communication with the server 
     // no data member needed 
 
     var self = this;
-    self.treeHandleError = handleError;
-    self.treeHandleSuccess = handleSuccess;
 }
 
-Server.prototype.getData = function(node, levels)
+Server.prototype.getData = function(node, levels, handleError, handleSuccess)
 {
     var self = this;
+    self.treeHandleError = handleError;
+    self.treeHandleSuccess = handleSuccess;
 	var url;
 	if(node && levels)
 		url = "/tree/data/?topic="+node+"&levels="+levels;
@@ -23,11 +23,11 @@ Server.prototype.getData = function(node, levels)
 		url = "tree/data";
     return d3.json(url, function(error, data){
     	if (error){
-    		return self.handleError(url, error);
+    		return self.handleError(node, url, error);
 
     	}
     	else {
-    		return self.handleSuccess(data);
+    		return self.handleSuccess(node, data);
 		}	
     });
 	
@@ -35,7 +35,7 @@ Server.prototype.getData = function(node, levels)
 };
 
 
-Server.prototype.handleError = function(url, error)
+Server.prototype.handleError = function(node, url, error)
 {
 	var self = this;
 	if (error == "Error: Internal Server Error")
@@ -52,18 +52,12 @@ Server.prototype.handleError = function(url, error)
 		alert(error);
 		throw(error);
 	}
-    return self.treeHandleError(url, error);
-
-
-
+    return self.treeHandleError(node, url, error);
 };
 
 
-Server.prototype.handleSuccess = function(data)
+Server.prototype.handleSuccess = function(node, data)
 {
     var self = this;
-    return self.treeHandleSuccess(data);
-
-
-
+    return self.treeHandleSuccess(node, data);
 };
