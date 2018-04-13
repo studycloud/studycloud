@@ -442,10 +442,10 @@ Tree.prototype.nodeCoordinateInterpolater = function(d)
 		case -1:
 		case 0:
 		case 3:
-			return function(t)
+			return function(p)
 			{
-				d.fx = interpolate_x(t);
-				d.fy = interpolate_y(t);
+				d.fx = interpolate_x(p);
+				d.fy = interpolate_y(p);
 				d.x = d.fx;
 				d.y = d.fy;
 				
@@ -459,24 +459,41 @@ Tree.prototype.nodeCoordinateInterpolater = function(d)
 
 Tree.prototype.linkLengthInterpolater = function(d)
 {
-	currentLength = 
+	var distance_initial = d.distance_old;
 	
-	interpolate_x = d3.interpolateNumber(d.x, coordinate.x)
+	var distance_final;
 	
-	//Set the lengths of the links
-	self.simulation.force("ForceLink").distance(function(d)
+	switch(d.level)
 	{
-		switch (d.level)
-		{
-			case -1:
-				return 500;
-			case 1: 
-				return 200; 
-			case 2: 
-				return 30;
-		}
+	case -1:
+		distance_final = 500;
+		break;
+	case 1: 
+		distance_final = 200; 
+		break;
+	case 2: 
+		distance_final = 30;
+		break;
+	default:
+		distance_final = distance_initial;
+		break;
 	}
-	);
+	
+	console.log(d.id);
+	console.log(d.level);
+	console.log(distance_initial);
+	console.log(distance_final);
+	
+	
+	var distance_interpolator = d3.interpolateNumber(distance_initial, distance_final);
+	
+	function linkInterpolator(p)
+	{
+		d.length = distance_interpolator(p);
+	}
+	
+	return linkInterpolator;
+
 }
 	
 Tree.prototype.centerOnNode = function(node)
@@ -670,14 +687,36 @@ Tree.prototype.centerOnNode = function(node)
 			)
 			.tween("coordinates", self.nodeCoordinateInterpolater);
 	
+	self.links
+		.each(function(d)
+		{
+			d.distance_old = self.simulation.force("ForceLink").distance()();
+		}
+	)
+	
+	self.links
+		.transition(transition)
+			.tween("linkLength", self.linkLengthInterpolater);
+	
+	
+	
 	self.frame.svg
 		.transition(transition)
-			.on();
+			.tween("UpdateLinkDistance", function()
+				{
+					return function()
+					{
+						//console.log("hi");
+						self.simulation.force("ForceLink").distance(function(d){return d.length;});
+					}
+				}
+			);
 	
 	
 	
 	//Not animating links since they aren't shown now
-	/*self.links
+	/*
+	self.links
 		.transition(transition)
 			.style("opacity", function(d)
 				{
