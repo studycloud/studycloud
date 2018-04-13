@@ -411,7 +411,7 @@ Tree.prototype.draw = function()
 		
 };
 
-Tree.prototype.nodeCoordinateInterpolater = function(d)
+Tree.prototype.nodeCoordinateInterpolatorGenerator = function(d)
 {
 	var coordinate = {};
 	
@@ -456,8 +456,9 @@ Tree.prototype.nodeCoordinateInterpolater = function(d)
 	
 }
 
-
-Tree.prototype.linkLengthInterpolater = function(d)
+// Defines linkLengthInterpolatorGenerator which takes in d and returns a function 
+// which takes in p and sets d.length to something given initial and final distances
+Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 {
 	var distance_initial = d.distance_old;
 	
@@ -685,8 +686,9 @@ Tree.prototype.centerOnNode = function(node)
 				console.log("Animation Interrupted");
 			}
 			)
-			.tween("coordinates", self.nodeCoordinateInterpolater);
+			.tween("coordinates", self.nodeCoordinateInterpolatorGenerator);
 	
+	// TODO: maybe remove this and move it back into linkLengthInterpolatorGenerator
 	self.links
 		.each(function(d)
 		{
@@ -696,7 +698,7 @@ Tree.prototype.centerOnNode = function(node)
 	
 	self.links
 		.transition(transition)
-			.tween("linkLength", self.linkLengthInterpolater);
+			.tween("linkLength", self.linkLengthInterpolatorGenerator);
 	
 	
 	
