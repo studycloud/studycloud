@@ -27,3 +27,8 @@
   font-size: 12px;
 }
 
+.module {
+  border: 1px black;
+  padding: 10px;
+}
+
