@@ -2,6 +2,7 @@
 
 @import "cleanup/reset.scss"; 
 @import "components/_header.scss";
+@import "helpers/color.scss";
 
 html {
 	font-family: 'Open Sans', sans-serif;
@@ -14,7 +15,7 @@ html {
 }
 
 #main {
-	background-color: hsla(360, 0%, 52%, 0.3);
+	background-color: $content-bg-color;
 	font-size: 16px;
 }
 

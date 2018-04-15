@@ -57,9 +57,15 @@ function set_author(name, type)
 // Display one of the content elements in the array.
 function display_content(num, element)
 {
+	// Create a new module.
+	document.getElementById('modules').innerHTML+="<div class=module id='module-"+num+"'></div>";
 	if(element.type="link")
 	{
-		document.getElementById('content-'+num).innerHTML="<a href="+element.content+">"+element.name+"</a>";
+		document.getElementById('module-'+num).innerHTML+="<div><a href="+element.content+">"+element.name+"</a></div>";
 	}
 	// Add other types as you will. 
+
+	// Display dates. 
+	document.getElementById('module-'+num).innerHTML+="<div class='date'>Created:"+element.created+"</div>";
+	document.getElementById('module-'+num).innerHTML+="<div class='date'>Modified:"+element.modified+"</div>";
 }

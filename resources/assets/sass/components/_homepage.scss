@@ -20,7 +20,7 @@
 
 .boxTitle { /* Possibly you might make boxtitle font size respond to how much text there is? */
 	font-size: 20px;
-	color: white;
+	color: $text-invert;
 	font-weight: bold;
 	text-align: center;
 	
@@ -37,7 +37,7 @@
 
 .boxText { /* Only for text content of elementboxes. */
 	font-size: 16px;
-	color: black;
+	color: $text-default;
 	text-align: left;
 
 	padding: 2%;

@@ -20,13 +20,16 @@
 			Resource Name
 		</h1>
 		<div>
-			<div id="author-name">Author Name</div>
+			contributed by <div id="author-name">Author Name</div>
 
 		</div>
-		<div> <!-- Module that varies: text/link/file -->
-			<div id="content-0"></div>
-			<div id="date-created">Date Created</div>
-			<div id="date-modified">Date Modified</div>
+		<div id="modules">
+			<!-- Space for modules that vary: text/link/file -->
+<!-- 			<div class="module-0"> 
+				<div class="date" id="date-created-0">Date Created</div>
+				<div class="date" id="date-modified-0">Date Modified</div>
+				<div id="content-0"></div>
+			</div> -->
 		</div>
 	</div>
 </div>

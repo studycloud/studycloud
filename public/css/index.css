@@ -480,6 +480,12 @@ table {
   cursor: pointer;
 }
 
+.navbar {
+  background: #1B3B6F;
+  background: -webkit-gradient(linear, left top, left bottom, from(#348AA7), to(#1B3B6F));
+  background: linear-gradient(#348AA7, #1B3B6F);
+}
+
 html {
   font-family: 'Open Sans', sans-serif;
 }

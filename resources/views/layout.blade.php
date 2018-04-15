@@ -7,6 +7,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- for jQuery -->
 	@stack('styles') {{-- include whatever code has been pushed to the styles stack --}}
 	<script type="text/javascript" src="js/header.js"></script> <!-- javascript for header but mostly for login drop down -->
+	<script type="text/javascript" src="js/loginmodal.js"></script> <!-- javascript for forgetting your login -->
 	@stack('scripts')
 
 	<meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
