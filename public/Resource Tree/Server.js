@@ -41,12 +41,19 @@ Server.prototype.handleError = function(node, url, error)
 	if (error == "Error: Internal Server Error")
 		return d3.json(url, function(error, data){
 			if (error){
-				return self.handleError(url, error);
-	
+				if(error != "Error: Internal Server Error")
+				{
+					return self.handleError(url, error);
+				}
+				else
+				{
+					alert(error);
+					throw(error);
+				}
 			}
 			else {
 				return self.handleSuccess(data);
-			}	
+			}
 		});
 	else{
 		alert(error);
