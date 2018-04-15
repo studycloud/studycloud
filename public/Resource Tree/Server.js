@@ -7,6 +7,71 @@ function Server()
     var self = this;
 }
 
+Server.prototype.getResource = function(resource, callBack1, callBack2)
+{
+	var self = this;
+	
+	var url = "/data/resource/" + resource;
+	return d3.json(url, function(error, data){
+		if(error)
+		{
+			throw error;
+		}
+		else
+		{
+			return "yeah";
+		}
+	}
+}
+
+Server.prototype.addResource = function(resource, content, callBack1, callBack2)
+{
+	var self = this;
+	var url = "/data/resource/" + resource;
+	return d3.json(url, function(error, data){
+		if(error)
+		{
+			throw error;
+		}
+		else
+		{
+			return "yeah";
+		}
+	}
+}
+
+Server.prototype.editResource = function(resource, content, callBack1, callBack2)
+{
+	var self = this;
+	var url = "/data/resource/" + resource;
+	return d3.json(url, function(error, data){
+		if(error)
+		{
+			throw error;
+		}
+		else
+		{
+			return "yeah";
+		}
+	}
+}
+
+Server.prototype.deleteResource = function(resource, callBack1, callBack2)
+{
+	var self = this;
+	var url = "/data/resource/" + resource;
+	return d3.json(url, function(error, data){
+		if(error)
+		{
+			throw error;
+		}
+		else
+		{
+			return "yeah";
+		}
+	}
+}
+
 Server.prototype.getData = function(node, levels, handleError, handleSuccess)
 {
     var self = this;
