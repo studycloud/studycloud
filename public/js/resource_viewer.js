@@ -67,7 +67,7 @@ function display_content(num, element)
 	}
 	else // Apparently by MVP things are HTML text. Check this. 
 	{
-		document.getElementById('module-'+num).innerHTML+="<h3>"+element.name+"</h3><div>"+element.content+"</div>";
+		document.getElementById('module-'+num).innerHTML+="<h2>"+element.name+"</h2><div>"+element.content+"</div>";
 	}
 	// Add other types as you will. 
 
