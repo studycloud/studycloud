@@ -27,7 +27,9 @@
 var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
 
 $(document).ready(function(){ 
-	callback(received);
+	// callback(received);
+	// you can also call:
+	error();
 });
 
 // Callback function that server will give the data.
@@ -74,4 +76,9 @@ function display_content(num, element)
 	// Display dates. 
 	document.getElementById('module-'+num).innerHTML+="<div class='date'>Created: "+element.created+"</div>";
 	document.getElementById('module-'+num).innerHTML+="<div class='date'>Modified: "+element.modified+"</div>";
+}
+
+function error()
+{
+	document.getElementById('modules').innerHTML="<h1>Sorry! We don't have that resource. Would you like to write it?</h1>"
 }

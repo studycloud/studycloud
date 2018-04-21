@@ -8,6 +8,7 @@
 	@stack('styles') {{-- include whatever code has been pushed to the styles stack --}}
 	<script type="text/javascript" src="js/header.js"></script> <!-- javascript for header but mostly for login drop down -->
 	<script type="text/javascript" src="js/loginmodal.js"></script> <!-- javascript for forgetting your login -->
+	<script type="text/javascript" src="js/resource_viewer.js"></script> <!-- aw heck -->
 	@stack('scripts')
 
 	<meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
@@ -38,6 +39,7 @@
 		</header>
 		@yield('content')
 	</div>
+
 	@component('auth/loginmodal')
 	@endcomponent
 </body></html>
