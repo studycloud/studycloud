@@ -11,64 +11,98 @@ Server.prototype.getResource = function(resource, callBack1, callBack2)
 {
 	var self = this;
 	
-	var url = "/data/resource/" + resource;
+	var url = "/resource/data/" + resource;
 	return d3.json(url, function(error, data){
 		if(error)
 		{
-			throw error;
+			return callBack1();
 		}
 		else
 		{
-			return "yeah";
+			return callBack2();
 		}
 	}
 }
 
-Server.prototype.addResource = function(resource, content, callBack1, callBack2)
+Server.prototype.getCookie = function(cname)
+{
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+Server.prototype.addResource = function(content, callBack1, callBack2)
 {
 	var self = this;
-	var url = "/data/resource/" + resource;
-	return d3.json(url, function(error, data){
+	var url = "/resource/create";
+	content["_method"] = "PUT";
+	var goodCookie = self.getCookie("XSRF-TOKEN");
+
+	if (goodCookie == ""){
+		return callBack1();
+	}
+
+	content["X-CSRF-TOKEN"] = self.getCookie("XSRF-TOKEN");
+	return d3.request(url).post(content, function(error, data){
 		if(error)
 		{
-			throw error;
+			return callBack1();
 		}
 		else
 		{
-			return "yeah";
+			return callBack2();
 		}
-	}
+	});
 }
 
 Server.prototype.editResource = function(resource, content, callBack1, callBack2)
 {
 	var self = this;
-	var url = "/data/resource/" + resource;
-	return d3.json(url, function(error, data){
+	var url = "/resource/" + resource;
+	content["_method"] = "PATCH";
+	var goodCookie = self.getCookie("XSRF-TOKEN");
+
+	if (goodCookie == ""){
+		return callBack1();
+	}
+
+	content["X-CSRF-TOKEN"] = self.getCookie("XSRF-TOKEN");
+	
+	return d3.request(url).post(content, function(error, data){
 		if(error)
 		{
-			throw error;
+			return callBack1();
 		}
 		else
 		{
-			return "yeah";
+			return callBack2();
 		}
-	}
+	});
 }
 
 Server.prototype.deleteResource = function(resource, callBack1, callBack2)
 {
 	var self = this;
-	var url = "/data/resource/" + resource;
+	var url = "/resource/data/" + resource;
 	return d3.json(url, function(error, data){
 		if(error)
 		{
-			throw error;
+			return callBack1();
 		}
 		else
 		{
-			return "yeah";
-		}
+			return callBack2();
+		}	
 	}
 }
 
