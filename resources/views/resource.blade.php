@@ -14,7 +14,7 @@
 
 @section('content')
 
-<div class="temp-container"> <!-- My container. Remove when you embed. -->
+<div class="temp-container"> <!-- My container. Remove when you embed. (BUT DO I WANT THAT THOUGH :O)-->
 	<div class="resource-background">
 		<h1 id="resource-name">
 			Resource Name
@@ -23,13 +23,7 @@
 			contributed by <div id="author-name">Author Name</div>
 
 		</div>
-		<div id="modules">
-			<!-- Space for modules that vary: text/link/file -->
-<!-- 			<div class="module-0"> 
-				<div class="date" id="date-created-0">Date Created</div>
-				<div class="date" id="date-modified-0">Date Modified</div>
-				<div id="content-0"></div>
-			</div> -->
+		<div id="modules"> <!-- This is where you put the modules. -->
 		</div>
 	</div>
 </div>

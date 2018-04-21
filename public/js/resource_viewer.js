@@ -24,7 +24,7 @@
 // xmlhttp.send();
 
 // Dummy data which I would get from the server.
-var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content 1", "type": "link", "content": "google.com", "created": "date", "updated": "date"}]}';
+var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
 
 $(document).ready(function(){ 
 	callback(received);
@@ -38,6 +38,7 @@ function callback(received)
 	set_author(resource.meta.author_name, resource.meta.author_type);
 	for(var i=0;i<1;i++)
 	{
+		console.log(resource.contents[i]);
 		display_content(i, resource.contents[i]);
 	}
 }
@@ -57,15 +58,20 @@ function set_author(name, type)
 // Display one of the content elements in the array.
 function display_content(num, element)
 {
+	console.log(element);
 	// Create a new module.
 	document.getElementById('modules').innerHTML+="<div class=module id='module-"+num+"'></div>";
-	if(element.type="link")
+	if(element.type=="link")
 	{
 		document.getElementById('module-'+num).innerHTML+="<div><a href="+element.content+">"+element.name+"</a></div>";
+	}
+	else // Apparently by MVP things are HTML text. Check this. 
+	{
+		document.getElementById('module-'+num).innerHTML+="<h3>"+element.name+"</h3><div>"+element.content+"</div>";
 	}
 	// Add other types as you will. 
 
 	// Display dates. 
-	document.getElementById('module-'+num).innerHTML+="<div class='date'>Created:"+element.created+"</div>";
-	document.getElementById('module-'+num).innerHTML+="<div class='date'>Modified:"+element.modified+"</div>";
+	document.getElementById('module-'+num).innerHTML+="<div class='date'>Created: "+element.created+"</div>";
+	document.getElementById('module-'+num).innerHTML+="<div class='date'>Modified: "+element.modified+"</div>";
 }
