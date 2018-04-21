@@ -441,12 +441,12 @@ Tree.prototype.nodeCoordinateInterpolatorGenerator = function(d)
 	{
 		case -1:
 		case 0:
-		case 3:
+		//case 3:
 			return function(p)
 			{
 				d.fx = interpolate_x(p);
 				d.fy = interpolate_y(p);
-				d.x = d.fx;
+				d.x = d.fx;	
 				d.y = d.fy;
 				
 				//self.draw();
@@ -467,23 +467,23 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 	switch(d.level)
 	{
 	case -1:
-		distance_final = 500;
+		distance_final = 530;
 		break;
 	case 1: 
 		distance_final = 200; 
 		break;
 	case 2: 
-		distance_final = 30;
+		distance_final = 35;
 		break;
 	default:
 		distance_final = distance_initial;
 		break;
 	}
 	
-	console.log(d.id);
-	console.log(d.level);
-	console.log(distance_initial);
-	console.log(distance_final);
+	//console.log(d.id);
+	//console.log(d.level);
+	//console.log(distance_initial);
+	//console.log(distance_final);
 	
 	
 	var distance_interpolator = d3.interpolateNumber(distance_initial, distance_final);
@@ -532,6 +532,7 @@ Tree.prototype.centerOnNode = function(node)
 	nodes_selection_parents.each(function(d){d.level = -1;});
 	links_selection_parents.each(function(d){d.level = -1;});
 	
+	
 
 	//All of the nodes and links together.
 	var nodes_selection = SelectionAdd(nodes_selection_children, nodes_selection_parents);
@@ -544,22 +545,36 @@ Tree.prototype.centerOnNode = function(node)
 	
 	self.simulation.stop();
 	
+	//Set the on click handlers
+	self.nodes.on("click", function(d)
+	{
+		switch (d.level)
+			{
+				case -1:
+				case 1: 
+					self.nodeClicked(this)
+				default:
+					break;
+			}
+	});
 	
-	//Clear the fixed position nodes except center or parents
+	
+	//Clear the fixed position nodes for elements that we want to move: Children and Grandchildren
 	self.nodes.each(function(d)
 		{
 			switch (d.level)
 			{
 				case -1:
 				case 0: 
+				case 3: 
 					break;
 				case 1:
 				case 2: 
-				case 3: 
 					d.fx = null;
 					d.fy = null;
 					break;
 			}
+			
 		}
 	);
 	
@@ -692,7 +707,7 @@ Tree.prototype.centerOnNode = function(node)
 	self.links
 		.each(function(d)
 		{
-			d.distance_old = self.simulation.force("ForceLink").distance()();
+			d.distance_old = self.simulation.force("ForceLink").distance()(d);
 		}
 	)
 	
