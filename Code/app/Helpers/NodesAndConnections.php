@@ -20,15 +20,15 @@ class NodesAndConnections
 
 		foreach ($old_nodes as $node) {
 			// check whether the node has been added already before adding it
-			if (!$nodes->pluck('id')->contains($node->get('id')))
+			if (!$nodes->pluck('id')->contains($node['id']))
 			{
 				// add the node without its pivot
 				$nodes->push($node->except(['pivot']));
 			}
 			// add any connections the node may have
-			if (!is_null($node->get('pivot')))
+			if (!is_null($node['pivot']))
 			{
-				$connections->push(collect($node->get('pivot')));
+				$connections->push(collect($node['pivot']));
 			}
 		}
 

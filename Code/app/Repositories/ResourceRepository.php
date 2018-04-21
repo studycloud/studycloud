@@ -38,7 +38,7 @@ class ResourceRepository
 		$disallowed_topics = self::disallowedTopics($resource)->pluck('id');
 		// iterate through each topic that we want to attach and make sure it can be added
 		$notAllowed = false;
-		foreach ($topic as $new_topics) {
+		foreach ($new_topics as $topic) {
 			$notAllowed = $notAllowed && $disallowed_topics->contains($topic->id);
 		}
 		// if any of the topics can't be added
@@ -63,13 +63,14 @@ class ResourceRepository
 	{	
 
 		$disallowed_topics = self::disallowedTopics($resource);
-		$allowed = !$disallowed_topics->pluck('id')->contains($newTopic->id);
+		$allowed = !$disallowed_topics->contains('id', $newTopic->id);
 		
 
-		if($allowed){
+		if ($allowed)
+		{
 			self::attachTopics($resource, collect([$newTopic]));
 		}
-		elseif(!$allowed)
+		else
 		{
 			$this->removeFamily($resource, $newTopic->id, $disallowed_topics);
 			self::attachTopics($newTopic, $resource);
@@ -101,7 +102,7 @@ class ResourceRepository
 				$old_topics->push($topic_id);
 			}
 		}
-		print($old_topics);
+		dd($old_topics);
 		// $this->detachTopics($resource, $old_topics);
 	}
 
@@ -112,7 +113,7 @@ class ResourceRepository
 	 * @param  Illuminate\Database\Eloquent\Collection  $disallowed_topics a portion of the tree to traverse
 	 * @return boolean                  whether $ancestor_topic_id is an ancestor of $topic
 	 */
-	private function isAncestor($topic_id, $ancestor_topic_id, $disallowed_topics)
+	public function isAncestor($topic_id, $ancestor_topic_id, $disallowed_topics)
 	{
 		// base case: ancestor_topic is an ancestor of topic if they are the same
 		if ($topic_id == $ancestor_topic_id)
@@ -126,8 +127,11 @@ class ResourceRepository
 		// and then OR all of the results together to get a final value
 		foreach ($topics as $topic)
 		{
-			// is the parent of this $topic an ancestor of $ancestor_topic_id?
-			$isAncestor = $isAncestor || $this->isAncestor($topic->get('pivot')->get('parent_id'), $ancestor_topic_id, $disallowed_topics);
+			if ($topic->has('pivot'))
+			{
+				// is the parent of this $topic an ancestor of $ancestor_topic_id?
+				$isAncestor = $isAncestor || $this->isAncestor($topic['pivot']['parent_id'], $ancestor_topic_id, $disallowed_topics);
+			}
 		}
 		return $isAncestor;
 	}
@@ -139,7 +143,7 @@ class ResourceRepository
 	 * @param  Illuminate\Database\Eloquent\Collection  $disallowed_topics a portion of the tree to traverse
 	 * @return boolean                  whether $descendant_topic_id is an descendant of $topic
 	 */
-	private function isDescendant($topic_id, $descendant_topic_id, $disallowed_topics)
+	public function isDescendant($topic_id, $descendant_topic_id, $disallowed_topics)
 	{
 		// base case: descendant_topic is an descendant of topic if they are the same
 		if ($topic_id == $descendant_topic_id)
@@ -150,16 +154,25 @@ class ResourceRepository
 		$topics = $disallowed_topics->filter(
 			function ($topic) use ($topic_id)
 			{
-				return $topic->get('pivot')->get('parent_id') == $topic_id;
+				if ($topic->has('pivot'))
+				{
+					return $topic['pivot']['parent_id'] == $topic_id;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		);
+		echo 'hi';
+		dd($topics);
 		$isDescendant = false;
 		// call isDescendant() with each of the topics
 		// and then OR all of the results together to get a final value
 		foreach ($topics as $topic)
 		{
 			// is the parent of this $topic a descendant of $descendant_topic_id?
-			$isDescendant = $isDescendant || $this->isDescendant($topic->get('id'), $descendant_topic_id, $disallowed_topics);
+			$isDescendant = $isDescendant || $this->isDescendant($topic['id'], $descendant_topic_id, $disallowed_topics);
 		}
 		return $isDescendant;
 	}
