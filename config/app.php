@@ -183,6 +183,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * Personal Service Providers...
+         */
+        App\Repositories\RepositoryServiceProvider::class,
+
     ],
 
     /*

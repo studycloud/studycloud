@@ -28,6 +28,8 @@ Route::get('tree', function(){
 	return view('tree');
 });
 
+Route::get('resource/{resource}', 'ResourceController@show');
+
 Route::get('tree/data', 'TopicTreeController');
 
 Route::get('admins/{userid}', function($user_id){

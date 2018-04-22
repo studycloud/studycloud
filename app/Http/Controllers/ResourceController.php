@@ -43,7 +43,7 @@ class ResourceController extends Controller
      */
     public function create()
     {
-        //
+  
     }
 
     /**
@@ -56,7 +56,7 @@ class ResourceController extends Controller
     {
         $newResource = new Resource;
         $newResource->name = $request->name;
-        $newResource->author_id = $request->author_id;
+        $newResource->author_id = Auth::id();
         $newResource->use_id = $request->use_id;
 
         $newResource->save();
@@ -69,8 +69,10 @@ class ResourceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Resource $resource)
-    {
-        return view('resource', ['resource' : $resource->name]    )
+    {	
+
+    	return view('resource', ['resource' => $resource]    );
+        
     }
 
     /**
@@ -95,9 +97,26 @@ class ResourceController extends Controller
     {
         //Request must have information about name, author_id, and use_id.
         $resource->name = $request->name;
-        $resource->author_id = $request->author_id;
+        $resource->author_id = Auth::id();
         $resource->use_id = $request->use_id;
+
+        $resource->save();
     }
+
+    /**
+     *Moves the resource under a specific named topic
+     * 
+     * @param \App\Resource $resource
+     * @param \App\Topic $topic
+     * @return \Illuminate\Http\Response
+     *
+     *  
+     */
+    public function move(Resource $resource, Topic $topic)
+    {
+        
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -107,8 +126,8 @@ class ResourceController extends Controller
      */
     public function destroy(Resource $resource)
     {
-        $deletedResource = $resource->id;
-        $deletedResource->delete();
+       
+        $resource->delete();
 
     }
 }
