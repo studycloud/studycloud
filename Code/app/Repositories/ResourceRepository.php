@@ -58,196 +58,123 @@ class ResourceRepository
 	 * current topics, the current topic will be replaced by the newTopic.
 	 * @param App\Resource $resource the resource to move
 	 */
-//check to see if this actually works 
-	public function moveTopics($newTopic, $resource)
-	{	
 
-		$disallowed_topics = self::disallowedTopics($resource);
-		$allowed = !$disallowed_topics->contains('id', $newTopic->id);
+
+// 	public function moveTopics($newTopic, $resource)
+// 	{	
+
+// 		$disallowed_topics = self::disallowedTopics($resource);
+// 		$allowed = !$disallowed_topics->contains('id', $newTopic->id);
 		
 
-		if ($allowed)
-		{
-			self::attachTopics($resource, collect([$newTopic]));
-		}
-		else
-		{
-			$this->removeFamily($resource, $newTopic->id, $disallowed_topics);
-			self::attachTopics($newTopic, $resource);
+// 		if ($allowed)
+// 		{
+// 			self::attachTopics($resource, collect([$newTopic]));
+// 		}
+// 		else
+// 		{
+// 			$this->removeFamily($resource, $newTopic->id, $disallowed_topics);
+// 			self::attachTopics($newTopic, $resource);
 			
-		}
-	}
+// 		}
+// 	}
 
-//Check to see if this actually works
-//Detaches any relatives of $resource that are related to $newTopic. 
-//aka NO INCEST--make sure an ancestor and a descendant topic do not share the same resource
+// //Check to see if this actually works
+// //Detaches any relatives of $resource that are related to $newTopic. 
+// //aka NO INCEST--make sure an ancestor and a descendant topic do not share the same resource
 
-	/**
-	 * remove any ancestor or descendant topics that conflict
-	 * with the topic that we want to add a resource to
-	 * @param  App\Resource $resource          the resource with potential topic conflicts
-	 * @param  Illuminate\Database\Eloquent\Collection $new_topic_id          the topic we want to add this resource to
-	 * @param  Illuminate\Database\Eloquent\Collection $disallowed_topics a collection of topics that can't be added to our resource
-	 * @return
-	 */
-	private function removeFamily($resource, $new_topic_id, $disallowed_topics)
-	{
-		$old_topics = collect();
-		$topics = $resource->topics()->get();
-		foreach ($topics as $topic) {
-			$topic_id = $topic->id;
-			if ($this->isAncestor($topic_id, $new_topic_id, $disallowed_topics)
-				|| $this->isDescendant($topic_id, $new_topic_id, $disallowed_topics))
-			{
-				$old_topics->push($topic_id);
-			}
-		}
-		dd($old_topics);
-		// $this->detachTopics($resource, $old_topics);
-	}
+// 	/**
+// 	 * remove any ancestor or descendant topics that conflict
+// 	 * with the topic that we want to add a resource to
+// 	 * @param  App\Resource $resource          the resource with potential topic conflicts
+// 	 * @param  Illuminate\Database\Eloquent\Collection $new_topic_id          the topic we want to add this resource to
+// 	 * @param  Illuminate\Database\Eloquent\Collection $disallowed_topics a collection of topics that can't be added to our resource
+// 	 * @return
+// 	 */
+// 	private function removeFamily($resource, $new_topic_id, $disallowed_topics)
+// 	{
+// 		$old_topics = collect();
+// 		$topics = $resource->topics()->get();
+// 		foreach ($topics as $topic) {
+// 			$topic_id = $topic->id;
+// 			if ($this->isAncestor($topic_id, $new_topic_id, $disallowed_topics)
+// 				|| $this->isDescendant($topic_id, $new_topic_id, $disallowed_topics))
+// 			{
+// 				$old_topics->push($topic_id);
+// 			}
+// 		}
+// 		dd($old_topics);
+// 		// $this->detachTopics($resource, $old_topics);
+// 	}
 
-	/**
-	 * given a portion of the tree, check to see whether $ancestor_topic_id is an ancestor of $topic_id
-	 * @param  int  $topic_id           the descendant topic
-	 * @param  int  $ancestor_topic_id   the ancestor to search for
-	 * @param  Illuminate\Database\Eloquent\Collection  $disallowed_topics a portion of the tree to traverse
-	 * @return boolean                  whether $ancestor_topic_id is an ancestor of $topic
-	 */
-	public function isAncestor($topic_id, $ancestor_topic_id, $disallowed_topics)
-	{
-		// base case: ancestor_topic is an ancestor of topic if they are the same
-		if ($topic_id == $ancestor_topic_id)
-		{
-			return true;
-		}
-		// get the topic collections in $disallowed_topics with ids equal to $topic_id
-		$topics = $disallowed_topics->where('id', $topic_id);
-		$isAncestor = false;
-		// call isAncestor() with each of the topics
-		// and then OR all of the results together to get a final value
-		foreach ($topics as $topic)
-		{
-			if ($topic->has('pivot'))
-			{
-				// is the parent of this $topic an ancestor of $ancestor_topic_id?
-				$isAncestor = $isAncestor || $this->isAncestor($topic['pivot']['parent_id'], $ancestor_topic_id, $disallowed_topics);
-			}
-		}
-		return $isAncestor;
-	}
+// 	/**
+// 	 * given a portion of the tree, check to see whether $ancestor_topic_id is an ancestor of $topic_id
+// 	 * @param  int  $topic_id           the descendant topic
+// 	 * @param  int  $ancestor_topic_id   the ancestor to search for
+// 	 * @param  Illuminate\Database\Eloquent\Collection  $disallowed_topics a portion of the tree to traverse
+// 	 * @return boolean                  whether $ancestor_topic_id is an ancestor of $topic
+// 	 */
+// 	public function isAncestor($topic_id, $ancestor_topic_id, $disallowed_topics)
+// 	{
+// 		// base case: ancestor_topic is an ancestor of topic if they are the same
+// 		if ($topic_id == $ancestor_topic_id)
+// 		{
+// 			return true;
+// 		}
+// 		// get the topic collections in $disallowed_topics with ids equal to $topic_id
+// 		$topics = $disallowed_topics->where('id', $topic_id);
+// 		$isAncestor = false;
+// 		// call isAncestor() with each of the topics
+// 		// and then OR all of the results together to get a final value
+// 		foreach ($topics as $topic)
+// 		{
+// 			if ($topic->has('pivot'))
+// 			{
+// 				// is the parent of this $topic an ancestor of $ancestor_topic_id?
+// 				$isAncestor = $isAncestor || $this->isAncestor($topic['pivot']['parent_id'], $ancestor_topic_id, $disallowed_topics);
+// 			}
+// 		}
+// 		return $isAncestor;
+// 	}
 
-	/**
-	 * given a portion of the tree, check to see whether $descendant_topic_id is an descendant of $topic_id
-	 * @param  int  $topic_id           the ancestor topic
-	 * @param  int  $descendant_topic_id   the descendant to search for
-	 * @param  Illuminate\Database\Eloquent\Collection  $disallowed_topics a portion of the tree to traverse
-	 * @return boolean                  whether $descendant_topic_id is an descendant of $topic
-	 */
-	public function isDescendant($topic_id, $descendant_topic_id, $disallowed_topics)
-	{
-		// base case: descendant_topic is an descendant of topic if they are the same
-		if ($topic_id == $descendant_topic_id)
-		{
-			return true;
-		}
-		// get the topic collections in $disallowed_topics with ids equal to $topic_id
-		$topics = $disallowed_topics->filter(
-			function ($topic) use ($topic_id)
-			{
-				if ($topic->has('pivot'))
-				{
-					return $topic['pivot']['parent_id'] == $topic_id;
-				}
-				else
-				{
-					return false;
-				}
-			}
-		);
-		echo 'hi';
-		dd($topics);
-		$isDescendant = false;
-		// call isDescendant() with each of the topics
-		// and then OR all of the results together to get a final value
-		foreach ($topics as $topic)
-		{
-			// is the parent of this $topic a descendant of $descendant_topic_id?
-			$isDescendant = $isDescendant || $this->isDescendant($topic['id'], $descendant_topic_id, $disallowed_topics);
-		}
-		return $isDescendant;
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	// private function removeFamily($newTopic, $resource, $disallowedTopics){
-
-	// 	//Getting the pivot of topic ID
-	// 	$newTopicId = $newTopic->get("id");
-	// 	$disTopicId = $disallowedTopics->pluck("id");
-	// 	$idx = $disTopicId->search($newTopicId, true); // The true field enables a direct comparison between integers
-	// 	$newTopicPivot = $disallowedTopics[$idx]->get("pivot");
-
-	// 	$relativeResource = checkRelatives($newTopicPivot, $resource, $disallowedTopics);
-
-
-
-	// }
-
-	// private function checkRelatives($newTopicPivot, $resource, $disallowedTopics){
-	// 	$newTopicParent = $newTopicPivot->parent_id;
-	// 	$newTopicSelf = $newTopicPivot->topic_id;
-
-	// 	foreach($topic as $disallowedTopics){
-	// 		$currentTopicParent = $topic->get("pivot")->get("parent_id");
-	// 		$currentTopicSelf = $topic->get("pivot")->get("topic_id");
-	// 		if($currentTopicParent == $newTopicSelf){
-	// 			$resourceTopics = $resource->topics->get();
-	// 			return parseChildren($topic, $resourceTopics, $disallowedTopics);
-	// 		}
-	// 		elseif($currentTopicSelf == $newTopicParent){
-	// 			$resourceTopics = $resource->topics->get();
-	// 			return parseParents($topic, $resourceTopics, $disallowedTopics);
-
-	// 		}
-	// 	}
-	// 	return null;
-	// }
-
-	// private function parseChildren($topic, $resourceTopics, $disallowedTopics){
-	// 	//End result: compare the topic of the recursion to the 
-	// 	$topicId = $topic->get("id");
-	// 	$resourceId = $resourceTopics->pluck("id");
-	// 	$idx = $resourceId->search($topicId);
-	// 	if($idx){
-	// 		return $resourceTopics[$idx];
-	// 	}
-	// 	else{
-	// 		//The next three lines are the same plucking code that was used in the removeFamily function.
-	// 		$disTopicId = $disallowedTopics->pluck("id");
-	// 		$idx = $disTopicId->search($topicId);
-	// 		$disTopicPivot = $disallowedTopics[$idx]->get("pivot")->get("topic_id");
-	// 		//Looking for parent that has the same topic id
-	// 		foreach($topic as $disallowedTopics){
-	// 			$parentIdPivots = $topic->get("pivot")->get("parent_id");
-	// 		}
-	// 	}	
-	// }
-	// private function parseParents($topic, $resourceTopics, $disallowedTopics){
-
-	// }
+// 	/**
+// 	 * given a portion of the tree, check to see whether $descendant_topic_id is a descendant of $topic_id
+// 	 * @param  int  $topic_id           the ancestor topic
+// 	 * @param  int  $descendant_topic_id   the descendant to search for
+// 	 * @param  Illuminate\Database\Eloquent\Collection  $disallowed_topics a portion of the tree to traverse
+// 	 * @return boolean                  whether $descendant_topic_id is an descendant of $topic
+// 	 */
+// 	public function isDescendant($topic_id, $descendant_topic_id, $disallowed_topics)
+// 	{
+// 		// base case: descendant_topic is an descendant of topic if they are the same
+// 		if ($topic_id == $descendant_topic_id)
+// 		{
+// 			return true;
+// 		}
+// 		// get the topic collections in $disallowed_topics with ids equal to $topic_id
+// 		$topics = $disallowed_topics->filter(
+// 			function ($topic) use ($topic_id)
+// 			{
+// 				if ($topic->has('pivot'))
+// 				{
+// 					return $topic['pivot']['parent_id'] == $topic_id;
+// 				}
+// 				else
+// 				{
+// 					return false;
+// 				}
+// 			}
+// 		);
+// 		$isDescendant = false;
+// 		// call isDescendant() with each of the topics
+// 		// and then OR all of the results together to get a final value
+// 		foreach ($topics as $topic)
+// 		{
+// 			// is the parent of this $topic a descendant of $descendant_topic_id?
+// 			$isDescendant = $isDescendant || $this->isDescendant($topic['id'], $descendant_topic_id, $disallowed_topics);
+// 		}
+// 		return $isDescendant;
+// 	}
 
 	/**
 	 * a wrapper function for detaching topics for ease of use
