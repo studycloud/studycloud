@@ -36,7 +36,7 @@ $(document).ready(function(){
 function callback(received)
 {
 	var resource = JSON.parse(received);
-	document.getElementById('resource-name').innerHTML=resource.meta.name;
+	document.getElementById('resource-head').innerHTML="<div><h1>"+resource.meta.name+"</h1><div>contributed by <div id='author-name'></div></div>";
 	set_author(resource.meta.author_name, resource.meta.author_type);
 	for(var i=0;i<1;i++)
 	{
@@ -80,5 +80,5 @@ function display_content(num, element)
 
 function error()
 {
-	document.getElementById('modules').innerHTML="<h1>Sorry! We don't have that resource. Would you like to write it?</h1>"
+	document.getElementById('resource-head').innerHTML="<h1>Sorry! We don't have that resource. Would you like to write it?</h1>"
 }

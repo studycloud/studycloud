@@ -46,7 +46,6 @@
 		<!-- Modal content -->
 		<div class="modal-content">
 			<span id="close-modal">&times;</span>
-
 			<!-- Container with information about forgot password. -->
 			<div id="forget-container">
 				@component('auth/passwords/email')
@@ -62,13 +61,7 @@
 			<!-- Container for resource. -->
 			<div id="resource-container">
 				<div class="resource-background">
-					<h1 id="resource-name">
-						Resource Name
-					</h1>
-					<div>
-						contributed by <div id="author-name">Author Name</div>
-
-					</div>
+					<div id="resource-head"></div>
 					<div id="modules"> <!-- This is where you put the modules. -->
 					</div>
 				</div>
