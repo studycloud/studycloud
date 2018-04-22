@@ -78,5 +78,6 @@
 
 	</div>
 
+	<button id="resource-btn">this is a temporary button</button>
 
 </body></html>

@@ -15,6 +15,13 @@ $(document).ready(function()
 		displayContainer("forget");
 	});
 
+	// When the user clicks on the forget button, also open the modal but with the forget content
+	$("#resource-btn").click(function(event)
+	{
+	    document.getElementById('my-modal').style.display = "block";
+		displayContainer("resource");
+	});
+
 	// When the user clicks on <span> (x), close the modal
 	$("#close-modal").click(function(event) 
 	{
