@@ -26,7 +26,7 @@ class NodesAndConnections
 				$nodes->push($node->except(['pivot']));
 			}
 			// add any connections the node may have
-			if (!is_null($node['pivot']))
+			if ($node->has('pivot'))
 			{
 				$connections->push(collect($node['pivot']));
 			}
