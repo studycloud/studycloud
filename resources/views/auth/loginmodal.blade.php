@@ -1,6 +1,6 @@
-@extends('layout')
+<!-- @extends('layout') -->
 
-@section('modal')
+<!-- @section('modal') -->
 
 <div id="forget-container">
 	@component('auth/passwords/email')
@@ -25,7 +25,7 @@
 	</div>
 </div>
 
-@stop
+<!-- @stop -->
 
 
 
