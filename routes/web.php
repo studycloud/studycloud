@@ -26,7 +26,7 @@ Route::get('resource', function(){
 
 Route::get('topics', function(){
 	return view('topics');
-});
+})->name('topics');
 
 Route::get('resource/{resource}', 'ResourceController@show');
 

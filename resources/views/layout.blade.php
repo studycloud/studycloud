@@ -28,7 +28,7 @@
 			<!-- Navbar goes here -->
 			<div class="navbar"> 
 				<ul>
-					<li><a href="#">Topics</a></li>
+					<li><a href="{{ route('topics') }}">Topics</a></li>
 					<li><a href="#">Classes</a></li>
 					<li><a href="{{ route('about') }}">About</a></li>
 					<li id="search">
