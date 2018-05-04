@@ -1,5 +1,6 @@
 {
+    "/css/_homepage.css": "/css/_homepage.css",
     "/css/_resource.css": "/css/_resource.css",
-    "/css/index.css": "/css/index.css",
-    "/css/_homepage.css": "/css/_homepage.css"
+    "/css/_tree.css": "/css/_tree.css",
+    "/css/index.css": "/css/index.css"
 }

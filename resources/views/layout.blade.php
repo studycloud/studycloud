@@ -9,6 +9,12 @@
 	<script type="text/javascript" src="js/header.js"></script> <!-- javascript for header but mostly for login drop down -->
 	<script type="text/javascript" src="js/loginmodal.js"></script> <!-- javascript for forgetting your login -->
 	<script type="text/javascript" src="js/resource_viewer.js"></script> <!-- aw heck -->
+	<!-- Tree scripts -->
+	<script src="https://d3js.org/d3.v5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
+	<script src="js/Server.js"></script>
+	<script src="js/D3HelperFunction.js"></script>
+	<script src="js/Tree.js"></script>
 	@stack('scripts')
 
 	<meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
