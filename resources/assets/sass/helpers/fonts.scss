@@ -1,9 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
-$main-font: $main-font-family-3;
-
-$body-font: 'Open Sans', sans-serif;
+@import url('https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One');
 
 
 // Define a bunch of fonts to choose from. 
@@ -17,3 +15,12 @@ $main-font-family-4: 'Righteous', cursive; 		// looks gross bold tbh
 $main-font-family-5: 'Jua', sans-serif; 		// are you in KINDERGARTEN? no
 $main-font-family-6: 'Contrail One', cursive; 	// you weird and italic bro
 $main-font-family-7: 'Paytone One', sans-serif; // this is a little young looking
+
+$main-font-family-9: 'Fredoka One', cursive;
+$main-font-family-10: 'Chela One', cursive;
+
+
+
+$body-font: 'Open Sans', sans-serif;
+
+$main-font: $body-font;

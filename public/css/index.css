@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One);@import url(https://fonts.googleapis.com/css?family=Open+Sans);/* The purpose of this file is to reset all CSS properties that the browser may otherwise want to reset. Taken directly from the webpage cited below.*/
+@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);/* The purpose of this file is to reset all CSS properties that the browser may otherwise want to reset. Taken directly from the webpage cited below.*/
 
 /*
 	http://meyerweb.com/eric/tools/css/reset/ 
@@ -237,7 +237,7 @@ table {
 }
 
 .navbar {
-  font-family: "Gugi", cursive;
+  font-family: "Open Sans", sans-serif;
   font-size: 20px;
 }
 
