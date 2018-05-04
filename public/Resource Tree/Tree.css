@@ -1,0 +1,35 @@
+
+.node, .node-deleted
+{
+}
+
+svg{
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.link, .link-deleted
+{ 
+	display:none;
+}
+
+#svg5045 
+{
+	overflow:visible;
+}
+
+#tree 
+{
+	width: 80%;
+	height: 600px;
+	margin: auto;
+}
+	
+.tree 
+{
+	width: 100%;
+	height: 100%;
+	overflow: none;x
+}

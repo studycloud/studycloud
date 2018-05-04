@@ -13,29 +13,6 @@ class Topic extends Model
 	 */
 	protected $fillable = ['name', 'author_id'];
 
-	protected $appends = ['target'];
-
-    protected $hidden = ['target'];
- 
- 	/**
- 	 * Add a unique id attribute so that JavaScript can distinguish between different models
- 	 * @return string the string representing the unique id
- 	 */
- 	public function getTargetAttribute()
- 	{
- 		return "t".($this->attributes['id']);
- 	}
-
-	/**
-	 * Returns the updated tree.
-	 *
-	 * @return \Illuminate\Database\Eloquent\Collection $tree
-	 */
-	public static function getTree()
-	{
-		return self::getTopLevelTopics();
-	}
-
 	/**
 	 * returns all topics that have this topic as their parent
 	 */
@@ -50,20 +27,6 @@ class Topic extends Model
 	public function parents()
 	{
 		return $this->belongsToMany(Topic::class, 'topic_parent', 'topic_id',  'parent_id');
-	}
-
-	/**
-	 * Finds the topics that are at the root (very top) of the tree.
-	 *
-	 * @return Illuminate\Database\Eloquent\Collection
-	 */
-	public static function getTopLevelTopics()
-	{
-		return self::whereNotExists(function ($query)
-			{
-				$query->select('topic_id')->distinct()->from('topic_parent')->whereRaw('topic_parent.topic_id = topics.id');
-			}
-		)->get();
 	}
 
 	public function resources()
@@ -85,7 +48,6 @@ class Topic extends Model
 	{
 		foreach ($new_resources as $new_resource)
 		{
-			// print_r(collect([Topic::find($this->id)]));
 			$new_resource->attachTopics(Topic::find($this->id));
 		}
 	}
@@ -93,19 +55,5 @@ class Topic extends Model
 	public function detachResources($old_resources)
 	{
 		return $this->resources()->detachResources($old_resources);
-	}
-
-	/**
-	 * get the parents of each parent of each parent (etc) of this topic in a flat collection
-	 * @return Illuminate\Database\Eloquent\Collection
-	 */
-	public function ancestors()
-	{
-		$parents = $this->parents()->get();
-		$ancestors = $parents;
-		foreach ($parents as $parent) {
-			$ancestors = $ancestors->merge($parent->ancestors());
-		}
-		return $ancestors;
 	}
 }

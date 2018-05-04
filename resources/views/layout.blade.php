@@ -6,7 +6,9 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> <!-- font for literally everything else -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- for jQuery -->
 	@stack('styles') {{-- include whatever code has been pushed to the styles stack --}}
+	<script type="text/javascript" src="js/header.js"></script> <!-- javascript for header but mostly for login drop down -->
 	@stack('scripts')
+
 	<meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
 </head>
 <body>
@@ -27,8 +29,8 @@
 						</form>
 					</li>
 					<!--Component for login/logout.-->
-					@component('auth/acct')
-					@endcomponent
+
+					@include('auth/acct')
 				</ul>
 			</div>
 
