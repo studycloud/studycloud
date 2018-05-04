@@ -32,7 +32,9 @@ $login-dropdown-color: $bg-light;
 
 // CONTENT
 
-$content-bg-color: $bg-light;
+$content-bg-light: $bg-light;
 
 $content-title-color: $accent-2;
 $content-border-color: $accent-2;
+
+$content-bg-color: hsla(360, 0%, 52%, 0.3);

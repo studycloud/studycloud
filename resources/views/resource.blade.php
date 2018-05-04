@@ -1,3 +1,5 @@
+<!-- BASICALLY DON'T USE THIS FILE I GUESS -->
+
 <!-- Is a resource viewer. May be embedded into a larger page; be flexible with your box size. -->
 <!-- For a model, check in with home or about blade files. You won't be directly injected where these are -->
 
@@ -14,19 +16,16 @@
 
 @section('content')
 
-<div class="temp-container"> <!-- My container. Remove when you embed. -->
+<div class="temp-container"> <!-- My container. Remove when you embed. (BUT DO I WANT THAT THOUGH :O)-->
 	<div class="resource-background">
 		<h1 id="resource-name">
 			Resource Name
 		</h1>
 		<div>
-			<div id="author-name">Author Name</div>
+			contributed by <div id="author-name">Author Name</div>
 
 		</div>
-		<div> <!-- Module that varies: text/link/file -->
-			<div id="content-0"></div>
-			<div id="date-created">Date Created</div>
-			<div id="date-modified">Date Modified</div>
+		<div id="modules"> <!-- This is where you put the modules. -->
 		</div>
 	</div>
 </div>

@@ -1,24 +1,53 @@
 // Sass file for the resource viewer. 
 
-.temp-container { // For now. 
-	background: blue;
+@import "../helpers/color.scss";
+
+
+$student-color: purple;
+$teacher-color: green;
+
+#resource-container { // For now. 
+	// background: $content-bg-color;
 	// max-width: 800px;
 }
 
 .resource-background {
-	background: red;
-	// margin: 10px auto; 	// Head/foot space; centers.
-	// max-width: 500px;	// Play with this value to figure out an appropriate max-width. 
+	// background: red;
+	padding: 20px; 	// External spacing.
 }
 
 #resource-name {
 	font-size: 30px;
 }
 
+#author-name {
+	align: inline;
+}
+
 .student {
-	color: purple;
+	color: $student-color;
 }
 
 .teacher {
-	color: green;
+	color: $teacher-color;
+}
+
+.date {
+	color: lighten($text-default, 50%);
+	font-size: 12px;
+}
+
+.module {
+	// TODO please style accordingly.
+	padding: 10px;
+}
+
+
+// TODO Maybe these stylings should be global? I don't know. 
+h1 {
+
+}
+
+h2 {
+
 }
