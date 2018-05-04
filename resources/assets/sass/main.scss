@@ -3,9 +3,10 @@
 @import "cleanup/reset.scss"; 
 @import "components/_header.scss";
 @import "helpers/color.scss";
+@import "helpers/fonts.scss";
 
 html {
-	font-family: 'Open Sans', sans-serif;
+	font-family: $body-font;
 }
 
 #pageWidth { // Limits width of page.

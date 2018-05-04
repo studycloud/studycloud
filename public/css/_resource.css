@@ -1,7 +1,3 @@
-#resource-container {
-  background: rgba(133, 133, 133, 0.3);
-}
-
 .resource-background {
   padding: 20px;
 }
@@ -28,7 +24,6 @@
 }
 
 .module {
-  border: 6px black;
   padding: 10px;
 }
 

@@ -2,10 +2,10 @@
 <html><head>
 	<title>Study Cloud</title>
 	<link rel="stylesheet" type="text/css" href="css/index.css">
-	<link href="https://fonts.googleapis.com/css?family=Fredericka+the+Great" rel="stylesheet"> <!-- font for header -->
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> <!-- font for literally everything else -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous"> <!-- Fontawesome for icons -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- for jQuery -->
 	@stack('styles') {{-- include whatever code has been pushed to the styles stack --}}
+	<link rel="stylesheet" type="text/css" href="css/_resource.css">
 	<script type="text/javascript" src="js/header.js"></script> <!-- javascript for header but mostly for login drop down -->
 	<script type="text/javascript" src="js/loginmodal.js"></script> <!-- javascript for forgetting your login -->
 	<script type="text/javascript" src="js/resource_viewer.js"></script> <!-- aw heck -->
@@ -45,7 +45,7 @@
 
 		<!-- Modal content -->
 		<div class="modal-content">
-			<span id="close-modal">&times;</span>
+			<span id="close-modal"><i class="fas fa-times"></i></span>
 			<!-- Container with information about forgot password. -->
 			<div id="forget-container">
 				@component('auth/passwords/email')

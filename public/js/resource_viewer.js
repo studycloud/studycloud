@@ -27,9 +27,9 @@
 var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
 
 $(document).ready(function(){ 
-	// callback(received);
+	callback(received);
 	// you can also call:
-	error();
+	// error();
 });
 
 // Callback function that server will give the data.
@@ -40,7 +40,6 @@ function callback(received)
 	set_author(resource.meta.author_name, resource.meta.author_type);
 	for(var i=0;i<1;i++)
 	{
-		console.log(resource.contents[i]);
 		display_content(i, resource.contents[i]);
 	}
 }
@@ -60,7 +59,6 @@ function set_author(name, type)
 // Display one of the content elements in the array.
 function display_content(num, element)
 {
-	console.log(element);
 	// Create a new module.
 	document.getElementById('modules').innerHTML+="<div class=module id='module-"+num+"'></div>";
 	if(element.type=="link")
@@ -78,7 +76,9 @@ function display_content(num, element)
 	document.getElementById('module-'+num).innerHTML+="<div class='date'>Modified: "+element.modified+"</div>";
 }
 
+// We can't find the resource requested. 
 function error()
 {
-	document.getElementById('resource-head').innerHTML="<h1>Sorry! We don't have that resource. Would you like to write it?</h1>"
+	document.getElementById('resource-head').innerHTML="<h1>Sorry! We don't have that resource. Would you like to write it?</h1>";
+	document.getElementById('modules').innerHTML=""; // Clear modules if anything exists within it. 
 }
