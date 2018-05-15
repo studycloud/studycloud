@@ -89,7 +89,7 @@
 					width: 100%;
 					resize: none;
 					font-size: 18px;
-					font-family: inherit;
+					font-family: $body-font;
 					&:focus {
 						color: $search-box-text-focus-color;
 						background: $search-box-bg-focus-color;
@@ -124,6 +124,8 @@
 #log-in-hidden { // Content box containing login form.
 	padding: 5px;
 	text-align: right;
+	font-family: $body-font;
+	font-size: 12px;
 
     position: absolute;
     background-color: $login-dropdown-color;
@@ -152,7 +154,6 @@
 	    text-decoration: none;
 	    border-radius: 0;
 	    background: none;
-	    font-size: 12px;
 	    font-weight: normal;
 	    text-align: right;
 
@@ -172,7 +173,7 @@
 		transition: all 0.15s;
 		border-radius: 0.1em;
 		resize: none;
-		font-size: inherit;
+		font-size: 18px;
 		font-family: inherit;
 		margin-bottom: 2%;
 	}
