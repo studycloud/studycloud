@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);/* The purpose of this file is to reset all CSS properties that the browser may otherwise want to reset. Taken directly from the webpage cited below.*/
+@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);/* The purpose of this file is to reset all CSS properties that the browser may otherwise want to reset. Taken directly from the webpage cited below.*/
 
 /*
 	http://meyerweb.com/eric/tools/css/reset/ 
@@ -412,12 +412,26 @@ table {
 }
 
 #log-in-hidden #remember {
-  margin: 0 0 0 auto;
+  display: inline;
+}
+
+#log-in-hidden #remember label {
+  display: block;
+  padding-left: 15px;
+  text-indent: -15px;
 }
 
 #log-in-hidden #remember input {
+  width: 13px;
+  height: 13px;
+  padding: 0;
+  margin: 0;
+  vertical-align: bottom;
+  position: relative;
+  top: -1px;
+  *overflow: hidden;
   margin: 2%;
-  display: inline;
+  display: none;
 }
 
 #log-in-hidden #logInSub {
@@ -506,6 +520,58 @@ html {
   background-color: rgba(133, 133, 133, 0.3);
   font-size: 16px;
   width: 100%;
+}
+
+input[type=checkbox] {
+  display: none;
+}
+
+/* to hide the checkbox itself */
+
+input[type=checkbox] + label:before {
+  font-family: "FontAwesome";
+  display: inline-block;
+}
+
+input[type=checkbox] + label:before {
+  content: "\F096";
+}
+
+/* unchecked icon */
+
+input[type=checkbox] + label:before {
+  letter-spacing: 10px;
+}
+
+/* space between checkbox and label */
+
+input[type=checkbox]:checked + label:before {
+  content: "\F046";
+}
+
+/* checked icon */
+
+input[type=checkbox]:checked + label:before {
+  letter-spacing: 5px;
+}
+
+/* allow space for check mark */
+
+.fancy-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.fancy-checkbox span:before {
+  font-family: "FontAwesome";
+  font-style: normal;
+  width: 1em;
+  height: 1em;
+  content: '\F10C';
+  margin-right: .3em;
+}
+
+.fancy-checkbox input[type="checkbox"]:checked ~ span:before {
+  content: '\F05D';
 }
 
 @media (max-width: 900px) {

@@ -179,10 +179,29 @@
 	}
 
 	#remember {
-		margin: 0 0 0 auto;
+		// margin: 0 0 0 auto;
+		display: inline;
+
+		// from stackexchange answer
+		// https://stackoverflow.com/questions/306252/how-to-align-checkboxes-and-their-labels-consistently-cross-browsers
+		label { 
+		    display: block;
+		    padding-left: 15px;
+		    text-indent: -15px;
+		}
+
 		input {
+		    width: 13px;
+		    height: 13px;
+		    padding: 0;
+		    margin:0;
+		    vertical-align: bottom;
+		    position: relative;
+		    top: -1px;
+		    *overflow: hidden;
+		// end stackexchange answer
 			margin: 2%;
-			display: inline;
+			display: none;
 		}
 	}
 

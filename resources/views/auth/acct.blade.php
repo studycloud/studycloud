@@ -8,7 +8,7 @@
 				{{ csrf_field() }}
 				<input type="text" name="email" id="log-in-user" placeholder="username">
 				<input type="password" name="password" id="log-in-pwd" placeholder="password">
-				<p><label for="remember"><input type="checkbox" name="remember" id="remember" value="remember"> Remember Me</label></p>
+				<div><input type="checkbox" name="remember" id="remember" value="remember"/><label for="remember"> Remember Me</label></div>
 				<input type="submit" id="logInSub" value="Go">
 			</form>
 			<a href="#" id="register-btn" class="link-default">Create account!</a> <!-- links to a new page on the website as it'll be annoying if you lose your progress creating an account -->

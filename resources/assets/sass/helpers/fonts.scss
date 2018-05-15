@@ -3,6 +3,8 @@
 
 @import url('https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One');
 
+// FontAwesome
+@import url('https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css');
 
 // Define a bunch of fonts to choose from. 
 $main-font-family-3: 'Gugi', cursive; 			// not bad
@@ -24,3 +26,5 @@ $main-font-family-10: 'Chela One', cursive;
 $body-font: 'Open Sans', sans-serif;
 
 $main-font: $main-font-family-3;
+
+$font-awesome: 'FontAwesome'
