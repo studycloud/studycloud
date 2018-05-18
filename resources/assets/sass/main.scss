@@ -24,22 +24,26 @@ html {
 
 // CUSTOM CHECKBOXES (source: https://codepen.io/jamesbarnett/pen/yILjk)
 
-.fancy-checkbox input[type="checkbox"] {
-    display: none;
+/* to hide the checkbox itself */
+input[type=checkbox] {
+  display: none;
 }
 
-.fancy-checkbox label:before {
-    font-family: $font-awesome;
-    font-style: normal;
-    width: 1em;
-    height: 1em;
-    content: '\f10c';
-    margin-right: .3em;
+input[type=checkbox] + label:before {
+  font-family: "FontAwesome";
 }
- 
-.fancy-checkbox input[type="checkbox"]:checked ~ label:before {
-    content: '\f05d';
+
+
+/* unchecked icon */
+input[type=checkbox] + label:before {
+  content: "\F0C8";
 }
+
+/* checked icon */
+input[type=checkbox]:checked + label:before {
+  content: "\F14A";
+}
+
 
 
 // MOBILE COMPATIBILITY

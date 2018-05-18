@@ -522,21 +522,26 @@ html {
   width: 100%;
 }
 
-.fancy-checkbox input[type="checkbox"] {
+/* to hide the checkbox itself */
+
+input[type=checkbox] {
   display: none;
 }
 
-.fancy-checkbox label:before {
+input[type=checkbox] + label:before {
   font-family: "FontAwesome";
-  font-style: normal;
-  width: 1em;
-  height: 1em;
-  content: '\F10C';
-  margin-right: .3em;
 }
 
-.fancy-checkbox input[type="checkbox"]:checked ~ label:before {
-  content: '\F05D';
+/* unchecked icon */
+
+input[type=checkbox] + label:before {
+  content: "\F0C8";
+}
+
+/* checked icon */
+
+input[type=checkbox]:checked + label:before {
+  content: "\F14A";
 }
 
 @media (max-width: 900px) {
