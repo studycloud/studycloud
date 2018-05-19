@@ -22,27 +22,6 @@ html {
 }
 
 
-// CUSTOM CHECKBOXES (source: https://codepen.io/jamesbarnett/pen/yILjk)
-
-/* to hide the checkbox itself */
-input[type=checkbox] {
-  display: none;
-}
-
-input[type=checkbox] + label:before {
-  font-family: "FontAwesome";
-}
-
-
-/* unchecked icon */
-input[type=checkbox] + label:before {
-  content: "\F0C8";
-}
-
-/* checked icon */
-input[type=checkbox]:checked + label:before {
-  content: "\F14A";
-}
 
 
 

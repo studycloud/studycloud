@@ -411,27 +411,24 @@ table {
   margin-bottom: 2%;
 }
 
-#log-in-hidden #remember {
+#log-in-hidden #rememberDiv {
   display: inline;
+  /* Hide the default checkbox. */
+  /* Set the unchecked icon. */
+  /* Set the checked icon. */
 }
 
-#log-in-hidden #remember label {
-  display: block;
-  padding-left: 15px;
-  text-indent: -15px;
-}
-
-#log-in-hidden #remember input {
-  width: 13px;
-  height: 13px;
-  padding: 0;
-  margin: 0;
-  vertical-align: bottom;
-  position: relative;
-  top: -1px;
-  *overflow: hidden;
-  margin: 2%;
+#log-in-hidden #rememberDiv input[type=checkbox] {
   display: none;
+}
+
+#log-in-hidden #rememberDiv input[type=checkbox] + label:before {
+  font-family: "FontAwesome";
+  content: "\F0C8";
+}
+
+#log-in-hidden #rememberDiv input[type=checkbox]:checked + label:before {
+  content: "\F14A";
 }
 
 #log-in-hidden #logInSub {
@@ -520,28 +517,6 @@ html {
   background-color: rgba(133, 133, 133, 0.3);
   font-size: 16px;
   width: 100%;
-}
-
-/* to hide the checkbox itself */
-
-input[type=checkbox] {
-  display: none;
-}
-
-input[type=checkbox] + label:before {
-  font-family: "FontAwesome";
-}
-
-/* unchecked icon */
-
-input[type=checkbox] + label:before {
-  content: "\F0C8";
-}
-
-/* checked icon */
-
-input[type=checkbox]:checked + label:before {
-  content: "\F14A";
 }
 
 @media (max-width: 900px) {
