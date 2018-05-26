@@ -1,0 +1,21 @@
+// Ambition color scheme. 
+
+$ground: #010823; 			// Extremely dark blue.
+
+$text-default: white;
+$text-invert: white;
+$text-light: #aaa;
+
+$primary-0: #220134; 		// Purple.
+$primary-0-light: lighten($primary-0, 20%);	
+
+$accent-0: #00177b;			// Mid-blue.
+$accent-1: lighten($accent-0, 20%);
+$accent-2: #0c5f07;
+
+$input-minimal: lighten($primary-0-light, 40%);
+
+$bg-light: #fefefe;
+
+$link-default: $primary-0;
+$link-hover: $accent-2;

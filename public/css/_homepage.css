@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One|Cinzel|Cinzel+Decorative);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);/* Contains formatting for the homepage content. */
+@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One|Cinzel|Cinzel+Decorative|Space+Mono|Roboto+Mono);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);/* Contains formatting for the homepage content. */
 
 #main {
   text-align: center;
@@ -13,7 +13,7 @@
   vertical-align: top;
   /* Properties of the element box. */
   border: 3px;
-  border-color: purple;
+  border-color: #0c5f07;
   border-style: solid;
 }
 
@@ -37,13 +37,13 @@
   padding: 3px;
   height: 40px;
   /* Space for two lines of text. Expand if necessary. */
-  background-color: purple;
+  background-color: #0c5f07;
 }
 
 .boxText {
   /* Only for text content of elementboxes. */
   font-size: 16px;
-  color: black;
+  color: white;
   text-align: left;
   padding: 2%;
 }

@@ -1,9 +1,11 @@
 // Contains colors and gradient definitions. 
 
-// Import a color scheme. 
-// @import "./original.scss";
-// @import "./umbrella.scss";
-@import "./bold.scss";
+// Import a color scheme with `@import "./colorSchemes/name.scss";`
+@import "./colorSchemes/ambition.scss";
+
+
+// GENERAL
+$page-background: $ground;
 
 // NAVBAR
 

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One|Cinzel|Cinzel+Decorative');
+@import url('https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One|Cinzel|Cinzel+Decorative|Space+Mono|Roboto+Mono');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
 @import url('https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One');
@@ -24,6 +24,8 @@ $main-font-family-10: 'Chela One', cursive;
 $main-font-family-11: 'Cinzel', cursive;		// A little medieval looking but maybe okay?
 $main-font-family-12: 'Cinzel Decorative', cursive; // Use for the header if you use Cinzel. 
 
+$main-font-family-13: 'Space Mono', cursive;	// Monospace...eeky.
+$main-font-family-14: 'Roboto Mono', cursive;	// Monospace... meh. I think if we do a terminal, theme, gotta be light on dark. 
 
 $body-font: 'Open Sans', sans-serif;
 $body-font-size: 14px;
