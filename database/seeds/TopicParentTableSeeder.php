@@ -21,7 +21,7 @@ class TopicParentTableSeeder extends Seeder
 	/**
 	 * What is the maximum number of topics that each level of the tree can have?
 	 */
-	const NUM_MAX_TOPICS = 5;
+	const NUM_MAX_TOPICS = 8;
 
 	/**
 	 * Run the database seeds.
@@ -43,7 +43,7 @@ class TopicParentTableSeeder extends Seeder
 		if (count($curr_topics)>0)
 		{
 			// how many topics should be at this level of the "tree"?
-			$num_topics_level = rand($num_topics_level_min, self::NUM_MAX_TOPICS);
+			$num_topics_level = rand( $num_topics_level_min, min(self::NUM_MAX_TOPICS, count($curr_topics)) );
 			// delegate the task of assigning children and get the ids of the chosen children
 			$curr_topic_ids = $this->assignChildren($parent_topic, $curr_topics, $num_topics_level);
 			// get the leftover topics that haven't been chosen as children yet
