@@ -1,3 +1,6 @@
 * text eol=lf
 *.css linguist-vendored
 *.scss linguist-vendored
+*.eps binary
+*.png binary
+*.ai binary
