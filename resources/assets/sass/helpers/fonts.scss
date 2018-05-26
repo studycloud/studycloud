@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One');
+@import url('https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One|Cinzel|Cinzel+Decorative');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
 @import url('https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One');
@@ -21,10 +21,14 @@ $main-font-family-7: 'Paytone One', sans-serif; // this is a little young lookin
 $main-font-family-9: 'Fredoka One', cursive;
 $main-font-family-10: 'Chela One', cursive;
 
+$main-font-family-11: 'Cinzel', cursive;		// A little medieval looking but maybe okay?
+$main-font-family-12: 'Cinzel Decorative', cursive; // Use for the header if you use Cinzel. 
 
 
 $body-font: 'Open Sans', sans-serif;
+$body-font-size: 14px;
 
-$main-font: $main-font-family-3;
+$main-font: $main-font-family-11;
+$main-font-size: 20px;
 
 $font-awesome: 'FontAwesome'

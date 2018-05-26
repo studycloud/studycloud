@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);/* The purpose of this file is to reset all CSS properties that the browser may otherwise want to reset. Taken directly from the webpage cited below.*/
+@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One|Cinzel|Cinzel+Decorative);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);/* The purpose of this file is to reset all CSS properties that the browser may otherwise want to reset. Taken directly from the webpage cited below.*/
 
 /*
 	http://meyerweb.com/eric/tools/css/reset/ 
@@ -237,7 +237,7 @@ table {
 }
 
 .navbar {
-  font-family: "Gugi", cursive;
+  font-family: "Cinzel", cursive;
   font-size: 20px;
 }
 
@@ -271,7 +271,6 @@ table {
 
 .navbar ul li a,
 .navbar ul li input {
-  font-weight: bolder;
   color: white;
   display: block;
   text-decoration: none;
@@ -317,8 +316,9 @@ table {
   border-radius: 0.1em;
   width: 100%;
   resize: none;
-  font-size: 18px;
+  font-size: 14px;
   font-family: "Open Sans", sans-serif;
+  padding: 10px 0px;
 }
 
 .navbar ul #search #search-form #search-text:focus {
@@ -515,7 +515,7 @@ html {
 
 #main {
   background-color: rgba(133, 133, 133, 0.3);
-  font-size: 16px;
+  font-size: 14px;
   width: 100%;
 }
 
