@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One|Cinzel|Cinzel+Decorative);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);/* The purpose of this file is to reset all CSS properties that the browser may otherwise want to reset. Taken directly from the webpage cited below.*/
+@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One|Cinzel|Cinzel+Decorative|Space+Mono|Roboto+Mono);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);/* The purpose of this file is to reset all CSS properties that the browser may otherwise want to reset. Taken directly from the webpage cited below.*/
 
 /*
 	http://meyerweb.com/eric/tools/css/reset/ 
@@ -139,9 +139,9 @@ table {
 }
 
 .navbar {
-  background: #1B3B6F;
-  background: -webkit-gradient(linear, left top, left bottom, from(#348AA7), to(#1B3B6F));
-  background: linear-gradient(#348AA7, #1B3B6F);
+  background: #220134;
+  background: -webkit-gradient(linear, left top, left bottom, from(#630398), to(#220134));
+  background: linear-gradient(#630398, #220134);
 }
 
 /* ----------------------------------------------
@@ -285,8 +285,8 @@ table {
 
 .navbar ul li a:hover,
 .navbar ul li input:hover {
-  background-color: #5DD39E;
-  color: black;
+  background-color: #00177b;
+  color: white;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
 }
@@ -310,7 +310,7 @@ table {
   border-color: transparent;
   color: white;
   outline: none;
-  background: #bddfea;
+  background: #c96bfc;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
   border-radius: 0.1em;
@@ -322,7 +322,7 @@ table {
 }
 
 .navbar ul #search #search-form #search-text:focus {
-  color: black;
+  color: white;
   background: white;
 }
 
@@ -338,12 +338,12 @@ table {
 }
 
 .navbar ul #log-in #log-in-button {
-  background-color: #5DD39E;
+  background-color: #00177b;
 }
 
 .navbar ul #log-in #log-in-button:hover,
 .navbar ul #log-in #log-in-button:focus {
-  background-color: #BCE784;
+  background-color: #002ae1;
 }
 
 /* LOGIN DROPDOWN */
@@ -380,7 +380,7 @@ table {
 }
 
 #log-in-hidden .link-default {
-  color: #1B3B6F;
+  color: #220134;
   padding-top: 2px;
   padding-bottom: 2px;
   text-decoration: none;
@@ -391,7 +391,7 @@ table {
 }
 
 #log-in-hidden .link-default:hover {
-  color: purple;
+  color: #0c5f07;
   background: none;
 }
 
@@ -401,7 +401,7 @@ table {
   border-color: transparent;
   color: white;
   outline: none;
-  background: #bddfea;
+  background: #c96bfc;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
   border-radius: 0.1em;
@@ -436,7 +436,7 @@ table {
   color: white;
   text-decoration: none;
   text-align: right;
-  background: #BCE784;
+  background: #002ae1;
   margin: 2% 0 2% auto;
 }
 
@@ -498,13 +498,14 @@ table {
 }
 
 .navbar {
-  background: #1B3B6F;
-  background: -webkit-gradient(linear, left top, left bottom, from(#348AA7), to(#1B3B6F));
-  background: linear-gradient(#348AA7, #1B3B6F);
+  background: #220134;
+  background: -webkit-gradient(linear, left top, left bottom, from(#630398), to(#220134));
+  background: linear-gradient(#630398, #220134);
 }
 
 html {
   font-family: "Open Sans", sans-serif;
+  background: #010823;
 }
 
 #pageWidth {
