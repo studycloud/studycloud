@@ -102,4 +102,9 @@ class TopicRepository
 	{
 		echo NestedArrays::convertToAscii(NestedArrays::topicDescendants($topic));
 	}
+
+	public static function printAsciiAncestors(Topic $topic)
+	{
+		echo NestedArrays::convertToAscii(NestedArrays::topicAncestors($topic));
+	}
 }

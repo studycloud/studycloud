@@ -13,7 +13,7 @@ class NestedArrays
 	/**
 	 * return the descendants of a topic (and the topic itself) in nested array format
 	 * @param  Topic  		$topic the topic whose descendants we want
-	 * @return Array        an array of arrays of topic IDs
+	 * @return array        an array of arrays of topic IDs
 	 */
 	public static function topicDescendants(Topic $topic)
 	{
@@ -21,6 +21,19 @@ class NestedArrays
 		$descendants_as_connections = NodesAndConnections::treeAsConnections($descendants);
 
 		return self::convertToArray($topic->id, $descendants_as_connections, "topic_id", "parent_id");
+	}
+
+	/**
+	 * return the ancestors of a topic (and the topic itself) in nested array format
+	 * @param  Topic  		$topic the topic whose ancestors we want
+	 * @return array        an array of arrays of topic IDs
+	 */
+	public static function topicAncestors(Topic $topic)
+	{
+		$ancestors = (new TopicRepository)->ancestors($topic);
+		$ancestors_as_connections = NodesAndConnections::treeAsConnections($ancestors);
+
+		return self::convertToArray($topic->id, $ancestors_as_connections, "parent_id", "topic_id");
 	}
 
 	/**
