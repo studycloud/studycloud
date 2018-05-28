@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Topic;
+use App\Helpers\NestedArrays;
 
 class TopicRepository
 {
@@ -95,5 +96,10 @@ class TopicRepository
 			}
 		}
 		return $tree;
+	}
+
+	public static function printAsciiDescendants(Topic $topic)
+	{
+		echo NestedArrays::convertToAscii(NestedArrays::topicDescendants($topic));
 	}
 }
