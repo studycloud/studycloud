@@ -67,7 +67,9 @@ class NestedArrays
 	public static function convertToAscii(array $nested_array, $indent = 0)
 	{
 		$ascii = "";
+		// delimiter for a nested connection
 		$space = "|-- ";
+		// only create spacing and indentation for nested items
 		if ($indent >= 1)
 		{
 			$space = str_repeat("|   ", $indent-1) . $space;
@@ -79,6 +81,7 @@ class NestedArrays
 		foreach ($nested_array as $key => $nested)
 		{
 			$ascii .= $space . $key . PHP_EOL;
+			// recursively create ascii for further nestings
 			$ascii .= self::convertToAscii($nested, $indent+1);
 		}
 		return $ascii;
