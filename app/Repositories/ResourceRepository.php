@@ -120,7 +120,8 @@ class ResourceRepository
 		// get the topic collections in $disallowed_topics with ids equal to $topic_id
 		$topics = $disallowed_topics->where('id', $topic_id);
 		$isAncestor = false;
-		// call isAncestor() with each of the topics
+		// call isAncestor() with each of the topics' parents
+		// (ie ask whether $ancestor_topic_id is an ancestor of each topic's parent)
 		// and then OR all of the results together to get a final value
 		foreach ($topics as $topic)
 		{
