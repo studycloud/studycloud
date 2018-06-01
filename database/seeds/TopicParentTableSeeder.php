@@ -21,7 +21,7 @@ class TopicParentTableSeeder extends Seeder
 	/**
 	 * What is the maximum number of topics that each level of the tree can have?
 	 */
-	const NUM_MAX_TOPICS = 8;
+	const NUM_MAX_TOPICS = 4;
 
 	/**
 	 * Run the database seeds.
