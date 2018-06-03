@@ -13,11 +13,11 @@ class ResourceTopicTableSeeder extends Seeder
 	 */
 	const NUM_MAX_TOPICS = 6;
 
-    /**
-     * The faker generator associated with this seeder
-     *
-     * @var Faker\Generator
-     */
+	/**
+	 * The faker generator associated with this seeder
+	 *
+	 * @var Faker\Generator
+	 */
 	protected $faker;
 
 	/**
