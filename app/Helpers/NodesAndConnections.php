@@ -32,7 +32,7 @@ class NodesAndConnections
 			}
 		}
 
-		return collect(["nodes" => $nodes, "connections" => $connections]);
+		return collect(["nodes" => $nodes, "connections" => $connections->unique()]);
 	}
 
 	/**
@@ -42,6 +42,6 @@ class NodesAndConnections
 	 */
 	public static function treeAsConnections($old_nodes)
 	{
-		return self::convertTo($old_nodes)["connections"]->unique();
+		return self::convertTo($old_nodes)["connections"];
 	}
 }

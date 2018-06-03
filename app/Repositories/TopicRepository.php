@@ -99,6 +99,61 @@ class TopicRepository
 	}
 
 	/**
+	 * given a portion of the tree, check to see whether $descendant_topic_id is a descendant of $topic_id
+	 * @param  int 			$topic_id           	the ancestor topic
+	 * @param  int  		$descendant_topic_id   	the descendant to search for
+	 * @param  Collection 	$disallowed_topics 		a portion of the tree to traverse, as a collection of connections
+	 * @return boolean                  			whether $descendant_topic_id is an descendant of $topic
+	 */
+	public static function isDescendant($topic_id, $descendant_topic_id, $disallowed_topics)
+	{
+		// base case: descendant_topic is an descendant of topic if they are the same
+		if ($topic_id == $descendant_topic_id)
+		{
+			return true;
+		}
+		// get the topic collections in $disallowed_topics with parent_ids equal to $topic_id
+		$topics = $disallowed_topics->where('parent_id', $topic_id);
+		$isDescendant = false;
+		// call isDescendant() with each of the topics
+		// and then OR all of the results together to get a final value
+		foreach ($topics as $topic)
+		{
+			// is the parent of this $topic a descendant of $descendant_topic_id?
+			$isDescendant = $isDescendant || self::isDescendant($topic['topic_id'], $descendant_topic_id, $disallowed_topics);
+		}
+		return $isDescendant;
+	}
+
+	/**
+	 * given a portion of the tree, check to see whether $ancestor_topic_id is an ancestor of $topic_id
+	 * @param  int 			$topic_id 			the descendant topic
+	 * @param  int 			$ancestor_topic_id 	the ancestor to search for
+	 * @param  Collection  	$disallowed_topics 	a portion of the tree to traverse, as a collection of connections
+	 * @return boolean                  		whether $ancestor_topic_id is an ancestor of $topic
+	 */
+	public static function isAncestor($topic_id, $ancestor_topic_id, $disallowed_topics)
+	{
+		// base case: ancestor_topic is an ancestor of topic if they are the same
+		if ($topic_id == $ancestor_topic_id)
+		{
+			return true;
+		}
+		// get the connections in $disallowed_topics with topic_ids equal to $topic_id
+		$topics = $disallowed_topics->where('topic_id', $topic_id);
+		$isAncestor = false;
+		// call isAncestor() with each of the topics' parents
+		// (ie ask whether $ancestor_topic_id is an ancestor of each topic's parent)
+		// and then OR all of the results together to get a final value
+		foreach ($topics as $topic)
+		{
+			// is the parent of this $topic an ancestor of $ancestor_topic_id?
+			$isAncestor = $isAncestor || self::isAncestor($topic['parent_id'], $ancestor_topic_id, $disallowed_topics);
+		}
+		return $isAncestor;
+	}
+
+	/**
 	 * print the descendants of $topic as an ascii tree
 	 * @param  Topic|int  $topic the topic whose descendants we'd like to print
 	 */
