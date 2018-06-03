@@ -14,13 +14,6 @@ class ResourceTopicTableSeeder extends Seeder
 	const NUM_MAX_TOPICS = 6;
 
 	/**
-	 * The faker generator associated with this seeder
-	 *
-	 * @var Faker\Generator
-	 */
-	protected $faker;
-
-	/**
 	 * Run the database seeds.
 	 *
 	 * @return void
@@ -51,36 +44,17 @@ class ResourceTopicTableSeeder extends Seeder
 	 */
 	private function assignTopics(Resource $resource, int $num_topics)
 	{
-		// recreate the faker instance so that unique() works correctly
-		$this->refreshFaker();
 		for ($i=0; $i<$num_topics; $i++)
 		{
-			// what topics can this resource be assigned to?
-			$available_topics = ResourceRepository::allowedTopics($resource)->pluck('id')->all();
-			// pick a topic randomly, then add it to the resource
-			$resource->topics()->attach($this->pickTopicID($available_topics));
+			// what topic can this resource be assigned to?
+			$available_topics = ResourceRepository::allowedTopics($resource);
+			// check that there are enough topics first!
+			if ($available_topics->count() > 0)
+			{
+				// pick a topic randomly, then add it to the resource
+				$topic = $available_topics->random();
+				$resource->topics()->attach($topic);
+			}
 		}
-	}
-
-	/**
-	 * reset the faker generator instance
-	 */
-	private function refreshFaker()
-	{
-		// create a new faker instance
-		$this->faker = new Faker\Generator;
-		// add the base provider so that we can use the unique() function later
-		$this->faker->addProvider(new Faker\Provider\Base($this->faker));
-	}
-
-	/**
-	 * randomly pick a topic (which hasn't been picked before) from the list
-	 * of available topics
-	 * @param  array $topics 	a list of topic ids from which to pick the child
-	 * @return int 				the id of the chosen topic
-	 */
-	private function pickTopicID($topics)
-	{
-		return $this->faker->unique()->randomElement($topics);
 	}
 }
