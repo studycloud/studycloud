@@ -42,6 +42,6 @@ class NodesAndConnections
 	 */
 	public static function treeAsConnections($old_nodes)
 	{
-		return self::convertTo($old_nodes)["connections"];
+		return self::convertTo($old_nodes)["connections"]->unique();
 	}
 }

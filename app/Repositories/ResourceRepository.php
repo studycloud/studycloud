@@ -53,12 +53,13 @@ class ResourceRepository
 	}
 
 	/**
-	 * Moves the resource into the desired topic newTopic. If attempting to 
+	 * Moves the resource into the desired topic $newTopic. If attempting to 
 	 * move into a topic that is an ancestor or child of the resource's
 	 * current topics, the current topic will be replaced by the newTopic.
-	 * @param App\Resource $resource the resource to move
+	 * @param Topic 	$newTopic	the topic which we want to add to $resource
+	 * @param Resource	$resource	the resource to move
 	 */
-	public function moveTopics($newTopic, $resource)
+	public function moveTopics(Topic $newTopic, Resource $resource)
 	{
 		$disallowed_topics = self::disallowedTopics($resource);
 		$allowed = !$disallowed_topics->contains('id', $newTopic->id);
@@ -70,14 +71,9 @@ class ResourceRepository
 		else
 		{
 			$this->removeFamily($resource, $newTopic->id, $disallowed_topics);
-			self::attachTopics($newTopic, $resource);
-			
+			self::attachTopics($resource, collect([$newTopic]));
 		}
 	}
-
-//Check to see if this actually works
-//Detaches any relatives of $resource that are related to $newTopic. 
-//aka NO INCEST--make sure an ancestor and a descendant topic do not share the same resource
 
 	/**
 	 * remove any ancestor or descendant topics that conflict
@@ -90,17 +86,19 @@ class ResourceRepository
 	private function removeFamily($resource, $new_topic_id, $disallowed_topics)
 	{
 		$old_topics = collect();
+		// which topics is this resource currently in?
 		$topics = $resource->topics()->get();
+		// iterate through the current topics and determine whether they conflict with the new topic
 		foreach ($topics as $topic) {
-			$topic_id = $topic->id;
-			if ($this->isAncestor($topic_id, $new_topic_id, $disallowed_topics)
-				|| $this->isDescendant($topic_id, $new_topic_id, $disallowed_topics))
+			if ($this->isAncestor($topic->id, $new_topic_id, $disallowed_topics)
+				|| $this->isDescendant($topic->id, $new_topic_id, $disallowed_topics))
 			{
-				$old_topics->push($topic_id);
+				// if a current topic conflicts, add it to the list of topics to remove
+				// TODO: remove it right away and recalculate $disallowed_topics?
+				$old_topics->push($topic->id);
 			}
 		}
-		dd($old_topics);
-		// $this->detachTopics($resource, $old_topics);
+		$this->detachTopics($resource, $old_topics);
 	}
 
 	/**
@@ -117,19 +115,28 @@ class ResourceRepository
 		{
 			return true;
 		}
-		// get the topic collections in $disallowed_topics with ids equal to $topic_id
-		$topics = $disallowed_topics->where('id', $topic_id);
+		// get the topic collections in $disallowed_topics with topic_ids equal to $topic_id
+		$topics = $disallowed_topics->filter(
+			function ($topic) use ($topic_id)
+			{
+				if ($topic->has('pivot'))
+				{
+					return $topic['pivot']['topic_id'] == $topic_id;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		);
 		$isAncestor = false;
 		// call isAncestor() with each of the topics' parents
 		// (ie ask whether $ancestor_topic_id is an ancestor of each topic's parent)
 		// and then OR all of the results together to get a final value
 		foreach ($topics as $topic)
 		{
-			if ($topic->has('pivot'))
-			{
-				// is the parent of this $topic an ancestor of $ancestor_topic_id?
-				$isAncestor = $isAncestor || $this->isAncestor($topic['pivot']['parent_id'], $ancestor_topic_id, $disallowed_topics);
-			}
+			// is the parent of this $topic an ancestor of $ancestor_topic_id?
+			$isAncestor = $isAncestor || $this->isAncestor($topic['pivot']['parent_id'], $ancestor_topic_id, $disallowed_topics);
 		}
 		return $isAncestor;
 	}
@@ -148,7 +155,7 @@ class ResourceRepository
 		{
 			return true;
 		}
-		// get the topic collections in $disallowed_topics with ids equal to $topic_id
+		// get the topic collections in $disallowed_topics with parent_ids equal to $topic_id
 		$topics = $disallowed_topics->filter(
 			function ($topic) use ($topic_id)
 			{

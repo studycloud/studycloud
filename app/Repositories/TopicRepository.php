@@ -100,28 +100,43 @@ class TopicRepository
 
 	/**
 	 * print the descendants of $topic as an ascii tree
-	 * @param  Topic  $topic the topic whose descendants we'd like to print
+	 * @param  Topic|int  $topic the topic whose descendants we'd like to print
 	 */
-	public static function printAsciiDescendants(Topic $topic)
+	public static function printAsciiDescendants($topic)
 	{
+		if (is_int($topic))
+		{
+			$topic = Topic::find($topic);
+		}
+
 		echo NestedArrays::convertToAscii(NestedArrays::topicDescendants($topic));
 	}
 
 	/**
 	 * print the ancestors of $topic as an ascii tree
-	 * @param  Topic  $topic the topic whose ancestors we'd like to print
+	 * @param  Topic|int  $topic the topic whose ancestors we'd like to print
 	 */
-	public static function printAsciiAncestors(Topic $topic)
+	public static function printAsciiAncestors($topic)
 	{
+		if (is_int($topic))
+		{
+			$topic = Topic::find($topic);
+		}
+
 		echo NestedArrays::convertToAscii(NestedArrays::topicAncestors($topic));
 	}
 
 	/**
 	 * convenience function for printing both ancestors and descendants of $topic as an ascii tree
-	 * @param  Topic  $topic the topic whose ancestors and descendants we'd like to print
+	 * @param  Topic|int  $topic the topic whose ancestors and descendants we'd like to print
 	 */
-	public static function asciiTree(Topic $topic)
+	public static function asciiTree($topic)
 	{
+		if (is_int($topic))
+		{
+			$topic = Topic::find($topic);
+		}
+
 		echo "DESCENDANTS\n";
 		self::printAsciiDescendants($topic);
 		echo "\nANCESTORS\n";
