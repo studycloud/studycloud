@@ -73,7 +73,10 @@ class TopicRepository
 		// base case: $levels == 0
 		// also do a memoization check to prevent us from
 		// executing a query for a topic that we've already found
-		if (($levels != 0 || is_null($levels)) && !in_array($topic->id, $this->memoize))
+		if (
+			($levels != 0 || is_null($levels)) &&
+			(is_null($topic) || !in_array($topic->id, $this->memoize))
+		)
 		{
 			if (is_null($topic))
 			{

@@ -30,7 +30,7 @@ Route::get('topics', function(){
 
 Route::get('resource/{resource}', 'ResourceController@show');
 
-Route::get('tree/data', 'TopicTreeController');
+Route::get('tree/data', 'GetTopicTree');
 
 Route::get('admins/{userid}', function($user_id){
 	$user = App\User::find($user_id);
