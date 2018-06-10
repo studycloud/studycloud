@@ -4,24 +4,24 @@ use Illuminate\Database\Seeder;
 
 class TopicParentTableSeeder extends Seeder
 {
-    /**
-     * The faker generator associated with this seeder
-     *
-     * @var Faker\Generator
-     */
-	protected $faker;
-
-    /**
-     * The list of topics that have become parents (i.e. have been assigned children).
-     *
-     * @var array
-     */
-	protected $has_been_a_parent = [];
-
 	/**
 	 * What is the maximum number of topics that each level of the tree can have?
 	 */
-	const NUM_MAX_TOPICS = 5;
+	const NUM_MAX_TOPICS = 4;
+
+	/**
+	 * The faker generator associated with this seeder
+	 *
+	 * @var Faker\Generator
+	 */
+	protected $faker;
+	
+	/**
+	 * The list of topics that have become parents (i.e. have been assigned children).
+	 *
+	 * @var array
+	 */
+	protected $has_been_a_parent = [];
 
 	/**
 	 * Run the database seeds.
@@ -43,7 +43,7 @@ class TopicParentTableSeeder extends Seeder
 		if (count($curr_topics)>0)
 		{
 			// how many topics should be at this level of the "tree"?
-			$num_topics_level = rand($num_topics_level_min, self::NUM_MAX_TOPICS);
+			$num_topics_level = rand( $num_topics_level_min, min(self::NUM_MAX_TOPICS, count($curr_topics)) );
 			// delegate the task of assigning children and get the ids of the chosen children
 			$curr_topic_ids = $this->assignChildren($parent_topic, $curr_topics, $num_topics_level);
 			// get the leftover topics that haven't been chosen as children yet
@@ -84,7 +84,6 @@ class TopicParentTableSeeder extends Seeder
 
 	/**
 	 * reset the faker generator instance
-	 * @return null
 	 */
 	private function refreshFaker()
 	{
@@ -108,7 +107,6 @@ class TopicParentTableSeeder extends Seeder
 	 * persist a list of children to the database
 	 * @param  int $parent_topic   		the id of the parent topic
 	 * @param  array $curr_topic_ids 	a list of children ids for this parent
-	 * @return null
 	 */
 	private function saveChildren($parent_topic, $curr_topic_ids)
 	{
