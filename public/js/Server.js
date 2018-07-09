@@ -111,15 +111,12 @@ Server.prototype.getData = function(node, levels, handleError, handleSuccess)
     var self = this;
     self.treeHandleError = handleError;
     self.treeHandleSuccess = handleSuccess;
-	var url;
-	if(node && levels)
-		url = "/tree/data/?topic="+node+"&levels="+levels;
-	else if(levels)
-		url = "/tree/data/?topic=&levels="+levels;
-	else if(node)
-		url = "/tree/data/?topic="+node;
-	else
-		url = "tree/data";
+	// if any of node, levels_up, or levels_down is undefined, use an empty string instead
+	node = node ? "" : node
+	levels_up = levels_up ? "" : levels_up
+	levels_down = levels_down ? "" : levels_down
+	// what is the url for this request?
+	url = "/tree/data/?topic="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
     return d3.json(url, function(error, data){
     	if (error){
     		return self.handleError(node, url, error);
