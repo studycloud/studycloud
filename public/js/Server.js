@@ -111,10 +111,11 @@ Server.prototype.getData = function(node, levels, handleError, handleSuccess)
     var self = this;
     self.treeHandleError = handleError;
     self.treeHandleSuccess = handleSuccess;
-	// if any of node, levels_up, or levels_down is undefined, use an empty string instead
-	node = node ? "" : node
-	levels_up = levels_up ? "" : levels_up
-	levels_down = levels_down ? "" : levels_down
+	// if any of node, levels_up, or levels_down is undefined/null, use an empty string instead
+	// but allow levels to be 0
+	node = node ? node : ""
+	levels_up = levels_up || levels_up === 0 ? levels_up : ""
+	levels_down = levels_down || levels_down === 0 ? levels_down : ""
 	// what is the url for this request?
 	url = "/tree/data/?topic="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
     return d3.json(url, function(error, data){
