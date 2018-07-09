@@ -35,43 +35,35 @@ class GetTopicTree extends Controller
 		{
 			$topic_id = null;
 		}
-		$levels = $request->input('levels');
-		if ($levels == "")
+		$up = $request->input('levels_up');
+		if ($up == "")
 		{
-			$levels = null;
+			$up = null;
 		}
-		$direction = $request->input('direction');
-		$descendants = true;
-		if ($direction == "up")
+		$down = $request->input('levels_down');
+		if ($down == "")
 		{
-			$descendants = false;
+			$down = null;
 		}
-		return $this->show($topic_id, $levels, $descendants);
+		return $this->show($topic_id, $up, $down);
 	}
 
 	/**
 	 * converts a portion of the tree to JSON for traversal by the JavaScript team
-	 * @param  integer 	$topic_id 		the id of the current topic in the tree; defaults to the root of the tree, which has an id of 0
-	 * @param  int     	$levels   		the number of levels of the tree to return; defaults to infinity
-	 * @param bool 		$descendants 	whether to show descendants or ancestors
-	 * @return Collection     the nodes and connections of the target portion of the tree
+	 * @param	integer		$topic_id		the id of the current topic in the tree; defaults to the root of the tree, which has an id of 0
+	 * @param	int|null	$levels_up		the number of ancestor levels of the tree to return; defaults to infinity
+	 * @param	int|null	$levels_down	the number of descendant levels of the tree to return; defaults to infinity
+	 * @return	Collection					the nodes and connections of the target portion of the tree
 	 */
-	public function show($topic_id = 0, int $levels = null, bool $descendants = true)
+	public function show($topic_id = 0, int $levels_up = null, int $levels_down = null)
 	{
 		$topic = null;
 		if ($topic_id != 0)
 		{
 			$topic = Topic::find($topic_id);
 		}
-		// get the descendants/ancestors of this topic in a flat collection and load them into our tree data member
-		if ($descendants)
-		{
-			$this->tree = (new TopicRepository)->descendants($topic, $levels);
-		}
-		else
-		{
-			$this->tree = (new TopicRepository)->ancestors($topic, $levels);
-		}
+		// get the ancestors and descendants of this topic in a flat collection
+		$this->tree = (new TopicRepository)->ancestors($topic, $levels_up)->merge((new TopicRepository)->descendants($topic, $levels_down));
 		// convert the data to the nodes/connections format
 		$this->tree = NodesAndConnections::convertTo($this->tree);
 		// get all of the topic_ids
