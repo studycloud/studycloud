@@ -19,16 +19,12 @@ Route::get('about', function(){
 	return view('about');
 })->name('about');
 
-// TEMPORARY FOR TESTING
-Route::get('resource', function(){
-	return view('resource');
-});
-
 Route::get('topics', function(){
 	return view('topics');
 })->name('topics');
 
-Route::get('resource/{resource}', 'ResourceController@show');
+Route::get('resources/data/{resource}', 'ResourceController@json');
+Route::resource('resources', 'ResourceController');
 
 Route::get('tree/data', 'TopicTreeController');
 
