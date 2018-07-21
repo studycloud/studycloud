@@ -28,6 +28,15 @@ class User extends Authenticatable
 	];
 
 	/**
+	 * return the full name of this user
+	 * @return string	the user's full name
+	 */
+	public function name()
+	{
+		return $this->fname . " " . $this->lname;
+	}
+
+	/**
 	 * returns the roles of this user. make sure to call get on the result!
 	 */
 	public function roles()

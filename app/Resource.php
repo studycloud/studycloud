@@ -4,7 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use  App\Topic;
+use App\Topic;
+use App\User;
 
 class Resource extends Model
 {
@@ -49,5 +50,14 @@ class Resource extends Model
 	public function getTopics()
 	{
 		return $this->topics()->get();
+	}
+
+	/**
+	 * define the many-to-one relationship between resources and their author
+	 * @return User	the author of this resource
+	 */
+	public function author()
+	{
+		return $this->belongsTo(User::class);
 	}
 }
