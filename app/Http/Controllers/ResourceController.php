@@ -8,26 +8,25 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 
 
-
-
-/*
-
-TODO:
-Think about each of the functions we need in each of our controllers. 
-
-Implement the code using the models.
-We want to be able to crate a resource that can be manipulated at will. What do we want in this resource?
-
-Use functions 
-
-
-
-*/
-
-
-
 class ResourceController extends Controller
 {
+	/**
+	ROUTES FOR THIS CONTROLLER
+		HTTP Verb		URI						Route Name			Action
+		GET				/resources/create		resources.create	show the resource creation page
+		POST			/resources				resources.store		create a new resource sent as JSON
+		GET				/resources/{id}			resources.show		show the page for this resource (and the editor if logged in as the author)
+		GET				/resources/data/{id}	resources.json		get the JSON representation of this resource
+		PATCH (or PUT)	resources/{id}			resources.update	alter a current resource according to the changes sent as JSON
+		DELETE			/resources/{id}			resources.destroy	request that this resource be deleted
+	**/
+
+	function __construct()
+	{
+		// verify that the user is signed in for all methods except index and show
+		$this->middleware('auth', ['except' => ['index', 'show']]);
+	}
+
 	/**
 	 * Display a listing of the resource, so the user can pick a resource among the many available.
 	 *
@@ -35,7 +34,8 @@ class ResourceController extends Controller
 	 */
 	public function index()
 	{
-		//
+		// this method is currently not accessible from a route
+		// it has been disabled
 	}
 
 	/**
@@ -79,7 +79,7 @@ class ResourceController extends Controller
 	 */
 	public function create()
 	{
-  
+		// load the appropriate view here
 	}
 
 	/**
@@ -95,13 +95,15 @@ class ResourceController extends Controller
 		$newResource->author_id = Auth::id();
 		$newResource->use_id = $request->use_id;
 
+		// maybe also create a new ResourceContent and attach it to this Resource?
+
 		$newResource->save();
 	}
 
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param  \App\Resource  $resource
+	 * @param  Resource  $resource
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show(Resource $resource)
@@ -113,38 +115,45 @@ class ResourceController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \App\Resource  $resource
+	 * @param  Resource  $resource
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(Request $request, Resource $resource)
 	{
-		//Request must have information about name, author_id, and use_id.
-		$resource->name = $request->name;
-		$resource->author_id = Auth::id();
-		$resource->use_id = $request->use_id;
+		// check that this user is the author
+		// TODO: migrate this check to middleware
+		if Auth::user() == $resource->author
+		{
+			//Request must have information about name, author_id, and use_id.
+			$resource->name = $request->name;
+			$resource->author_id = Auth::id();
+			$resource->use_id = $request->use_id;
 
-		$resource->save();
+			$resource->save();
+		}
 	}
 
 	/**
-	 *Moves the resource under a specific named topic
+	 * Moves the resource into the desired topics. If attempting to 
+	 * move into a topic that is an ancestor or child of the resource's
+	 * current topics, the conflicting topics will be removed, as well.
 	 *
-	 * @param \App\Resource $resource
-	 * @param \App\Topic $topic
+	 * @param Resource $resource
+	 * @param Topic $topic
 	 * @return \Illuminate\Http\Response
 	 *
 	 *
 	 */
 	public function move(Resource $resource, Topic $topic)
 	{
-		# do stuff
+		// do stuff
 	}
 
 
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param  \App\Resource  $resource
+	 * @param  Resource  $resource
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy(Resource $resource)

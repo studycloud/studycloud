@@ -62,7 +62,7 @@ class ResourceRepository
 	 * @param Topic 	$new_topic	the topic which we want to add to $resource
 	 * @param Resource	$resource	the resource to move
 	 */
-	public function moveTopics(Topic $new_topic, Resource $resource)
+	public function addTopic(Topic $new_topic, Resource $resource)
 	{
 		// get the set of disallowed topics for this resource
 		$disallowed_topics = self::disallowedTopics($resource);
