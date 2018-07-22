@@ -24,7 +24,9 @@ Route::get('topics', function(){
 })->name('topics');
 
 Route::get('resources/data/{resource}', 'ResourceController@json');
-Route::resource('resources', 'ResourceController');
+Route::resource('resources', 'ResourceController', ['except' => 
+	'index', 'edit'
+]);
 
 Route::get('tree/data', 'TopicTreeController');
 

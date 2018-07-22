@@ -29,7 +29,7 @@ Use functions
 class ResourceController extends Controller
 {
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of the resource, so the user can pick a resource among the many available.
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
@@ -107,17 +107,6 @@ class ResourceController extends Controller
 	public function show(Resource $resource)
 	{
 		return view('resource', ['resource' => $resource]);
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  \App\Resource  $resource
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit(Resource $resource)
-	{
-		//
 	}
 
 	/**
