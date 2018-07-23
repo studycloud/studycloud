@@ -16,15 +16,26 @@ class ResourceController extends Controller
 		GET				/resources/create		resources.create	show the resource creation page
 		POST			/resources				resources.store		create a new resource sent as JSON
 		GET				/resources/{id}			resources.show		show the page for this resource (and the editor if logged in as the author)
-		GET				/resources/data/{id}	resources.json		get the JSON representation of this resource
+		POST			/resources/data/{id}	resources.json		get the JSON representation of this resource
 		PATCH (or PUT)	resources/{id}			resources.update	alter a current resource according to the changes sent as JSON
 		DELETE			/resources/{id}			resources.destroy	request that this resource be deleted
 	**/
 
-	function __construct()
+	function __construct(Resource $resource)
 	{
-		// verify that the user is signed in for all methods except index and show
-		$this->middleware('auth', ['except' => ['index', 'show']]);
+		// verify that the user is signed in for all methods except index, show, and json
+		$this->middleware('auth', ['except' => ['index', 'show', 'json']]);
+		// verify that the user is the author of the resource
+		$this->middleware(
+			function ($request, $next) use ($resource)
+			{
+				if ($resource->author == Auth::user())
+				{
+					return $next($request);
+				}
+				abort(403, "You aren't authorized to perform this action.");
+			},
+		['only' => ['update', 'move', 'destroy']]);
 	}
 
 	/**
@@ -120,17 +131,12 @@ class ResourceController extends Controller
 	 */
 	public function update(Request $request, Resource $resource)
 	{
-		// check that this user is the author
-		// TODO: migrate this check to middleware
-		if Auth::user() == $resource->author
-		{
-			//Request must have information about name, author_id, and use_id.
-			$resource->name = $request->name;
-			$resource->author_id = Auth::id();
-			$resource->use_id = $request->use_id;
+		//Request must have information about name, author_id, and use_id.
+		$resource->name = $request->name;
+		$resource->author_id = Auth::id();
+		$resource->use_id = $request->use_id;
 
-			$resource->save();
-		}
+		$resource->save();
 	}
 
 	/**
