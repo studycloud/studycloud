@@ -12,7 +12,8 @@ Server.prototype.getResource = function(resource, callBack1, callBack2)
 	var self = this;
 	
 	var url = "/resource/data/" + resource;
-	return d3.json(url, function(error, data){
+	return d3.json(url, function(error, data)
+	{
 		if(error)
 		{
 			return callBack1();
@@ -21,7 +22,7 @@ Server.prototype.getResource = function(resource, callBack1, callBack2)
 		{
 			return callBack2();
 		}
-	}
+	})
 }
 
 Server.prototype.getCookie = function(cname)
@@ -102,8 +103,8 @@ Server.prototype.deleteResource = function(resource, callBack1, callBack2)
 		else
 		{
 			return callBack2();
-		}	
-	}
+		}
+	})
 }
 
 Server.prototype.getData = function(node, levels, handleError, handleSuccess)
