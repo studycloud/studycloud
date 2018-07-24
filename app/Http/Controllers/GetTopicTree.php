@@ -10,13 +10,14 @@ use App\Repositories\ResourceRepository;
 use App\Helpers\NodesAndConnections;
 // use Barryvdh\Debugbar\Facade as Debugbar;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 
-class TopicTreeController extends Controller
+class GetTopicTree extends Controller
 {
 	/**
 	 * The nodes and connections for this tree.
 	 *
-	 * @var \Illuminate\Database\Eloquent\Collection
+	 * @var Collection
 	 */
 	protected $tree;
 
@@ -25,38 +26,46 @@ class TopicTreeController extends Controller
 	 * a wrapper for show() that parses the query string. This
 	 * function is automatically invoked by Laravel when the 
 	 * controller is called.
-	 * @return \Illuminate\Database\Eloquent\Collection            the return value of show()
+	 * @return Collection 	the return value of show()
 	 */
 	public function __invoke(Request $request)
 	{
-		$topic_id = $request->query('topic');
+		$topic_id = $request->input('topic');
 		if ($topic_id == "")
 		{
 			$topic_id = null;
 		}
-		$levels = $request->query('levels');
-		if ($levels == "")
+		$up = $request->input('levels_up');
+		if ($up == "")
 		{
-			$levels = null;
+			$up = null;
 		}
-		return $this->show($topic_id, $levels);
+		$down = $request->input('levels_down');
+		if ($down == "")
+		{
+			$down = null;
+		}
+		return $this->show($topic_id, $up, $down);
 	}
 
 	/**
 	 * converts a portion of the tree to JSON for traversal by the JavaScript team
-	 * @param  integer $topic_id 							the id of the current topic in the tree; defaults to the root of the tree, which has an id of 0
-	 * @param  int     $levels   							the number of levels of the tree to return; defaults to infinity
-	 * @return \Illuminate\Database\Eloquent\Collection     the nodes and connections of the target portion of the tree
+	 * @param	integer		$topic_id		the id of the current topic in the tree; defaults to the root of the tree, which has an id of 0
+	 * @param	int|null	$levels_up		the number of ancestor levels of the tree to return; defaults to infinity
+	 * @param	int|null	$levels_down	the number of descendant levels of the tree to return; defaults to infinity
+	 * @return	Collection					the nodes and connections of the target portion of the tree
 	 */
-	public function show($topic_id = 0, $levels = null)
+	public function show($topic_id = 0, int $levels_up = null, int $levels_down = null)
 	{
 		$topic = null;
 		if ($topic_id != 0)
 		{
 			$topic = Topic::find($topic_id);
 		}
-		// get the descendants of this topic in a flat collection and load them into our tree data member
-		$this->tree = (new TopicRepository)->descendants($topic, $levels);
+		// get the ancestors and descendants of this topic in a flat collection
+		$this->tree = (new TopicRepository)->ancestors($topic, $levels_up)->merge(
+			(new TopicRepository)->descendants($topic, $levels_down)
+		);
 		// convert the data to the nodes/connections format
 		$this->tree = NodesAndConnections::convertTo($this->tree);
 		// get all of the topic_ids
@@ -95,23 +104,21 @@ class TopicTreeController extends Controller
 	/**
 	 * process this node so that it shows the correct 
 	 * attributes when the request is returned to the user
-	 * @param  \Illuminate\Database\Eloquent\Collection $node the node to process
-	 * @return \Illuminate\Database\Eloquent\Collection       the processed node
+	 * @param  Collection 	$node 	the node to process
+	 * @return Collection       	the processed node
 	 */
 	private function processTopic($node)
 	{
 		// add a 't' to the beginnning of the id
 		$node->put('id', 't'.$node['id']);
-		// remove the pivot attribute
-		$node = $node->except(['pivot']);
 		return $node;
 	}
 
 	/**
 	 * process this connection so that it shows the correct 
 	 * attributes when the request is returned to the user
-	 * @param  Illuminate\Database\Eloquent\Collection $connection the connection to process
-	 * @return \Illuminate\Database\Eloquent\Collection        the processed pivot as a collection
+	 * @param  Collection 	$connection 	the connection to process
+	 * @return Collection        			the processed pivot as a collection
 	 */
 	private function processTopicConnection($connection)
 	{
@@ -124,7 +131,7 @@ class TopicTreeController extends Controller
 
 	/**
 	 * adds the given node and any connections to the appropriate $nodes and $connections collections
-	 * @param \Illuminate\Database\Eloquent\Collection $nodes the nodes to add
+	 * @param Collection 	$nodes 	the nodes to add
 	 */
 	private function addResource($node)
 	{
@@ -147,23 +154,21 @@ class TopicTreeController extends Controller
 	/**
 	 * process this node so that it shows the correct 
 	 * attributes when the request is returned to the user
-	 * @param  \Illuminate\Database\Eloquent\Collection $node the node to process
-	 * @return \Illuminate\Database\Eloquent\Collection       the processed node
+	 * @param  Collection 	$node 	the node to process
+	 * @return Collection       	the processed node
 	 */
 	private function processResource($node)
 	{
 		// add an 'r' to the beginnning of the id
 		$node->put('id', 'r'.$node['id']);
-		// remove the pivot attribute
-		$node = $node->except(['pivot']);
 		return $node;
 	}
 
 	/**
 	 * process this connection so that it shows the correct 
 	 * attributes when the request is returned to the user
-	 * @param  Illuminate\Database\Eloquent\Collection $connection the connection to process
-	 * @return \Illuminate\Database\Eloquent\Collection        the processed pivot as a collection
+	 * @param  Collection $connection 	the connection to process
+	 * @return Collection        		the processed pivot as a collection
 	 */
 	private function processResourceConnection($connection)
 	{
