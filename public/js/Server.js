@@ -7,11 +7,11 @@ function Server()
     var self = this;
 }
 
-Server.prototype.getResource = function(resource, callBack1, callBack2)
+Server.prototype.getResource = function(resource_id, callBack1, callBack2)
 {
 	var self = this;
 	
-	var url = "/resource/data/" + resource;
+	var url = "/resources/data?id=" + resource_id;
 	return d3.json(url, function(error, data)
 	{
 		if(error)
@@ -45,8 +45,7 @@ Server.prototype.getCookie = function(cname)
 Server.prototype.addResource = function(content, callBack1, callBack2)
 {
 	var self = this;
-	var url = "/resource/create";
-	content["_method"] = "PUT";
+	var url = "/resources";
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
@@ -66,10 +65,10 @@ Server.prototype.addResource = function(content, callBack1, callBack2)
 	});
 }
 
-Server.prototype.editResource = function(resource, content, callBack1, callBack2)
+Server.prototype.editResource = function(resource_id, content, callBack1, callBack2)
 {
 	var self = this;
-	var url = "/resource/" + resource;
+	var url = "/resources/" + resource_id;
 	content["_method"] = "PATCH";
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
@@ -91,10 +90,19 @@ Server.prototype.editResource = function(resource, content, callBack1, callBack2
 	});
 }
 
-Server.prototype.deleteResource = function(resource, callBack1, callBack2)
+Server.prototype.deleteResource = function(resource_id, callBack1, callBack2)
 {
 	var self = this;
-	var url = "/resource/data/" + resource;
+	var url = "/resources/" + resource_id;
+	content["_method"] = "DELETE";
+	var goodCookie = self.getCookie("XSRF-TOKEN");
+
+	if (goodCookie == ""){
+		return callBack1();
+	}
+
+	content["X-CSRF-TOKEN"] = self.getCookie("XSRF-TOKEN");
+
 	return d3.json(url, function(error, data){
 		if(error)
 		{
