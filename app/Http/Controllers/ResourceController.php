@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Resource;
 use Carbon\Carbon;
+use App\Http\Middleware\CheckAuthor;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -20,21 +21,12 @@ class ResourceController extends Controller
 		DELETE			/resources/{id}			resources.destroy	request that this resource be deleted
 	**/
 
-	function __construct(Resource $resource)
+	function __construct()
 	{
 		// verify that the user is signed in for all methods except index, show, and json
 		$this->middleware('auth', ['except' => ['index', 'show']]);
 		// verify that the user is the author of the resource
-		$this->middleware(
-			function ($request, $next) use ($resource)
-			{
-				if ($resource->author == Auth::user())
-				{
-					return $next($request);
-				}
-				abort(403, "You aren't authorized to perform this action.");
-			},
-		['only' => ['update', 'move', 'destroy']]);
+		$this->middleware(CheckAuthor::class, ['only' => ['update', 'move', 'destroy']]);
 	}
 
 	/**
