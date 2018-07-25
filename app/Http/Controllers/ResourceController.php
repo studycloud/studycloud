@@ -16,7 +16,6 @@ class ResourceController extends Controller
 		GET				/resources/create		resources.create	show the resource creation page
 		POST			/resources				resources.store		create a new resource sent as JSON
 		GET				/resources/{id}			resources.show		show the page for this resource (and the editor if logged in as the author)
-		POST			/resources/data/{id}	resources.json		get the JSON representation of this resource
 		PATCH (or PUT)	resources/{id}			resources.update	alter a current resource according to the changes sent as JSON
 		DELETE			/resources/{id}			resources.destroy	request that this resource be deleted
 	**/
@@ -24,7 +23,7 @@ class ResourceController extends Controller
 	function __construct(Resource $resource)
 	{
 		// verify that the user is signed in for all methods except index, show, and json
-		$this->middleware('auth', ['except' => ['index', 'show', 'json']]);
+		$this->middleware('auth', ['except' => ['index', 'show']]);
 		// verify that the user is the author of the resource
 		$this->middleware(
 			function ($request, $next) use ($resource)
@@ -47,40 +46,6 @@ class ResourceController extends Controller
 	{
 		// this method is currently not accessible from a route
 		// it has been disabled
-	}
-
-	/**
-	 * convert a resource to JSON
-	 * @param  Resource	$resource	the resource to display
-	 * @return Collection			the json representation of this resource
-	 */
-	public function json(Resource $resource)
-	{
-		$json = collect();
-		$author = $resource->author;
-		// set meta tag that specifies the resource's meta data
-		$json['meta'] = collect([
-							"name" => $resource->name,
-							"author_name" => $author->name(),
-							"author_type" => $author->type
-						]);
-		// set contents of this resource to be
-		// a list of collections each with the following attributes:
-		// 		name
-		// 		type
-		// 		content
-		// 		created - formatted as April 1, 2018 1:05 AM
-		// 		updated - formatted as April 1, 2018 1:05 AM
-		$json['contents'] = $resource->contents->map(
-			function($content)
-			{
-				$new_content = collect($content);
-				$new_content['created'] = $content['created_at']->format('M j, Y g:i A');
-				$new_content['updated'] = $content['updated_at']->format('M j, Y g:i A');
-				return $new_content->only(['name', 'type', 'content', 'created', 'updated']);
-			}
-		);
-		return $json;
 	}
 
 	/**
@@ -164,6 +129,21 @@ class ResourceController extends Controller
 	 */
 	public function destroy(Resource $resource)
 	{
+		// first, delete attachments this resource has to any topics
+		$resource->topics->pluck('pivot')->each(
+			function ($resource_topic)
+			{
+				$resource_topic->delete();
+			}
+		);
+		// also delete the resource's contents
+		$resource->contents->each(
+			function ($content)
+			{
+				$content->delete();
+			}
+		);
+		// finally, we can delete the resource
 		$resource->delete();
 	}
 }
