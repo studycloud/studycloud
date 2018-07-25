@@ -23,7 +23,8 @@ Route::get('topics', function(){
 	return view('topics');
 })->name('topics');
 
-Route::post('resources/data/{resource}', 'ResourceController@json')->name('resources.json');
+Route::get('resources/data', 'ResourceDataController@getResource')->name('resources.json');
+
 Route::resource('resources', 'ResourceController', ['except' => 
 	'index', 'edit'
 ]);
