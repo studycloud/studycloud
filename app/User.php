@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -121,5 +122,21 @@ class User extends Authenticatable
 			return $role;
 		}
 		throw new \InvalidArgumentException("this function only accepts either a string representing a role or an instance of Role");
+	}
+
+	/**
+	 * Retrieves the acceptable enum fields for a user type
+	 * @return array	the available resource types
+	 */
+	public static function getPossibleTypes() {
+		// Pulls column string from DB
+		// we use (new static) to get an instance of the current class
+		$enumStr = DB::select(DB::raw('SHOW COLUMNS FROM '.(new static)->getTable().' WHERE Field = "type"'))[0]->Type;
+		// Parse enum string
+		// should look something like:
+		// 		enum('text','link','file')
+		preg_match_all("/'([^']+)'/", $enumStr, $matches);
+		// Return matches
+		return isset($matches[1]) ? $matches[1] : [];
 	}
 }
