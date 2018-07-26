@@ -18,6 +18,7 @@
 	@stack('scripts')
 
 	<meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
+	<meta name="csrf-token" content="{{ csrf_token() }}"> <!-- include csrf_token in all pages, so it can be accessed by js -->
 </head>
 <body>
 	<div id="pageWidth">
