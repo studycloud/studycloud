@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Resource;
 use Carbon\Carbon;
-use App\Http\Middleware\CheckAuthor;
+use App\ResourceContent;
 use Illuminate\Http\Request;
+use App\Http\Middleware\CheckAuthor;
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 
 
@@ -58,6 +60,18 @@ class ResourceController extends Controller
 	 */
 	public function store(Request $request)
 	{
+		$request->validate([
+			'name' => 'string|required|max:255',
+			'use_id' => 'required|exists:resource_uses,id',
+			'contents' => 'bail|required'
+			'contents.*.name' => 'string|required|max:255',
+			'contents.*.type' => [
+				'required',
+				Rule::in(ResourceContent::getPossibleTypes())
+			],
+			'contents.*.content' => 'string'
+		]);
+
 		$newResource = new Resource;
 		$newResource->name = $request->name;
 		$newResource->author_id = Auth::id();
@@ -88,7 +102,18 @@ class ResourceController extends Controller
 	 */
 	public function update(Request $request, Resource $resource)
 	{
-		//Request must have information about name, author_id, and use_id.
+		$request->validate([
+			'name' => 'sometimes|max:255'
+			'use_id' => 'sometimes|exists:resource_uses,id',
+			'contents.*.name' => 'sometimes|max:255',
+			'contents.*.type' => [
+				'sometimes',
+				Rule::in(ResourceContent::getPossibleTypes())
+			],
+			'contents.*.content' => 'sometimes|string'
+		]);
+
+		// TODO: check which ones are null
 		$resource->name = $request->name;
 		$resource->author_id = Auth::id();
 		$resource->use_id = $request->use_id;
