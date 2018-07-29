@@ -60,7 +60,7 @@ class ResourceController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
+		$validated = $request->validate([
 			'name' => 'string|required|max:255',
 			'use_id' => 'required|exists:resource_uses,id',
 			'contents' => 'bail|required'
