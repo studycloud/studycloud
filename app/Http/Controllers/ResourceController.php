@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\ResourceContent;
 use Illuminate\Http\Request;
 use App\Http\Middleware\CheckAuthor;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -60,26 +61,33 @@ class ResourceController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$validated = $request->validate([
-			'name' => 'string|required|max:255',
-			'use_id' => 'required|exists:resource_uses,id',
-			'contents' => 'bail|required'
-			'contents.*.name' => 'string|required|max:255',
-			'contents.*.type' => [
-				'required',
-				Rule::in(ResourceContent::getPossibleTypes())
-			],
-			'contents.*.content' => 'string'
-		]);
-
-		$newResource = new Resource;
-		$newResource->name = $request->name;
-		$newResource->author_id = Auth::id();
-		$newResource->use_id = $request->use_id;
-
-		// maybe also create a new ResourceContent and attach it to this Resource?
-
-		$newResource->save();
+		// $validated = $request->validate([
+		// 	'name' => 'string|required|max:255',
+		// 	'use_id' => 'required|exists:resource_uses,id',
+		// 	'contents' => 'bail|required'
+		// 	'contents.*.name' => 'string|required|max:255',
+		// 	'contents.*.type' => [
+		// 		'required',
+		// 		Rule::in(ResourceContent::getPossibleTypes())
+		// 	],
+		// 	'contents.*.content' => 'string'
+		// ]);
+		// create a new Resource
+		$new_resource = new Resource;
+		$new_resource->name = $request->input('name');
+		$new_resource->author_id = Auth::id();
+		$new_resource->use_id = $request->input('use_id');
+		$new_resource->save();
+		// create new ResourceContents and attach them to this Resource
+		$contents = [];
+		foreach ($request->input("contents") as $content) {
+			$new_content = new ResourceContent;
+			$new_content->name = $content['name'];
+			$new_content->type = $content['type'];
+			$new_content->content = $content['content'];
+			$contents[] = $new_content;
+		}
+		$new_resource->contents()->saveMany($contents);
 	}
 
 	/**
@@ -102,16 +110,16 @@ class ResourceController extends Controller
 	 */
 	public function update(Request $request, Resource $resource)
 	{
-		$request->validate([
-			'name' => 'sometimes|max:255'
-			'use_id' => 'sometimes|exists:resource_uses,id',
-			'contents.*.name' => 'sometimes|max:255',
-			'contents.*.type' => [
-				'sometimes',
-				Rule::in(ResourceContent::getPossibleTypes())
-			],
-			'contents.*.content' => 'sometimes|string'
-		]);
+		// $request->validate([
+		// 	'name' => 'sometimes|max:255',
+		// 	'use_id' => 'sometimes|exists:resource_uses,id',
+		// 	'contents.*.name' => 'sometimes|max:255',
+		// 	'contents.*.type' => [
+		// 		'sometimes',
+		// 		Rule::in(ResourceContent::getPossibleTypes())
+		// 	],
+		// 	'contents.*.content' => 'sometimes|string'
+		// ]);
 
 		// TODO: check which ones are null
 		$resource->name = $request->name;
