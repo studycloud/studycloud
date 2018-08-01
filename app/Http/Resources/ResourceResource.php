@@ -30,6 +30,7 @@ class ResourceResource extends Resource
 		/**
 		set contents of this resource to be
 		a list of collections each with the following attributes:
+			id
 			name
 			type
 			content
@@ -43,7 +44,7 @@ class ResourceResource extends Resource
 				$new_content = collect($content);
 				$new_content['created'] = $content['created_at']->format($date_format);
 				$new_content['updated'] = $content['updated_at']->format($date_format);
-				return $new_content->only(['name', 'type', 'content', 'created', 'updated']);
+				return $new_content->only(['id', 'name', 'type', 'content', 'created', 'updated']);
 			}
 		)->toArray();
 

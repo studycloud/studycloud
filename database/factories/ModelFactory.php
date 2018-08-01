@@ -53,7 +53,17 @@ $factory->define(App\ResourceContent::class, function (Faker\Generator $faker)
 			$faker->words($nb = 3, $asText = true)
 		),
 		'type' => $faker->randomElement(App\ResourceContent::getPossibleTypes()),
-		'content' => $faker->paragraph,
+		'content' => function(array $resource_content) use ($faker)
+		{
+			if ($resource_content['type'] == "link")
+			{
+				return $faker->url;
+			}
+			else
+			{
+				return $faker->paragraph;
+			}
+		},
 		'resource_id' => 0, // this will get overridden by the ResourcesTableSeeder
 	];
 });
