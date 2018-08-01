@@ -23,30 +23,53 @@ class ResourcesHttpTest extends TestCase
 		$resource_count = Resource::count();
 		$resource_content_count = ResourceContent::count();
 		// make a new resource but don't add it to database
-		$new_resource = factory(Resource::class)->make();
-		$user = User::find($new_resource->author_id);
-		$new_resource_content = factory(ResourceContent::class)->make([
-			'resource_id' => $new_resource->id
-		]);
+		$resource = factory(Resource::class)->make();
+		$user = User::find($resource->author_id);
+		$resource_content = factory(ResourceContent::class)->make(
+			[
+				'resource_id' => $resource->id
+			]
+		);
+
 		// make a request to create a new resource
-		$response = $this->actingAs($user)->post('/resources/', [
-			'name' => $new_resource->name,
-			'use_id' => $new_resource->use_id,
-			'contents' => [
-				[
-					'name' => $new_resource_content->name,
-					'type' => $new_resource_content->type,
-					'content' => $new_resource_content->content
+		$response = $this->actingAs($user)->post('/resources/',
+			[
+				'name' => $resource->name,
+				'use_id' => $resource->use_id,
+				'contents' => [
+					[
+						'name' => $resource_content->name,
+						'type' => $resource_content->type,
+						'content' => $resource_content->content
+					]
 				]
 			]
-		]);
+		);
+		$new_resource = Resource::latest()->first();
 		// check: do we have a new Resource and a new ResourceContent?
-		$this->assertTrue(Resource::count()-1 == $resource_count);
-		$this->assertTrue(ResourceContent::count()-1 == $resource_content_count);
+		$response->assertSuccessful();
+		$this->assertEquals(Resource::count()-1, $resource_count);
+		$this->assertEquals(ResourceContent::count()-1, $resource_content_count);
+		// check: is the name what we expect?
+		$this->assertEquals($resource->name, $new_resource->name);
+
+		// edit the created resource
+		$new_name = "Test Resource";
+		$response = $this->actingAs($user)->patch('/resources/'.($new_resource->id),
+			[
+				'name' => $new_name
+			]
+		);
+		$new_resource = Resource::latest()->first();
+		// check was the edit successful?
+		$response->assertSuccessful();
+		$this->assertEquals($new_name, $new_resource->name);
+
 		// delete the resource we just created
-		$response = $this->actingAs($user)->delete('/resources/'.(Resource::latest()->first()->id));
+		$response = $this->actingAs($user)->delete('/resources/'.($new_resource->id));
 		// is the Resource and its ResourceContent gone?
-		$this->assertTrue(Resource::count() == $resource_count);
-		$this->assertTrue(ResourceContent::count() == $resource_content_count);
+		$response->assertSuccessful();
+		$this->assertEquals(Resource::count(), $resource_count);
+		$this->assertEquals(ResourceContent::count(), $resource_content_count);
 	}
 }

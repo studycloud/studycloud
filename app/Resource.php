@@ -14,7 +14,7 @@ class Resource extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'author_id', 'use_id'];
+	protected $fillable = ['name', 'use_id'];
 
     protected $appends = ['target'];
 

@@ -61,6 +61,7 @@ class ResourceController extends Controller
 	 */
 	public function store(Request $request)
 	{
+		// first, validate the response
 		// $validated = $request->validate([
 		// 	'name' => 'string|required|max:255',
 		// 	'use_id' => 'required|exists:resource_uses,id',
@@ -72,22 +73,18 @@ class ResourceController extends Controller
 		// 	],
 		// 	'contents.*.content' => 'string'
 		// ]);
-		// create a new Resource
-		$new_resource = new Resource;
-		$new_resource->name = $request->input('name');
-		$new_resource->author_id = Auth::id();
-		$new_resource->use_id = $request->input('use_id');
-		$new_resource->save();
+
+		// create a new Resource using mass assignment to add 'name' and 'use_id' attributes
+		$resource = (new Resource)->fill($request->all());
+		$resource->author_id = Auth::id();
+		$resource->save();
 		// create new ResourceContents and attach them to this Resource
 		$contents = [];
 		foreach ($request->input("contents") as $content) {
-			$new_content = new ResourceContent;
-			$new_content->name = $content['name'];
-			$new_content->type = $content['type'];
-			$new_content->content = $content['content'];
-			$contents[] = $new_content;
+			// use mass assignment to add 'name', 'type', and 'content' attributes
+			$contents[] = (new ResourceContent)->fill($content);
 		}
-		$new_resource->contents()->saveMany($contents);
+		$resource->contents()->saveMany($contents);
 	}
 
 	/**
@@ -110,7 +107,8 @@ class ResourceController extends Controller
 	 */
 	public function update(Request $request, Resource $resource)
 	{
-		// $request->validate([
+		// first, validate the response
+		// $validated = $request->validate([
 		// 	'name' => 'sometimes|max:255',
 		// 	'use_id' => 'sometimes|exists:resource_uses,id',
 		// 	'contents.*.name' => 'sometimes|max:255',
@@ -121,12 +119,10 @@ class ResourceController extends Controller
 		// 	'contents.*.content' => 'sometimes|string'
 		// ]);
 
-		// TODO: check which ones are null
-		$resource->name = $request->name;
-		$resource->author_id = Auth::id();
-		$resource->use_id = $request->use_id;
+		// update whichever attributes have been sent in the request
+		// note that this uses mass assignment. see the $fillable array on the Resource to see which attributes are allowed
+		$resource->fill($request->all())->save();
 
-		$resource->save();
 	}
 
 	/**

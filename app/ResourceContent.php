@@ -12,7 +12,7 @@ class ResourceContent extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'resource_id'];
+	protected $fillable = ['name', 'type', 'content'];
 	
 	/**
 	 * define the many-to-one relationship between a resource's contents and the resource itself
