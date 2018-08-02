@@ -11,7 +11,7 @@ Server.prototype.getResource = function(resource_id, callBack1, callBack2)
 {
 	var self = this;
 	
-	var url = "/resources/data?id=" + resource_id;
+	var url = "/data/resource?id=" + resource_id;
 	return d3.json(url, function(error, data)
 	{
 		if(error)
