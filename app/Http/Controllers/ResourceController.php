@@ -6,9 +6,9 @@ use App\Resource;
 use Carbon\Carbon;
 use App\ResourceContent;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Middleware\CheckAuthor;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 
 
@@ -61,26 +61,26 @@ class ResourceController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		// first, validate the response
-		// $validated = $request->validate([
-		// 	'name' => 'string|required|max:255',
-		// 	'use_id' => 'required|exists:resource_uses,id',
-		// 	'contents' => 'bail|required'
-		// 	'contents.*.name' => 'string|required|max:255',
-		// 	'contents.*.type' => [
-		// 		'required',
-		// 		Rule::in(ResourceContent::getPossibleTypes())
-		// 	],
-		// 	'contents.*.content' => 'string'
-		// ]);
+		// first, validate the request
+		$validated = $request->validate([
+			'name' => 'string|required|max:255',
+			'use_id' => 'required|exists:resource_uses,id',
+			'contents' => 'required|array',
+			'contents.*.name' => 'string|required|max:255',
+			'contents.*.type' => [
+				'required',
+				Rule::in(ResourceContent::getPossibleTypes())
+			],
+			'contents.*.content' => 'string'
+		]);
 
 		// create a new Resource using mass assignment to add 'name' and 'use_id' attributes
-		$resource = (new Resource)->fill($request->all());
+		$resource = (new Resource)->fill($validated);
 		$resource->author_id = Auth::id();
 		$resource->save();
 		// create new ResourceContents and attach them to this Resource
 		$contents = [];
-		foreach ($request->input("contents") as $content) {
+		foreach ($validated["contents"] as $content) {
 			// use mass assignment to add 'name', 'type', and 'content' attributes
 			$contents[] = (new ResourceContent)->fill($content);
 		}
@@ -107,22 +107,40 @@ class ResourceController extends Controller
 	 */
 	public function update(Request $request, Resource $resource)
 	{
-		// first, validate the response
-		// $validated = $request->validate([
-		// 	'name' => 'sometimes|max:255',
-		// 	'use_id' => 'sometimes|exists:resource_uses,id',
-		// 	'contents.*.name' => 'sometimes|max:255',
-		// 	'contents.*.type' => [
-		// 		'sometimes',
-		// 		Rule::in(ResourceContent::getPossibleTypes())
-		// 	],
-		// 	'contents.*.content' => 'sometimes|string'
-		// ]);
+		// first, validate the request
+		$validated = $request->validate([
+			'name' => 'sometimes|max:255',
+			'use_id' => 'sometimes|exists:resource_uses,id',
+			'contents' => 'sometimes|array',
+			'contents.*.id' => [
+				'required_with:contents',
+				Rule::exists('resource_contents', 'id')->where(
+					function ($query) use ($resource)
+					{
+						// check that this resource content actually belongs to the resource
+						$query->where('resource_id', $resource->id);
+					}
+				)
+			],
+			'contents.*.name' => 'sometimes|max:255',
+			'contents.*.type' => [
+				'sometimes',
+				Rule::in(ResourceContent::getPossibleTypes())
+			],
+			'contents.*.content' => 'sometimes|string'
+		]);
 
-		// update whichever attributes have been sent in the request
+		// update whichever resource attributes have been sent in the request
 		// note that this uses mass assignment. see the $fillable array on the Resource to see which attributes are allowed
-		$resource->fill($request->all())->save();
-
+		$resource->fill($validated)->save();
+		// update resource content attributes
+		if (array_key_exists("contents", $validated))
+		{
+			foreach ($validated["contents"] as $content) {
+				// use mass assignment to update 'name', 'type', or 'content' attributes
+				ResourceContent::find($content['id'])->fill($content)->save();
+			}
+		}
 	}
 
 	/**

@@ -13,7 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class ResourcesHttpTest extends TestCase
 {
 	/**
-	 * Test that routes for a Resource work correctly. Assumes you've already seeded the DB.
+	 * Test that CRUD routes for a Resource work correctly. Assumes you've already seeded the users table.
 	 *
 	 * @return void
 	 */
@@ -21,11 +21,11 @@ class ResourcesHttpTest extends TestCase
 	{
 		// how many Resources and ResourceContents do we have?
 		$resource_count = Resource::count();
-		$resource_content_count = ResourceContent::count();
-		// make a new resource but don't add it to database
+		$content_count = ResourceContent::count();
+		// make a new resource but don't add it to database yet
 		$resource = factory(Resource::class)->make();
 		$user = User::find($resource->author_id);
-		$resource_content = factory(ResourceContent::class)->make(
+		$content = factory(ResourceContent::class)->make(
 			[
 				'resource_id' => $resource->id
 			]
@@ -38,20 +38,22 @@ class ResourcesHttpTest extends TestCase
 				'use_id' => $resource->use_id,
 				'contents' => [
 					[
-						'name' => $resource_content->name,
-						'type' => $resource_content->type,
-						'content' => $resource_content->content
+						'name' => $content->name,
+						'type' => $content->type,
+						'content' => $content->content
 					]
 				]
 			]
 		);
 		$new_resource = Resource::latest()->first();
+		$new_content = $new_resource->contents->first();
 		// check: do we have a new Resource and a new ResourceContent?
 		$response->assertSuccessful();
 		$this->assertEquals(Resource::count()-1, $resource_count);
-		$this->assertEquals(ResourceContent::count()-1, $resource_content_count);
-		// check: is the name what we expect?
+		$this->assertEquals(ResourceContent::count()-1, $content_count);
+		// check: are the names what we expect?
 		$this->assertEquals($resource->name, $new_resource->name);
+		$this->assertEquals($content->name, $new_content->name);
 
 		// edit the created resource
 		$new_name = "Test Resource";
@@ -61,15 +63,32 @@ class ResourcesHttpTest extends TestCase
 			]
 		);
 		$new_resource = Resource::latest()->first();
-		// check was the edit successful?
+		// check: was the edit successful?
 		$response->assertSuccessful();
 		$this->assertEquals($new_name, $new_resource->name);
 
-		// delete the resource we just created
+		// edit the resource's contents
+		$new_content_name = "Test Resource Content";
+		$response = $this->actingAs($user)->patch('/resources/'.($new_resource->id),
+			[
+				'contents' => [
+					[
+						'id' => $new_content->id,
+						'name' => $new_content_name
+					]
+				]
+			]
+		);
+		$new_content = Resource::latest()->first()->contents->first();
+		// check: was the edit successful?
+		$response->assertSuccessful();
+		$this->assertEquals($new_content_name, $new_content->name);
+
+		// delete the resource we created
 		$response = $this->actingAs($user)->delete('/resources/'.($new_resource->id));
 		// is the Resource and its ResourceContent gone?
 		$response->assertSuccessful();
 		$this->assertEquals(Resource::count(), $resource_count);
-		$this->assertEquals(ResourceContent::count(), $resource_content_count);
+		$this->assertEquals(ResourceContent::count(), $content_count);
 	}
 }
