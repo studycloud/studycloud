@@ -2,10 +2,10 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-use App\Topic;
 use App\User;
+use App\Topic;
+use App\ResourceUse;
+use Illuminate\Database\Eloquent\Model;
 
 class Resource extends Model
 {
@@ -59,5 +59,14 @@ class Resource extends Model
 	public function author()
 	{
 		return $this->belongsTo(User::class);
+	}
+
+	/**
+	 * define the many-to-one relationship between resources and their use
+	 * @return ResourceUse	this resource's use
+	 */
+	public function use()
+	{
+		return $this->belongsTo(ResourceUse::class);
 	}
 }

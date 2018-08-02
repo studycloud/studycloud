@@ -24,7 +24,8 @@ class ResourceResource extends Resource
 		$meta = [
 			"name" => $this->name,
 			"author_name" => $this->author->name(),
-			"author_type" => $this->author->type
+			"author_type" => $this->author->type,
+			"use_name" => $this->use->name
 		];
 
 		/**
