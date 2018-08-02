@@ -113,7 +113,7 @@ class ResourceController extends Controller
 			'use_id' => 'sometimes|exists:resource_uses,id',
 			'contents' => 'sometimes|array',
 			'contents.*.id' => [
-				'required_with:contents',
+				'required_with:contents.*.name,contents.*.type,contents.*.content',
 				Rule::exists('resource_contents', 'id')->where(
 					function ($query) use ($resource)
 					{
