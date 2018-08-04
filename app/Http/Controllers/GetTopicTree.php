@@ -30,7 +30,7 @@ class GetTopicTree extends Controller
 	 */
 	public function __invoke(Request $request)
 	{
-		$topic_id = $request->input('topic');
+		$topic_id = $request->input('id');
 		if ($topic_id == "")
 		{
 			$topic_id = null;

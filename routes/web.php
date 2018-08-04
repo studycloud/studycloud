@@ -36,7 +36,7 @@ Route::resource('resources', 'ResourceController', ['except' =>
 	'index', 'edit'
 ]);
 
-Route::get('tree/data', 'GetTopicTree');
+Route::get('data/topic_tree', 'GetTopicTree');
 Route::resource('topics', 'TopicController');
 
 Route::get('admins/{userid}',
