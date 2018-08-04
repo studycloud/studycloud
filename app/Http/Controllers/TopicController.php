@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Topic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TopicController extends Controller
 {
+	function __construct()
+	{
+		// verify that the user is signed in for all methods except index, show, and json
+		$this->middleware('auth', ['except' => ['index', 'show']]);
+	}
+
 	/**
 	 * Display a listing of the topic.
 	 *
@@ -79,9 +86,15 @@ class TopicController extends Controller
 	 */
 	public function update(Request $request, Topic $topic)
 	{
-		$topic->name = $request->name;
-		$topic->author_id = Auth::id();
+		// first, validate the request
+		// note that we make the 'name' attribute required because there aren't any other attributes to validate
+		$validated = $request->validate([
+			'name' => 'string|required|max:255'
+		]);
 
+		// create a new Topic using mass assignment to add the 'name' attribute
+		$topic = $topic->fill($validated);
+		$topic->author_id = Auth::id();
 		$topic->save();
 	}
 
