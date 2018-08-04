@@ -11,7 +11,7 @@ class Topic extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'author_id'];
+	protected $fillable = ['name'];
 
 	/**
 	 * returns all topics that have this topic as their parent
