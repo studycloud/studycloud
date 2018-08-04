@@ -8,27 +8,27 @@ use Illuminate\Http\Request;
 class TopicController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the topic.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        return view('topics');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new topic.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        //
+        // return a view for creating a new topic
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created topic in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -43,29 +43,31 @@ class TopicController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified topic.
      *
      * @param  \App\Topic  $topic
      * @return \Illuminate\Http\Response
      */
     public function show(Topic $topic)
     {
-        //
+        // let the js handle parsing the URL to determine which topic to retrieve
+        return view('topics');
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified topic.
      *
      * @param  \App\Topic  $topic
      * @return \Illuminate\Http\Response
      */
     public function edit(Topic $topic)
     {
-        //
+        // return a view for editing a topic
+        // perhaps this functionality should be embedded in the topic tree, though?
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified topic in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Topic  $topic
@@ -80,7 +82,7 @@ class TopicController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified topic from storage.
      *
      * @param  \App\Topic  $topic
      * @return \Illuminate\Http\Response

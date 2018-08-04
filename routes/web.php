@@ -26,13 +26,6 @@ Route::get('about',
 	}
 )->name('about');
 
-Route::get('topics',
-	function()
-	{
-		return view('topics');
-	}
-)->name('topics');
-
 Route::get('data/resource',
 	function(Request $request)
 	{
@@ -43,7 +36,8 @@ Route::resource('resources', 'ResourceController', ['except' =>
 	'index', 'edit'
 ]);
 
-Route::get('tree/data', 'TopicTreeController');
+Route::get('tree/data', 'GetTopicTree');
+Route::resource('topics', 'TopicController');
 
 Route::get('admins/{userid}',
 	function($user_id)
