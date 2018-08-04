@@ -40,6 +40,15 @@ class Topic extends Model
 	}
 
 	/**
+	 * define the many-to-one relationship between topics and their author
+	 * @return User	the author of this topic
+	 */
+	public function author()
+	{
+		return $this->belongsTo(User::class);
+	}
+
+	/**
 	 * a wrapper function for attaching resources to prevent disallowedTopics from being added
 	 * @param  Illuminate\Database\Eloquent\Collection $new_resources the resources to be attached
 	 * @return void
