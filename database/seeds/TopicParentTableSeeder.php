@@ -52,6 +52,7 @@ class TopicParentTableSeeder extends Seeder
 				{
 					// recursion!
 					$this->parents[$new_parent] = $this->run($new_parent, $new_curr_topics);
+					// continue to keep track of descendants
 					$descendants = array_merge($descendants, $this->parents[$new_parent]);
 				}
 			}
@@ -95,6 +96,7 @@ class TopicParentTableSeeder extends Seeder
 
 	/**
 	 * randomly pick a child (which hasn't been picked before) from the list of children
+	 * filter $topics (in place)
 	 * @param  array $topics 	a list of topic ids from which to pick the child
 	 * @return int 					the id of the chosen topic
 	 */
