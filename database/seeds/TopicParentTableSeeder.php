@@ -39,17 +39,11 @@ class TopicParentTableSeeder extends Seeder
 		{
 			// how many topics should be at this level of the "tree"?
 			$num_topics_level = rand( $num_topics_level_min, min(self::NUM_MAX_TOPICS, $curr_topics->count()) );
-			echo "-----\n";
 			// delegate the task of assigning children and get the ids of the chosen children
-			$curr_topic_ids = $this->assignChildren($parent, $num_topics_level);
+			$curr_topic_ids = $this->assignChildren($parent, $curr_topics, $num_topics_level);
 			// get the leftover topics that haven't been chosen as children yet
 			$new_curr_topics = $curr_topics->diff($curr_topic_ids);
-			echo "parent is " . $parent . "\n";
-			echo "curr_topics count is " . $curr_topics->count() . "\n";
-			echo "curr_topics are " . implode(", ", $curr_topics->toArray()) . "\n";
-			echo "chosen children are " . implode(", ", $curr_topic_ids) . "\n";
-			echo "new_curr_topics count is " . $curr_topics->count() . "\n";
-			echo "new curr_topics are " . implode(", ", $new_curr_topics->toArray()) . "\n";
+			// set up the descendants array for returning it later
 			$descendants = $curr_topic_ids;
 			// recur with each chosen child as a new parent!
 			foreach ($curr_topic_ids as $new_parent) {
@@ -75,23 +69,24 @@ class TopicParentTableSeeder extends Seeder
 	 */
 	private function assignChildren($parent, $topics, $num_topics_level)
 	{
-		// use a copy of $topics rather than the copy of the reference to the object, so as not to accidently change $curr_topics
+		// use a copy of $topics rather than the copy of the reference to the object, so as not to accidentally change $curr_topics
 		$topics = collect($topics);
 		// an array that will hold the ids of the topics that we pick to be children of $parent
 		$curr_topic_ids = [];
 		while ($num_topics_level>0 && $topics->count()>0)
 		{
-			$chosen_child = $this->pickChildID($topics);
-			$topics->forget($topics->search($chosen_child, true));
-			$num_topics_level--;
-			$curr_topic_ids[] = $chosen_child;
-			// does the child we chose already have children assigned to it?
-			if (array_key_exists($chosen_child, $this->parents))
+			$choice = $this->pickChildID($topics, $curr_topic_ids);
+			// check whether a child was chosen
+			if ($choice)
 			{
-				// get the child's descendants
-				$child_descendants = $this->parents[$chosen_child];
-				// any of the child's descendants cannot be chosen as children of the current $parent
-				$topics = $topics->diff($child_descendants);
+				$num_topics_level--;
+				$curr_topic_ids[] = $choice;
+				// does the child we chose already have children assigned to it?
+				if (array_key_exists($choice, $this->parents))
+				{
+					// any of the child's descendants cannot be chosen as children of the current $parent
+					$topics = $topics->diff($this->parents[$choice]);
+				}
 			}
 		}
 		$this->saveChildren($parent, $curr_topic_ids);
@@ -100,12 +95,29 @@ class TopicParentTableSeeder extends Seeder
 
 	/**
 	 * randomly pick a child (which hasn't been picked before) from the list of children
-	 * @param  array $curr_topics 	a list of topic ids from which to pick the child
+	 * @param  array $topics 	a list of topic ids from which to pick the child
 	 * @return int 					the id of the chosen topic
 	 */
-	private function pickChildID($curr_topics)
+	private function pickChildID(&$topics, $chosen_children)
 	{
-		return $curr_topics->random();
+		$choice = null;
+		while ($topics->count()>0)
+		{
+			$choice = $topics->random();
+			// now that we've chosen this topic, let's remove it from those that are available
+			$topics->forget($topics->search($choice, true));
+			// does the child we chose already have children assigned to it?
+			// if it does, check that its descendants don't conflict with any children we've already chosen
+			if (
+				!array_key_exists($choice, $this->parents) ||
+				!array_intersect($this->parents[$choice], $chosen_children)
+			)
+			{
+				break;
+			}
+			$choice = null;
+		}
+		return $choice;
 	}
 
 	/**
