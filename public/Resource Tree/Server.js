@@ -60,7 +60,6 @@ Server.prototype.addResource = function(content, callBack1, callBack2)
 {
 	var self = this;
 	var url = "/resources";
-	content["_method"] = "PUT";
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
@@ -141,7 +140,7 @@ Server.prototype.editResource = function(resource, content, callBack1, callBack2
 Server.prototype.deleteResource = function(resource, callBack1, callBack2)
 {
 	var self = this;
-	var url = "/data/resource/" + resource;
+	var url = "/resources/" + resource;
 	return d3.json(url, {method: 'delete'}).then(function(error, data){
 		if(error)
 		{
