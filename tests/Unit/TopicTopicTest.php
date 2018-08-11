@@ -14,29 +14,47 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class TopicTopicTest extends TestCase
 {
 	/**
-	 * A basic test example.
+	 * Test whether the topics in the database are attached
+	 * to each other in a valid way.
 	 *
 	 * @return void
 	 */
 	public function testValidTopics()
 	{
-		print_r(Topic::all()->map(
-			function ($topic, $key)
+		$conflicts = $this->conflictingTopics();
+		$conflicts_exist = false;
+		$conflict_list = [];
+		$message = "Conflicting topics were found in the following subtrees: \n";
+		foreach ($conflicts as $topic_id => $conflicting) {
+			if (!empty($conflicting))
 			{
-				return $this->trySubTree($topic);
+				$conflicts_exist = true;
+				$conflict_list = array_merge($conflict_list, array_keys($conflicting));
+				$message .= $topic_id == 0 ? "root" : $topic_id;
+				$message .= "\thas " . implode(", ", array_keys($conflicting)) . "\n";
 			}
-		)->toArray());
+		}
+		sort($conflict_list);
+		$message .= "Summary: " . implode(", ", array_unique($conflict_list)) . " were found to be in conflict.";
+		$this->assertFalse($conflicts_exist, $message);
 	}
 
-	private function conflictingTopics()
+	/**
+	 * Looks for conflicting topics in all subtrees of the topic tree.
+	 * @return array the conflicting topics of each subtree with the subtree id as keys
+	 */
+	public function conflictingTopics()
 	{
-
-		Topic::all()->map(
-			function ($topic)
-			{
-				return $this->trySubTree($topic);
-			}
-		)
+		$conflicts = collect([0 => $this->trySubTree()]);
+		$conflicts = $conflicts->merge(
+			Topic::all()->keyBy('id')->map(
+				function ($topic)
+				{
+					return $this->trySubTree($topic);
+				}
+			)
+		);
+		return $conflicts->toArray();
 	}
 
 	/**
