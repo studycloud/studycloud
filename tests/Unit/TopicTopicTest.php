@@ -21,11 +21,22 @@ class TopicTopicTest extends TestCase
 	public function testValidTopics()
 	{
 		print_r(Topic::all()->map(
-			function ($topic)
+			function ($topic, $key)
 			{
 				return $this->trySubTree($topic);
 			}
 		)->toArray());
+	}
+
+	private function conflictingTopics()
+	{
+
+		Topic::all()->map(
+			function ($topic)
+			{
+				return $this->trySubTree($topic);
+			}
+		)
 	}
 
 	/**
