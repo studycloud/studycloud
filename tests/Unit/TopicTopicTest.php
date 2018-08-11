@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Topic;
 use Tests\TestCase;
+use App\Helpers\NestedArrays;
 use App\Repositories\TopicRepository;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -31,7 +32,11 @@ class TopicTopicTest extends TestCase
 				$conflicts_exist = true;
 				$conflict_list = array_merge($conflict_list, array_keys($conflicting));
 				$message .= $topic_id == 0 ? "root" : $topic_id;
-				$message .= "\thas " . implode(", ", array_keys($conflicting)) . "\n";
+				$message .= " has " . implode(", ", array_keys($conflicting)) . "\n";
+				if ($topic_id != 0)
+				{					
+					$message .= NestedArrays::convertToAscii(NestedArrays::topicDescendants(Topic::find($topic_id)));
+				}
 			}
 		}
 		sort($conflict_list);
@@ -79,7 +84,7 @@ class TopicTopicTest extends TestCase
 		// get all descendants of each child
 		$descendants = collect();
 		foreach ($children as $child) {
-			$descendants = $descendants->merge((new TopicRepository)->descendants());
+			$descendants = $descendants->merge((new TopicRepository)->descendants($child));
 		}
 		// get conflicting topics
 		$conflicts = $descendants->pluck('id')->intersect($children->pluck('id'))->toArray();
