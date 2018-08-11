@@ -16,7 +16,7 @@ class TopicTopicTest extends TestCase
 {
 	/**
 	 * Test whether the topics in the database are attached
-	 * to each other in a valid way.
+	 * to each other in a valid way. Report which ones are not.
 	 *
 	 * @return void
 	 */
@@ -40,7 +40,9 @@ class TopicTopicTest extends TestCase
 			}
 		}
 		sort($conflict_list);
-		$message .= "Summary: " . implode(", ", array_unique($conflict_list)) . " were found to be in conflict.";
+		$message .= "Summary: " . implode(", ", array_unique($conflict_list));
+		$message .= count($conflict_list) == 1 ? " was" : " were";
+		$message .= " found to be in conflict.";
 		$this->assertFalse($conflicts_exist, $message);
 	}
 
