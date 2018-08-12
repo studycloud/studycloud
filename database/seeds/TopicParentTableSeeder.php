@@ -51,9 +51,10 @@ class TopicParentTableSeeder extends Seeder
 				if (!array_key_exists($new_parent, $this->parents))
 				{
 					// recursion!
-					$this->parents[$new_parent] = $this->run($new_parent, $new_curr_topics);
+					// also store the descendants of this topic
+					$this->parents[$new_parent] = array_unique($this->run($new_parent, $new_curr_topics));
 				}
-				// continue to keep track of descendants
+				// continue to keep track of descendants for returning later
 				$descendants = array_merge($descendants, $this->parents[$new_parent]);
 			}
 			return $descendants;
