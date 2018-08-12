@@ -43,13 +43,6 @@ class TopicParentTableSeeder extends Seeder
 			$curr_topic_ids = $this->assignChildren($parent, $curr_topics, $num_topics_level);
 			// get the leftover topics that haven't been chosen as children yet
 			$new_curr_topics = $curr_topics->diff($curr_topic_ids);
-			echo "-----\n";
-			echo "parent is " . $parent . "\n";
-			echo "curr_topics count is " . $curr_topics->count() . "\n";
-			echo "curr_topics are " . implode(", ", $curr_topics->toArray()) . "\n";
-			echo "chosen children are " . implode(", ", $curr_topic_ids) . "\n";
-			echo "new_curr_topics count is " . $curr_topics->count() . "\n";
-			echo "new curr_topics are " . implode(", ", $new_curr_topics->toArray()) . "\n";
 			// set up the descendants array for returning it later
 			$descendants = $curr_topic_ids;
 			// recur with each chosen child as a new parent!
@@ -62,10 +55,6 @@ class TopicParentTableSeeder extends Seeder
 				}
 				// continue to keep track of descendants
 				$descendants = array_merge($descendants, $this->parents[$new_parent]);
-			}
-			if (!$parent)
-			{
-				print_r($this->parents);
 			}
 			return $descendants;
 		}
