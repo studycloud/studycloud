@@ -165,13 +165,13 @@ Tree.prototype.getParentsSelection = function(node_id)
 }
 
 
-Tree.prototype.getNChildrenSelections = function(node_id, children_levels_num)
+Tree.prototype.getNChildrenSelections = function(node_id, levels_num)
 {
 	var self = this;
 	var node_ids; 
 	var link_ids;
 	
-	[node_ids, link_ids] = self.getNChildrenIds(node_id, children_levels_num)
+	[node_ids, link_ids] = self.getNChildrenIds(node_id, levels_num)
 	
 	var nodes_selection = self.nodes.filter(function()
 		{
@@ -190,7 +190,7 @@ Tree.prototype.getNChildrenSelections = function(node_id, children_levels_num)
 
 
 //Wrapper for getNChildrenRecurse
-Tree.prototype.getNChildrenIds = function(node_id, children_levels_num)
+Tree.prototype.getNChildrenIds = function(node_id, levels_num)
 {
 	var self = this;
 	
@@ -216,7 +216,7 @@ Tree.prototype.getNChildrenIds = function(node_id, children_levels_num)
 	}
 	else
 	{
-		self.getNChildrenRecurse(node_ids_updated, link_ids_updated, node_id, children_levels_num);
+		self.getNChildrenRecurse(node_ids_updated, link_ids_updated, node_id, levels_num);
 	}
 	
 	//TODO, make sure that javascript is returning a pointer and not returning a copy of the data.
