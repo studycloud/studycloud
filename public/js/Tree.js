@@ -1,4 +1,4 @@
-function Tree(type, frame_id)
+function Tree(type, frame_id, server)
 {		
 	//Creates a tree visualization with a type of <type> inside the DOM element <frame_id>
 	
@@ -10,7 +10,7 @@ function Tree(type, frame_id)
 	
 	var self = this;
 	
-	self.debug = true;
+	self.debug = false;
 	
 	if (self.debug)
 	{
@@ -19,14 +19,14 @@ function Tree(type, frame_id)
 		var nodes_count = 10;
 		data.nodes = new Array(nodes_count);
 		
-		data.links = [];
+		data.connections = [];
 		
 
 		for(i = 0; i < nodes_count; i++)
 		{	
 			data.nodes[i] = {id: (i).toString()};
-			data.links.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:(i).toString()});
-			data.links.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:(i+nodes_count).toString()});
+			data.connections.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:(i).toString()});
+			data.connections.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:(i+nodes_count).toString()});
 		}
 
 	}
@@ -67,9 +67,12 @@ function Tree(type, frame_id)
 	
 	self.simulationInitialize();			
 	
-	self.setData(data);
+	if (self.debug) self.setData(data);
 	
 	self.breadcrumbStack = [0];
+
+	self.server = server;
+
 }
 
 
@@ -132,9 +135,7 @@ Tree.prototype.getNLevelIds = function(node_id, levels_num, node_ids_retrieved =
 {
 	var self = this;
 
-	if (self.debug) console.log("getNLevelIds on " + node_id + " for level " + levels_num);
-
-	
+	console.log("getNLevelIds on " + node_id + " for level " + levels_num);
 
 	//These sets contain ids of elements to update when we get new data. Only create new ones if we aren't already passed a set
 
@@ -149,10 +150,9 @@ Tree.prototype.getNLevelIds = function(node_id, levels_num, node_ids_retrieved =
 
 	}
 
-	if (self.debug) console.log("node_ids_retrieved: ", node_ids_retrieved);
-
 	var node_id_valid = false;
 
+	/*
 	//Check whether the requested node is one that we know about
 	self.nodes
 		.each(function (node)
@@ -167,12 +167,16 @@ Tree.prototype.getNLevelIds = function(node_id, levels_num, node_ids_retrieved =
 
 	if (!node_id_valid) 
 	{
+		console.log("Requested node id is invalid");
 		throw ("Requested node id is invalid");
 	}
 	else 
 	{
 		self.getNLevelIdsRecurse(node_ids_retrieved, link_ids_retrieved, node_id, levels_num);
 	}
+	*/
+
+	self.getNLevelIdsRecurse(node_ids_retrieved, link_ids_retrieved, node_id, levels_num);
 
 	//TODO, make sure that javascript is returning a pointer and not returning a copy of the data.
 	return [node_ids_retrieved, link_ids_retrieved];
@@ -181,7 +185,7 @@ Tree.prototype.getNLevelIds = function(node_id, levels_num, node_ids_retrieved =
 Tree.prototype.getNLevelIdsRecurse = function(node_ids_retrieved, link_ids_retrieved, node_id, levels_num)
 {
 	var self = this;
-
+	
 	//return early, because we have already seen this node before
 	if (node_ids_retrieved.has(node_id))
 	{
@@ -235,7 +239,7 @@ Tree.prototype.getNLevelSelections = function(node_id, levels_num)
 	var self = this;
 	var node_ids; 
 	var link_ids;
-	
+
 	[node_ids, link_ids] = self.getNLevelIds(node_id, levels_num)
 
 	//console.log(node_ids);
@@ -249,16 +253,17 @@ Tree.prototype.getNLevelSelections = function(node_id, levels_num)
 
 Tree.prototype.updateDataNodes = function(selection, data)
 {
-	
+	console.log("Updating node data for ", selection, " to ", data);
+
 	var self = this;
-	
+
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
-	
+
 	var nodes = selection
 		.enter()
 			.append("g")
 			.attr("class", "node")
-			.attr("data_id", function(d){return d.id;})
+			.attr("data_id", function (d) { return d.id; })
 			.on("click", function(d){self.nodeClicked(this)});
 
 
@@ -306,7 +311,13 @@ Tree.prototype.updateDataNodes = function(selection, data)
 Tree.prototype.updateDataLinks = function(selection, data)
 {
 	var self = this;
-	
+
+	data.forEach(function (link)
+		{
+			link.id = link.source.id + link.target.id;
+		}
+	);
+
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
 	
 	selection
@@ -340,7 +351,7 @@ Tree.prototype.setData = function(data)
 	var self = this;
 	
 	self.updateDataNodes(self.nodes, data.nodes);
-	self.updateDataLinks(self.links, data.links);
+	self.updateDataLinks(self.links, data.connections);
 	
 	self.nodes_simulated = self.nodes;
 	self.links_simulated = self.links;
@@ -350,20 +361,26 @@ Tree.prototype.setData = function(data)
 
 Tree.prototype.updateDataNLevels = function(node_id, levels_num_children, levels_num_parents, data)
 {	
+
 	var self = this;
+
+	console.log("Updating data for N Levels with:", data);
+
 	var nodes_updated_ids;
 	var links_updated_ids;
 
 	//Get Set()s of Ids to update the data for
-	[nodes_updated, links_updated] = getNLevelIds(node_id, levels_num_children);
-	[nodes_updated, links_updated] = getNLevelIds(node_id, levels_num_children, nodes_updated, links_updated);
+	[nodes_updated, links_updated] = self.getNLevelIds(node_id, levels_num_children);
+	[nodes_updated, links_updated] = self.getNLevelIds(node_id, levels_num_children, nodes_updated, links_updated);
+
+	console.log(nodes_updated);
 
 	//Convert those ID Set()s into D3 selections
 	var nodes_updated_selection = filterSelectionsByIDs(self.nodes, nodes_updated, "data_id");
 	var links_updated_selection = filterSelectionsByIDs(self.links, links_updated, "data_id");
 
-	self.updateDataNodes(nodes_updated, data.nodes);
-	self.updateDataLinks(links_updated, data.links);
+	self.updateDataNodes(nodes_updated_selection, data.nodes);
+	self.updateDataLinks(links_updated_selection, data.connections);
 
 	self.simulationRestart();
 };
@@ -384,13 +401,12 @@ Tree.prototype.drawNodes = function()
 {
 	var self = this;
 
-	self.nodes.select("circle")
-		.attr('cx', function(d) { return d.x; })
-		.attr('cy', function(d) { return d.y; });
-	
-	self.nodes.select("text")
-		.attr('x', function(d) { return d.x; })
-		.attr('y', function(d) { return d.y; });
+	self.nodes
+		.attr('transform', function(d) 
+			{
+				return "translate(" + d.x + "," + d.y + ")";
+			}
+		);
 	
 };
 
@@ -497,8 +513,6 @@ Tree.prototype.centerOnNode = function (node)
 	
 	data_id = node.__data__.id;
 
-	//self.server.getData(data_id, )
-
 	var nodes_selection_children, links_selection_children;
 	var nodes_selection_grandchildren, links_selection_grandchildren;
 	var nodes_selection_parents, links_selection_parents;
@@ -526,7 +540,7 @@ Tree.prototype.centerOnNode = function (node)
 	
 	node_selection_clicked.each(function(d){d.level = 0;});
 
-	
+	console.log(nodes_selection_parents);
 	
 
 	//All of the nodes and links together.
@@ -713,8 +727,14 @@ Tree.prototype.centerOnNode = function (node)
 					return function()
 					{
 						//console.log("hi");
+						self.draw();
 						self.simulation.force("ForceLink").distance(function(d){return d.length;});
 					}
+				}
+			)
+			.on("end", function(d)
+				{
+					self.simulationRestart();
 				}
 			);
 	
@@ -773,7 +793,7 @@ Tree.prototype.centerOnNode = function (node)
 	self.links_simulated = links_selection;
 	self.nodes_simulated = nodes_selection;
 
-	self.simulationRestart();
+	//self.simulationRestart();
 }
 
 
@@ -785,5 +805,6 @@ Tree.prototype.BreadcrumbStackUpdate = function(id)
 Tree.prototype.nodeClicked = function(node)
 {
 	self = this;
+	//self.server.getData(data_id, 1, 2, self.updateDataNLevels.bind(self), function (){});
 	self.centerOnNode(node);
 }

@@ -1,4 +1,5 @@
-tree_topics = new Tree("topic", "topic-tree");
+server = new Server();
+tree_topics = new Tree("topic", "topic-tree", server);
 
 var data=
 {
@@ -75,7 +76,7 @@ var data=
       "id": "t9"
     }
   ],
-  "links": [
+  "connections": [
     {
       "source": "t1",
       "target": "t2",
@@ -119,7 +120,9 @@ var data=
   ]
 };	
 
-tree_topics.setData(data);
+
+tree_topics.server.getData(0, 1, 3, tree_topics.updateDataNLevels.bind(tree_topics), function (node, url, error) { console.log(node, url, error); });
+//tree_topics.setData(data);
 
 // server_topics = new Server();
 

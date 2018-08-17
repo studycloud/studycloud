@@ -107,41 +107,45 @@ Server.prototype.deleteResource = function(resource, callBack1, callBack2)
 	})
 }
 
-Server.prototype.getData = function(node, levels, handleError, handleSuccess)
+Server.prototype.getData = function (node, levels_up, levels_down, handleSuccessExternal, handleErrorExternal)
 {
-    var self = this;
-    self.treeHandleError = handleError;
-    self.treeHandleSuccess = handleSuccess;
+	console.log("Request Sent");
+
+	var self = this;
 	// if any of node, levels_up, or levels_down is undefined/null, use an empty string instead
 	// but allow levels to be 0
 	node = node ? node : ""
+
 	levels_up = levels_up || levels_up === 0 ? levels_up : ""
 	levels_down = levels_down || levels_down === 0 ? levels_down : ""
 	// what is the url for this request?
-	url = "/tree/data/?topic="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
-    return d3.json(url, function(error, data){
-    	if (error){
-    		return self.handleError(node, url, error);
+	url = "/data/topic_tree?id=" + node + "&levels_up=" + levels_up + "&levels_down=" + levels_down;
 
-    	}
-    	else {
-    		return self.handleSuccess(node, data);
-		}	
-    });
-	
+	d3.json(url)
+		.then(function (data)
+			{
+				console.log("Response Recieved");
+				self.handleSuccess(node, levels_up, levels_down, data, handleSuccessExternal);
+			},
+			function (error)
+			{
+				console.log("Response Errored");
+				self.handleError(node, levels_up, levels_down, data, handleSuccessExternal);
+			}
+		);
+}
 
-};
-
-
-Server.prototype.handleError = function(node, url, error)
+Server.prototype.handleError = function (node, levels_up, levels_down, data, handleSuccessExternal, handleErrorExternal, url, error)
 {
+	/*
 	var self = this;
 	if (error == "Error: Internal Server Error")
 		return d3.json(url, function(error, data){
-			if (error){
+			if (error)
+			{
 				if(error != "Error: Internal Server Error")
 				{
-					return self.handleError(url, error);
+					return handleErrorExternal(url, error);
 				}
 				else
 				{
@@ -149,20 +153,35 @@ Server.prototype.handleError = function(node, url, error)
 					throw(error);
 				}
 			}
-			else {
-				return self.handleSuccess(data);
+			else
+			{
+				return self.handleSuccess(node, levels_up, levels_down, data, handleSuccessExternal);
 			}
 		});
-	else{
+	else
+	{
 		alert(error);
 		throw(error);
 	}
-    return self.treeHandleError(node, url, error);
+	return self.treeHandleError(node, url, error);
+	*/
 };
 
 
-Server.prototype.handleSuccess = function(node, data)
+Server.prototype.handleSuccess = function (node, levels_up, levels_down, data, handleSuccessExternal)
 {
-    var self = this;
-    return self.treeHandleSuccess(node, data);
+	var self = this;
+
+	var connections = data.connections;
+	var IDNodeMap = d3.map(data.nodes, function (d) { return d.id; });
+
+	connections.forEach(function(connection)
+		{
+			connection.source = IDNodeMap.get(connection.source);
+			connection.target = IDNodeMap.get(connection.target);
+		}
+	);
+	console.log("foo");
+
+	return handleSuccessExternal(node, levels_up, levels_down, data);
 };
