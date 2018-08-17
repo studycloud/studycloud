@@ -118,7 +118,7 @@ Server.prototype.getData = function(node, levels, handleError, handleSuccess)
 	levels_up = levels_up || levels_up === 0 ? levels_up : ""
 	levels_down = levels_down || levels_down === 0 ? levels_down : ""
 	// what is the url for this request?
-	url = "/tree/data/?topic="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
+	url = "/data/topic_tree/?topic="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
     return d3.json(url, function(error, data){
     	if (error){
     		return self.handleError(node, url, error);
