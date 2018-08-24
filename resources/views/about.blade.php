@@ -1,5 +1,5 @@
 @push('styles')
-	<link rel="stylesheet" type="text/css" href="css/_homepage.css">
+	<link rel="stylesheet" type="text/css" href="{{ asset('css/_homepage.css') }}">
 @endpush
 
 @extends('layout')
@@ -12,7 +12,7 @@
 		<div class="boxTitle">
 			<p>Why Study Cloud?</p>
 		</div>
-		<img class="picture" src="{{ URL::asset('storage/a_public_image.jpg') }}"/>
+		<img class="picture" src="{{ asset('storage/a_public_image.jpg') }}"/>
 		<div class="boxText">Study Cloud is useful for Reasons which are Important and it's just useful guys you should like try it.</div>
 	</div>
 

@@ -1,5 +1,5 @@
 @push('styles')
-	<link rel="stylesheet" type="text/css" href="css/_homepage.css">
+	<link rel="stylesheet" type="text/css" href="{{ asset('css/_homepage.css') }}">
 @endpush
 
 @extends('layout')

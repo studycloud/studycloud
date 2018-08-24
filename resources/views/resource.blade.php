@@ -4,11 +4,11 @@
 <!-- For a model, check in with home or about blade files. You won't be directly injected where these are -->
 
 @push('styles')
-<link rel="stylesheet" type="text/css" href="css/_resource.css">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/_resource.css') }}">
 @endpush
 
 @push('scripts')
-<script type="text/javascript" src="js/resource_viewer.js"></script>
+<script type="text/javascript" src="{{ asset('js/resource_viewer.js') }}"></script>
 @endpush
 
 <!-- When you inject this as a component into a parent, remove next two lines because it's gonna go into the component that embeds this. -->
