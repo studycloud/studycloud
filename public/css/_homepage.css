@@ -13,7 +13,7 @@
   vertical-align: top;
   /* Properties of the element box. */
   border: 3px;
-  border-color: #0c5f07;
+  border-color: purple;
   border-style: solid;
 }
 
@@ -37,13 +37,13 @@
   padding: 3px;
   height: 40px;
   /* Space for two lines of text. Expand if necessary. */
-  background-color: #0c5f07;
+  background-color: purple;
 }
 
 .boxText {
   /* Only for text content of elementboxes. */
   font-size: 16px;
-  color: white;
+  color: black;
   text-align: left;
   padding: 2%;
 }

@@ -139,9 +139,9 @@ table {
 }
 
 .navbar {
-  background: #220134;
-  background: -webkit-gradient(linear, left top, left bottom, from(#630398), to(#220134));
-  background: linear-gradient(#630398, #220134);
+  background: #1B3B6F;
+  background: -webkit-gradient(linear, left top, left bottom, from(#348AA7), to(#1B3B6F));
+  background: linear-gradient(#348AA7, #1B3B6F);
 }
 
 /* ----------------------------------------------
@@ -285,8 +285,8 @@ table {
 
 .navbar ul li a:hover,
 .navbar ul li input:hover {
-  background-color: #00177b;
-  color: white;
+  background-color: #5DD39E;
+  color: black;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
 }
@@ -310,7 +310,7 @@ table {
   border-color: transparent;
   color: white;
   outline: none;
-  background: #c96bfc;
+  background: #bddfea;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
   border-radius: 0.1em;
@@ -322,7 +322,7 @@ table {
 }
 
 .navbar ul #search #search-form #search-text:focus {
-  color: white;
+  color: black;
   background: white;
 }
 
@@ -338,12 +338,12 @@ table {
 }
 
 .navbar ul #log-in #log-in-button {
-  background-color: #00177b;
+  background-color: #5DD39E;
 }
 
 .navbar ul #log-in #log-in-button:hover,
 .navbar ul #log-in #log-in-button:focus {
-  background-color: #002ae1;
+  background-color: #BCE784;
 }
 
 /* LOGIN DROPDOWN */
@@ -380,7 +380,7 @@ table {
 }
 
 #log-in-hidden .link-default {
-  color: #220134;
+  color: #1B3B6F;
   padding-top: 2px;
   padding-bottom: 2px;
   text-decoration: none;
@@ -391,7 +391,7 @@ table {
 }
 
 #log-in-hidden .link-default:hover {
-  color: #0c5f07;
+  color: purple;
   background: none;
 }
 
@@ -401,7 +401,7 @@ table {
   border-color: transparent;
   color: white;
   outline: none;
-  background: #c96bfc;
+  background: #bddfea;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
   border-radius: 0.1em;
@@ -436,7 +436,7 @@ table {
   color: white;
   text-decoration: none;
   text-align: right;
-  background: #002ae1;
+  background: #BCE784;
   margin: 2% 0 2% auto;
 }
 
@@ -498,14 +498,14 @@ table {
 }
 
 .navbar {
-  background: #220134;
-  background: -webkit-gradient(linear, left top, left bottom, from(#630398), to(#220134));
-  background: linear-gradient(#630398, #220134);
+  background: #1B3B6F;
+  background: -webkit-gradient(linear, left top, left bottom, from(#348AA7), to(#1B3B6F));
+  background: linear-gradient(#348AA7, #1B3B6F);
 }
 
 html {
   font-family: "Open Sans", sans-serif;
-  background: #010823;
+  background: white;
 }
 
 #pageWidth {
