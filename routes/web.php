@@ -40,7 +40,7 @@ Route::get('data/resource',
 	}
 )->name('resources.json');
 Route::resource('resources', 'ResourceController', ['except' => 
-	'index', 'edit'
+	'index'
 ]);
 
 Route::get('tree/data', 'TopicTreeController');

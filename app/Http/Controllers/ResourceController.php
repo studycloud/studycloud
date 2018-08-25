@@ -51,6 +51,7 @@ class ResourceController extends Controller
 	public function create()
 	{
 		// load the appropriate view here
+		// return view('resource.create', ['resource' => NULL]);
 	}
 
 	/**
@@ -96,6 +97,18 @@ class ResourceController extends Controller
 	public function show(Resource $resource)
 	{
 		return view('resource', ['resource' => $resource]);
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  Resource  $resource
+	 * @return \Illuminate\Http\Response
+	 */
+	public function edit(Resource $resource)
+	{
+		// load the same view as the create method
+		// return view('resource.create', ['resource' => $resource]);
 	}
 
 	/**
