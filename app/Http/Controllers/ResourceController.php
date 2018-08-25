@@ -19,7 +19,8 @@ class ResourceController extends Controller
 		HTTP Verb		URI						Route Name			Action
 		GET				/resources/create		resources.create	show the resource creation page
 		POST			/resources				resources.store		create a new resource sent as JSON
-		GET				/resources/{id}			resources.show		show the page for this resource (and the editor if logged in as the author)
+		GET				/resources/{id}			resources.show		show the page for this resource
+		GET				/resources/{id}/edit	resources.edit		show the editor for this resource (if logged in as the author)
 		PATCH (or PUT)	resources/{id}			resources.update	alter a current resource according to the changes sent as JSON
 		DELETE			/resources/{id}			resources.destroy	request that this resource be deleted
 	**/
