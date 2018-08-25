@@ -29,20 +29,6 @@ Route::get('about',
 	}
 )->name('about');
 
-Route::get('login',
-	function()
-	{
-		return view('login');
-	}
-)->name('login');
-
-Route::get('register',
-	function()
-	{
-		return view('register');
-	}
-)->name('register');
-
 Route::get('data/resource',
 	function(Request $request)
 	{
