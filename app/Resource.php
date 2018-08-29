@@ -2,9 +2,10 @@
 
 namespace App;
 
+use App\User;
+use App\Topic;
+use App\ResourceUse;
 use Illuminate\Database\Eloquent\Model;
-
-use  App\Topic;
 
 class Resource extends Model
 {
@@ -13,7 +14,7 @@ class Resource extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'author_id', 'use_id'];
+	protected $fillable = ['name', 'use_id'];
 
     protected $appends = ['target'];
 
@@ -49,5 +50,23 @@ class Resource extends Model
 	public function getTopics()
 	{
 		return $this->topics()->get();
+	}
+
+	/**
+	 * define the many-to-one relationship between resources and their author
+	 * @return User	the author of this resource
+	 */
+	public function author()
+	{
+		return $this->belongsTo(User::class);
+	}
+
+	/**
+	 * define the many-to-one relationship between resources and their use
+	 * @return ResourceUse	this resource's use
+	 */
+	public function use()
+	{
+		return $this->belongsTo(ResourceUse::class);
 	}
 }
