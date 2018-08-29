@@ -1,5 +1,5 @@
 @push('styles')
-<link rel="stylesheet" type="text/css" href="css/_tree.css">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/_tree.css') }}">
 @endpush
 
 
@@ -12,6 +12,6 @@
 	</div>
 </div>
 
-<script src="js/topics.js"></script>
+<script src="{{ asset('js/topics.js') }}"></script>
 
 @stop

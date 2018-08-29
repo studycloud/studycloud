@@ -1,7 +1,10 @@
 <?php
 
+use App\User;
+use App\Topic;
 use App\Resource;
 use Illuminate\Http\Request;
+use App\Http\Resources\TopicResource;
 use App\Http\Resources\ResourceResource;
 
 /*
@@ -26,13 +29,6 @@ Route::get('about',
 	}
 )->name('about');
 
-Route::get('topics',
-	function()
-	{
-		return view('topics');
-	}
-)->name('topics');
-
 Route::get('data/resource',
 	function(Request $request)
 	{
@@ -43,12 +39,19 @@ Route::resource('resources', 'ResourceController', ['except' =>
 	'index'
 ]);
 
-Route::get('tree/data', 'TopicTreeController');
+Route::get('data/topic_tree', 'GetTopicTree');
+Route::get('data/topic',
+	function(Request $request)
+	{
+		return new TopicResource(Topic::find($request->query('id')));
+	}
+)->name('topics.json');
+Route::resource('topics', 'TopicController');
 
 Route::get('admins/{userid}',
 	function($user_id)
 	{
-		$user = App\User::find($user_id);
+		$user = User::find($user_id);
 		// return $user;
 		return view('admins', compact('user'));
 	}

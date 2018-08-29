@@ -11,7 +11,7 @@ class Topic extends Model
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'author_id'];
+	protected $fillable = ['name'];
 
 	/**
 	 * returns all topics that have this topic as their parent
@@ -37,6 +37,15 @@ class Topic extends Model
 	public function getResources()
 	{
 		return $this->resources()->get();
+	}
+
+	/**
+	 * define the many-to-one relationship between topics and their author
+	 * @return User	the author of this topic
+	 */
+	public function author()
+	{
+		return $this->belongsTo(User::class);
 	}
 
 	/**
