@@ -8,6 +8,7 @@ use App\ResourceContent;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Middleware\CheckAuthor;
+use App\Http\Repositories\ResourceRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -22,6 +23,8 @@ class ResourceController extends Controller
 		GET				/resources/{id}			resources.show		show the page for this resource
 		GET				/resources/{id}/edit	resources.edit		show the editor for this resource (if logged in as the author)
 		PATCH (or PUT)	resources/{id}			resources.update	alter a current resource according to the changes sent as JSON
+		POST			/resources/attach/{id}	resources.attach	add this resource to a list of topics sent as JSON (overriding any conflicts that are currently attached)
+		POST			/resources/detach/{id}	resources.detach	remove this resource from a list of topics sent as JSON
 		DELETE			/resources/{id}			resources.destroy	request that this resource be deleted
 	**/
 
@@ -199,4 +202,44 @@ class ResourceController extends Controller
 		// finally, we can delete the resource
 		$resource->delete();
 	}
+
+
+
+	/*
+	*	Attach a resource to a certain topic, overwriting the current topics
+	*	@param Resource $resource
+	*	@param \Illuminate\Http\Request  $request
+	*/
+	public function attachTopics(Resource $resource, Request $request){
+
+		// validating the request
+		$validated = $request->validate([
+			'topics' => 'sometimes|array' //should be an array of topic_id's
+			'classes' => 'sometimes|array'
+		]);
+
+		// doing things
+
+	
+		foreach($validated['topics'] as $topic){
+			ResourceRepository::addTopic($topic, $resource)
+		}
+	}
+	
+
+	public function detachTopics(Resource $resource, Request $request){
+		// validating the reqeust 
+		$validated = $request->validate([
+			'topics' => 'sometimes|array' //should be an array of topic_id's
+			'classes' => 'sometimes|array'
+		]);
+
+		foreach($validated['topics'] as $topic){
+			//Unfortunately, detachTopics is not a static function like I've written here
+			//Should I instead make a ResourceRepository object and call that instead? Or should we modify
+			//the actual code to make detachTopics a static function? 
+			ResourceRepository::detachTopics($topic, $resource); 
+		}
+	}
+
 }
