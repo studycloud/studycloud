@@ -231,7 +231,7 @@ class ResourceController extends Controller
 
 	
 		foreach($validated['topics'] as $topic){
-			ResourceRepository::addTopic($topic, $resource)
+			ResourceRepository::addTopic($topic, $resource);
 		}
 	}
 	
