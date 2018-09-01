@@ -31,20 +31,8 @@ class GetTopicTree extends Controller
 	public function __invoke(Request $request)
 	{
 		$topic_id = $request->input('id');
-		if ($topic_id == "")
-		{
-			$topic_id = null;
-		}
 		$up = $request->input('levels_up');
-		if ($up == "")
-		{
-			$up = null;
-		}
 		$down = $request->input('levels_down');
-		if ($down == "")
-		{
-			$down = null;
-		}
 		return $this->show($topic_id, $up, $down);
 	}
 

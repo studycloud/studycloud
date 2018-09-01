@@ -32,7 +32,7 @@ Route::get('about',
 Route::get('data/resource',
 	function(Request $request)
 	{
-		return new ResourceResource(Resource::find($request->query('id')));
+		return new ResourceResource(Resource::find($request->input('id')));
 	}
 )->name('resources.json');
 Route::resource('resources', 'ResourceController', ['except' => 
@@ -43,7 +43,7 @@ Route::get('data/topic_tree', 'GetTopicTree');
 Route::get('data/topic',
 	function(Request $request)
 	{
-		return new TopicResource(Topic::find($request->query('id')));
+		return new TopicResource(Topic::find($request->input('id')));
 	}
 )->name('topics.json');
 Route::resource('topics', 'TopicController');
