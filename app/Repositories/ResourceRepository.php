@@ -104,7 +104,7 @@ class ResourceRepository
 			}
 		}
 		dd($old_topics);
-		$this->detachTopics($resource, $old_topics);
+		self::detachTopics($resource, $old_topics);
 	}
 
 	/**
@@ -112,7 +112,7 @@ class ResourceRepository
 	 * @param  Resource 	$resource 	the resource whose topics you'd like to detach
 	 * @param  Collection 	$new_topics the topics to detach
 	 */
-	public function detachTopics($resource, $old_topics) 
+	public static function detachTopics($resource, $old_topics) 
 	{
 		return $resource->topics()->detach($old_topics);
 	}
