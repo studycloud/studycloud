@@ -32,8 +32,7 @@ class ResourceController extends Controller
 	{
 		// verify that the user is signed in for all methods except index, show, and json
 		$this->middleware('auth', ['except' => ['index', 'show']]);
-		// verify that the user is the author of the resource
-		$this->middleware(CheckAuthor::class, ['only' => ['update', 'move', 'destroy']]);
+
 	}
 
 	/**
@@ -54,6 +53,7 @@ class ResourceController extends Controller
 	 */
 	public function create()
 	{
+		$this->authorize('create');
 		// load the appropriate view here
 		// return view('resource.create', ['resource' => NULL]);
 	}
@@ -66,6 +66,7 @@ class ResourceController extends Controller
 	 */
 	public function store(Request $request)
 	{
+		$this->authorize('create');
 		// first, validate the request
 		$validated = $request->validate([
 			'name' => 'string|required|max:255',
@@ -100,6 +101,7 @@ class ResourceController extends Controller
 	 */
 	public function show(Resource $resource)
 	{
+		$this->authorize('view', $resource);
 		return view('resource', ['resource' => $resource]);
 	}
 
@@ -111,6 +113,7 @@ class ResourceController extends Controller
 	 */
 	public function edit(Resource $resource)
 	{
+		$this->authorize('update', $resource);
 		// load the same view as the create method
 		// return view('resource.create', ['resource' => $resource]);
 	}
@@ -124,6 +127,7 @@ class ResourceController extends Controller
 	 */
 	public function update(Request $request, Resource $resource)
 	{
+		$this->authorize('update', $resource);
 		// first, validate the request
 		$validated = $request->validate([
 			'name' => 'sometimes|max:255',
@@ -173,6 +177,7 @@ class ResourceController extends Controller
 	 */
 	public function move(Resource $resource, Topic $topic)
 	{
+		$this->authorize('update', $resource);
 		// do stuff
 	}
 
@@ -185,6 +190,7 @@ class ResourceController extends Controller
 	 */
 	public function destroy(Resource $resource)
 	{
+		$this->authorize('delete', $resource);
 		// first, delete attachments this resource has to any topics
 		$resource->topics->pluck('pivot')->each(
 			function ($resource_topic)
@@ -212,6 +218,7 @@ class ResourceController extends Controller
 	*/
 	public function attachTopics(Resource $resource, Request $request){
 
+		$this->authorize('update', $resource);
 		// validating the request
 		$validated = $request->validate([
 			'topics' => 'sometimes|array', //should be an array of topic_id's
@@ -230,6 +237,8 @@ class ResourceController extends Controller
 	
 
 	public function detachTopics(Resource $resource, Request $request){
+
+		$this->authorize('update', $resource);
 		// validating the reqeust 
 		$validated = $request->validate([
 			'topics' => 'sometimes|array', //should be an array of topic_id's

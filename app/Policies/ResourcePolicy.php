@@ -19,7 +19,12 @@ class ResourcePolicy
      */
     public function view(User $user, Resource $resource)
     {
-        //
+        if $resource->status == 0{ 
+            return false
+        }
+        else{
+            return true
+        }
     }
 
     /**
@@ -30,7 +35,9 @@ class ResourcePolicy
      */
     public function create(User $user)
     {
-        //
+        //NOTE: Put in the admin privileges later
+        return $userid === $resource->id
+
     }
 
     /**
@@ -42,7 +49,9 @@ class ResourcePolicy
      */
     public function update(User $user, Resource $resource)
     {
-        //
+    
+        return $userid === $resource->id
+
     }
 
     /**
@@ -54,6 +63,7 @@ class ResourcePolicy
      */
     public function delete(User $user, Resource $resource)
     {
-        //
+        return $userid === $resource->id
+
     }
 }
