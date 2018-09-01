@@ -214,8 +214,10 @@ class ResourceController extends Controller
 
 		// validating the request
 		$validated = $request->validate([
-			'topics' => 'sometimes|array' //should be an array of topic_id's
-			'classes' => 'sometimes|array'
+			'topics' => 'sometimes|array', //should be an array of topic_id's
+			'topics.*' => 'exists:topics,id',
+			'classes' => 'sometimes|array',
+			'classes.*' => 'exists:classes,id'
 		]);
 
 		// doing things
@@ -230,8 +232,10 @@ class ResourceController extends Controller
 	public function detachTopics(Resource $resource, Request $request){
 		// validating the reqeust 
 		$validated = $request->validate([
-			'topics' => 'sometimes|array' //should be an array of topic_id's
-			'classes' => 'sometimes|array'
+			'topics' => 'sometimes|array', //should be an array of topic_id's
+			'topics.*' => 'exists:topics,id',
+			'classes' => 'sometimes|array',
+			'classes.*' => 'exists:classes,id'
 		]);
 
 		foreach($validated['topics'] as $topic){

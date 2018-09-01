@@ -103,7 +103,6 @@ class ResourceRepository
 				$old_topics->push($topic->id);
 			}
 		}
-		dd($old_topics);
 		self::detachTopics($resource, $old_topics);
 	}
 
