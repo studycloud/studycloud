@@ -31,32 +31,35 @@ class ClassParentTableSeeder extends Seeder
 	public function run()
 	{
 		$this->classes = Academic_Class::all();
-		$this->assignChildren($this->chooseClass());
+		// assign children to the root of the tree (and to subtrees when we recur)
+		$this->assignChildren();
 	}
 
 	/**
 	 * assign children to a parent class
-	 * @param  Academic_Class	$parent	the soon-to-be parent class
+	 * @param  Academic_Class|null	$parent					the soon-to-be parent class
+	 * @param	int					$num_classes_level_min	the min number of classes that can occur at this level of the tree
 	 */
-	private function assignChildren($parent, $num_classes_level_min= 1)
+	private function assignChildren($parent = null, $num_classes_level_min = 1)
 	{
+		// how many classes should be at this level of the tree?
+		$num_classes_level = rand( $num_classes_level_min, min(self::NUM_MAX_CLASSES, $this->classes->count()) );
+		$children = collect();
+		// choose children to add to this parent
+		while ($num_classes_level > 0)
+		{
+			$child = $this->chooseClass();
+			if (!is_null($child))
+			{				
+				$children->push($child);
+				$this->assignChildren($child, 0);
+			}
+			$num_classes_level--;
+		}
+		// add these children to this parent
+		// don't add them if we are at the root of the tree
 		if (!is_null($parent))
 		{
-			// how many classes should be at this level of the tree?
-			$num_classes_level = rand( $num_classes_level_min, min(self::NUM_MAX_CLASSES, $this->classes->count()) );
-			$children = collect();
-			// choose children to add to this parent
-			while ($num_classes_level > 0)
-			{
-				$child = $this->chooseClass();
-				if (!is_null($child))
-				{				
-					$children->push($child);
-					$this->assignChildren($child, 0);
-				}
-				$num_classes_level--;
-			}
-			// add these children to this parent
 			$parent->children()->attach($children->pluck('id'));
 		}
 	}
