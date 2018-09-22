@@ -19,4 +19,20 @@ class Academic_Class extends Model
 	 * @var array
 	 */
 	protected $fillable = ['name'];
+
+	/**
+	 * returns all classes that have this class as their parent
+	 */
+	public function children()
+	{
+		return $this->belongsToMany(Academic_Class::class, 'class_parent', 'parent_id',  'class_id');
+	}
+
+	/**
+	 * returns all classes for which this class is a child
+	 */
+	public function parents()
+	{
+		return $this->belongsToMany(Academic_Class::class, 'class_parent', 'class_id',  'parent_id');
+	}
 }

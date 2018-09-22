@@ -14,7 +14,7 @@ class CreateClassParentsTable extends Migration
     public function up()
     {
         Schema::create('class_parent', function (Blueprint $table) {
-            $table->integer('class_id')->unsigned();
+            $table->integer('class_id')->unsigned()->unique();
             $table->foreign('class_id')->references('id')->on('classes');
             $table->integer('parent_id')->unsigned();
             $table->foreign('parent_id')->references('id')->on('classes');
