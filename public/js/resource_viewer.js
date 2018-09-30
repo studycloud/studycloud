@@ -36,7 +36,8 @@ $(document).ready(function(){
 function callback(received)
 {
 	var resource = JSON.parse(received);
-	document.getElementById('resource-head').innerHTML="<div><h1>"+resource.meta.name+"</h1><div>contributed by <div id='author-name'></div></div>";
+	// add id = 'resource-name so we can edit the style of resource name in scss
+	document.getElementById('resource-head').innerHTML="<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1><div>contributed by <div id='author-name'></div></div>";
 	set_author(resource.meta.author_name, resource.meta.author_type);
 	for(var i=0;i<1;i++)
 	{
