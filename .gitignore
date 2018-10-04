@@ -9,3 +9,5 @@ Homestead.yaml
 /public/css/.sasscache
 /public/css/.sass-cache
 /storage/framework/views/*.php
+**/.DS_Store
+**/._.DS_Store
