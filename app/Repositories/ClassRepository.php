@@ -7,6 +7,86 @@ use App\Helpers\NestedArrays;
 
 class ClassRepository 
 {
+	protected $memoize = [];
+	
+	/**
+	 * get the descendants of a class in a flat collection
+	 * @param  App\Academic_Class the current class in the tree; defaults to the root of the tree
+	 * @param  int $levels the number of levels of descendants to get; returns all if $levels is not specified or is less than 0
+	 * @return Illuminate\Database\Eloquent\Collection
+	 */
+	public function descendants(Academic_Class $class = null, int $levels = null)
+	{
+		$tree = collect();
+		// base case: $levels == 0
+		// also do a memoization check to prevent us from
+		// executing a query for a class that we've already found
+		if (
+			($levels != 0 || is_null($levels)) &&
+			(is_null($class) || !in_array($class->id, $this->memoize))
+		) 
+		{
+			if (is_null($class)) #if the class is null, how would we be able
+			#to get topLevelClasses? -> wouldn't they not exist
+			{
+				$children = self::getTopLevelClasses();
+			}
+			else
+			{
+				$children = $class->children()->get();
+				// add the class id to the list of classes that have already been called
+				array_push($this->memoize, $class->id);
+			}
+			foreach ($children as $child) {
+				// add the child to the tree
+				$tree->push(collect($child));
+				$tree = $tree->merge(
+					// RECURSION!
+					$this->descendants($child, $levels - 1)
+				);
+			}
+		}
+	}
+
+	/**
+	 * get the ancestors of a class in a flat collection
+	 * @param  App\Academic_Class the current class in the tree; defaults to the root of the tree
+	 * @param  int $levels the number of levels of ancestors to get; returns all if $levels is not specified or is less than 0
+	 * @return Illuminate\Database\Eloquent\Collection
+	 */
+	public function ancestors(Academic_Class $class = null, int $levels = null)
+	{
+		$tree = collect();
+		// base case: $levels == 0
+		// also do a memoization check to prevent us from
+		// executing a query for a class that we've already found
+		if (
+			($levels != 0 || is_null($levels)) &&
+			(is_null($class) || !in_array($class->id, $this->memoize))
+		)
+		{
+			if (is_null($class))
+			{
+				$parents = collect();
+			}
+			else
+			{
+				$parents = $class->parents()->get();
+				// add the class id to the list of classes that have already been called
+				array_push($this->memoize, $class->id);
+			}
+			foreach ($parents as $parent) {
+				// add the parent to the tree
+				$tree->push(collect($parent));
+				$tree = $tree->merge(
+					// RECURSION!
+					$this->ancestors($parent, $levels - 1)
+				);
+			}
+		}
+		return $tree;
+	}
+
     public static function getTopLevelClasses()
     {
         return Academic_Class::whereNotExists(function ($query)
