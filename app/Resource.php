@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
 use  App\Topic;
+use App\Academic_Class;
+use Illuminate\Database\Eloquent\Model;
 
 class Resource extends Model
 {
@@ -49,5 +49,14 @@ class Resource extends Model
 	public function getTopics()
 	{
 		return $this->topics()->get();
+	}
+
+	/**
+	 * define the many-to-one relationship between resources and the classes they belong to
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo the relationship accessor
+	 */
+	public function class()
+	{
+		return $this->belongsTo(Academic_Class::class, 'class_id');
 	}
 }

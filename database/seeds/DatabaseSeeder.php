@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
 			$this->call('ResourcesTableSeeder');
 			$this->call('ResourceContentsTableSeeder');
 			$this->call('TopicParentTableSeeder');
+			$this->call('ResourceClassTableSeeder');
 			$this->call('ResourceTopicTableSeeder');
 			$this->call('RoleUserTableSeeder');
 		}

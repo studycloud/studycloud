@@ -46,6 +46,7 @@ class ClassRepository
 				);
 			}
 		}
+		return $tree;
 	}
 
 	/**
@@ -87,23 +88,32 @@ class ClassRepository
 		return $tree;
 	}
 
-    public static function getTopLevelClasses()
-    {
-        return Academic_Class::whereNotExists(function ($query)
-            {
-                $query->select('class_id')->distinct()->from('class_parent')->whereRaw('class_parent.class_id = classes.id');
-            }
-        )->get();
-    }
+	public static function getTopLevelClasses()
+	{
+		return Academic_Class::whereNotExists(function ($query)
+			{
+				$query->select('class_id')->distinct()->from('class_parent')->whereRaw('class_parent.class_id = classes.id');
+			}
+		)->get();
+	}
 
-    public static function isDescendant($class_id, $descendant_class_id, $disallowed_classes)
+	public static function getLeafClasses()
+	{
+		return Academic_Class::whereNotExists(function ($query)
+			{
+				$query->select('class_id')->distinct()->from('class_parent')->whereRaw('class_parent.parent_id = classes.id');
+			}
+		)->get();
+	}
+
+	public static function isDescendant($class_id, $descendant_class_id, $disallowed_classes)
 	{
 		// base case: descendant_class is an descendant of class if they are the same
 		if ($class_id == $descendant_class_id)
 		{
 			return true;
 		}
-        // get the class collections in $disallowed_classes with parent_ids equal to $class_id
+		// get the class collections in $disallowed_classes with parent_ids equal to $class_id
 		$classes = $disallowed_classes->where('parent_id', $class_id);
 		$isDescendant = false;
 		// call isDescendant() with each of the classes
@@ -114,9 +124,9 @@ class ClassRepository
 			$isDescendant = $isDescendant || self::isDescendant($class['class_id'], $descendant_class_id, $disallowed_classes);
 		}
 		return $isDescendant;
-    }
-    
-    public static function isAncestor($class_id, $ancestor_class_id, $disallowed_classes)
+	}
+	
+	public static function isAncestor($class_id, $ancestor_class_id, $disallowed_classes)
 	{
 		// base case: ancestor_class is an ancestor of class if they are the same
 		if ($class_id == $ancestor_class_id)
@@ -135,9 +145,9 @@ class ClassRepository
 			$isAncestor = $isAncestor || self::isAncestor($class['parent_id'], $ancestor_class_id, $disallowed_classes);
 		}
 		return $isAncestor;
-    }
-    
-    public static function printAsciiDescendants($class)
+	}
+	
+	public static function printAsciiDescendants($class)
 	{
 		if (is_int($class))
 		{
@@ -145,20 +155,20 @@ class ClassRepository
 		}
 
 		echo NestedArrays::convertToAscii(NestedArrays::classDescendants($class));
-    }
-    
-    public static function printAsciiAncestors($class)
+	}
+	
+	public static function printAsciiAncestors($class)
 	{
 		if (is_int($class))
 		{
-            $class = Academic_Class::find($class); //this seems like the same line
-            //as in printAsciiDescendants() but isn't giving an error
+			$class = Academic_Class::find($class); //this seems like the same line
+			//as in printAsciiDescendants() but isn't giving an error
 		}
 
 		echo NestedArrays::convertToAscii(NestedArrays::classAncestors($class));
-    }
-    
-    public static function asciiTree($class)
+	}
+	
+	public static function asciiTree($class)
 	{
 		if (is_int($class))
 		{
@@ -169,6 +179,6 @@ class ClassRepository
 		self::printAsciiDescendants($class);
 		echo "\nANCESTORS\n";
 		self::printAsciiAncestors($class);
-    }
-    
+	}
+	
 }

@@ -35,4 +35,13 @@ class Academic_Class extends Model
 	{
 		return $this->belongsToMany(Academic_Class::class, 'class_parent', 'class_id',  'parent_id');
 	}
+
+	/**
+	 * returns all resources of this class
+	 */
+	public function resources()
+	{
+		return $this->hasMany(Resource::class, 'class_id');
+	}
+
 }
