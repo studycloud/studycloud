@@ -1,0 +1,21 @@
+// Universe color scheme. 
+// Borrowing from bold; soft the gradient, unmintify the mint. 
+// Remintified a different mint. Don't love it. Too many colors. Ahh. 
+
+$text-default: black;
+$text-invert: white;
+$text-light: #aaa;
+
+$primary-0: #1B3B6F;
+$primary-0-light: #336ac3;
+
+$accent-0: #3ad076; // light blue: #5587d8
+$accent-1: #dc3737; // Optional; mouseover login?
+$accent-2: purple; // Content boxes
+
+$input-minimal: lighten($primary-0-light, 40%);
+
+$bg-light: #fefefe;
+
+$link-default: $primary-0;
+$link-hover: $accent-2;

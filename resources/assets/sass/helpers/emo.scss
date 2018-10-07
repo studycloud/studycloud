@@ -1,0 +1,20 @@
+// it's not a phase, mom. 
+// Trying a Bold New Look. 
+
+$text-default: black;
+$text-invert: white;
+$text-light: #aaa;
+
+$primary-0: black;
+$primary-0-light: lighten($primary-0, 20%);
+
+$accent-0: #0044b3; // light blue: #5587d8 red: #dc3737
+$accent-1: lighten($accent-0, 20%); // Optional; mouseover login? mint: #3ad076
+$accent-2: #0044b3; // Content boxes purple: purple lighterpurple: #9d3db3 salmonthanksihateit: #fd4444
+
+$input-minimal: lighten($primary-0-light, 40%);
+
+$bg-light: #fefefe;
+
+$link-default: $primary-0;
+$link-hover: $accent-2;
