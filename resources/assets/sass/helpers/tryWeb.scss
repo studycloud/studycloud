@@ -1,0 +1,19 @@
+// Bold color scheme. 
+
+$text-default: black;
+$text-invert: white;
+$text-light: #aaa;
+
+$primary-0: #333A56;
+$primary-0-light: #465C8B;
+
+$accent-0: rgb(218, 204, 247);
+$accent-1: rgb(171, 152, 198); // Optional; mouseover login?
+$accent-2: #675682; // Content boxes
+
+$input-minimal: lighten($primary-0-light, 40%);
+
+$bg-light: #fefefe;
+
+$link-default: $primary-0;
+$link-hover: $accent-2;

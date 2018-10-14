@@ -36,14 +36,19 @@ $teacher-color: green;
 .date {
 	color: lighten($text-default, 50%);
 	font-size: 12px;
+	margin-top: 5px;
 }
 
 .module {
 	// TODO please style accordingly.
-	font-size: 25px;
+	font-size: 20px; //change the font size of the resource
 	padding: 10px;
 }
 
+.resource-divider{
+	height: 2px;
+	background-color: black;
+}
 
 // TODO Maybe these stylings should be global? I don't know. 
 h1 {

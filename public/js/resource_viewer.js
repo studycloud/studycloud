@@ -26,6 +26,7 @@
 // Dummy data which I would get from the server.
 var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
 
+//var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "link", "content": "http://google.com", "created": "date", "updated": "date"}]}';
 $(document).ready(function(){ 
 	callback(received);
 	// you can also call:
@@ -68,7 +69,7 @@ function display_content(num, element)
 	}
 	else // Apparently by MVP things are HTML text. Check this. 
 	{
-		document.getElementById('module-'+num).innerHTML+="<h2>"+element.name+"</h2><div>"+element.content+"</div>";
+		document.getElementById('module-'+num).innerHTML+="<div class=resource-divider></div><h2>"+element.name+"</h2><div>"+element.content+"</div>";
 	}
 	// Add other types as you will. 
 
