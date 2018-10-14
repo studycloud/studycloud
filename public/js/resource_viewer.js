@@ -25,10 +25,17 @@
 
 // Dummy data which I would get from the server.
 var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
+var created;
+var resourceCreator = true;
 
 //var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "link", "content": "http://google.com", "created": "date", "updated": "date"}]}';
 $(document).ready(function(){ 
-	callback(received);
+	if (resourceCreator){
+		create_textbox();
+	}
+	else{
+		callback(received);
+	}
 	// you can also call:
 	// error();
 });
@@ -83,4 +90,13 @@ function error()
 {
 	document.getElementById('resource-head').innerHTML="<h1>Sorry! We don't have that resource. Would you like to write it?</h1>";
 	document.getElementById('modules').innerHTML=""; // Clear modules if anything exists within it. 
+}
+
+function create_textbox()
+{
+	document.getElementById('resource-head').innerHTML="<h1>Resource Editor</h1><br><form> <textarea class = 'new-resource' rows='5' id = 'new-resource'></textarea></form>";
+	//this is not storing the created data properlly...	
+	//when I hit return, the page will just refresh
+	created = document.getElementById("new-resource").value;
+	document.getElementById('modules').innerHTML+="<div class='data'>data: " + created + "</h1>";
 }
