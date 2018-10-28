@@ -34,12 +34,6 @@ function Tree(type, frame_id)
 	self.frame = d3.select("#" + frame_id);
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
 	
-	self.frame.on("resize", self.resizeFrame);
-	
-	resizeFrame2 = function(){self.resizeFrame()};
-	
-	self.frame.node().onResize = "Tree.resizeFrame2";
-	
 	self.frame.svg = self.frame.append("svg");
 	
 	self.frame.svg.center = 
@@ -50,7 +44,6 @@ function Tree(type, frame_id)
 	
 	self.frame.svg
 		.attr("class", "tree");
-	
 	
 	self.links = self.frame.svg
 		.append("g")
@@ -65,7 +58,9 @@ function Tree(type, frame_id)
 	self.nodes_simulated = {};
 	self.links_simulated = {};
 	
-	self.simulationInitialize();			
+	self.simulationInitialize();
+
+	d3.select(window).on("resize", function() { self.simulationRecenter(); });
 	
 	self.setData(data);
 	
@@ -107,7 +102,6 @@ Tree.prototype.simulationInitialize = function()
 	self.simulation
 		.force("ForceCharge")
 			.strength(-1000);
-
 };
 
 Tree.prototype.simulationReheat = function()
@@ -128,6 +122,24 @@ Tree.prototype.simulationRestart = function()
 	self.simulationReheat();
 };
 
+Tree.prototype.simulationRecenter = function(node)
+{
+	var self = this;
+
+	self.frame.boundary = self.frame.node().getBoundingClientRect();
+
+	self.frame.svg.center =
+	{
+		x: self.frame.boundary.width / 2,
+		y: self.frame.boundary.height / 2
+	};
+
+	self.simulation
+		.force("ForceCenterX", d3.forceX(self.frame.boundary.width / 2))
+		.force("ForceCenterY", d3.forceY(self.frame.boundary.height / 2));
+
+	self.simulationReheat();
+}
 
 Tree.prototype.getParentsSelection = function(node_id)
 {
