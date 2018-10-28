@@ -20,6 +20,7 @@
    sodipodi:docname="header.svg">
   <defs
      id="defs4">
+    <style type="text/css">@import url(http://fonts.googleapis.com/css?family=Gugi);</style>
     <linearGradient
        osb:paint="solid"
        id="white-2">
@@ -677,6 +678,6 @@
          id="tspan4575"
          x="-317.07709"
          y="747.15656"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:180px;font-family:'Fredericka the Great';-inkscape-font-specification:'Fredericka the Great'">Study Cloud</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:180px;font-family:'Gugi';-inkscape-font-specification:'Gugi'">Study Cloud</tspan></text>
   </g>
 </svg>
