@@ -22,8 +22,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker)
 		'email' => $faker->unique()->safeEmail,
 		'password' => $password ?: $password = bcrypt('password'),
 		'remember_token' => str_random(10),
-		// TODO: update this enum to dynamically retrieve whatever enum options are in the database
-		'type' => $faker->randomElement(['student','teacher'])
+		'type' => $faker->randomElement(App\User::getPossibleTypes())
 	];
 });
 
@@ -53,9 +52,18 @@ $factory->define(App\ResourceContent::class, function (Faker\Generator $faker)
 		'name' => ucwords(
 			$faker->words($nb = 3, $asText = true)
 		),
-		// TODO: update this enum to dynamically retrieve whatever enum options are in the database
-		'type' => $faker->randomElement(['text', 'link', 'file']),
-		'content' => $faker->paragraph,
+		'type' => $faker->randomElement(App\ResourceContent::getPossibleTypes()),
+		'content' => function(array $resource_content) use ($faker)
+		{
+			if ($resource_content['type'] == "link")
+			{
+				return $faker->url;
+			}
+			else
+			{
+				return $faker->paragraph;
+			}
+		},
 		'resource_id' => 0, // this will get overridden by the ResourcesTableSeeder
 	];
 });
