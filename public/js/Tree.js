@@ -139,6 +139,15 @@ Tree.prototype.simulationRecenter = function(node)
 		.force("ForceCenterY", d3.forceY(self.frame.boundary.height / 2));
 
 	self.simulationReheat();
+
+	var node_center = self.nodes.filter(function(d){ return d.level == 0; });
+
+	node_center.each(function(d)
+		{
+			d.fx = self.frame.boundary.width / 2;
+			d.fy = self.frame.boundary.height / 2;
+		}
+	);
 }
 
 Tree.prototype.getParentsSelection = function(node_id)
