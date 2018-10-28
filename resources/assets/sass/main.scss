@@ -7,6 +7,9 @@
 
 html {
 	font-family: $body-font;
+	// Smooth fonts.
+	-webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 #pageWidth { // Limits width of page.
