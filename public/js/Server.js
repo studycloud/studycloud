@@ -259,20 +259,18 @@ Server.prototype.storeTopic = function(name)
 	data = {"name": name};	
 	url = "/topics";
 	const csrftoken = self.getCookie("XSRF-TOKEN");
-	const headers = new Headers({
-        'X-XSRF-TOKEN': csrftoken
-    });
 	fetch(url, {
 		method: 'Post',
 		body: JSON.stringify(data),
-		headers
-	}).then(function(data){			
+		headers: {
+			'X-XSRF-TOKEN': csrftoken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
 		console.log(data);
-	})
-
-	.catch(function(error){
-	console.log('Error', error.message);
-	});	
+	}).catch(function(error){
+		console.log(error);
+	});
 }
 
 
