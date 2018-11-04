@@ -40,7 +40,7 @@ class TopicRepository
 			$topLevelTopics = $topic.getTopLevelTopics(); //gets and stores top level topics
 			
 			foreach ($topLevelTopics as $topic) {  //iterates through each top level topic
-				$topic = collect(["parent" -> $root, "topic" -> $topic->id]); //adds pivot element to each topic
+				$topic->pivot = collect(["parent" => $root->id, "topic" => $topic->id]); //adds pivot element to each topic
 			}
 		} 
 		
@@ -87,8 +87,8 @@ class TopicRepository
 		$topicParents = $topic -> parents() -> get();
 		if ((is_empty($topicParents) == True) && (is_null($root) == False))
 		{
-			$root = collect(["parent" -> $root -> id, "topic" -> $topic]);
-			$tree.addResource($root);
+			$root->pivot = collect(["parent" => $root->id, "topic" => $topic->id]);
+			$tree->push($root);
 		}
 
 
