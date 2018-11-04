@@ -29,9 +29,21 @@ class TopicRepository
 	 * @param  int $levels the number of levels of descendants to get; returns all if $levels is not specified or is less than 0
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function descendants(Topic $topic = null, int $levels = null)
+	public function descendants(Topic $topic = null, int $levels = null, $root = null)
 	{
 		$tree = collect();
+
+		if (
+			is_null($topic) && (is_null($root) == False)
+		)
+		{
+			$topLevelTopics = $topic.getTopLevelTopics(); //gets and stores top level topics
+			
+			foreach ($topLevelTopics as $topic) {  //iterates through each top level topic
+				$topic = collect(["parent" -> $root, "topic" -> $topic->id]); //adds pivot element to each topic
+			}
+		} 
+		
 		// base case: $levels == 0
 		// also do a memoization check to prevent us from
 		// executing a query for a topic that we've already found
@@ -55,7 +67,7 @@ class TopicRepository
 				$tree->push(collect($child));
 				$tree = $tree->merge(
 					// RECURSION!
-					$this->descendants($child, $levels - 1)
+					$this->descendants($child, $levels - 1, $root)
 				);
 			}
 		}
@@ -68,9 +80,18 @@ class TopicRepository
 	 * @param  int $levels the number of levels of ancestors to get; returns all if $levels is not specified or is less than 0
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function ancestors(Topic $topic = null, int $levels = null)
+	public function ancestors(Topic $topic = null, int $levels = null, $root = null)
 	{
 		$tree = collect();
+
+		$topicParents = $topic -> parents() -> get();
+		if ((is_empty($topicParents) == True) && (is_null($root) == False))
+		{
+			$root = collect(["parent" -> $root -> id, "topic" -> $topic]);
+			$tree.addResource($root);
+		}
+
+
 		// base case: $levels == 0
 		// also do a memoization check to prevent us from
 		// executing a query for a topic that we've already found
@@ -94,7 +115,7 @@ class TopicRepository
 				$tree->push(collect($parent));
 				$tree = $tree->merge(
 					// RECURSION!
-					$this->ancestors($parent, $levels - 1)
+					$this->ancestors($parent, $levels - 1, $root)
 				);
 			}
 		}

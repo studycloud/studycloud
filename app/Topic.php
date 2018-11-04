@@ -65,4 +65,9 @@ class Topic extends Model
 	{
 		return $this->resources()->detachResources($old_resources);
 	}
+
+	/*public function setParentID($newID)
+	{
+		$this.parent = $newID
+	} */
 }
