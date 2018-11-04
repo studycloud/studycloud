@@ -12,7 +12,7 @@ Server.prototype.getResource = function(resource_id, callBack1, callBack2)
 	var self = this;
 	
 	var url = "/data/resource?id=" + resource_id;
-	return d3.json(url, {method='get'}).then(function(error, data){
+	return d3.json(url, {method:'get'}).then(function(error, data){
 		if(error)
 		{
 			if(typeof callback1 === 'function')
@@ -26,7 +26,7 @@ Server.prototype.getResource = function(resource_id, callBack1, callBack2)
 		}
 		else
 		{
-			if(typeof callback2 ==== 'function')
+			if(typeof callback2 === 'function')
 			{
 				return callback2(data);
 			}
@@ -83,7 +83,7 @@ Server.prototype.addResource = function(content, callBack1, callBack2)
 		}
 		else
 		{
-			if(typeof callback2 ==== 'function')
+			if(typeof callback2 === 'function')
 			{
 				return callback2(data);
 			}
@@ -123,7 +123,7 @@ Server.prototype.editResource = function(resource_id, content, callBack1, callBa
 		}
 		else
 		{
-			if(typeof callback2 ==== 'function')
+			if(typeof callback2 === 'function')
 			{
 				return callback2(data);
 			}
@@ -164,7 +164,7 @@ Server.prototype.deleteResource = function(resource_id, callBack1, callBack2)
 		}
 		else
 		{
-			if(typeof callback2 ==== 'function')
+			if(typeof callback2 === 'function')
 			{
 				return callback2(data);
 			}
@@ -235,3 +235,22 @@ Server.prototype.handleSuccess = function(node, data)
     var self = this;
     return self.treeHandleSuccess(node, data);
 };
+
+Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
+{
+	var self = this;
+	self.treeHandleError = handleError;
+	self.treeHandleSuccess = handleSuccess;
+	
+	url = "/data/topic?id="+id;
+    return d3.json(url, function(error, data){
+		console.log(data);
+		if (error){			
+    		return self.handleError(id, url, error);
+
+    	}
+    	else {
+    		return self.handleSuccess(id, data);
+		}	
+    });
+}
