@@ -79,6 +79,6 @@
 	</div>
 
 	<button id="resource-btn">this is a temporary button</button>
-	<button id="textbox-btn">temporary textbox button</button>
+	<button id="creator-btn">temporary resource creator button</button>
 
 </body></html>

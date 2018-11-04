@@ -24,14 +24,25 @@
 // xmlhttp.send();
 
 // Dummy data which I would get from the server.
+/*
 var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
 var created;
-var resourceCreator = true;
+var resourceCreator = false;
+
 
 //var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "link", "content": "http://google.com", "created": "date", "updated": "date"}]}';
 $(document).ready(function(){ 
+	
+	if (document.getElementById('resource-container').className == "view"){
+		resourceCreator = false;
+	}
+	else{
+		resourceCreator = true;
+	}
+	//createResource();
+	
 	if (resourceCreator){
-		create_resource();
+		createResource();
 	}
 	else{
 		callback(received);
@@ -92,20 +103,32 @@ function error()
 	document.getElementById('modules').innerHTML=""; // Clear modules if anything exists within it. 
 }
 
-function create_resource()
+function createResource()
 {
+	//create all the input to create resources
 	document.getElementById('resource-head').innerHTML="<h1>Resource Creator</h1>"
 	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> <form> <div class 'resource-creator> Resource Name: <br> <input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = '1'> Note </option> <option value = '2'> Quiz </option> </select> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> <input type = 'text' id = 'content-name'> <br> Content Type:  <select id = 'content-type'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> Content: <br> <textarea rows = '5' id = 'content'> </textarea> </div> </form> <div> <button type = 'button' id = 'submit-button' onclick = 'submitContent()'> Submit </button> <p id = 'demo'> </p></div> ";
 
 }
 
-function submitContent() {
+function submitContent() 
+{
 	//this function gets triggered with the submit function is clicked
+	//all the userinput are stored in these variables
 	var resourceName = document.getElementById("meta-name").value;
 	var resourceUse = document.getElementById("resource-use").value;
 	var contentName = document.getElementById("content-name").value;
 	var contentType = document.getElementById("content-type").value;
 	var content = document.getElementById("content").value;
 
-    document.getElementById("demo").innerHTML = resourceName + resourceUse + contentName + contentType + content;
+	if (document.getElementById('resource-container').className == "view"){
+		resourceCreator = false;
+	}
+	else{
+		resourceCreator = true;
+	}
+	
+	//document.getElementById("demo").innerHTML = resourceName + resourceUse + contentName + contentType + content;
+	document.getElementById("demo").innerHTML = resourceCreator + document.getElementById('resource-container').className;
 }
+*/
