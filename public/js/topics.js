@@ -116,12 +116,28 @@ var data=
       "source": "t8",
       "target": "t9",
 	  "id": "l8"
+    },
+	{
+      "source": "t3",
+      "target": "t4",
+	  "id": "l9"
     }
   ]
 };	
 
+var connections = data.connections;
+	var IDNodeMap = d3.map(data.nodes, function (d) { return d.id; });
 
-tree_topics.server.getData(0, 1, 3, tree_topics.updateDataNLevels.bind(tree_topics), function (node, url, error) { console.log(node, url, error); });
+	connections.forEach(function(connection)
+		{
+			connection.source = IDNodeMap.get(connection.source);
+			connection.target = IDNodeMap.get(connection.target);
+		}
+	);
+
+tree_topics.setData(data);
+
+//tree_topics.server.getData(0, 1, 3, tree_topics.updateDataNLevels.bind(tree_topics), function (node, url, error) { console.log(node, url, error); });
 //tree_topics.setData(data);
 
 // server_topics = new Server();

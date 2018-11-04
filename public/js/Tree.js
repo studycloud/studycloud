@@ -358,7 +358,7 @@ Tree.prototype.updateDataNLevels = function(node_id, levels_num_children, levels
 	var nodes_updated_ids;
 	var links_updated_ids;
 
-	//Get Set()s of Ids to update the data for
+	//Get Sets() of Ids to update the data for
 	[nodes_updated_ids, links_updated_ids] = self.getNLevelIds(node_id, levels_num_children);
 	[nodes_updated_ids, links_updated_ids] = self.getNLevelIds(node_id, levels_num_parents, nodes_updated_ids, links_updated_ids);
 
@@ -411,22 +411,32 @@ Tree.prototype.draw = function()
 Tree.prototype.nodeCoordinateInterpolatorGenerator = function(d, )
 {
 	//create interpolate functions between where we are and where we want to be
-	switch(d.level)
+
+	//console.log("Origin: (" + d.x + "," + d.y + ") Destination: (" + d.fx + "," + d.fy + ")")
+	
+	var interpolate_x = d3.interpolateNumber(d.x_old, d.x_new);
+	var interpolate_y = d3.interpolateNumber(d.y_old, d.y_new);
+	
+	return function(p)
 	{
-		case -1:
-		case 0:
-			console.log("Origin: (" + d.x + "," + d.y + ") Destination: (" + d.fx + "," + d.fy + ")")
-			var interpolate_x = d3.interpolateNumber(d.x_old, d.x_new);
-			var interpolate_y = d3.interpolateNumber(d.y_old, d.y_new);
+		if (d.x_new != null)
+		{
+			d.fx = interpolate_x(p);
+		}
+		else
+		{
+			d.fx = null;
+		}
 			
-			return function(p)
-			{
-				d.fx = interpolate_x(p);
-				d.fy = interpolate_y(p);
-			};	
-	}
-	
-	
+		if (d.x_new != null)
+		{
+			d.fy = interpolate_y(p);
+		}
+		else
+		{
+			d.fy = null;
+		}
+	};	
 }
 
 // Defines linkLengthInterpolatorGenerator which takes in d and returns a function 
@@ -488,6 +498,8 @@ Tree.prototype.centerOnNode = function (node)
 	[nodes_selection_children, links_selection_children] = self.getNLevelSelections(data_id, 1);
 	[nodes_selection_grandchildren, links_selection_grandchildren] = self.getNLevelSelections(data_id, 2);
 
+	//console.log(links_selection_children);
+	
 	//Get the parent nodes of the circle
 	[nodes_selection_parents, links_selection_parents] = self.getNLevelSelections(data_id, -1);
 	
@@ -507,7 +519,7 @@ Tree.prototype.centerOnNode = function (node)
 	
 	node_selection_clicked.each(function(d){d.level = 0;});
 
-	console.log(nodes_selection_parents);
+	//	console.log(nodes_selection_parents);
 	
 
 	//All of the nodes and links together.
@@ -547,13 +559,15 @@ Tree.prototype.centerOnNode = function (node)
 			{
 				case -1:
 					d.visible = true;
+					d.labeled = true;
 					d.radius = "15%";
 					d.opacity = 1;
-					d.x_new = 50*i;
+					d.x_new = 150*i;
 					d.y_new = 50;
 					break;
 				case 0:
 					d.visible = true;
+					d.labeled = true;
 					d.radius = "8%";
 					d.opacity = 1;
 					d.x_new = self.frame.center.x;;
@@ -561,6 +575,7 @@ Tree.prototype.centerOnNode = function (node)
 					break;
 				case 1:
 					d.visible = true;
+					d.labeled = true;
 					d.radius = "5%";
 					d.opacity = 1;
 					d.x_new = null; //Let them move
@@ -570,6 +585,7 @@ Tree.prototype.centerOnNode = function (node)
 					break;
 				case 2:
 					d.visible = true;
+					d.labeled = false;
 					d.radius = "1%";
 					d.opacity = 0.5;
 					d.x_new = null; //Let them move
@@ -579,6 +595,7 @@ Tree.prototype.centerOnNode = function (node)
 					break;
 				case 3:
 					d.visible = false;
+					d.labeled = false;
 					d.radius = "1%";
 					d.opacity = 0;
 					d.x_new = null;
@@ -596,12 +613,34 @@ Tree.prototype.centerOnNode = function (node)
 	);
 	
 	
-	self.nodes
-		.select("circle")
+	self.nodes.select("circle")
 		.transition(transition)
 			.attr("r", function(d)
 				{
 					return d.radius;
+				}
+			);
+	self.nodes.select("text")
+		.transition(transition)
+			.on("start", function(d)
+				{	
+					if (d.labeled)
+					{
+						this.style.visibility = "unset";
+					}
+				}
+			)
+			.on("end", function(d)
+				{
+					if (!d.labeled)
+					{
+						this.style.visibility = "hidden";
+					}
+				}
+			)
+			.attr("opacity",function(d)
+				{
+					return d.opacity;
 				}
 			);
 			
@@ -636,8 +675,32 @@ Tree.prototype.centerOnNode = function (node)
 					return d.radius;
 				}
 			)
+			.attr("opacity",function(d)
+				{
+					return d.opacity;
+				}
+			)
 			.tween("coordinates", self.nodeCoordinateInterpolatorGenerator);
-	/*
+	
+
+	
+	self.simulation.force("ForceLink").distance(function(d)
+		{
+			switch(d.level)
+			{
+			case -1:
+				return 150;
+			case 1: 
+				return 150; 
+			case 2: 
+				return 25;	
+			default:
+				return 280;
+			}
+		}
+	);
+	
+		/*
 	self.links
 		.transition(transition)
 			.tween("linkLength", self.linkLengthInterpolatorGenerator);
