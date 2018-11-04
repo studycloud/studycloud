@@ -243,14 +243,37 @@ Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
 	self.treeHandleSuccess = handleSuccess;
 	
 	url = "/data/topic?id="+id;
-    return d3.json(url, function(error, data){
-		console.log(data);
-		if (error){			
-    		return self.handleError(id, url, error);
-
-    	}
-    	else {
-    		return self.handleSuccess(id, data);
-		}	
-    });
+	return d3.json(url)
+		.then(function(data){			
+				return self.handleSuccess(id, data);
+			})
+		
+		.catch(function(error){
+			console.log('Error', error.message);
+		});		
 }
+
+Server.prototype.storeTopic = function(name)
+{
+	var self = this;
+	data = {"name": name};	
+	url = "/topics";
+	const csrftoken = self.getCookie("XSRF-TOKEN");
+	const headers = new Headers({
+        'X-XSRF-TOKEN': csrftoken
+    });
+	fetch(url, {
+		method: 'Post',
+		body: JSON.stringify(data),
+		headers
+	}).then(function(data){			
+		console.log(data);
+	})
+
+	.catch(function(error){
+	console.log('Error', error.message);
+	});	
+}
+
+
+
