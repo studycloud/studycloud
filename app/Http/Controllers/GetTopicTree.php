@@ -64,8 +64,8 @@ class GetTopicTree extends Controller
 			$topic = Topic::find($topic_id);
 		}
 		// get the ancestors and descendants of this topic in a flat collection
-		$this->tree = (new TopicRepository)->ancestors($topic, $levels_up)->merge(
-			(new TopicRepository)->descendants($topic, $levels_down)
+		$this->tree = (new TopicRepository)->ancestors($topic, $levels_up, $root)->merge(
+			(new TopicRepository)->descendants($topic, $levels_down, $root)
 		);
 		// convert the data to the nodes/connections format
 		$this->tree = NodesAndConnections::convertTo($this->tree);
