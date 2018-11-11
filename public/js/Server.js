@@ -293,3 +293,22 @@ Server.prototype.updateTopic = function(name)
 	});
 }
 
+Server.prototype.destroyTopic = function(name)
+{
+	var self = this;
+	data = {"name": name};	
+	url = "/topics/{id}";
+	const csrftoken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'Delete',
+		body: JSON.stringify(data),
+		headers: {
+			'X-XSRF-TOKEN': csrftoken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		console.log(data);
+	}).catch(function(error){
+		console.log(error);
+	});
+}
