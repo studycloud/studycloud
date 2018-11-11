@@ -80,7 +80,7 @@ Tree.prototype.simulationInitialize = function()
 	
 	self.simulation
 		.alphaTarget(-1)
-		.alphaDecay(0.005)
+		.alphaDecay(0.01)
 		.force("ForceLink", d3.forceLink())
 		.force("ForceCharge", d3.forceManyBody())
 		.force("ForceCenterX", d3.forceX(self.frame.center.x))
@@ -91,21 +91,21 @@ Tree.prototype.simulationInitialize = function()
 		.on('tick', function(){self.draw()});
 
 	self.simulation.force("ForceCenterX")
-		.strength(0.1);
+		.strength(0.01);
 	
 	self.simulation.force("ForceCenterY")
-		.strength(0.1);	
+		.strength(0.01);	
 		
 	self.simulation
 		.force("ForceLink")
-			.strength(0.5)
+			.strength(0.6)
 			.links(self.links.data())
 			.id(function(d){return d.id;})
-			.distance(80);
+			.distance(400);
 			
 	self.simulation
 		.force("ForceCharge")
-			.strength(-100);
+			.strength(-500);
 
 };
 
@@ -131,7 +131,7 @@ Tree.prototype.getNLevelIds = function(node_id, levels_num, node_ids_retrieved =
 {
 	var self = this;
 
-	console.log("getNLevelIds on " + node_id + " for level " + levels_num);
+	//console.log("getNLevelIds on " + node_id + " for level " + levels_num);
 
 	//These sets contain ids of elements to update when we get new data. Only create new ones if we aren't already passed a set
 
@@ -261,7 +261,7 @@ Tree.prototype.updateDataNodes = function(selection, data)
 			.attr("fill", function(d)
 			{
 				//generate our fill color based on the date created, author, and name
-				var random_number_generator = new Math.seedrandom(d.created_at + d.author_id + d.name);
+				var random_number_generator = new Math.seedrandom(d.id);
 				var color = d3.interpolateRainbow(random_number_generator());
 				return color;
 			}
@@ -304,6 +304,8 @@ Tree.prototype.updateDataLinks = function(selection, data)
 	data.forEach(function (link)
 		{
 			link.id = link.source.id + link.target.id;
+			console.log(link.source.id);
+			console.log(link.target.id);
 		}
 	);
 
@@ -456,7 +458,7 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 		distance_final = 280; 
 		break;
 	case 2: 
-		distance_final = 80;
+		distance_final = 40;
 		break;
 	default:
 		distance_final = distance_initial;
@@ -553,11 +555,12 @@ Tree.prototype.centerOnNode = function (node)
 	//Set the animatable attributes for all of the nodes that we are about to animate
 	self.nodes.each(function(d, i)
 		{
-
+			var node = d3.select(this);
 			//Determine our attributes based on the node level that we previously set
 			switch (d.level)
 			{
 				case -1:
+					node.classed("node-parent", true);
 					d.visible = true;
 					d.labeled = true;
 					d.radius = "15%";
@@ -566,14 +569,16 @@ Tree.prototype.centerOnNode = function (node)
 					d.y_new = 50;
 					break;
 				case 0:
+					node.classed("node-center", true);
 					d.visible = true;
 					d.labeled = true;
 					d.radius = "8%";
 					d.opacity = 1;
-					d.x_new = self.frame.center.x;;
-					d.y_new = self.frame.center.y;;
+					d.x_new = self.frame.center.x;
+					d.y_new = self.frame.center.y;
 					break;
 				case 1:
+					node.classed("node-child", true);
 					d.visible = true;
 					d.labeled = true;
 					d.radius = "5%";
@@ -584,6 +589,7 @@ Tree.prototype.centerOnNode = function (node)
 					d.fy = null;
 					break;
 				case 2:
+					node.classed("node-grandchild", true);
 					d.visible = true;
 					d.labeled = false;
 					d.radius = "1%";
@@ -594,6 +600,7 @@ Tree.prototype.centerOnNode = function (node)
 					d.fy = null;
 					break;
 				case 3:
+					node.classed("node-other", true);
 					d.visible = false;
 					d.labeled = false;
 					d.radius = "1%";
@@ -777,6 +784,8 @@ Tree.prototype.centerOnNode = function (node)
 	
 	self.links_simulated = links_selection;
 	self.nodes_simulated = nodes_selection;
+	
+	//console.log(links_simulated);
 
 	self.simulationRestart();
 }

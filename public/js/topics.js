@@ -137,6 +137,9 @@ var connections = data.connections;
 
 tree_topics.setData(data);
 
+
+tree_topics.nodeClicked(d3.select(".node").node());
+
 //tree_topics.server.getData(0, 1, 3, tree_topics.updateDataNLevels.bind(tree_topics), function (node, url, error) { console.log(node, url, error); });
 //tree_topics.setData(data);
 

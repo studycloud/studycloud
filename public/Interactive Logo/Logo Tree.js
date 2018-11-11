@@ -1,4 +1,3 @@
-/*
 var LogoSVG = d3.select("#svg5045");
 
 var LogoData = 

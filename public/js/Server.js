@@ -181,7 +181,6 @@ Server.prototype.handleSuccess = function (node, levels_up, levels_down, data, h
 			connection.target = IDNodeMap.get(connection.target);
 		}
 	);
-	console.log("foo");
-
+	
 	return handleSuccessExternal(node, levels_up, levels_down, data);
 };
