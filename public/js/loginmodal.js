@@ -19,7 +19,6 @@ $(document).ready(function()
 	$("#resource-btn").click(function(event)
 	{
 		document.getElementById('my-modal').style.display = "block";
-		document.getElementById('resource-container').className = "view";
 		displayContainer("resource");
 		callback(received)
 	});
@@ -28,7 +27,6 @@ $(document).ready(function()
 	$("#creator-btn").click(function(event)
 	{
 		document.getElementById('my-modal').style.display = "block";
-		document.getElementById('resource-container').className = "create";
 		displayContainer("resource");
 		createResource();
 	});
@@ -37,11 +35,12 @@ $(document).ready(function()
 	$("#close-modal").click(function(event) 
 	{
 		document.getElementById('my-modal').style.display = "none";
-		document.getElementById('resource-container').className = "null";
+		document.getElementById('modules').innerHTML = " "; //clean the display box up
 		//location.reload();
 	});
 
 });
+
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) 
@@ -49,19 +48,16 @@ window.onclick = function(event)
     if (event.target == document.getElementById('my-modal')) 
     {
 		document.getElementById('my-modal').style.display = "none";
-		document.getElementById('modules').innerHTML = " ";
+		document.getElementById('modules').innerHTML = " "; //clean the display box up
 		/*
 		var x = document.getElementsByClassName("module");
 		for (var i; i<x.length; i++){
 			x[i].innerHTML=" ";
 		}*/
-		document.getElementById('resource-container').className = "null";
+		
 		//location.reload();
     }
 }
-
-var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
-var created;
 
 // Display only the container specified.
 function displayContainer(container) 
@@ -82,6 +78,7 @@ function displayContainer(container)
 
 }
 
+/*
 function callback(received)
 {
 	var resource = JSON.parse(received);
@@ -158,9 +155,9 @@ function submitContent()
 		resourceCreator = true;
 	}
 	
-	//document.getElementById("demo").innerHTML = resourceName + resourceUse + contentName + contentType + content;
-	document.getElementById("demo").innerHTML = resourceCreator + document.getElementById('resource-container').className;
+	document.getElementById("demo").innerHTML = resourceName + resourceUse + contentName + contentType + content;
+	//document.getElementById("demo").innerHTML = resourceCreator + document.getElementById('resource-container').className;
 }
 
-
+*/
 

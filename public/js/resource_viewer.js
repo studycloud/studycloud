@@ -24,14 +24,12 @@
 // xmlhttp.send();
 
 // Dummy data which I would get from the server.
-/*
+
 var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
 var created;
-var resourceCreator = false;
-
 
 //var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "link", "content": "http://google.com", "created": "date", "updated": "date"}]}';
-$(document).ready(function(){ 
+/*$(document).ready(function(){ 
 	
 	if (document.getElementById('resource-container').className == "view"){
 		resourceCreator = false;
@@ -49,7 +47,7 @@ $(document).ready(function(){
 	}
 	// you can also call:
 	// error();
-});
+});*/
 
 // Callback function that server will give the data.
 function callback(received)
@@ -121,14 +119,7 @@ function submitContent()
 	var contentType = document.getElementById("content-type").value;
 	var content = document.getElementById("content").value;
 
-	if (document.getElementById('resource-container').className == "view"){
-		resourceCreator = false;
-	}
-	else{
-		resourceCreator = true;
-	}
+	document.getElementById("demo").innerHTML = resourceName + resourceUse + contentName + contentType + content;
 	
-	//document.getElementById("demo").innerHTML = resourceName + resourceUse + contentName + contentType + content;
-	document.getElementById("demo").innerHTML = resourceCreator + document.getElementById('resource-container').className;
 }
-*/
+
