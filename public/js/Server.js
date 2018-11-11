@@ -304,7 +304,7 @@ Server.prototype.destroyTopic = function(name)
 		method: 'Post',		
 		body: JSON.stringify(data),
 		headers: {
-			'X-HTTP-Method-Override': 'PATCH',
+			'X-HTTP-Method-Override': 'DELETE',
 			'X-XSRF-TOKEN': csrftoken,
 			"Content-type": "application/json; charset=UTF-8"
 		}
