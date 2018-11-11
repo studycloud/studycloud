@@ -284,6 +284,7 @@ Server.prototype.updateTopic = function(name)
 		type: "Patch",
 		body: JSON.stringify(data),
 		headers: {
+			'X-HTTP-Method-Override': 'PATCH',
 			'X-XSRF-TOKEN': csrftoken,
 			"Content-type": "application/json; charset=UTF-8"
 		}
