@@ -27,6 +27,7 @@
 
 var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
 var created;
+var contentNum = 0;
 
 //var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "link", "content": "http://google.com", "created": "date", "updated": "date"}]}';
 /*$(document).ready(function(){ 
@@ -105,21 +106,80 @@ function createResource()
 {
 	//create all the input to create resources
 	document.getElementById('resource-head').innerHTML="<h1>Resource Creator</h1>"
-	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> <form> <div class 'resource-creator> Resource Name: <br> <input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = '1'> Note </option> <option value = '2'> Quiz </option> </select> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> <input type = 'text' id = 'content-name'> <br> Content Type:  <select id = 'content-type'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> Content: <br> <textarea rows = '5' id = 'content'> </textarea> </div> </form> <div> <button type = 'button' id = 'submit-button' onclick = 'submitContent()'> Submit </button> <p id = 'demo'> </p></div> ";
+	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> <form> <div class 'resource-creator> Resource Name: <br> \
+	<input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = '1'> Note </option> <option value = '2'> Quiz </option> </select> \
+	<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
+	<input type = 'text' id = 'content-name0'> <br> \
+	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
+	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> </form> <div id = 'more-contents'> </div>\
+	<div> <button type = 'button' id = 'submit-button' onclick = 'submitContent()'> Submit </button> \
+	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
+	<p id = 'demo'> </p></div> ";
 
 }
 
+//minor problem, everytime new content is pressed, if u enter stuff in the previous content, it is going to be cleared
+function newContent(){
+	contentNum += 1;
+	document.getElementById('more-contents').innerHTML += "<div id='content-"+contentNum+"'></div>";
+	document.getElementById('content-'+contentNum).innerHTML += "<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
+	<input type = 'text' id = 'content-name"+contentNum+"'> <br> \
+	Content Type:  <select id = 'content-type"+contentNum+"'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
+	Content: <br> <textarea rows = '5' id = 'content"+contentNum+"'> </textarea> </div> </form>";
+}
 function submitContent() 
 {
 	//this function gets triggered with the submit function is clicked
 	//all the userinput are stored in these variables
 	var resourceName = document.getElementById("meta-name").value;
 	var resourceUse = document.getElementById("resource-use").value;
-	var contentName = document.getElementById("content-name").value;
-	var contentType = document.getElementById("content-type").value;
-	var content = document.getElementById("content").value;
+	var contentName = [];
+	var contentType = [];
+	var content = [];
 
-	document.getElementById("demo").innerHTML = resourceName + resourceUse + contentName + contentType + content;
+	for (i=0;i < (contentNum+1); i++){
+		contentName.push(document.getElementById("content-name"+i).value);
+		contentType.push(document.getElementById("content-type"+i).value);
+		content.push(document.getElementById("content"+i).value);
+	}
+
+	//document.getElementById("demo").innerHTML = resourceName + resourceUse + "content: " + contentName + "|" + contentType + "|" + content;
 	
+	var resourceArray =  {
+		"name":resourceName,
+		"use_id": resourceUse,
+		"contents":[
+			{
+				"name": document.getElementById("content-name0").value,
+				"type": document.getElementById("content-type0").value,
+				"content": document.getElementById("content0").value
+			}
+		]
+	};
+
+
+	
+	for (i=1;i < (contentNum+1); i++){
+		var contentArray =
+		{
+			"name": document.getElementById("content-name"+i).value,
+			"type": document.getElementById("content-type"+i).value,
+			"content": document.getElementById("content"+i).value
+		};
+		resourceArray.contents.push(contentArray);
+	}
+
+	document.getElementById("demo").innerHTML = resourceArray.contents[1]["name"];
+
+
+	//testing JSON stuff, don't actually need for the function
+	/*
+	var testJson = JSON.stringify(resourceArray);
+	localStorage.setItem("testJSON", testJson);
+
+	text = localStorage.getItem("testJSON");
+	obj = JSON.parse(text);
+	document.getElementById("demo").innerHTML = obj.;
+	*/
 }
 
