@@ -280,8 +280,7 @@ Server.prototype.updateTopic = function(name)
 	url = "/topics/{id}";
 	const csrftoken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
-		method: 'Post',
-		type: "Patch",
+		method: 'Post',		
 		body: JSON.stringify(data),
 		headers: {
 			'X-HTTP-Method-Override': 'PATCH',
@@ -302,9 +301,10 @@ Server.prototype.destroyTopic = function(name)
 	url = "/topics/{id}";
 	const csrftoken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
-		method: 'Delete',
+		method: 'Post',		
 		body: JSON.stringify(data),
 		headers: {
+			'X-HTTP-Method-Override': 'PATCH',
 			'X-XSRF-TOKEN': csrftoken,
 			"Content-type": "application/json; charset=UTF-8"
 		}
