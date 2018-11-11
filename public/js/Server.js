@@ -280,7 +280,8 @@ Server.prototype.updateTopic = function(name)
 	url = "/topics/{id}";
 	const csrftoken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
-		method: 'Patch',
+		method: 'Post',
+		type: "Patch",
 		body: JSON.stringify(data),
 		headers: {
 			'X-XSRF-TOKEN': csrftoken,
