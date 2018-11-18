@@ -22,10 +22,23 @@
 .date {
   color: #807f7f;
   font-size: 12px;
+  margin-top: 5px;
 }
 
 .module {
-  font-size: 25px;
+  font-size: 20px;
   padding: 10px;
+}
+
+.resource-divider {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: 2px;
+  background-color: black;
+}
+
+h1 {
+  font-size: 50px;
+  font-weight: bold;
 }
 

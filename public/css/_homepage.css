@@ -13,7 +13,7 @@
   vertical-align: top;
   /* Properties of the element box. */
   border: 3px;
-  border-color: purple;
+  border-color: #675682;
   border-style: solid;
 }
 
@@ -37,7 +37,7 @@
   padding: 3px;
   height: 40px;
   /* Space for two lines of text. Expand if necessary. */
-  background-color: purple;
+  background-color: #675682;
 }
 
 .boxText {

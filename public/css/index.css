@@ -139,9 +139,9 @@ table {
 }
 
 .navbar {
-  background: #1B3B6F;
-  background: -webkit-gradient(linear, left top, left bottom, from(#348AA7), to(#1B3B6F));
-  background: linear-gradient(#348AA7, #1B3B6F);
+  background: #333A56;
+  background: -webkit-gradient(linear, left top, left bottom, from(#465C8B), to(#333A56));
+  background: linear-gradient(#465C8B, #333A56);
 }
 
 /* ----------------------------------------------
@@ -286,7 +286,7 @@ table {
 
 .navbar ul li a:hover,
 .navbar ul li input:hover {
-  background-color: #5DD39E;
+  background-color: #daccf7;
   color: black;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
@@ -311,7 +311,7 @@ table {
   border-color: transparent;
   color: white;
   outline: none;
-  background: #bddfea;
+  background: #bec9df;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
   border-radius: 0.1em;
@@ -338,12 +338,12 @@ table {
 }
 
 .navbar ul #log-in #log-in-button {
-  background-color: #5DD39E;
+  background-color: #daccf7;
 }
 
 .navbar ul #log-in #log-in-button:hover,
 .navbar ul #log-in #log-in-button:focus {
-  background-color: #BCE784;
+  background-color: #ab98c6;
 }
 
 /* LOGIN DROPDOWN */
@@ -378,7 +378,7 @@ table {
 }
 
 #log-in-hidden .link-default {
-  color: #1B3B6F;
+  color: #333A56;
   padding-top: 2px;
   padding-bottom: 2px;
   text-decoration: none;
@@ -390,7 +390,7 @@ table {
 }
 
 #log-in-hidden .link-default:hover {
-  color: purple;
+  color: #675682;
   background: none;
 }
 
@@ -400,7 +400,7 @@ table {
   border-color: transparent;
   color: white;
   outline: none;
-  background: #bddfea;
+  background: #bec9df;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
   border-radius: 0.1em;
@@ -424,7 +424,7 @@ table {
   color: white;
   text-decoration: none;
   text-align: right;
-  background: #BCE784;
+  background: #ab98c6;
   margin: 2% 0 2% auto;
 }
 
@@ -486,9 +486,9 @@ table {
 }
 
 .navbar {
-  background: #1B3B6F;
-  background: -webkit-gradient(linear, left top, left bottom, from(#348AA7), to(#1B3B6F));
-  background: linear-gradient(#348AA7, #1B3B6F);
+  background: #333A56;
+  background: -webkit-gradient(linear, left top, left bottom, from(#465C8B), to(#333A56));
+  background: linear-gradient(#465C8B, #333A56);
 }
 
 html {
