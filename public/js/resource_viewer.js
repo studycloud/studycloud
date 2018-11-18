@@ -25,7 +25,7 @@
 
 // Dummy data which I would get from the server.
 
-var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher", "use_name":"Notes"},\
+var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher", "use_name":"Quiz"},\
  "contents": \
  [\
  {"name": "Resource Content BROKENadfs;lj;", "type": "link", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"},\
@@ -61,6 +61,7 @@ function callback(received)
 {
 	var resource = JSON.parse(received);
 	// add id = 'resource-name so we can edit the style of resource name in scss
+	//document.getElementById('resource-head').innerHTML="<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1><div>contributed by <div id='author-name'></div></div>";
 	document.getElementById('resource-head').innerHTML="<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1><div>contributed by <div id='author-name'></div></div>";
 	set_author(resource.meta.author_name, resource.meta.author_type);
 	for(var i=0;i<1;i++)
@@ -132,6 +133,7 @@ function newContent(){
 	<input type = 'text' id = 'content-name"+contentNum+"'> <br> \
 	Content Type:  <select id = 'content-type"+contentNum+"'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
 	Content: <br> <textarea rows = '5' id = 'content"+contentNum+"'> </textarea> </div> </form>";
+	//document.getElementById('modules').innerHTML +=  "<div id = 'more-contents" + (contentNum + 1) +"'> </div>";
 }
 
 function submitContent() 
@@ -189,17 +191,31 @@ function resourceEditor(){
 	document.getElementById("meta-name").value = resource.meta.name;
 	
 	if (resource.meta.use_name == "Notes"){
-		document.getElementById("resource-use").selected = "1";
+		document.getElementById("resource-use").selectedIndex = 0;
 	}
 	else if (resource.meta.use_name == "Quiz"){
-		document.getElementById("resource-use").selected = "2";
+		document.getElementById("resource-use").selectedIndex = 1;
 	}
 	
-	for (i=0; i < resource.content.length; i++){
+	for (i=0; i < resource.contents.length; i++)
+	{
 		if (i > 0){
 			newContent();
 		}
-		document.getElementById("content-name"+0).value = resource.content[i]["name"];
+
+		document.getElementById("content-name"+i).value = resource.contents[i]["name"];
+		
+		if (resource.contents[i]["type"] == "text")
+		{
+			document.getElementById("content-type"+i).selectedIndex = 0;
+		}
+		else if (resource.contents[i]["type"] == "link")
+		{
+			document.getElementById("content-type"+i).selectedIndex = 1;
+		}
+		
+		document.getElementById("content"+i).value = resource.contents[i]["content"];
 	}
+	//resourceArray.contents[0].length;
 	
 }
