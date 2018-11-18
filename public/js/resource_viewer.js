@@ -25,7 +25,13 @@
 
 // Dummy data which I would get from the server.
 
-var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
+var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher", "use_name":"Notes"},\
+ "contents": \
+ [\
+ {"name": "Resource Content BROKENadfs;lj;", "type": "link", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"},\
+ {"name": "Resource 222222", "type": "text", "content": "sadfdsflkjsfkljasklff", "created": "date", "updated": "date"}\
+ ]}';
+var received2 = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher", "use_name":"Notes"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
 var created;
 var contentNum = 0;
 
@@ -107,7 +113,7 @@ function createResource()
 	//create all the input to create resources
 	document.getElementById('resource-head').innerHTML="<h1>Resource Creator</h1>"
 	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> <form> <div class 'resource-creator> Resource Name: <br> \
-	<input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = '1'> Note </option> <option value = '2'> Quiz </option> </select> \
+	<input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = '1'> Notes </option> <option value = '2'> Quiz </option> </select> \
 	<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
@@ -127,6 +133,7 @@ function newContent(){
 	Content Type:  <select id = 'content-type"+contentNum+"'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
 	Content: <br> <textarea rows = '5' id = 'content"+contentNum+"'> </textarea> </div> </form>";
 }
+
 function submitContent() 
 {
 	//this function gets triggered with the submit function is clicked
@@ -148,7 +155,8 @@ function submitContent()
 	var resourceArray =  {
 		"name":resourceName,
 		"use_id": resourceUse,
-		"contents":[
+		"contents":
+		[
 			{
 				"name": document.getElementById("content-name0").value,
 				"type": document.getElementById("content-type0").value,
@@ -156,8 +164,6 @@ function submitContent()
 			}
 		]
 	};
-
-
 	
 	for (i=1;i < (contentNum+1); i++){
 		var contentArray =
@@ -170,16 +176,30 @@ function submitContent()
 	}
 
 	document.getElementById("demo").innerHTML = resourceArray.contents[1]["name"];
+	//document.getElementById("demo").innerHTML = resourceArray.contents.length;
 
-
-	//testing JSON stuff, don't actually need for the function
-	/*
-	var testJson = JSON.stringify(resourceArray);
-	localStorage.setItem("testJSON", testJson);
-
-	text = localStorage.getItem("testJSON");
-	obj = JSON.parse(text);
-	document.getElementById("demo").innerHTML = obj.;
-	*/
 }
 
+function resourceEditor(){
+	var resource = JSON.parse(received);
+	
+	createResource(); //open the resource editor
+	
+	//load the resource into the editor
+	document.getElementById("meta-name").value = resource.meta.name;
+	
+	if (resource.meta.use_name == "Notes"){
+		document.getElementById("resource-use").selected = "1";
+	}
+	else if (resource.meta.use_name == "Quiz"){
+		document.getElementById("resource-use").selected = "2";
+	}
+	
+	for (i=0; i < resource.content.length; i++){
+		if (i > 0){
+			newContent();
+		}
+		document.getElementById("content-name"+0).value = resource.content[i]["name"];
+	}
+	
+}

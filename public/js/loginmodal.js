@@ -23,12 +23,20 @@ $(document).ready(function()
 		callback(received)
 	});
 
-	// When the user clicks on the forget button, also open the modal but with the resource viewer
+	// When the user clicks on the create button, also open the modal but with the resource viewer
 	$("#creator-btn").click(function(event)
 	{
 		document.getElementById('my-modal').style.display = "block";
 		displayContainer("resource");
 		createResource();
+	});
+
+	// When the user clicks on the create button, also open the modal but with the resource viewer
+	$("#editor-btn").click(function(event)
+	{
+		document.getElementById('my-modal').style.display = "block";
+		displayContainer("resource");
+		resourceEditor();
 	});
 
 	// When the user clicks on <span> (x), close the modal
