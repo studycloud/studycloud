@@ -12,7 +12,7 @@ Server.prototype.getResource = function(resource_id, callBack1, callBack2)
 	var self = this;
 	
 	var url = "/data/resource?id=" + resource_id;
-	return d3.json(url, {method='get'}).then(function(error, data){
+	return d3.json(url, {method: 'get'}).then(function(data, error){
 		if(error)
 		{
 			if(typeof callback1 === 'function')
@@ -26,7 +26,7 @@ Server.prototype.getResource = function(resource_id, callBack1, callBack2)
 		}
 		else
 		{
-			if(typeof callback2 ==== 'function')
+			if(typeof callback2 === 'function')
 			{
 				return callback2(data);
 			}
@@ -65,11 +65,12 @@ Server.prototype.addResource = function(content, callBack1, callBack2)
 		return callBack1();
 	}
 
-	const csrftoken = goodCookie;
+	const csrfToken = goodCookie;
 	const headers = new Headers({
-        'X-XSRF-TOKEN': csrfToken
+        'X-XSRF-TOKEN': csrfToken,
+		'Content-type': "applications/json; charset=UTF-8"
     });
-	return d3.json(url, {method: 'post', headers, body: content}).then(function(error, data){
+	return d3.text(url, {method: 'post', headers, body: content}).then(function(data, error){
 		if(error)
 		{
 			if(typeof callback1 === 'function')
@@ -83,7 +84,7 @@ Server.prototype.addResource = function(content, callBack1, callBack2)
 		}
 		else
 		{
-			if(typeof callback2 ==== 'function')
+			if(typeof callback2 === 'function')
 			{
 				return callback2(data);
 			}
@@ -104,12 +105,16 @@ Server.prototype.editResource = function(resource_id, content, callBack1, callBa
 	if (goodCookie == ""){
 		return callBack1();
 	}
+	
+	content['_method'] = "PATCH";
 
 	const csrftoken = goodCookie;
 	const headers = new Headers({
-        'X-XSRF-TOKEN': csrfToken
+        'X-XSRF-TOKEN': csrftoken,
+		'Content-type': "applications/json; charset=UTF-8",
+		'X-HTTP-Method-Override': "PATCH"
     });
-	return d3.json(url, {method:'patch', headers, body: content}).then(function(error, data){
+	return d3.text(url, {method:'post', headers, body: content}).then(function(data, error){
 		if(error)
 		{
 			if(typeof callback1 === 'function')
@@ -123,7 +128,7 @@ Server.prototype.editResource = function(resource_id, content, callBack1, callBa
 		}
 		else
 		{
-			if(typeof callback2 ==== 'function')
+			if(typeof callback2 === 'function')
 			{
 				return callback2(data);
 			}
@@ -147,7 +152,7 @@ Server.prototype.deleteResource = function(resource_id, callBack1, callBack2)
 
 	const csrftoken = goodCookie;
 	const headers = new Headers({
-        'X-XSRF-TOKEN': csrfToken
+        'X-XSRF-TOKEN': csrftoken
     });
 
 	return d3.json(url, {method: 'delete', headers}).then(function(error, data){
@@ -164,7 +169,7 @@ Server.prototype.deleteResource = function(resource_id, callBack1, callBack2)
 		}
 		else
 		{
-			if(typeof callback2 ==== 'function')
+			if(typeof callback2 === 'function')
 			{
 				return callback2(data);
 			}
@@ -176,24 +181,24 @@ Server.prototype.deleteResource = function(resource_id, callBack1, callBack2)
 	});
 }
 
-Server.prototype.getData = function(node, levels, handleError, handleSuccess)
+Server.prototype.getData = function(node, levels_up, levels_down, handleError, handleSuccess)
 {
     var self = this;
     self.treeHandleError = handleError;
     self.treeHandleSuccess = handleSuccess;
 	// if any of node, levels_up, or levels_down is undefined/null, use an empty string instead
 	// but allow levels to be 0
-	node = node ? node : ""
-	levels_up = levels_up || levels_up === 0 ? levels_up : ""
-	levels_down = levels_down || levels_down === 0 ? levels_down : ""
+	node = node ? node : "";
+	levels_up = levels_up || levels_up === 0 ? levels_up : "";
+	levels_down = levels_down || levels_down === 0 ? levels_down : "";
 	// what is the url for this request?
 	url = "/data/topic_tree/?topic="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
-    return d3.json(url, function(error, data){
+    return d3.json(url, {method: 'get'}).then(function(error, data){
     	if (error){
     		return self.handleError(node, url, error);
-
     	}
-    	else {
+    	else
+    	{
     		return self.handleSuccess(node, data);
 		}	
     });
@@ -206,7 +211,7 @@ Server.prototype.handleError = function(node, url, error)
 {
 	var self = this;
 	if (error == "Error: Internal Server Error")
-		return d3.json(url, function(error, data){
+		return d3.json(url, {method: 'get'}).then(function(error, data){
 			if (error){
 				if(error != "Error: Internal Server Error")
 				{
@@ -223,10 +228,8 @@ Server.prototype.handleError = function(node, url, error)
 			}
 		});
 	else{
-		alert(error);
-		throw(error);
+		return self.treeHandleError(node, url, error);
 	}
-    return self.treeHandleError(node, url, error);
 };
 
 
