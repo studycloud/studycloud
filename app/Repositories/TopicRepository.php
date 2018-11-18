@@ -85,7 +85,7 @@ class TopicRepository
 		$tree = collect();
 
 		$topicParents = $topic -> parents() -> get();
-		if ((is_empty($topicParents) == True) && (is_null($root) == False))
+		if ((($topicParents -> isEmpty()) == True) && (is_null($root) == False))
 		{
 			$root->pivot = collect(["parent" => $root->id, "topic" => $topic->id]);
 			$tree->push($root);
