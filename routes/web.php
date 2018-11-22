@@ -3,7 +3,9 @@
 use App\User;
 use App\Topic;
 use App\Resource;
+use App\Academic_Class;
 use Illuminate\Http\Request;
+use App\Http\Resources\ClassResource;
 use App\Http\Resources\TopicResource;
 use App\Http\Resources\ResourceResource;
 
@@ -49,12 +51,12 @@ Route::get('data/topic',
 Route::resource('topics', 'TopicController');
 
 // Route::get('data/class_tree', 'GetTopicTree');
-// Route::get('data/class',
-// 	function(Request $request)
-// 	{
-// 		return new TopicResource(Topic::find($request->query('id')));
-// 	}
-// )->name('topics.json');
+Route::get('data/class',
+	function(Request $request)
+	{
+		return new ClassResource(Academic_Class::find($request->query('id')));
+	}
+)->name('topics.json');
 Route::resource('classes', 'ClassController');
 
 Route::get('admins/{userid}',

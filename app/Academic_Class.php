@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Academic_Class extends Model
@@ -44,4 +45,12 @@ class Academic_Class extends Model
 		return $this->hasMany(Resource::class, 'class_id');
 	}
 
+	/**
+	 * define the many-to-one relationship between classes and their author
+	 * @return User	the author of this class
+	 */
+	public function author()
+	{
+		return $this->belongsTo(User::class);
+	}
 }
