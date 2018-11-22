@@ -48,6 +48,15 @@ Route::get('data/topic',
 )->name('topics.json');
 Route::resource('topics', 'TopicController');
 
+// Route::get('data/class_tree', 'GetTopicTree');
+// Route::get('data/class',
+// 	function(Request $request)
+// 	{
+// 		return new TopicResource(Topic::find($request->query('id')));
+// 	}
+// )->name('topics.json');
+Route::resource('classes', 'ClassController');
+
 Route::get('admins/{userid}',
 	function($user_id)
 	{
