@@ -31,6 +31,7 @@ function Tree(type, frame_id, server)
 
 	}
 	
+	//Create the various DOM element groups needed by the tree
 	self.frame = d3.select("#" + frame_id);
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
 	
@@ -57,7 +58,59 @@ function Tree(type, frame_id, server)
 		.append("g")
 			.attr("class", "layer_nodes")
 			.selectAll(".node");
-			
+	
+	
+	//Set up the right click menu
+	self.menu_context = self.frame
+		.append('div')
+		.attr('class', 'menu_context');
+	
+	self.menu_context_items = 
+	[
+		{
+			title: '🗑 Delete',
+			color: 'red',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('Item #1 clicked!');
+				console.log('The data for this circle is: ' + d);
+			}
+		},
+		{
+			title: '✏ Edit',
+			color: 'purple',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('You have clicked the second item!');
+				console.log('The data for this circle is: ' + d);
+			}
+		},
+		{
+			title: '➕ Add',
+			color: 'green',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('You have clicked the second item!');
+				console.log('The data for this circle is: ' + d);
+			}
+		},
+		{
+			title: '➰ Capture',
+			color: 'blue',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('You have clicked the second item!');
+				console.log('The data for this circle is: ' + d);
+			}
+		}
+	];
+	
+	self.frame.on('click.menu_context', function(){self.menu_context.style('display', 'none');});
+	
 	self.nodes_simulated = {};
 	self.links_simulated = {};
 	
@@ -253,7 +306,8 @@ Tree.prototype.updateDataNodes = function(selection, data)
 			.append("g")
 			.attr("class", "node")
 			.attr("data_id", function (d) { return d.id; })
-			.on("click", function(d){self.nodeClicked(this)});
+			.on("click", function(){self.nodeClicked(this)})
+			.on('contextmenu', function(d, i){self.nodeMenuOpen(this, d, i)});
 
 
 	nodes
@@ -486,7 +540,7 @@ Tree.prototype.centerOnNode = function (node)
 {
 	//This function centers the tree visualization on a node.
 	
-	self = this;
+	var self = this;
 	
 	data_id = node.__data__.id;
 
@@ -794,12 +848,60 @@ Tree.prototype.centerOnNode = function (node)
 
 Tree.prototype.BreadcrumbStackUpdate = function(id)
 {
-	self = this;
+	var self = this;
 }
 
+//Event Handlers for User events in the tree
+
+//Handle Left click on nodes
 Tree.prototype.nodeClicked = function(node)
 {
-	self = this;
+	var self = this;
 	//self.server.getData(data_id, 1, 2, self.updateDataNLevels.bind(self), function (){});
 	self.centerOnNode(node);
+}
+
+Tree.prototype.nodeMenuOpen = function(node, data, index)
+{
+	
+	
+	var self = this;
+
+	d3.selectAll('.menu_context').html('');
+	
+	var list = self.menu_context.append('ul');
+	
+	list.selectAll('li')
+			.data(self.menu_context_items)
+			.enter()
+				.append('li')
+					.html(function(d) 
+						{
+							return d.title;
+						}
+					)
+					.style('color', function(d)
+						{
+							return d.color;
+						}
+					)
+					.style('display', function(d)
+						{
+							return d.enabled ? "default" : "none";
+						}	
+					)
+					.on('click', function(d) 
+						{
+							d.action(node, data, index);
+							self.menu_context.style('display', 'none');
+						}
+					);
+					
+	// display context menu
+	self.menu_context
+		.style('left', (d3.event.pageX - 2) + 'px')
+		.style('top', (d3.event.pageY - 2) + 'px')
+		.style('display', 'block');
+
+	d3.event.preventDefault();
 }

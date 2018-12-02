@@ -209,7 +209,7 @@ Server.prototype.getData = function(node, levels_up, levels_down, handleError, h
 
 Server.prototype.handleError = function(node, url, error)
 {
-	/*
+	
 	var self = this;
 	if (error == "Error: Internal Server Error")
 		return d3.json(url, {method: 'get'}).then(function(error, data){
