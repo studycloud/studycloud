@@ -1,4 +1,5 @@
-tree_topics = new Tree("topic", "topic-tree");
+server = new Server();
+tree_topics = new Tree("topic", "topic-tree", server);
 
 var data=
 {
@@ -75,7 +76,7 @@ var data=
       "id": "t9"
     }
   ],
-  "links": [
+  "connections": [
     {
       "source": "t1",
       "target": "t2",
@@ -115,11 +116,32 @@ var data=
       "source": "t8",
       "target": "t9",
 	  "id": "l8"
+    },
+	{
+      "source": "t3",
+      "target": "t4",
+	  "id": "l9"
     }
   ]
 };	
 
+var connections = data.connections;
+	var IDNodeMap = d3.map(data.nodes, function (d) { return d.id; });
+
+	connections.forEach(function(connection)
+		{
+			connection.source = IDNodeMap.get(connection.source);
+			connection.target = IDNodeMap.get(connection.target);
+		}
+	);
+
 tree_topics.setData(data);
+
+
+tree_topics.nodeClicked(d3.select(".node").node());
+
+//tree_topics.server.getData(0, 1, 3, tree_topics.updateDataNLevels.bind(tree_topics), function (node, url, error) { console.log(node, url, error); });
+//tree_topics.setData(data);
 
 // server_topics = new Server();
 
