@@ -191,7 +191,7 @@ Server.prototype.getData = function(node, levels_up, levels_down, handleError, h
 	levels_down = levels_down || levels_down === 0 ? levels_down : ""
 	// what is the url for this request?
 	url = "/data/topic_tree/?topic="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
-    return d3.json(url, function(error, data){
+    return d3.json(url, {method: 'get'}).then(function(error, data){
     	if (error){
     		return self.handleError(url, error, handleError);
 
@@ -209,12 +209,16 @@ Server.prototype.handleError = function(url, error, treeHandleError)
 {
 	
 	var self = this;
+	if(!(typeof treeHandleError === 'function')){
+
+		return(error);
+	}
 	if (error == "Error: Internal Server Error")
-		return d3.json(url, function(error, data){
+		return d3.json(url, {method: 'get'}).then(function(error, data){
 			if (error){
 				if(error != "Error: Internal Server Error")
 				{
-					return self.handleError(url, error, treeHandleError);
+					throw(error);
 				}
 				else
 				{
@@ -235,7 +239,11 @@ Server.prototype.handleError = function(url, error, treeHandleError)
 Server.prototype.handleSuccess = function(data, treeHandleSuccess)
 {
 	
-    var self = this;
+	var self = this;
+	if(!(typeof treeHandleSuccess === 'function'))
+	{
+		return data;
+	}
     return treeHandleSuccess(data);
 };
 
