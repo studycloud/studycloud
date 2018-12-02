@@ -544,7 +544,8 @@ Tree.prototype.centerOnNode = function (node)
 		switch (d.level)
 			{
 				case -1:
-				case 1: 
+				case 1:
+				case 2:
 					self.nodeClicked(this)
 				default:
 					//self.nodeClicked(this)
