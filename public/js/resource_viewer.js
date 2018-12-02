@@ -113,27 +113,31 @@ function createResource()
 {
 	//create all the input to create resources
 	document.getElementById('resource-head').innerHTML="<h1>Resource Creator</h1>"
-	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> <form> <div class 'resource-creator> Resource Name: <br> \
+	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> <div class 'resource-creator> Resource Name: <br> \
 	<input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = '1'> Notes </option> <option value = '2'> Quiz </option> </select> \
 	<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
-	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> </form> <div id = 'more-contents'> </div>\
+	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> <div id = 'more-contents'> </div>\
 	<div> <button type = 'button' id = 'submit-button' onclick = 'submitContent()'> Submit </button> \
 	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
 	<p id = 'demo'> </p></div> ";
 
 }
 
-//minor problem, everytime new content is pressed, if u enter stuff in the previous content, it is going to be cleared
 function newContent(){
+	//temperarily store the already typed content in an array
+	var storedContent = temporaryStoreContent(); 
+
 	contentNum += 1;
 	document.getElementById('more-contents').innerHTML += "<div id='content-"+contentNum+"'></div>";
 	document.getElementById('content-'+contentNum).innerHTML += "<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name"+contentNum+"'> <br> \
 	Content Type:  <select id = 'content-type"+contentNum+"'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
 	Content: <br> <textarea rows = '5' id = 'content"+contentNum+"'> </textarea> </div> </form>";
-	//document.getElementById('modules').innerHTML +=  "<div id = 'more-contents" + (contentNum + 1) +"'> </div>";
+
+	//load the stored content back to the content textboxes
+	loadContent(storedContent);
 }
 
 function submitContent() 
@@ -151,9 +155,8 @@ function submitContent()
 		contentType.push(document.getElementById("content-type"+i).value);
 		content.push(document.getElementById("content"+i).value);
 	}
-
-	//document.getElementById("demo").innerHTML = resourceName + resourceUse + "content: " + contentName + "|" + contentType + "|" + content;
 	
+	//store all the data in json
 	var resourceArray =  {
 		"name":resourceName,
 		"use_id": resourceUse,
@@ -177,7 +180,7 @@ function submitContent()
 		resourceArray.contents.push(contentArray);
 	}
 
-	document.getElementById("demo").innerHTML = resourceArray.contents[1]["name"];
+	//document.getElementById("demo").innerHTML = resourceArray.contents[1]["name"];
 	//document.getElementById("demo").innerHTML = resourceArray.contents.length;
 
 }
@@ -197,25 +200,63 @@ function resourceEditor(){
 		document.getElementById("resource-use").selectedIndex = 1;
 	}
 	
-	for (i=0; i < resource.contents.length; i++)
+	
+	for (i=1; i < resource.contents.length; i++)
 	{
-		if (i > 0){
-			newContent();
-		}
+		newContent();
+	}
 
-		document.getElementById("content-name"+i).value = resource.contents[i]["name"];
+	loadContent(resource.contents);
+}
+
+function loadContent(contents){
+	/*
+	Helper function to load the content back into the textbox
+	Used in:
+	resource editor (initially loading resource)
+	new content button (loading the previously typed resource back to the textbox)
+	*/
+	for (i=0; i < contents.length; i++)
+	{
+		document.getElementById("content-name"+i).value = contents[i]["name"];
 		
-		if (resource.contents[i]["type"] == "text")
+		if (contents[i]["type"] == "text")
 		{
 			document.getElementById("content-type"+i).selectedIndex = 0;
 		}
-		else if (resource.contents[i]["type"] == "link")
+		else if (contents[i]["type"] == "link")
 		{
 			document.getElementById("content-type"+i).selectedIndex = 1;
 		}
 		
-		document.getElementById("content"+i).value = resource.contents[i]["content"];
+		document.getElementById("content"+i).value = contents[i]["content"];
 	}
-	//resourceArray.contents[0].length;
-	
 }
+
+function temporaryStoreContent(){
+	/*
+	Helper function to temporarily store the content typed in the textbox into 
+	an array. 
+	Return this contents array to get put back to the textbox after a new content is created
+	*/
+	var contents = [
+		{
+			"name": document.getElementById("content-name0").value,
+			"type": document.getElementById("content-type0").value,
+			"content": document.getElementById("content0").value
+		}
+	];
+
+	for (i=1;i < (contentNum+1); i++){
+		var contentArray =
+		{
+			"name": document.getElementById("content-name"+i).value,
+			"type": document.getElementById("content-type"+i).value,
+			"content": document.getElementById("content"+i).value
+		};
+		contents.push(contentArray);
+	}
+
+	return contents;
+}
+
