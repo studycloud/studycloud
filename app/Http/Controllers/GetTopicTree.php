@@ -57,7 +57,7 @@ class GetTopicTree extends Controller
 	 */
 	public function show($topic_id = 0, int $levels_up = null, int $levels_down = null)
 	{
-		$root = getRoot();
+		$root = Topic::getRoot();
 		$topic = null;
 		if ($topic_id != 0)
 		{

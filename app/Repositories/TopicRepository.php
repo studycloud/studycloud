@@ -32,17 +32,6 @@ class TopicRepository
 	public function descendants(Topic $topic = null, int $levels = null, $root = null)
 	{
 		$tree = collect();
-
-		if (
-			is_null($topic) && (is_null($root) == False)
-		)
-		{
-			$topLevelTopics = $topic.getTopLevelTopics(); //gets and stores top level topics
-			
-			foreach ($topLevelTopics as $topic) {  //iterates through each top level topic
-				$topic->pivot = collect(["parent" => $root->id, "topic" => $topic->id]); //adds pivot element to each topic
-			}
-		} 
 		
 		// base case: $levels == 0
 		// also do a memoization check to prevent us from
@@ -55,9 +44,17 @@ class TopicRepository
 			if (is_null($topic))
 			{
 				$children = self::getTopLevelTopics();
+
+				if (!is_null($root))
+				{
+					foreach ($children as $child) {  //iterates through each top level topic
+						$child-> pivot = collect(["parent_id" => $root['id'], "topic_id" => $child["id"]]); //adds pivot element to each topic
+					}
+				}
 			}
 			else
 			{
+				
 				$children = $topic->children()->get();
 				// add the topic id to the list of topics that have already been called
 				array_push($this->memoize, $topic->id);
@@ -84,14 +81,6 @@ class TopicRepository
 	{
 		$tree = collect();
 
-		$topicParents = $topic -> parents() -> get();
-		if ((($topicParents -> isEmpty()) == True) && (is_null($root) == False))
-		{
-			$root->pivot = collect(["parent" => $root->id, "topic" => $topic->id]);
-			$tree->push($root);
-		}
-
-
 		// base case: $levels == 0
 		// also do a memoization check to prevent us from
 		// executing a query for a topic that we've already found
@@ -110,6 +99,13 @@ class TopicRepository
 				// add the topic id to the list of topics that have already been called
 				array_push($this->memoize, $topic->id);
 			}
+
+			if ($parents -> isEmpty() && is_null($root))
+			{
+				$root->put("pivot", collect(["parent_id" => $root['id'], "topic_id" => $topic['id']]));
+				$tree->push($root);
+			}
+
 			foreach ($parents as $parent) {
 				// add the parent to the tree
 				$tree->push(collect($parent));
