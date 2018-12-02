@@ -97,12 +97,13 @@ Server.prototype.addResource = function(content, callBack1, callBack2)
 
 Server.prototype.editResource = function(resource_id, content, callBack1, callBack2)
 {
+	
 	var self = this;
 	var url = "/resources/" + resource_id;
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
-		return callBack1();
+		return callBack1()
 	}
 
 	const csrftoken = goodCookie;
@@ -137,6 +138,7 @@ Server.prototype.editResource = function(resource_id, content, callBack1, callBa
 
 Server.prototype.deleteResource = function(resource_id, callBack1, callBack2)
 {
+	callback1
 	var self = this;
 	var url = "/resources/" + resource_id;
 	var goodCookie = self.getCookie("XSRF-TOKEN");
@@ -164,8 +166,8 @@ Server.prototype.deleteResource = function(resource_id, callBack1, callBack2)
 		}
 		else
 		{
-			if(typeof callback2 === 'function')
-			{
+			if(typeof callback2 === 'function') 			
+			{ 
 				return callback2(data);
 			}
 			else
@@ -176,11 +178,12 @@ Server.prototype.deleteResource = function(resource_id, callBack1, callBack2)
 	});
 }
 
-Server.prototype.getData = function(node, levels, handleError, handleSuccess)
+Server.prototype.getData = function(node, levels_up, levels_down, handleError, handleSuccess)
 {
+	
     var self = this;
-    self.treeHandleError = handleError;
-    self.treeHandleSuccess = handleSuccess;
+    
+    
 	// if any of node, levels_up, or levels_down is undefined/null, use an empty string instead
 	// but allow levels to be 0
 	node = node ? node : ""
@@ -190,11 +193,11 @@ Server.prototype.getData = function(node, levels, handleError, handleSuccess)
 	url = "/data/topic_tree/?topic="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
     return d3.json(url, function(error, data){
     	if (error){
-    		return self.handleError(node, url, error);
+    		return self.handleError(url, error, handleError);
 
     	}
     	else {
-    		return self.handleSuccess(node, data);
+    		return self.handleSuccess(data, handleSuccess);
 		}	
     });
 	
@@ -202,20 +205,20 @@ Server.prototype.getData = function(node, levels, handleError, handleSuccess)
 };
 
 
-Server.prototype.handleError = function(node, url, error)
+Server.prototype.handleError = function(url, error, treeHandleError)
 {
+	
 	var self = this;
 	if (error == "Error: Internal Server Error")
 		return d3.json(url, function(error, data){
 			if (error){
 				if(error != "Error: Internal Server Error")
 				{
-					return self.handleError(url, error);
+					return self.handleError(url, error, treeHandleError);
 				}
 				else
 				{
-					alert(error);
-					throw(error);
+					return treeHandleError(error);
 				}
 			}
 			else {
@@ -223,21 +226,22 @@ Server.prototype.handleError = function(node, url, error)
 			}
 		});
 	else{
-		alert(error);
-		throw(error);
+		return treeHandleError(error);
 	}
-    return self.treeHandleError(node, url, error);
+    
 };
 
 
-Server.prototype.handleSuccess = function(node, data)
+Server.prototype.handleSuccess = function(data, treeHandleSuccess)
 {
+	
     var self = this;
-    return self.treeHandleSuccess(node, data);
+    return treeHandleSuccess(data);
 };
 
 Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
 {
+	
 	var self = this;
 	self.treeHandleError = handleError;
 	self.treeHandleSuccess = handleSuccess;
