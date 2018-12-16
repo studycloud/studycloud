@@ -24,8 +24,8 @@ class ResourceController extends Controller
 		GET				/resources/{id}			resources.show		show the page for this resource
 		GET				/resources/{id}/edit	resources.edit		show the editor for this resource (if logged in as the author)
 		PATCH (or PUT)	resources/{id}			resources.update	alter a current resource according to the changes sent as JSON
-		POST			/resources/attach/{id}	resources.attach	add this resource to a list of topics sent as JSON (overriding any conflicts that are currently attached)
-		POST			/resources/detach/{id}	resources.detach	remove this resource from a list of topics sent as JSON
+		PATCH			/resources/attach/{id}	resources.attach	add this resource to a list of topics (or a class) sent as JSON (overriding any conflicts that are currently attached)
+		PATCH			/resources/detach/{id}	resources.detach	remove this resource from a list of topics (or a class) sent as JSON
 		DELETE			/resources/{id}			resources.destroy	request that this resource be deleted
 	**/
 
@@ -225,15 +225,14 @@ class ResourceController extends Controller
 		$validated = $request->validate([
 			'topics' => 'sometimes|array',
 			'topics.*' => 'exists:topics,id',
-			'classes' => 'sometimes|array',
-			'classes.*' => 'exists:classes,id'
+			'class' => 'sometimes|integer|exists:classes,id',
 		]);
 
 		// add the topics (we'll need to disable this code for MVP)
 		foreach($validated['topics'] as $topic){
 			ResourceRepository::addTopic(Topic::find($topic), $resource);
 		}
-		// add the classes (add this code once you have a function for it)
+		// add the class (add this code once you have a function for it)
 		
 	}
 	
@@ -251,13 +250,12 @@ class ResourceController extends Controller
 		$validated = $request->validate([
 			'topics' => 'sometimes|array',
 			'topics.*' => 'exists:topics,id',
-			'classes' => 'sometimes|array',
-			'classes.*' => 'exists:classes,id'
+			'class' => 'sometimes|integer|exists:classes,id',
 		]);
 
 		// remove the topics (we'll need to disable this code for MVP)
 		ResourceRepository::detachTopics($resource, $validated['topics']);
-		// remove any classes (add this code once you have a function for it)
+		// remove the class (add this code once you have a function for it)
 		
 	}
 
