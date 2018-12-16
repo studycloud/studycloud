@@ -19,14 +19,7 @@ class ResourcePolicy
      */
     public function view(User $user, Resource $resource)
     {
-        if ($resource->status == 0)
-        { 
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return $resource->status != 0;
     }
 
     /**
@@ -37,7 +30,7 @@ class ResourcePolicy
      */
     public function create(User $user)
     {
-        //NOTE: Put in the admin privileges later
+        // TODO: add admin privileges
         return $user->id === $resource->id;
     }
 
@@ -50,6 +43,7 @@ class ResourcePolicy
      */
     public function update(User $user, Resource $resource)
     {
+        // TODO: add admin privileges
         return $user->id === $resource->id;
     }
 
@@ -62,6 +56,7 @@ class ResourcePolicy
      */
     public function delete(User $user, Resource $resource)
     {
+        // TODO: add admin privileges?
         return $user->id === $resource->id;
     }
 }
