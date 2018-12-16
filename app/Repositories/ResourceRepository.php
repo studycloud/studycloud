@@ -5,13 +5,15 @@ namespace App\Repositories;
 use App\Resource;
 use App\Topic;
 use App\Repositories\TopicRepository;
+use Illuminate\Database\Eloquent\Collection;
+use App\Helpers\NodesAndConnections;
 
 class ResourceRepository
 {
 	/**
 	 * In a single query, get the resources of all of the topics in a collection of topic ids.
-	 * @param  array $topic_ids the topic ids of the resources you want returned
-	 * @return Illuminate\Database\Eloquent\Collection         the resources as Collections
+	 * @param  array 	$topic_ids 	the topic ids of the resources you want returned
+	 * @return Collection         	the resources as Collections
 	 */
 	public static function getByTopics($topic_ids)
 	{
@@ -27,9 +29,10 @@ class ResourceRepository
 	}
 
 	/**
-	 * a wrapper function for attaching topics to prevent disallowedTopics from being added
-	 * @param  App\Resource $resource the resource to attach topics to
-	 * @param  Illuminate\Database\Eloquent\Collection $new_topics the topics to be attached
+	 * a wrapper function for attaching topics that prevents disallowed topics
+	 * from being added
+	 * @param  Resource 	$resource 	the resource to attach topics to
+	 * @param  Collection 	$new_topics the topics to be attached
 	 * @return 
 	 */
 	public static function attachTopics($resource, $new_topics)
@@ -53,134 +56,61 @@ class ResourceRepository
 	}
 
 	/**
-	 * Moves the resource into the desired topic newTopic. If attempting to 
+	 * Moves the resource into the desired topic $new_topic. If attempting to 
 	 * move into a topic that is an ancestor or child of the resource's
-	 * current topics, the current topic will be replaced by the newTopic.
-	 * @param App\Resource $resource the resource to move
+	 * current topics, the current topic will be replaced by the new_topic.
+	 * @param Topic 	$new_topic	the topic which we want to add to $resource
+	 * @param Resource	$resource	the resource to move
 	 */
+	public function addTopic(Topic $new_topic, Resource $resource)
+	{
+		// get the set of disallowed topics for this resource
+		$disallowed_topics = self::disallowedTopics($resource);
+		// check whether $new_topic is one of the disallowed topics
+		if ($disallowed_topics->contains('id', $new_topic->id))
+		{
+			// remove any current topics that are preventing $new_topic from
+			// being added. no incest!
+			$this->removeFamily($resource, $new_topic->id, $disallowed_topics);
+		}
+		// safely add $new_topic to $resource
+		// in the future, you might want to change this to be a regular attach
+		// (so that the function becomes faster)
+		self::attachTopics($resource, collect([$new_topic]));
+	}
 
-
-// 	public function moveTopics($newTopic, $resource)
-// 	{	
-
-// 		$disallowed_topics = self::disallowedTopics($resource);
-// 		$allowed = !$disallowed_topics->contains('id', $newTopic->id);
-		
-
-// 		if ($allowed)
-// 		{
-// 			self::attachTopics($resource, collect([$newTopic]));
-// 		}
-// 		else
-// 		{
-// 			$this->removeFamily($resource, $newTopic->id, $disallowed_topics);
-// 			self::attachTopics($newTopic, $resource);
-			
-// 		}
-// 	}
-
-// //Check to see if this actually works
-// //Detaches any relatives of $resource that are related to $newTopic. 
-// //aka NO INCEST--make sure an ancestor and a descendant topic do not share the same resource
-
-// 	/**
-// 	 * remove any ancestor or descendant topics that conflict
-// 	 * with the topic that we want to add a resource to
-// 	 * @param  App\Resource $resource          the resource with potential topic conflicts
-// 	 * @param  Illuminate\Database\Eloquent\Collection $new_topic_id          the topic we want to add this resource to
-// 	 * @param  Illuminate\Database\Eloquent\Collection $disallowed_topics a collection of topics that can't be added to our resource
-// 	 * @return
-// 	 */
-// 	private function removeFamily($resource, $new_topic_id, $disallowed_topics)
-// 	{
-// 		$old_topics = collect();
-// 		$topics = $resource->topics()->get();
-// 		foreach ($topics as $topic) {
-// 			$topic_id = $topic->id;
-// 			if ($this->isAncestor($topic_id, $new_topic_id, $disallowed_topics)
-// 				|| $this->isDescendant($topic_id, $new_topic_id, $disallowed_topics))
-// 			{
-// 				$old_topics->push($topic_id);
-// 			}
-// 		}
-// 		dd($old_topics);
-// 		// $this->detachTopics($resource, $old_topics);
-// 	}
-
-// 	/**
-// 	 * given a portion of the tree, check to see whether $ancestor_topic_id is an ancestor of $topic_id
-// 	 * @param  int  $topic_id           the descendant topic
-// 	 * @param  int  $ancestor_topic_id   the ancestor to search for
-// 	 * @param  Illuminate\Database\Eloquent\Collection  $disallowed_topics a portion of the tree to traverse
-// 	 * @return boolean                  whether $ancestor_topic_id is an ancestor of $topic
-// 	 */
-// 	public function isAncestor($topic_id, $ancestor_topic_id, $disallowed_topics)
-// 	{
-// 		// base case: ancestor_topic is an ancestor of topic if they are the same
-// 		if ($topic_id == $ancestor_topic_id)
-// 		{
-// 			return true;
-// 		}
-// 		// get the topic collections in $disallowed_topics with ids equal to $topic_id
-// 		$topics = $disallowed_topics->where('id', $topic_id);
-// 		$isAncestor = false;
-// 		// call isAncestor() with each of the topics
-// 		// and then OR all of the results together to get a final value
-// 		foreach ($topics as $topic)
-// 		{
-// 			if ($topic->has('pivot'))
-// 			{
-// 				// is the parent of this $topic an ancestor of $ancestor_topic_id?
-// 				$isAncestor = $isAncestor || $this->isAncestor($topic['pivot']['parent_id'], $ancestor_topic_id, $disallowed_topics);
-// 			}
-// 		}
-// 		return $isAncestor;
-// 	}
-
-// 	/**
-// 	 * given a portion of the tree, check to see whether $descendant_topic_id is a descendant of $topic_id
-// 	 * @param  int  $topic_id           the ancestor topic
-// 	 * @param  int  $descendant_topic_id   the descendant to search for
-// 	 * @param  Illuminate\Database\Eloquent\Collection  $disallowed_topics a portion of the tree to traverse
-// 	 * @return boolean                  whether $descendant_topic_id is an descendant of $topic
-// 	 */
-// 	public function isDescendant($topic_id, $descendant_topic_id, $disallowed_topics)
-// 	{
-// 		// base case: descendant_topic is an descendant of topic if they are the same
-// 		if ($topic_id == $descendant_topic_id)
-// 		{
-// 			return true;
-// 		}
-// 		// get the topic collections in $disallowed_topics with ids equal to $topic_id
-// 		$topics = $disallowed_topics->filter(
-// 			function ($topic) use ($topic_id)
-// 			{
-// 				if ($topic->has('pivot'))
-// 				{
-// 					return $topic['pivot']['parent_id'] == $topic_id;
-// 				}
-// 				else
-// 				{
-// 					return false;
-// 				}
-// 			}
-// 		);
-// 		$isDescendant = false;
-// 		// call isDescendant() with each of the topics
-// 		// and then OR all of the results together to get a final value
-// 		foreach ($topics as $topic)
-// 		{
-// 			// is the parent of this $topic a descendant of $descendant_topic_id?
-// 			$isDescendant = $isDescendant || $this->isDescendant($topic['id'], $descendant_topic_id, $disallowed_topics);
-// 		}
-// 		return $isDescendant;
-// 	}
+	/**
+	 * remove any ancestor or descendant topics that conflict
+	 * with the topic that we want to add a resource to
+	 * @param  Resource 	$resource 			the resource with potential topic conflicts
+	 * @param  Collection 	$new_topic_id 		the topic we want to add this resource to
+	 * @param  Collection 	$disallowed_topics 	a collection of topics that can't be added to our resource
+	 */
+	private function removeFamily($resource, $new_topic_id, $disallowed_topics)
+	{
+		$old_topics = collect();
+		// convert $disallowed_topics to a collection of connections
+		$disallowed_topics = NodesAndConnections::treeAsConnections($disallowed_topics);
+		// which topics is this resource currently in?
+		$topics = $resource->topics()->get();
+		// iterate through the current topics and determine whether they conflict with the new topic
+		foreach ($topics as $topic) {
+			if (TopicRepository::isAncestor($topic->id, $new_topic_id, $disallowed_topics)
+				|| TopicRepository::isDescendant($topic->id, $new_topic_id, $disallowed_topics))
+			{
+				// if a current topic conflicts, add it to the list of topics to remove
+				// TODO: remove it right away and recalculate $disallowed_topics?
+				$old_topics->push($topic->id);
+			}
+		}
+		dd($old_topics);
+		$this->detachTopics($resource, $old_topics);
+	}
 
 	/**
 	 * a wrapper function for detaching topics for ease of use
-	 * @param  App\Resource $resource the resource whose topics you'd like to detach
-	 * @param  Illuminate\Database\Eloquent\Collection $new_topics the Topics to detach
-	 * @return 
+	 * @param  Resource 	$resource 	the resource whose topics you'd like to detach
+	 * @param  Collection 	$new_topics the topics to detach
 	 */
 	public function detachTopics($resource, $old_topics)
 	{
@@ -189,8 +119,8 @@ class ResourceRepository
 
 	/**
 	 * which topics isn't this resource allowed to be added to?
-	 * @param  App\Resource $resource the resource whose disallowedTopics you'd like to get
-	 * @return Illuminate\Database\Eloquent\Collection
+	 * @param  Resource 	$resource 	the resource whose disallowedTopics you'd like to get
+	 * @return Collection
 	 */
 	public static function disallowedTopics($resource)
 	{
@@ -217,8 +147,8 @@ class ResourceRepository
 	 * which topics is this resource allowed to be added to?
 	 * Note: this function executes one more query than disallowedTopics() and is therefore a bit slower. don't use it if you don't have to
 	 * Note also: the topics returned in this function won't have pivots
-	 * @param  App\Resource $resource the resource whose allowedTopics you'd like to get
-	 * @return Illuminate\Database\Eloquent\Collection
+	 * @param  Resource 	$resource 	the resource whose allowedTopics you'd like to get
+	 * @return Collection
 	 */
 	public static function allowedTopics($resource)
 	{

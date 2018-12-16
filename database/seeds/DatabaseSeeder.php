@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
 		// now we can seed everything else as long as the App::environment variable indicates that the app is not in production or staging mode (ie testing or something else of the sort)
 		if (!App::environment('production','staging'))
 		{
-			// the order of these seeders is important because several of them depend on each other, so don't change the order
+			// the order of these seeders is important because several of them depend on each other, so change it with care
 			$this->call('UsersTableSeeder');
 			$this->call('ClassesTableSeeder');
 			$this->call('TopicsTableSeeder');
@@ -34,11 +34,8 @@ class DatabaseSeeder extends Seeder
 	{
 		/*
 		| Here we define seeders for the "core" models of the app.
-		| Their corresponding tables will need to be filled with
-		| data before the site starts running because these models
-		| represent values that are indendent of changes in
-		| the site later. You can think of them as settings for
-		| the app.
+		| This data needs to be filled before the site starts running because the site relies on them to work properly.
+		| You can think of these as settings for the site.
 		| Note that the nature of these seeders means that they
 		| don't have corresponding factories.
 		*/

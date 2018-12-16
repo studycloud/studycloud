@@ -4,8 +4,13 @@
 @import "./colorSchemes/bold.scss";
 
 
-// GENERAL
 $page-background: $ground;
+// Import a color scheme. 
+// @import "./original.scss";
+// @import "./umbrella.scss";
+// @import "./bold.scss";
+// @import "./universe.scss";
+@import "./emo.scss";
 
 // NAVBAR
 

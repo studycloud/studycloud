@@ -4,6 +4,11 @@ use Illuminate\Database\Seeder;
 
 class UsersTableSeeder extends Seeder
 {
+	/**
+	 * The number of fake users to make
+	 */
+	const NUM_USERS = 25;
+
     /**
      * Run the database seeds.
      *
@@ -11,7 +16,7 @@ class UsersTableSeeder extends Seeder
      */
 	public function run()
 	{
-		factory('App\User', 25)->create();
+		factory('App\User', self::NUM_USERS)->create();
 	}
 }
 

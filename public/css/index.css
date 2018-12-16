@@ -139,9 +139,9 @@ table {
 }
 
 .navbar {
-  background: #1B3B6F;
-  background: -webkit-gradient(linear, left top, left bottom, from(#348AA7), to(#1B3B6F));
-  background: linear-gradient(#348AA7, #1B3B6F);
+  background: black;
+  background: -webkit-gradient(linear, left top, left bottom, from(#333333), to(black));
+  background: linear-gradient(#333333, black);
 }
 
 /* ----------------------------------------------
@@ -285,7 +285,7 @@ table {
 
 .navbar ul li a:hover,
 .navbar ul li input:hover {
-  background-color: #5DD39E;
+  background-color: #0044b3;
   color: black;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
@@ -310,7 +310,7 @@ table {
   border-color: transparent;
   color: white;
   outline: none;
-  background: #bddfea;
+  background: #999999;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
   border-radius: 0.1em;
@@ -338,12 +338,12 @@ table {
 }
 
 .navbar ul #log-in #log-in-button {
-  background-color: #5DD39E;
+  background-color: #0044b3;
 }
 
 .navbar ul #log-in #log-in-button:hover,
 .navbar ul #log-in #log-in-button:focus {
-  background-color: #BCE784;
+  background-color: #ed6639;
 }
 
 /* LOGIN DROPDOWN */
@@ -380,7 +380,7 @@ table {
 }
 
 #log-in-hidden .link-default {
-  color: #1B3B6F;
+  color: black;
   padding-top: 2px;
   padding-bottom: 2px;
   text-decoration: none;
@@ -391,7 +391,7 @@ table {
 }
 
 #log-in-hidden .link-default:hover {
-  color: purple;
+  color: #0044b3;
   background: none;
 }
 
@@ -401,7 +401,7 @@ table {
   border-color: transparent;
   color: white;
   outline: none;
-  background: #bddfea;
+  background: #999999;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
   border-radius: 0.1em;
@@ -436,7 +436,7 @@ table {
   color: white;
   text-decoration: none;
   text-align: right;
-  background: #BCE784;
+  background: #ed6639;
   margin: 2% 0 2% auto;
 }
 
@@ -498,9 +498,9 @@ table {
 }
 
 .navbar {
-  background: #1B3B6F;
-  background: -webkit-gradient(linear, left top, left bottom, from(#348AA7), to(#1B3B6F));
-  background: linear-gradient(#348AA7, #1B3B6F);
+  background: black;
+  background: -webkit-gradient(linear, left top, left bottom, from(#333333), to(black));
+  background: linear-gradient(#333333, black);
 }
 
 html {

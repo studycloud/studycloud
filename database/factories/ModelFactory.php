@@ -22,8 +22,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker)
 		'email' => $faker->unique()->safeEmail,
 		'password' => $password ?: $password = bcrypt('password'),
 		'remember_token' => str_random(10),
-		// TODO: update this enum to dynamically retrieve whatever enum options are in the database
-		'type' => $faker->randomElement(['student','teacher'])
+		'type' => $faker->randomElement(App\User::getPossibleTypes())
 	];
 });
 
@@ -53,9 +52,18 @@ $factory->define(App\ResourceContent::class, function (Faker\Generator $faker)
 		'name' => ucwords(
 			$faker->words($nb = 3, $asText = true)
 		),
-		// TODO: update this enum to dynamically retrieve whatever enum options are in the database
-		'type' => $faker->randomElement(['text', 'link', 'file']),
-		'content' => $faker->paragraph,
+		'type' => $faker->randomElement(App\ResourceContent::getPossibleTypes()),
+		'content' => function(array $resource_content) use ($faker)
+		{
+			if ($resource_content['type'] == "link")
+			{
+				return $faker->url;
+			}
+			else
+			{
+				return $faker->paragraph;
+			}
+		},
 		'resource_id' => 0, // this will get overridden by the ResourcesTableSeeder
 	];
 });
@@ -76,27 +84,7 @@ $factory->define(App\Resource::class, function (Faker\Generator $faker)
 // This model doesn't have a factory definition. All of it's seeding happens in the TopicParentTableSeeder.
 
 // Resource-Topic Factory
-$factory->define(App\ResourceTopic::class, function (Faker\Generator $faker)
-{
-	return [
-		'resource_id' => 0, // this will get overridden by the ResourceTopicTableSeeder
-		'topic_id' => function(array $curr_ResourceTopic)
-		{
-			// see the Role-User Factory code for a more detailed explanation of the code below; it's essentially the same code
-			global $old_resource_id, $hacky_faker;
-			if ($old_resource_id != $curr_ResourceTopic['resource_id'])
-			{
-				$hacky_faker = new Faker\Generator;
-				$hacky_faker->addProvider(new Faker\Provider\Base($hacky_faker));
-			}
-			$old_resource_id = $curr_ResourceTopic['resource_id'];
-			$topic_id = $hacky_faker->unique()->randomElement(
-				App\Repositories\ResourceRepository::allowedTopics(App\Resource::find($old_resource_id))->pluck('id')->all()
-			);
-			return $topic_id;
-		}
-	];
-});
+// This model doesn't have a factory definition. All of it's seeding happens in the ResourceTopicTableSeeder.
 
 // Role-User Factory
 $factory->define(App\RoleUser::class, function (Faker\Generator $faker)
@@ -105,8 +93,10 @@ $factory->define(App\RoleUser::class, function (Faker\Generator $faker)
 		'user_id' => 0, // this will get overridden by the RoleUserTableSeeder
 		'role_id' => function(array $curr_RoleUser)
 		{
-			// Disclaimer: the code below is super hacky and quite weird, but it works. If anybody can come up with a better way of doing this, please change it.
+			// Disclaimer: the code below is super hacky and quite weird, but they seem to work. If anybody can come up with a better way of doing this, please change it.
 			// Until then, I'll walk you through the madness that is written here.
+			
+			// Update: I actually found a way to change it. Use classes.
 
 			// First, we declare two global variables so that their values may persist after each call to the function (unless explicity changed!) because PHP's variable scope rules say that these variables don't exist outside our function.
 			global $old_user_id, $hacky_faker;

@@ -1,6 +1,10 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
 * text eol=lf
+
 *.css linguist-vendored
 *.scss linguist-vendored
+
+# Denote all files that are truly binary and should not be modified.
 *.eps binary
 *.png binary
 *.ai binary
