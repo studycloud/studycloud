@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);/* Contains formatting for the homepage content. */
+@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One|Cinzel|Cinzel+Decorative|Space+Mono|Roboto+Mono);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);/* Contains formatting for the homepage content. */
 
 #main {
   text-align: center;
@@ -13,13 +13,13 @@
   vertical-align: top;
   /* Properties of the element box. */
   border: 3px;
-  border-color: purple;
+  border-color: #0044b3;
   border-style: solid;
 }
 
 .boxTitle {
   /* Possibly you might make boxtitle font size respond to how much text there is? */
-  font-family: "Gugi", cursive;
+  font-family: "Cinzel", cursive;
   font-size: 20px;
   color: white;
   font-weight: bold;
@@ -37,7 +37,7 @@
   padding: 3px;
   height: 40px;
   /* Space for two lines of text. Expand if necessary. */
-  background-color: purple;
+  background-color: #0044b3;
 }
 
 .boxText {

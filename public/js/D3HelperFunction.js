@@ -34,3 +34,14 @@ function SelectionAdd(SelectionA, SelectionB)
 	
 	return d3.selectAll(nodes_combined);
 }
+
+function filterSelectionsByIDs(selection, IDs, field)
+{
+	var selection_filtered = selection.filter(function ()
+	{
+		return IDs.has(this.getAttribute(field));
+	}
+	);
+
+	return selection_filtered;
+}

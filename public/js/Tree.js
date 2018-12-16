@@ -1,4 +1,4 @@
-function Tree(type, frame_id)
+function Tree(type, frame_id, server)
 {		
 	//Creates a tree visualization with a type of <type> inside the DOM element <frame_id>
 	
@@ -10,7 +10,7 @@ function Tree(type, frame_id)
 	
 	var self = this;
 	
-	self.debug = true;
+	self.debug = false;
 	
 	if (self.debug)
 	{
@@ -19,14 +19,14 @@ function Tree(type, frame_id)
 		var nodes_count = 10;
 		data.nodes = new Array(nodes_count);
 		
-		data.links = [];
+		data.connections = [];
 		
 
 		for(i = 0; i < nodes_count; i++)
 		{	
 			data.nodes[i] = {id: (i).toString()};
-			data.links.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:(i).toString()});
-			data.links.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:(i+nodes_count).toString()});
+			data.connections.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:(i).toString()});
+			data.connections.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:(i+nodes_count).toString()});
 		}
 
 	}
@@ -34,9 +34,11 @@ function Tree(type, frame_id)
 	self.frame = d3.select("#" + frame_id);
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
 	
+	self.frame.on("resize", self.resizeFrame);
+	
 	self.frame.svg = self.frame.append("svg");
 	
-	self.frame.svg.center = 
+	self.frame.center = 
 	{
 		x: self.frame.boundary.width/2, 
 		y: self.frame.boundary.height/2 
@@ -62,9 +64,12 @@ function Tree(type, frame_id)
 
 	d3.select(window).on("resize", function() { self.simulationRecenter(); });
 	
-	self.setData(data);
+	//if (self.debug) self.setData(data);
 	
 	self.breadcrumbStack = [0];
+
+	self.server = server;
+
 }
 
 
@@ -79,29 +84,29 @@ Tree.prototype.simulationInitialize = function()
 		.alphaDecay(0.01)
 		.force("ForceLink", d3.forceLink())
 		.force("ForceCharge", d3.forceManyBody())
-		.force("ForceCenterX", d3.forceX(self.frame.boundary.width / 2))
-		.force("ForceCenterY", d3.forceY(self.frame.boundary.height / 2));
+		.force("ForceCenterX", d3.forceX(self.frame.center.x))
+		.force("ForceCenterY", d3.forceY(self.frame.center.y));
 
 	self.simulation
 		.nodes(self.nodes.data())
 		.on('tick', function(){self.draw()});
 
 	self.simulation.force("ForceCenterX")
-		.strength(0.1);
+		.strength(0.01);
 	
 	self.simulation.force("ForceCenterY")
-		.strength(0.1);	
+		.strength(0.01);	
 		
 	self.simulation
 		.force("ForceLink")
-			.strength(1)
+			.strength(0.6)
 			.links(self.links.data())
 			.id(function(d){return d.id;})
-			.distance(80);
+			.distance(400);
 			
 	self.simulation
 		.force("ForceCharge")
-			.strength(-1000);
+			.strength(-500);
 };
 
 Tree.prototype.simulationReheat = function()
@@ -110,7 +115,6 @@ Tree.prototype.simulationReheat = function()
 	self.simulation.restart();
 	self.simulation.alpha(1);
 };
-
 
 Tree.prototype.simulationRestart = function()
 {
@@ -150,150 +154,132 @@ Tree.prototype.simulationRecenter = function(node)
 	);
 }
 
-Tree.prototype.getParentsSelection = function(node_id)
+Tree.prototype.getNLevelIds = function(node_id, levels_num, node_ids_retrieved = null, link_ids_retrieved = null)
 {
 	var self = this;
-	
-	var node_ids = new Set();
-	var link_ids = new Set();
-	
-	
-	self.links.data().forEach(function(link)
-		{
-			if (link.target.id == node_id)
-			{	
-				//we found a parent, record the id
-				node_ids.add(link.source.id);
-				link_ids.add(link.id);
-			}
-		}
-	);
-	
-	var nodes_selection = self.nodes.filter(function()
-		{
-			return node_ids.has(this.getAttribute("data_id"));
-		}
-	);
-	
-	var links_selection = self.links.filter(function()
-		{
-			return link_ids.has(this.getAttribute("data_id"));
-		}
-	);
-	
-	return [nodes_selection, links_selection];
-	
-}
 
+	//console.log("getNLevelIds on " + node_id + " for level " + levels_num);
 
-Tree.prototype.getNChildrenSelections = function(node_id, children_levels_num)
-{
-	var self = this;
-	var node_ids; 
-	var link_ids;
-	
-	[node_ids, link_ids] = self.getNChildrenIds(node_id, children_levels_num)
-	
-	var nodes_selection = self.nodes.filter(function()
-		{
-			return node_ids.has(this.getAttribute("data_id"));
-		}
-	);
-	
-	var links_selection = self.links.filter(function()
-		{
-			return link_ids.has(this.getAttribute("data_id"));
-		}
-	);
-	
-	return [nodes_selection, links_selection];
-};
+	//These sets contain ids of elements to update when we get new data. Only create new ones if we aren't already passed a set
 
+	if (node_ids_retrieved == null)
+	{
+		node_ids_retrieved = new Set();
+	}
 
-//Wrapper for getNChildrenRecurse
-Tree.prototype.getNChildrenIds = function(node_id, children_levels_num)
-{
-	var self = this;
-	
-	//These sets contain ids of elements to update when we get new data
-	var node_ids_updated = new Set();
-	var link_ids_updated = new Set();
-	
+	if (link_ids_retrieved == null)
+	{
+		link_ids_retrieved = new Set();
+
+	}
+
 	var node_id_valid = false;
-	
-	self.nodes.data().forEach(function(node)
-		{
-			if (node.id == node_id)
-			{	
-				//we found the requested node!
-				node_id_valid = true;
-			}
-		}
-	)
-	
-	if (!node_id_valid)
-	{
-		throw ("Requested node id is invalid");
-	}
-	else
-	{
-		self.getNChildrenRecurse(node_ids_updated, link_ids_updated, node_id, children_levels_num);
-	}
-	
+
+	self.getNLevelIdsRecurse(node_ids_retrieved, link_ids_retrieved, node_id, levels_num);
+
 	//TODO, make sure that javascript is returning a pointer and not returning a copy of the data.
-	return [node_ids_updated, link_ids_updated];
-	
+	return [node_ids_retrieved, link_ids_retrieved];
 };
 
-//This function is a recursive function that loops through all links, 
-//and gets the children the node with id:node_id
-Tree.prototype.getNChildrenRecurse = function(node_ids_updated, link_ids_updated, node_id, children_levels_num)
-{	
+Tree.prototype.getNLevelIdsRecurse = function(node_ids_retrieved, link_ids_retrieved, node_id, levels_num)
+{
 	var self = this;
 	
 	//return early, because we have already seen this node before
-	if (node_ids_updated.has(node_id))
+	if (node_ids_retrieved.has(node_id))
 	{
 		return;
 	}
 	
 	
-	node_ids_updated.add(node_id);
+	node_ids_retrieved.add(node_id);
 	
-	if (children_levels_num <= 0)
+	if (levels_num == 0)
 	{
 		//there are no more children to find
 		return;
 	}
-	
-	
-	self.links.data().forEach(function(link)
+	else if (levels_num < 0)
+	{
+		//We are searching for parents, so check if our current node is a child of any nodes, and traverse upwards
+		self.links.data().forEach(function (link)
 		{
-			if (link.source.id == node_id)
-			{	
-				//we found a child, add the id of the link and recurse
-				link_ids_updated.add(link.id);
-				
-				self.getNChildrenRecurse(node_ids_updated, link_ids_updated, link.target.id, children_levels_num - 1);
+			if (link.target.id == node_id)
+			{
+				//We found a parent! add the id of the link and recurse
+				//A parent is any node that has a link pointing towards our node
+				link_ids_retrieved.add(link.id);
+
+				self.getNLevelIdsRecurse(node_ids_retrieved, link_ids_retrieved, link.source.id, levels_num + 1);
 			}
 		}
-	);
+		);
+	}
+	else
+	{
+		//We are searching for children, so check if our current node is a parent of any nodes, and traverse downwards
+		self.links.each(function (link)
+			{
+				if (link.source.id == node_id)
+				{
+					//We found a child! Add the id of the link and recurse
+					//A child is any node that has a link that originates at our node
+					link_ids_retrieved.add(link.id);
+					self.getNLevelIdsRecurse(node_ids_retrieved, link_ids_retrieved, link.target.id, levels_num - 1);
+				}
+			}
+		);
+	}
+};
+
+Tree.prototype.getNLevelSelections = function(node_id, levels_num)
+{
+	var self = this;
+	var node_ids; 
+	var link_ids;
+
+	[node_ids, link_ids] = self.getNLevelIds(node_id, levels_num)
+
+	//console.log(node_ids);
+
+	var nodes_selection = filterSelectionsByIDs(self.nodes, node_ids, "data_id");
+	var links_selection = filterSelectionsByIDs(self.links, link_ids, "data_id");
+	
+	return [nodes_selection, links_selection];
 };
 
 
+//This function accepts node data, and adds/updates its attributes to match the form of data that we want.
+//	Right now this function just makes sure that all of the nodes have a defined coordinate
+Tree.prototype.cleanDataNodes = function(data)
+{
+	data.forEach(function(d)
+	{
+		if (d.x == undefined || d.y == undefined)
+		{
+			console.log("foooo");
+			d.x = 0;
+			d.y = 0;
+		}
+
+	});
+};
 
 Tree.prototype.updateDataNodes = function(selection, data)
 {
-	
 	var self = this;
 	
-	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
+	console.log("Updating node data for ", selection, " to ", data);
 	
+	self.cleanDataNodes(data);
+
+	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
+
 	var nodes = selection
 		.enter()
 			.append("g")
 			.attr("class", "node")
-			.attr("data_id", function(d){return d.id;})
+			.attr("data_id", function (d) { return d.id; })
 			.on("click", function(d){self.nodeClicked(this)});
 
 
@@ -302,7 +288,7 @@ Tree.prototype.updateDataNodes = function(selection, data)
 			.attr("fill", function(d)
 			{
 				//generate our fill color based on the date created, author, and name
-				var random_number_generator = new Math.seedrandom(d.created_at + d.author_id + d.name);
+				var random_number_generator = new Math.seedrandom(d.id);
 				var color = d3.interpolateRainbow(random_number_generator());
 				return color;
 			}
@@ -341,7 +327,15 @@ Tree.prototype.updateDataNodes = function(selection, data)
 Tree.prototype.updateDataLinks = function(selection, data)
 {
 	var self = this;
-	
+
+	data.forEach(function (link)
+		{
+			link.id = link.source.id + link.target.id;
+			console.log(link.source.id);
+			console.log(link.target.id);
+		}
+	);
+
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
 	
 	selection
@@ -375,7 +369,7 @@ Tree.prototype.setData = function(data)
 	var self = this;
 	
 	self.updateDataNodes(self.nodes, data.nodes);
-	self.updateDataLinks(self.links, data.links);
+	self.updateDataLinks(self.links, data.connections);
 	
 	self.nodes_simulated = self.nodes;
 	self.links_simulated = self.links;
@@ -383,20 +377,32 @@ Tree.prototype.setData = function(data)
 	self.simulationRestart();
 }
 
-
-Tree.prototype.updateDataNChildren = function(node_id, children_levels_num, data)
+Tree.prototype.updateDataNLevels = function(node_id, levels_num_children, levels_num_parents, data)
 {	
+
 	var self = this;
-	var nodes_updated;
-	var links_updated;
-	
-	[nodes_updated, links_updated] = getNChildrenSelections(node_id, children_levels_num);
-				
-	self.updateDataNodes(nodes_updated, data.nodes);
-	self.updateDataLinks(links_updated, data.links);
-	
+
+	console.log("Updating data for N Levels with:", data);
+
+	var nodes_updated_ids;
+	var links_updated_ids;
+
+	//Get Sets() of Ids to update the data for
+	[nodes_updated_ids, links_updated_ids] = self.getNLevelIds(node_id, levels_num_children);
+	[nodes_updated_ids, links_updated_ids] = self.getNLevelIds(node_id, levels_num_parents, nodes_updated_ids, links_updated_ids);
+
+	console.log(nodes_updated_ids);
+
+	//Convert those ID Set()s into D3 selections
+	var nodes_updated_selection = filterSelectionsByIDs(self.nodes, nodes_updated_ids, "data_id");
+	var links_updated_selection = filterSelectionsByIDs(self.links, links_updated_ids, "data_id");
+
+	self.updateDataNodes(nodes_updated_selection, data.nodes);
+	self.updateDataLinks(links_updated_selection, data.connections);
+
 	self.simulationRestart();
 };
+
 
 Tree.prototype.drawLinks = function()
 {
@@ -413,13 +419,12 @@ Tree.prototype.drawNodes = function()
 {
 	var self = this;
 
-	self.nodes.select("circle")
-		.attr('cx', function(d) { return d.x; })
-		.attr('cy', function(d) { return d.y; });
-	
-	self.nodes.select("text")
-		.attr('x', function(d) { return d.x; })
-		.attr('y', function(d) { return d.y; });
+	self.nodes
+		.attr('transform', function(d) 
+			{
+				return "translate(" + d.x + "," + d.y + ")";
+			}
+		);
 	
 };
 
@@ -429,59 +434,45 @@ Tree.prototype.draw = function()
 	
 	self.drawNodes();
 	self.drawLinks();
-		
 };
 
-Tree.prototype.nodeCoordinateInterpolatorGenerator = function(d)
-{
-	var coordinate = {};
-	
-	switch(d.level)
-	{
-		case -1:
-			coordinate.x = 0;
-			coordinate.y = 0;
-			break;
-		case 0:
-			coordinate.x = self.frame.svg.center.x;
-			coordinate.y = self.frame.svg.center.y;
-			break;
-		case 1:
-		case 2:
-			return;
-		case 3:
-			coordinate.x = 0;
-			coordinate.y = 0;
-			break;
-	}
 
-	var interpolate_x = d3.interpolateNumber(d.x, coordinate.x);
-	var interpolate_y = d3.interpolateNumber(d.y, coordinate.y);
-		
-	switch(d.level)
+Tree.prototype.nodeCoordinateInterpolatorGenerator = function(d, )
+{
+	//create interpolate functions between where we are and where we want to be
+
+	//console.log("Origin: (" + d.x + "," + d.y + ") Destination: (" + d.fx + "," + d.fy + ")")
+	
+	var interpolate_x = d3.interpolateNumber(d.x_old, d.x_new);
+	var interpolate_y = d3.interpolateNumber(d.y_old, d.y_new);
+	
+	return function(p)
 	{
-		case -1:
-		case 0:
-		//case 3:
-			return function(p)
-			{
-				d.fx = interpolate_x(p);
-				d.fy = interpolate_y(p);
-				d.x = d.fx;	
-				d.y = d.fy;
-				
-				//self.draw();
-			};	
-	}
-	
-	
+		if (d.x_new != null)
+		{
+			d.fx = interpolate_x(p);
+		}
+		else
+		{
+			d.fx = null;
+		}
+			
+		if (d.x_new != null)
+		{
+			d.fy = interpolate_y(p);
+		}
+		else
+		{
+			d.fy = null;
+		}
+	};	
 }
 
 // Defines linkLengthInterpolatorGenerator which takes in d and returns a function 
 // which takes in p and sets d.length to something given initial and final distances
 Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 {
-	var distance_initial = d.distance_old;
+	var distance_initial = self.simulation.force("ForceLink").distance()(d);
 	
 	var distance_final;
 	
@@ -491,10 +482,10 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 		distance_final = 530;
 		break;
 	case 1: 
-		distance_final = 200; 
+		distance_final = 280; 
 		break;
 	case 2: 
-		distance_final = 35;
+		distance_final = 40;
 		break;
 	default:
 		distance_final = distance_initial;
@@ -518,52 +509,60 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 
 }
 	
-Tree.prototype.centerOnNode = function(node)
-{	//This function centers the tree visualization on a node.
+Tree.prototype.centerOnNode = function (node)
+{
+	//This function centers the tree visualization on a node.
 	
 	self = this;
 	
 	data_id = node.__data__.id;
-	
-	var nodes_selection_primary, links_selection_primary;
+
 	var nodes_selection_children, links_selection_children;
+	var nodes_selection_grandchildren, links_selection_grandchildren;
 	var nodes_selection_parents, links_selection_parents;
 	
 	//Get selections of the circle we are centering on, and the parent DOM element of that circle
 	var node_selection_clicked = d3.select(node);
 
-	[nodes_selection_primary, links_selection_primary] = self.getNChildrenSelections(data_id, 1);
-	[nodes_selection_children, links_selection_children] = self.getNChildrenSelections(data_id, 2);
+	[nodes_selection_children, links_selection_children] = self.getNLevelSelections(data_id, 1);
+	[nodes_selection_grandchildren, links_selection_grandchildren] = self.getNLevelSelections(data_id, 2);
+
+	//console.log(links_selection_children);
 	
 	//Get the parent nodes of the circle
-	[nodes_selection_parents, links_selection_parents] = self.getParentsSelection(data_id);
-
+	[nodes_selection_parents, links_selection_parents] = self.getNLevelSelections(data_id, -1);
 	
+	
+	//Set the new level of each of the nodes in our tree
 	self.nodes.each(function(d){d.level = 3;});
 	self.links.each(function(d){d.level = 3;});
 	
-	nodes_selection_children.each(function(d){d.level = 2;});
-	links_selection_children.each(function(d){d.level = 2;});
+	nodes_selection_grandchildren.each(function(d){d.level = 2;});
+	links_selection_grandchildren.each(function(d){d.level = 2;});
 	
-	nodes_selection_primary.each(function(d){d.level = 1});
-	links_selection_primary.each(function(d){d.level = 1;});
+	nodes_selection_children.each(function(d){d.level = 1});
+	links_selection_children.each(function(d){d.level = 1;});
+
+	nodes_selection_parents.each(function (d) { d.level = -1; });
+	links_selection_parents.each(function (d) { d.level = -1; });
 	
 	node_selection_clicked.each(function(d){d.level = 0;});
-	
-	nodes_selection_parents.each(function(d){d.level = -1;});
-	links_selection_parents.each(function(d){d.level = -1;});
-	
+
+	//	console.log(nodes_selection_parents);
 	
 
 	//All of the nodes and links together.
-	var nodes_selection = SelectionAdd(nodes_selection_children, nodes_selection_parents);
-	var links_selection = SelectionAdd(links_selection_children, links_selection_parents);
+	var nodes_selection = SelectionAdd(nodes_selection_grandchildren, nodes_selection_parents);
+	var links_selection = SelectionAdd(links_selection_grandchildren, links_selection_parents);
 	
+	
+
 	//Make all of the animations!
 	var transition = d3.transition();
-	
+
 	transition.duration(500);
-	
+	transition.ease(d3.easeBackOut.overshoot(0.8));
+
 	self.simulation.stop();
 	
 	//Set the on click handlers
@@ -572,171 +571,174 @@ Tree.prototype.centerOnNode = function(node)
 		switch (d.level)
 			{
 				case -1:
-				case 1: 
+				case 1:
+				case 2:
 					self.nodeClicked(this)
 				default:
+					//self.nodeClicked(this)
 					break;
 			}
 	});
 	
-	
-	//Clear the fixed position nodes for elements that we want to move: Children and Grandchildren
-	self.nodes.each(function(d)
+	//Set the animatable attributes for all of the nodes that we are about to animate
+	self.nodes.each(function(d, i)
 		{
+			var node = d3.select(this);
+			//Determine our attributes based on the node level that we previously set
 			switch (d.level)
 			{
 				case -1:
-				case 0: 
-				case 3: 
+					node.classed("node-parent", true);
+					d.visible = true;
+					d.labeled = true;
+					d.radius = "15%";
+					d.opacity = 1;
+					d.x_new = 150*i;
+					d.y_new = 50;
+					break;
+				case 0:
+					node.classed("node-center", true);
+					d.visible = true;
+					d.labeled = true;
+					d.radius = "8%";
+					d.opacity = 1;
+					d.x_new = self.frame.center.x;
+					d.y_new = self.frame.center.y;
 					break;
 				case 1:
-				case 2: 
+					node.classed("node-child", true);
+					d.visible = true;
+					d.labeled = true;
+					d.radius = "5%";
+					d.opacity = 1;
+					d.x_new = null; //Let them move
+					d.y_new = null;
 					d.fx = null;
 					d.fy = null;
 					break;
+				case 2:
+					node.classed("node-grandchild", true);
+					d.visible = true;
+					d.labeled = false;
+					d.radius = "1%";
+					d.opacity = 0.5;
+					d.x_new = null; //Let them move
+					d.y_new = null;
+					d.fx = null;
+					d.fy = null;
+					break;
+				case 3:
+					node.classed("node-other", true);
+					d.visible = false;
+					d.labeled = false;
+					d.radius = "1%";
+					d.opacity = 0;
+					d.x_new = null;
+					d.y_new = null;
+					d.fx = null;
+					d.fy = null;
+					break;					
 			}
+		
+		//Set our old position to be our current, so that we can later use this in our animation
+		d.x_old = d.x;
+		d.y_old = d.y;
 			
 		}
 	);
 	
 	
-	self.nodes
-		.select("text")
-		.transition(transition)
-			.style("opacity", function(d)
-				{
-					switch (d.level)
-					{
-						case -1:
-						case 0: 
-						case 1:
-							return 1;
-						case 2:
-						case 3: 
-							return 0;
-					}
-				}
-			)
-			.on("start", function(d)
-				{
-					//set the visibility
-					switch (d.level)
-					{
-						case -1:
-						case 0: 
-						case 1: 
-							this.style.visibility = "unset";
-							break;
-						case 2:
-						case 3:
-							break;
-					}
-					
-				}
-			)
-			.on("end", function(d)
-				{
-					//set the visibility
-					switch (d.level)
-					{
-						case -1:
-						case 0: 
-						case 1: 
-							break;
-						case 2:
-						case 3:
-							this.style.visibility = "hidden";
-							break;
-					}
-				}
-			);
-	
-	self.nodes
-		.select("circle")
+	self.nodes.select("circle")
 		.transition(transition)
 			.attr("r", function(d)
 				{
-					switch (d.level)
-					{
-						case -1: return "15%";
-						case 0: return "8%";
-						case 1: return "5%";
-						case 2: return "1%";
-						case 3: return this.getAttribute("r");
-					}
+					return d.radius;
 				}
-			)
-			.style("opacity", function(d)
-				{
-					switch (d.level)
-					{
-						case -1:
-						case 0: 
-						case 1:
-							return 1;
-						case 2: 
-							return 0.2;
-						case 3: 
-							return 0;
-					}
-				}
-			)
+			);
+	self.nodes.select("text")
+		.transition(transition)
 			.on("start", function(d)
 				{	
-					//set the visibility
-					switch (d.level)
+					if (d.labeled)
 					{
-						case -1:
-						case 0: 
-						case 1: 
-						case 2: 
-							this.style.visibility = "unset";
-							break;
-						case 3:
-							break;
+						this.style.visibility = "unset";
 					}
-					
 				}
 			)
 			.on("end", function(d)
 				{
-					//self.simulationRestart()
-					switch (d.level)
+					if (!d.labeled)
 					{
-						case -1:
-						case 0: 
-						case 1: 
-						case 2: 
-							break;
-						case 3:
-							this.style.visibility = "hidden";
-							break;
+						this.style.visibility = "hidden";
+					}
+				}
+			)
+			.attr("opacity",function(d)
+				{
+					return d.opacity;
+				}
+			);
+			
+	self.nodes
+		.transition(transition)
+			.on("start", function(d)
+				{	
+					if (d.visible)
+					{
+						this.style.visibility = "unset";
+					}
+				}
+			)
+			.on("end", function(d)
+				{
+					if (!d.visible)
+					{
+						this.style.visibility = "hidden";
 					}
 				}
 			)
 			.on("interrupt", function(d)
-			{	
-				//we got interrupted, clear the fixed position of the circles so that they animate correctly
-				d.fx = null;
-				d.fy = null;
-				console.log("Animation Interrupted");
-			}
+				{	
+					//we got interrupted, clear the fixed position of the circles so that they animate correctly
+					//d.fx = null;
+					//d.fy = null;
+					console.log("Animation Interrupted");
+				}
+			)
+			.attr("r", function(d)
+				{
+					return d.radius;
+				}
+			)
+			.attr("opacity",function(d)
+				{
+					return d.opacity;
+				}
 			)
 			.tween("coordinates", self.nodeCoordinateInterpolatorGenerator);
 	
-	// TODO: maybe remove this and move it back into linkLengthInterpolatorGenerator
-	self.links
-		.each(function(d)
-		{
-			d.distance_old = self.simulation.force("ForceLink").distance()(d);
-		}
-	)
+
 	
+	self.simulation.force("ForceLink").distance(function(d)
+		{
+			switch(d.level)
+			{
+			case -1:
+				return 150;
+			case 1: 
+				return 150; 
+			case 2: 
+				return 25;	
+			default:
+				return 280;
+			}
+		}
+	);
+	
+		/*
 	self.links
 		.transition(transition)
 			.tween("linkLength", self.linkLengthInterpolatorGenerator);
-	
-	
 	
 	self.frame.svg
 		.transition(transition)
@@ -745,12 +747,18 @@ Tree.prototype.centerOnNode = function(node)
 					return function()
 					{
 						//console.log("hi");
+						self.draw();
 						self.simulation.force("ForceLink").distance(function(d){return d.length;});
 					}
 				}
+			)
+			.on("end", function(d)
+				{
+					self.simulationRestart();
+				}
 			);
 	
-	
+	*/
 	
 	//Not animating links since they aren't shown now
 	/*
@@ -804,9 +812,12 @@ Tree.prototype.centerOnNode = function(node)
 	
 	self.links_simulated = links_selection;
 	self.nodes_simulated = nodes_selection;
+	
+	//console.log(links_simulated);
 
 	self.simulationRestart();
 }
+
 
 Tree.prototype.BreadcrumbStackUpdate = function(id)
 {
@@ -816,5 +827,6 @@ Tree.prototype.BreadcrumbStackUpdate = function(id)
 Tree.prototype.nodeClicked = function(node)
 {
 	self = this;
+	//self.server.getData(data_id, 1, 2, self.updateDataNLevels.bind(self), function (){});
 	self.centerOnNode(node);
 }
