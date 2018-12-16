@@ -193,10 +193,12 @@ Server.prototype.getData = function(node, levels_up, levels_down, handleError, h
 	url = "/data/topic_tree/?topic="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
     return d3.json(url, {method: 'get'}).then(function(error, data){
     	if (error){
+			console.log("error reached")
     		return self.handleError(url, error, handleError);
 
     	}
     	else {
+			console.log("success reached")
     		return self.handleSuccess(data, handleSuccess);
 		}	
     });
@@ -234,6 +236,7 @@ Server.prototype.handleError = function(url, error, treeHandleError)
 			}
 		});
 	else{
+		console.log('error')
 		return treeHandleError(error);
 	}
     
