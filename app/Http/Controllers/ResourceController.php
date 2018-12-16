@@ -56,7 +56,7 @@ class ResourceController extends Controller
 	 */
 	public function create()
 	{
-		$this->authorize('create');
+		$this->authorize('create', Resource::class);
 		// load the appropriate view here
 		// return view('resource.create', ['resource' => NULL]);
 	}

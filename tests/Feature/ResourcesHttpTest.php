@@ -87,7 +87,7 @@ class ResourcesHttpTest extends TestCase
 		// attach the resource to some items in the tree
 		$new_tree_items = [
 			'topics': [],
-			'classes': []
+			'class': 1
 		];
 		$response = $this->actingAs($user)->patch('/resources/attach/'.($new_resource->id), $tree_items);
 		$new_class = Resource::latest()->class()->get();
