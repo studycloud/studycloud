@@ -251,21 +251,19 @@ Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
 {
 	
 	var self = this;
-	self.treeHandleError = handleError;
-	self.treeHandleSuccess = handleSuccess;
-	
+		
 	url = "/data/topic?id="+id;
 	return d3.json(url)
 		.then(function(data){			
-				return self.handleSuccess(id, data);
+				return handleSuccess(id, data);
 			})
 		
 		.catch(function(error){
-			console.log('Error', error.message);
+			return handleError(error);			
 		});		
 }
 
-Server.prototype.storeTopic = function(name)
+Server.prototype.storeTopic = function(name, handleError, handleSuccess)
 {
 	var self = this;
 	data = {"name": name};	
@@ -279,13 +277,13 @@ Server.prototype.storeTopic = function(name)
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		console.log(data);
+		return handleSuccess(data);		
 	}).catch(function(error){
-		console.log(error);
+		return handleError(error);	
 	});
 }
 
-Server.prototype.updateTopic = function(name)
+Server.prototype.updateTopic = function(name, handleError, handleSuccess)
 {
 	var self = this;
 	data = {"name": name};	
@@ -300,13 +298,13 @@ Server.prototype.updateTopic = function(name)
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		console.log(data);
+		return handleSuccess(data);
 	}).catch(function(error){
-		console.log(error);
+		return handleError(error);
 	});
 }
 
-Server.prototype.destroyTopic = function(name)
+Server.prototype.destroyTopic = function(name, handleError, handleSuccess)
 {
 	var self = this;
 	data = {"name": name};	
@@ -321,8 +319,8 @@ Server.prototype.destroyTopic = function(name)
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		console.log(data);
+		return handleSuccess(data);
 	}).catch(function(error){
-		console.log(error);
+		return handleError(error);
 	});
 }
