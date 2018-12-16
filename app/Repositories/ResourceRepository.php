@@ -109,7 +109,7 @@ class ResourceRepository
 	/**
 	 * a wrapper function for detaching topics for ease of use
 	 * @param  Resource 	$resource 	the resource whose topics you'd like to detach
-	 * @param  Collection 	$new_topics the topics to detach
+	 * @param  Collection 	$new_topics the topics to detach (as IDs)
 	 */
 	public static function detachTopics($resource, $old_topics) 
 	{

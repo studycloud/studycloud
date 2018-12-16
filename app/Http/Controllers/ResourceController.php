@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Topic;
 use App\Resource;
 use Carbon\Carbon;
 use App\ResourceContent;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Middleware\CheckAuthor;
-use App\Http\Repositories\ResourceRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
+use App\Http\Repositories\ResourceRepository;
 
 
 class ResourceController extends Controller
@@ -212,47 +213,47 @@ class ResourceController extends Controller
 
 
 	/*
-	*	Attach a resource to a certain topic, overwriting the current topics
+	*	Attach a resource to a certain topic or class in the tree, overwriting any current topics or classes that conflict
 	*	@param Resource $resource
 	*	@param \Illuminate\Http\Request  $request
 	*/
-	public function attachTopics(Resource $resource, Request $request){
-
+	public function attachTree(Resource $resource, Request $request){
+		// only the author of the resource can alter what it is attached to
 		$this->authorize('update', $resource);
 		// validating the request
+		// topics and classes are both optional, but should be arrays of IDs when provided
 		$validated = $request->validate([
-			'topics' => 'sometimes|array', //should be an array of topic_id's
+			'topics' => 'sometimes|array',
 			'topics.*' => 'exists:topics,id',
 			'classes' => 'sometimes|array',
 			'classes.*' => 'exists:classes,id'
 		]);
 
-		// doing things
-
-	
+		// add the topics (we'll need to disable this code for MVP)
 		foreach($validated['topics'] as $topic){
-			ResourceRepository::addTopic($topic, $resource);
+			ResourceRepository::addTopic(Topic::find($topic), $resource);
 		}
+		// add the classes (add this code once you have a function for it)
+		
 	}
 	
 
-	public function detachTopics(Resource $resource, Request $request){
-
+	public function detachTree(Resource $resource, Request $request){
+		// only the author of resource can alter what it is attached to
 		$this->authorize('update', $resource);
 		// validating the reqeust 
+		// topics and classes are both optional, but should be arrays of IDs when provided
 		$validated = $request->validate([
-			'topics' => 'sometimes|array', //should be an array of topic_id's
+			'topics' => 'sometimes|array',
 			'topics.*' => 'exists:topics,id',
 			'classes' => 'sometimes|array',
 			'classes.*' => 'exists:classes,id'
 		]);
 
-		foreach($validated['topics'] as $topic){
-			//Unfortunately, detachTopics is not a static function like I've written here
-			//Should I instead make a ResourceRepository object and call that instead? Or should we modify
-			//the actual code to make detachTopics a static function? 
-			ResourceRepository::detachTopics($topic, $resource); 
-		}
+		// remove the topics (we'll need to disable this code for MVP)
+		ResourceRepository::detachTopics($resource, $validated['topics']);
+		// remove any classes (add this code once you have a function for it)
+		
 	}
 
 }

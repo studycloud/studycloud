@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Resource extends Model
 {
 	/**
-	 * The 	ributes that are mass assignable.
+	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
