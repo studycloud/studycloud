@@ -306,15 +306,13 @@ Server.prototype.updateTopic = function(id, name, handleError, handleSuccess)
 	});
 }
 
-Server.prototype.destroyTopic = function(name, handleError, handleSuccess)
+Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 {
-	var self = this;
-	data = {"name": name};	
-	url = "/topics/{id}";
+	var self = this;		
+	url = "/topics/" + id;
 	const csrftoken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
-		method: 'Post',		
-		body: JSON.stringify(data),
+		method: 'Post',			
 		headers: {
 			'X-HTTP-Method-Override': 'DELETE',
 			'X-XSRF-TOKEN': csrftoken,
