@@ -15,19 +15,6 @@ class Resource extends Model
 	 * @var array
 	 */
 	protected $fillable = ['name', 'use_id'];
-
-    protected $appends = ['target'];
-
-    protected $hidden = ['target'];
-
-  	/**
- 	 * Add a unique id attribute so that JavaScript can distinguish between different models
- 	 * @return string the string representing the unique id
- 	 */
-    public function getTargetAttribute()
-    {
-        return "r".($this->attributes['id']);
-    }
 	
 	/**
 	 * define the one-to-many relationship between a resource and its contents
