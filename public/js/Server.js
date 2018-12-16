@@ -64,7 +64,7 @@ Server.prototype.addResource = function(content, callBack1, callBack2)
 	if (goodCookie == ""){
 		return callBack1();
 	}
-
+s
 	const csrftoken = goodCookie;
 	const headers = new Headers({
         'X-XSRF-TOKEN': csrfToken
@@ -218,14 +218,18 @@ Server.prototype.handleError = function(url, error, treeHandleError)
 			if (error){
 				if(error != "Error: Internal Server Error")
 				{
+					console.log('error')
 					throw(error);
 				}
 				else
 				{
+					console.log(' tree error')
 					return treeHandleError(error);
+					
 				}
 			}
 			else {
+				console.log('success')
 				return self.handleSuccess(data);
 			}
 		});
