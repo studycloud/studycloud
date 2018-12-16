@@ -277,17 +277,19 @@ Server.prototype.storeTopic = function(name, handleError, handleSuccess)
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
+		
 		return handleSuccess(data);		
 	}).catch(function(error){
+		
 		return handleError(error);	
 	});
 }
 
-Server.prototype.updateTopic = function(name, handleError, handleSuccess)
+Server.prototype.updateTopic = function(id, name, handleError, handleSuccess)
 {
 	var self = this;
 	data = {"name": name};	
-	url = "/topics/{id}";
+	url = "/topics/" + id;
 	const csrftoken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
 		method: 'Post',		
