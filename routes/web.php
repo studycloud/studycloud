@@ -4,6 +4,7 @@ use App\User;
 use App\Topic;
 use App\Resource;
 use Illuminate\Http\Request;
+use App\Http\Middleware\CheckStatus;
 use App\Http\Resources\TopicResource;
 use App\Http\Resources\ResourceResource;
 
@@ -34,7 +35,7 @@ Route::get('data/resource',
 	{
 		return new ResourceResource(Resource::find($request->input('id')));
 	}
-)->name('resources.json');
+)->middleware(CheckStatus::class.':'.Resource::class)->name('resources.json');
 Route::resource('resources', 'ResourceController', ['except' => 
 	'index'
 ]);

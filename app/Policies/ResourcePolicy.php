@@ -17,7 +17,7 @@ class ResourcePolicy
      * @param  \App\Resource  $resource
      * @return mixed
      */
-    public function view(User $user, Resource $resource)
+    public function view(Resource $resource)
     {
         return $resource->status != 0;
     }
@@ -30,8 +30,9 @@ class ResourcePolicy
      */
     public function create(User $user)
     {
+        // everyone can add a resource, as long as they're signed in (which we should have already checked)
+        return true;
         // TODO: add admin privileges
-        return $user->id === $resource->id;
     }
 
     /**
@@ -44,7 +45,7 @@ class ResourcePolicy
     public function update(User $user, Resource $resource)
     {
         // TODO: add admin privileges
-        return $user->id === $resource->id;
+        return $user->id === $resource->author->id;
     }
 
     /**
@@ -57,6 +58,6 @@ class ResourcePolicy
     public function delete(User $user, Resource $resource)
     {
         // TODO: add admin privileges?
-        return $user->id === $resource->id;
+        return $user->id === $resource->author->id;
     }
 }

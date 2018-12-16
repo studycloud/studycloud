@@ -9,6 +9,7 @@ use App\ResourceContent;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Middleware\CheckAuthor;
+use App\Http\Middleware\CheckStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
 use App\Http\Repositories\ResourceRepository;
@@ -23,7 +24,7 @@ class ResourceController extends Controller
 		POST			/resources				resources.store		create a new resource sent as JSON
 		GET				/resources/{id}			resources.show		show the page for this resource
 		GET				/resources/{id}/edit	resources.edit		show the editor for this resource (if logged in as the author)
-		PATCH (or PUT)	resources/{id}			resources.update	alter a current resource according to the changes sent as JSON
+		PATCH (or PUT)	/resources/{id}			resources.update	alter a current resource according to the changes sent as JSON
 		PATCH			/resources/attach/{id}	resources.attach	add this resource to a list of topics (or a class) sent as JSON (overriding any conflicts that are currently attached)
 		PATCH			/resources/detach/{id}	resources.detach	remove this resource from a list of topics (or a class) sent as JSON
 		DELETE			/resources/{id}			resources.destroy	request that this resource be deleted
@@ -33,7 +34,8 @@ class ResourceController extends Controller
 	{
 		// verify that the user is signed in for all methods except index, show, and json
 		$this->middleware('auth', ['except' => ['index', 'show']]);
-
+		// verify that the resource isn't disabled before doing anything with it
+		$this->middleware(CheckStatus::class, ['except' => ['index', 'create', 'store']]);
 	}
 
 	/**
@@ -67,7 +69,7 @@ class ResourceController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$this->authorize('create');
+		$this->authorize('create', Resource::class);
 		// first, validate the request
 		$validated = $request->validate([
 			'name' => 'string|required|max:255',
@@ -102,7 +104,7 @@ class ResourceController extends Controller
 	 */
 	public function show(Resource $resource)
 	{
-		$this->authorize('view', $resource);
+		// $this->authorize('view', $resource);
 		return view('resource', ['resource' => $resource]);
 	}
 
@@ -163,23 +165,6 @@ class ResourceController extends Controller
 				ResourceContent::find($content['id'])->fill($content)->save();
 			}
 		}
-	}
-
-	/**
-	 * Moves the resource into the desired topics. If attempting to 
-	 * move into a topic that is an ancestor or child of the resource's
-	 * current topics, the conflicting topics will be removed, as well.
-	 *
-	 * @param Resource $resource
-	 * @param Topic $topic
-	 * @return \Illuminate\Http\Response
-	 *
-	 *
-	 */
-	public function move(Resource $resource, Topic $topic)
-	{
-		$this->authorize('update', $resource);
-		// do stuff
 	}
 
 
