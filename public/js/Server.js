@@ -216,7 +216,7 @@ Server.prototype.handleError = function(url, error, treeHandleError)
 		return(error);
 	}
 	if (error == "Error: Internal Server Error")
-		return d3.json(url, {method: 'get'}).then(function(error, data){
+		return d3.json(url, {method: 'get'}).then(function(data, error){
 			if (error){
 				if(error != "Error: Internal Server Error")
 				{
