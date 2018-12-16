@@ -7,6 +7,7 @@
 
 html {
 	font-family: $body-font;
+	background: $page-background;
 	// Smooth fonts.
 	-webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -20,9 +21,12 @@ html {
 
 #main {
 	background-color: $content-bg-color;
-	font-size: 16px;
+	font-size: $body-font-size;
 	width: 100%;
 }
+
+
+
 
 
 // MOBILE COMPATIBILITY
