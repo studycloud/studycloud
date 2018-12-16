@@ -47,7 +47,6 @@ function Tree(type, frame_id, server)
 	self.frame.svg
 		.attr("class", "tree");
 	
-	
 	self.links = self.frame.svg
 		.append("g")
 			.attr("class", "layer_links")
@@ -61,7 +60,9 @@ function Tree(type, frame_id, server)
 	self.nodes_simulated = {};
 	self.links_simulated = {};
 	
-	self.simulationInitialize();			
+	self.simulationInitialize();
+
+	d3.select(window).on("resize", function() { self.simulationRecenter(); });
 	
 	//if (self.debug) self.setData(data);
 	
@@ -106,7 +107,6 @@ Tree.prototype.simulationInitialize = function()
 	self.simulation
 		.force("ForceCharge")
 			.strength(-500);
-
 };
 
 Tree.prototype.simulationReheat = function()
@@ -126,6 +126,33 @@ Tree.prototype.simulationRestart = function()
 	self.simulationReheat();
 };
 
+Tree.prototype.simulationRecenter = function(node)
+{
+	var self = this;
+
+	self.frame.boundary = self.frame.node().getBoundingClientRect();
+
+	self.frame.svg.center =
+	{
+		x: self.frame.boundary.width / 2,
+		y: self.frame.boundary.height / 2
+	};
+
+	self.simulation
+		.force("ForceCenterX", d3.forceX(self.frame.boundary.width / 2))
+		.force("ForceCenterY", d3.forceY(self.frame.boundary.height / 2));
+
+	self.simulationReheat();
+
+	var node_center = self.nodes.filter(function(d){ return d.level == 0; });
+
+	node_center.each(function(d)
+		{
+			d.fx = self.frame.boundary.width / 2;
+			d.fy = self.frame.boundary.height / 2;
+		}
+	);
+}
 
 Tree.prototype.getNLevelIds = function(node_id, levels_num, node_ids_retrieved = null, link_ids_retrieved = null)
 {
