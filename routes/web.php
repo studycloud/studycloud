@@ -38,6 +38,8 @@ Route::get('data/resource',
 Route::resource('resources', 'ResourceController', ['except' => 
 	'index'
 ]);
+Route::post('/resources/attach/{resource}', 'ResourceController@attach')->name('resources.attach');
+Route::post('/resources/detach/{resource}', 'ResourceController@detach')->name('resources.detach');
 
 Route::get('data/topic_tree', 'GetTopicTree');
 Route::get('data/topic',

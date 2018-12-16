@@ -212,12 +212,12 @@ class ResourceController extends Controller
 
 
 
-	/*
-	*	Attach a resource to a certain topic or class in the tree, overwriting any current topics or classes that conflict
-	*	@param Resource $resource
-	*	@param \Illuminate\Http\Request  $request
-	*/
-	public function attachTree(Resource $resource, Request $request){
+	/**
+	 * Attach a resource to some topics or classes (or both!) in the tree, overwriting any current topics or classes that conflict
+	 * @param Resource $resource
+	 * @param \Illuminate\Http\Request  $request
+	 */
+	public function attach(Resource $resource, Request $request){
 		// only the author of the resource can alter what it is attached to
 		$this->authorize('update', $resource);
 		// validating the request
@@ -238,7 +238,12 @@ class ResourceController extends Controller
 	}
 	
 
-	public function detachTree(Resource $resource, Request $request){
+	/**
+	 * Detach a resource from topics or classes (or both!) in the tree
+	 * @param  Resource $resource
+	 * @param  Request  $request
+	 */
+	public function detach(Resource $resource, Request $request){
 		// only the author of resource can alter what it is attached to
 		$this->authorize('update', $resource);
 		// validating the reqeust 
