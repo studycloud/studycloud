@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Topic;
-use App\TopicParent;
 use App\Resource;
+use App\TopicParent;
+use Illuminate\Http\Request;
+use App\Helpers\NodesAndConnections;
 use App\Repositories\TopicRepository;
 use App\Repositories\ResourceRepository;
-use App\Helpers\NodesAndConnections;
-// use Barryvdh\Debugbar\Facade as Debugbar;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 
 class GetTopicTree extends Controller
@@ -112,6 +112,10 @@ class GetTopicTree extends Controller
 	{
 		// add a 't' to the beginnning of the id
 		$node->put('id', 't'.$node['id']);
+		// add author name; it's more useful than the author id
+		// $node->put('author_name', User::find($node->get('author_id'))->name());
+		// send only the attributes that we need
+		$node = $node->only('id', 'name', 'author_id', 'created_at', 'updated_at');
 		return $node;
 	}
 
@@ -162,6 +166,10 @@ class GetTopicTree extends Controller
 	{
 		// add an 'r' to the beginnning of the id
 		$node->put('id', 'r'.$node['id']);
+		// add author name; it's more useful than the author id
+		// $node->put('author_name', User::find($node->get('author_id'))->name());
+		// send only the attributes that we need
+		$node = $node->only('id', 'name', 'author_id', 'created_at', 'updated_at');
 		return $node;
 	}
 

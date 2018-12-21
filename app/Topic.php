@@ -74,8 +74,8 @@ class Topic extends Model
 			"id"=>0, 
 			"name"=>"All Topics", 
 			"author_id"=>0, 
-			"created_at"=>Carbon::now(), 
-			"updated_at"=>Carbon::now()
+			"created_at"=>Carbon::now()->toDateTimeString(), 
+			"updated_at"=>Carbon::now()->toDateTimeString()
 		]);
 		return $root;
 	} 

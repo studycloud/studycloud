@@ -100,7 +100,7 @@ class TopicRepository
 				array_push($this->memoize, $topic->id);
 			}
 
-			if ($parents -> isEmpty() && is_null($root))
+			if ($parents->isEmpty() && !is_null($root))
 			{
 				$root->put("pivot", collect(["parent_id" => $root['id'], "topic_id" => $topic['id']]));
 				$tree->push($root);
