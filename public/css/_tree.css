@@ -21,3 +21,7 @@ svg.tree {
   overflow: none;
 }
 
+.node text 
+{
+	dominant-baseline: central;
+}
