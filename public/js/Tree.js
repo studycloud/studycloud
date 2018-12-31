@@ -603,7 +603,7 @@ Tree.prototype.centerOnNode = function (node)
 				d.width = 10;
 				d.height = d.width;
 				d.opacity = 0;
-				d.x_new = self.frame.center.x/2;
+				d.x_new = self.frame.center.x;
 				d.y_new = self.frame.center.y/2;
 				
 				//for every node, store its old position
