@@ -58,6 +58,7 @@ Route::get('data/class',
 	}
 )->name('topics.json');
 Route::resource('classes', 'ClassController');
+Route::patch('/classes/attach/{class}', 'ClassController@attach')->name('resources.attach');
 
 Route::get('admins/{userid}',
 	function($user_id)

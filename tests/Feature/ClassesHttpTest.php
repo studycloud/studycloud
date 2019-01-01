@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\User;
 use Tests\TestCase;
 use App\Academic_Class;
+use App\Repositories\ClassRepository;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -25,11 +26,11 @@ class ClassesHttpTest extends TestCase
 
 		// make a request to create a new class
 		// but first, pick a class to be our parent
-		$parents = Academic_Class::inRandomOrder()->take(1)->get();
+		$parent = Academic_Class::inRandomOrder()->take(1)->get()->first();
 		$response = $this->actingAs($user)->post('/classes/',
 			[
 				'name' => $class->name,
-				'parent' => $parents[0]->id
+				'parent' => $parent->id
 			]
 		);
 		$new_class = Academic_Class::latest()->first();
@@ -51,9 +52,51 @@ class ClassesHttpTest extends TestCase
 		$response->assertSuccessful();
 		$this->assertEquals($new_name, $new_class->name);
 
+		// attach this class to the root class
+		$parent = 0;
+		$response = $this->actingAs($user)->patch('/classes/attach/'.($new_class->id),
+			[
+				'parent' => $parent
+			]
+		);
+		$new_class = Academic_Class::latest()->first();
+		$new_parent = $new_class->parent()->get()->first();
+		// check: was the attachment successful?
+		$response->assertSuccessful();
+		$this->assertNull($new_parent);
+		$this->assertContains($new_class->id, ClassRepository::getTopLevelClasses()->pluck('id')->toArray());
+
+		// attach this class to a parent class
+		$parent = Academic_Class::inRandomOrder()->take(1)->get()->first();
+		$response = $this->actingAs($user)->patch('/classes/attach/'.($new_class->id),
+			[
+				'parent' => $parent->id
+			]
+		);
+		$new_class = Academic_Class::latest()->first();
+		$new_parent = $new_class->parent()->get()->first();
+		// check: was the attachment successful?
+		$response->assertSuccessful();
+		$this->assertEquals($new_parent->id, $parent->id);
+		$this->assertNotContains($new_class->id, ClassRepository::getTopLevelClasses()->pluck('id')->toArray());
+
+		// attach this class to the root class
+		$parent = '';
+		$response = $this->actingAs($user)->patch('/classes/attach/'.($new_class->id),
+			[
+				'parent' => $parent
+			]
+		);
+		$new_class = Academic_Class::latest()->first();
+		$new_parent = $new_class->parent()->get()->first();
+		// check: was the attachment successful?
+		$response->assertSuccessful();
+		$this->assertNull($new_parent);
+		$this->assertContains($new_class->id, ClassRepository::getTopLevelClasses()->pluck('id')->toArray());
+
 		// delete the class we created
 		$response = $this->actingAs($user)->delete('/classes/'.($new_class->id));
-		// is the Class gone?
+		// is the class gone?
 		$response->assertSuccessful();
 		$this->assertEquals(Academic_Class::count(), $class_count);
 	}
