@@ -185,18 +185,6 @@ class ResourceRepository
 	}
 
 	/**
-	 * which classes isn't this resource allowed to be added to?
-	 * Note: this function executes one more query than allowedClasses() and is therefore a bit slower. don't use it if you don't have to
-	 * Note also: the classes returned in this function won't have pivots
-	 * @param  Resource 	$resource 	the resource whose disallowedClasses you'd like to get
-	 * @return Collection
-	 */
-	public static function disallowedClasses($resource)
-	{
-		return collect(Academic_Class::whereNotIn('id', self::allowedClasses($resource)->pluck('id'))->get());
-	}
-
-	/**
 	 * which topics is this resource allowed to be added to?
 	 * Note: this function executes one more query than disallowedTopics() and is therefore a bit slower. don't use it if you don't have to
 	 * Note also: the topics returned in this function won't have pivots
@@ -206,6 +194,18 @@ class ResourceRepository
 	public static function allowedTopics($resource)
 	{
 		return collect(Topic::whereNotIn('id', self::disallowedTopics($resource)->pluck('id'))->get());
+	}
+
+	/**
+	 * which classes isn't this resource allowed to be added to?
+	 * Note: this function executes one more query than allowedClasses() and is therefore a bit slower. don't use it if you don't have to
+	 * Note also: the classes returned in this function won't have pivots
+	 * @param  Resource 	$resource 	the resource whose disallowedClasses you'd like to get
+	 * @return Collection
+	 */
+	public static function disallowedClasses($resource)
+	{
+		return collect(Academic_Class::whereNotIn('id', self::allowedClasses($resource)->pluck('id'))->get());
 	}
 
 	/**
