@@ -26,15 +26,15 @@ class Academic_Class extends Model
 	 */
 	public function children()
 	{
-		return $this->belongsToMany(Academic_Class::class, 'class_parent', 'parent_id',  'class_id');
+		return $this->hasMany(Academic_Class::class, 'parent_id');
 	}
 
 	/**
 	 * returns all classes for which this class is a child
 	 */
-	public function parents()
+	public function parent()
 	{
-		return $this->belongsToMany(Academic_Class::class, 'class_parent', 'class_id',  'parent_id');
+		return $this->belongsTo(Academic_Class::class, 'parent_id');
 	}
 
 	/**

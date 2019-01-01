@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Academic_Class;
 use App\Helpers\NestedArrays;
+use App\Helpers\NodesAndConnections;
 
 class ClassRepository 
 {
@@ -26,8 +27,7 @@ class ClassRepository
 			(is_null($class) || !in_array($class->id, $this->memoize))
 		) 
 		{
-			if (is_null($class)) #if the class is null, how would we be able
-			#to get topLevelClasses? -> wouldn't they not exist
+			if (is_null($class))
 			{
 				$children = self::getTopLevelClasses();
 			}
@@ -39,7 +39,10 @@ class ClassRepository
 			}
 			foreach ($children as $child) {
 				// add the child to the tree
-				$tree->push(collect($child));
+				// but add a pivot object to it first
+				$tree->push(
+					NodesAndConnections::addPivot(collect($child), "class")
+				);
 				$tree = $tree->merge(
 					// RECURSION!
 					$this->descendants($child, $levels - 1)
@@ -72,13 +75,15 @@ class ClassRepository
 			}
 			else
 			{
-				$parents = $class->parents()->get();
+				$parents = $class->parent()->get();
 				// add the class id to the list of classes that have already been called
 				array_push($this->memoize, $class->id);
 			}
 			foreach ($parents as $parent) {
 				// add the parent to the tree
-				$tree->push(collect($parent));
+				$tree->push(
+					NodesAndConnections::addPivot(collect($parent), "class", $class->id)
+				);
 				$tree = $tree->merge(
 					// RECURSION!
 					$this->ancestors($parent, $levels - 1)
@@ -90,18 +95,14 @@ class ClassRepository
 
 	public static function getTopLevelClasses()
 	{
-		return Academic_Class::whereNotExists(function ($query)
-			{
-				$query->select('class_id')->distinct()->from('class_parent')->whereRaw('class_parent.class_id = classes.id');
-			}
-		)->get();
+		return Academic_Class::whereNull('parent_id')->get();
 	}
 
 	public static function getLeafClasses()
 	{
-		return Academic_Class::whereNotExists(function ($query)
+		return Academic_Class::whereNotIn('id', function ($query)
 			{
-				$query->select('class_id')->distinct()->from('class_parent')->whereRaw('class_parent.parent_id = classes.id');
+				$query->select('parent_id')->distinct()->from('classes')->whereNotNull('parent_id');
 			}
 		)->get();
 	}
@@ -118,7 +119,7 @@ class ClassRepository
 		$isDescendant = false;
 		// call isDescendant() with each of the classes
 		// and then OR all of the results together to get a final value
-		foreach ($classes as $class) //*Not sure about this
+		foreach ($classes as $class)
 		{
 			// is the parent of this $class a descendant of $descendant_class_id?
 			$isDescendant = $isDescendant || self::isDescendant($class['class_id'], $descendant_class_id, $disallowed_classes);
@@ -151,7 +152,7 @@ class ClassRepository
 	{
 		if (is_int($class))
 		{
-			$class = Academic_Class::find($class); //This is giving an error; not sure why
+			$class = Academic_Class::find($class);
 		}
 
 		echo NestedArrays::convertToAscii(NestedArrays::classDescendants($class));
@@ -161,8 +162,7 @@ class ClassRepository
 	{
 		if (is_int($class))
 		{
-			$class = Academic_Class::find($class); //this seems like the same line
-			//as in printAsciiDescendants() but isn't giving an error
+			$class = Academic_Class::find($class);
 		}
 
 		echo NestedArrays::convertToAscii(NestedArrays::classAncestors($class));

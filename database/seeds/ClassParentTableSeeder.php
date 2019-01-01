@@ -60,7 +60,7 @@ class ClassParentTableSeeder extends Seeder
 		// don't add them if we are at the root of the tree
 		if (!is_null($parent))
 		{
-			$parent->children()->attach($children->pluck('id'));
+			$parent->children()->saveMany($children);
 		}
 	}
 

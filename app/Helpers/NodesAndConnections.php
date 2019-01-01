@@ -44,4 +44,35 @@ class NodesAndConnections
 	{
 		return self::convertTo($old_nodes)["connections"];
 	}
+
+	/**
+	 * some data won't have pivot objects, but conversion function depends on their existence
+	 * let's format an $node into the "nodes with pivot" format
+	 * @param array		$node	the data that needs to be converted; the node must have a 'parent_id' attribute
+	 * @param string	$name		the name of the type of object (ex: "topic" or "class")
+	 * @param int|null	$other_id	the id of the pivot's parent_id, if not the parent_id itself
+	 * @return array				the reformated data as a collection with a pivot attribute
+	 * added and the 'parent_id' attribute removed
+	 */
+	public static function addPivot($node, $name, $replace_child=null)
+	{
+		// add the pivot attribute if there's a parent
+		if (!is_null($replace_child))
+		{
+			$node['pivot'] = [
+				'parent_id' => $node['id'],
+				$name.'_id' => $replace_child
+			];
+		}
+		elseif (!is_null($node['parent_id']))
+		{
+			$node['pivot'] = [
+				'parent_id' => $node['parent_id'],
+				$name.'_id' => $node['id']
+			];
+		}
+		// remove the parent_id attribute
+		unset($node['parent_id']);
+		return $node;
+	}
 }
