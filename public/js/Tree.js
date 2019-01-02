@@ -81,8 +81,9 @@ Tree.prototype.simulationInitialize = function()
 	self.simulation = d3.forceSimulation();
 	
 	self.simulation
+		.alpha(0.5)
 		.alphaTarget(-1)
-		.alphaDecay(0.008)
+		.alphaDecay(0.002)
 		.force("ForceLink", d3.forceLink())
 		.force("ForceCharge", d3.forceManyBody());
 		//.force("ForceCenterX", d3.forceX(self.frame.boundary.width/2))
@@ -114,7 +115,7 @@ Tree.prototype.simulationReheat = function()
 {
 	var self = this;
 	self.simulation.restart();
-	self.simulation.alpha(1);
+	self.simulation.alpha(0.5);
 };
 
 Tree.prototype.simulationRestart = function()
@@ -642,7 +643,7 @@ Tree.prototype.computeTreeAttributes = function(selections)
 				console.log(d.id);
 				return 200;
 			case 2: 
-				return 80;	
+				return 50;	
 			default:
 				return 280;
 			}
