@@ -68,43 +68,73 @@ function Tree(type, frame_id, server)
 	self.menu_context_items = 
 	[
 		{
-			title: '🗑 Delete',
+			title: 'Delete',
+			icon:  'delete',
 			color: 'red',
 			enabled: true,
 			action: function(node, d, i) 
 			{
 				console.log('Item #1 clicked!');
-				console.log('The data for this circle is: ' + d);
 			}
 		},
 		{
-			title: '✏ Edit',
+			title: 'Edit',
+			icon:  'edit',
 			color: 'purple',
 			enabled: true,
 			action: function(node, d, i) 
 			{
-				console.log('You have clicked the second item!');
-				console.log('The data for this circle is: ' + d);
+				console.log('Item #1 clicked!');
 			}
 		},
 		{
-			title: '➕ Add',
+			title: 'Add',
+			icon:  'add',
 			color: 'green',
 			enabled: true,
 			action: function(node, d, i) 
 			{
-				console.log('You have clicked the second item!');
-				console.log('The data for this circle is: ' + d);
+				console.log('Item #1 clicked!');
 			}
 		},
 		{
-			title: '➰ Capture',
+			title: 'Capture',
+			icon:   'playlist_add',
 			color: 'blue',
 			enabled: true,
 			action: function(node, d, i) 
 			{
-				console.log('You have clicked the second item!');
-				console.log('The data for this circle is: ' + d);
+				console.log('Item #1 clicked!');
+			}
+		},
+		{
+			title: 'Move',
+			icon:   'open_with',
+			color: 'blue',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('Item #1 clicked!');
+			}
+		},
+		{
+			title: 'Attach',
+			icon:   'link',
+			color: 'orange',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('Item #1 clicked!');
+			}
+		},
+		{
+			title: 'Detach',
+			icon:   'link_off',
+			color: 'red',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('Item #1 clicked!');
 			}
 		}
 	];
@@ -871,31 +901,46 @@ Tree.prototype.nodeMenuOpen = function(node, data, index)
 	
 	var list = self.menu_context.append('ul');
 	
-	list.selectAll('li')
+	var menu_items_new = list.selectAll('li')
 			.data(self.menu_context_items)
 			.enter()
 				.append('li')
-					.html(function(d) 
-						{
-							return d.title;
-						}
-					)
-					.style('color', function(d)
-						{
-							return d.color;
-						}
-					)
-					.style('display', function(d)
-						{
-							return d.enabled ? "default" : "none";
-						}	
-					)
-					.on('click', function(d) 
-						{
-							d.action(node, data, index);
-							self.menu_context.style('display', 'none');
-						}
-					);
+	
+	menu_items_new
+		.style('color', function(d)
+			{
+				return d.color;
+			}
+		)
+		.style('display', function(d)
+			{
+				return d.enabled ? "default" : "none";
+			}	
+		)
+		.on('click', function(d) 
+			{
+				d.action(node, data, index);
+				self.menu_context.style('display', 'none');
+			}
+		)
+	
+	menu_items_new
+		.append('i')
+			.classed('material-icons', true)
+			.text(function(d) 
+				{
+					return d.icon;
+				}
+			);
+	menu_items_new
+		.append('span')
+			.text(function(d) 
+				{
+					return d.title;
+				}
+			);
+			
+	
 					
 	// display context menu
 	self.menu_context
