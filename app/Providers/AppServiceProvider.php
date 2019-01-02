@@ -2,9 +2,8 @@
 
 namespace App\Providers;
 
-use App\Http\Resources\ClassResource;
-use App\Http\Resources\TopicResource;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Http\Resources\Json\Resource;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,9 +14,8 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		// disable wrapping of the outermost resource with a 'data' attribute
-		TopicResource::withoutWrapping();
-		ClassResource::withoutWrapping();
+		// disable wrapping of arrays returned by Resource classes with a data attribute
+		Resource::withoutWrapping();
 	}
 
 	/**
