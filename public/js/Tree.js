@@ -918,9 +918,17 @@ Tree.prototype.nodeMenuOpen = function(node, data, index)
 			}	
 		)
 		.on('click', function(d) 
-			{
+			{	
 				d.action(node, data, index);
 				self.menu_context.style('display', 'none');
+			}
+		)
+		.on('touchstart', function(d) 
+			{	
+				setTimeout(function(){self.menu_context.style('display', 'none');}, 500);
+				d.action(node, data, index);
+				d3.event.preventDefault();
+				//alert("touchdown");
 			}
 		)
 	

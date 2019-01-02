@@ -63,7 +63,7 @@ svg.tree
 	vertical-align: middle;
 }
 
-.menu_context li:hover 
+.menu_context li:hover,li:active
 {
 	background-color: #cddbff;
 }
