@@ -53,18 +53,40 @@ class ClassesHttpTest extends TestCase
 		$this->assertEquals($new_name, $new_class->name);
 
 		// attach this class to the root class
+		// and attach some children to this class
 		$parent = 0;
+		$children = ClassRepository::getTopLevelClasses()->pluck('id')->toArray();
 		$response = $this->actingAs($user)->patch('/classes/attach/'.($new_class->id),
 			[
+				'children' => $children,
 				'parent' => $parent
 			]
 		);
 		$new_class = Academic_Class::latest()->first();
 		$new_parent = $new_class->parent()->get()->first();
+		$new_children = $new_class->children()->get()->pluck('id')->toArray();
 		// check: was the attachment successful?
 		$response->assertSuccessful();
 		$this->assertNull($new_parent);
 		$this->assertContains($new_class->id, ClassRepository::getTopLevelClasses()->pluck('id')->toArray());
+		$this->assertEquals(array_values($children), array_values($new_children));
+
+		// attach those children back to the root
+		$response = $this->actingAs($user)->patch('/classes/attach/0',
+			[
+				'children' => $children
+			]
+		);
+		$new_class = Academic_Class::latest()->first();
+		// check: was the attachment successful?
+		$response->assertSuccessful();
+		$this->assertEquals(
+			array_values(array_merge($children, [$new_class->id])),
+			array_values(
+				ClassRepository::getTopLevelClasses()->pluck('id')->toArray()
+			)
+		);
+		$this->assertEmpty($new_class->children()->get());
 
 		// attach this class to a parent class
 		$parent = Academic_Class::inRandomOrder()->take(1)->get()->first();
@@ -79,20 +101,6 @@ class ClassesHttpTest extends TestCase
 		$response->assertSuccessful();
 		$this->assertEquals($new_parent->id, $parent->id);
 		$this->assertNotContains($new_class->id, ClassRepository::getTopLevelClasses()->pluck('id')->toArray());
-
-		// attach this class to the root class
-		$parent = '';
-		$response = $this->actingAs($user)->patch('/classes/attach/'.($new_class->id),
-			[
-				'parent' => $parent
-			]
-		);
-		$new_class = Academic_Class::latest()->first();
-		$new_parent = $new_class->parent()->get()->first();
-		// check: was the attachment successful?
-		$response->assertSuccessful();
-		$this->assertNull($new_parent);
-		$this->assertContains($new_class->id, ClassRepository::getTopLevelClasses()->pluck('id')->toArray());
 
 		// delete the class we created
 		$response = $this->actingAs($user)->delete('/classes/'.($new_class->id));

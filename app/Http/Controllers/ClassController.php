@@ -53,13 +53,13 @@ class ClassController extends Controller
 	public function store(Request $request)
 	{
 		// first, validate the request
-		// note that the parent attribute can either be empty or 0,
+		// note that the parent attribute can be 0,
 		// which would mean that we must attach the root as the parent
 		$validated = $request->validate([
 			'name' => 'string|required|max:255',
 			'parent' => [
 				'int',
-				'present',
+				'required',
 				Rule::in(
 					Academic_Class::pluck('id')->push('0')->toArray()
 				)
@@ -69,7 +69,7 @@ class ClassController extends Controller
 		// create a new Academic_Class using mass assignment to add the 'name' attribute
 		$class = (new Academic_Class)->fill($validated);
 		$class->author_id = Auth::id();
-		// check that the parent attribute is not empty or 0
+		// check that the parent attribute is not 0
 		// otherwise, don't set the parent attribute, since it will default to NULL
 		if ($validated['parent'])
 		{
@@ -153,30 +153,59 @@ class ClassController extends Controller
 	 * @param  Academic_Class $class the child class
 	 * @return \Illuminate\Http\Response
 	 */
-	public function attach(Request $request, Academic_Class $class)
+	public function attach(Request $request, Academic_Class $class = null)
 	{
+		$id = is_null($class) ? 0 : $class->id;
 		// first, validate the request
 		// note that the parent attribute can either be empty or 0,
 		// which would mean that we must attach the root as the parent
 		$validated = $request->validate([
+			'children' => 'array|required_without:parent',
+			'children.*' => [
+				'int',
+				'distinct',
+				'required',
+				Rule::in(
+					Academic_Class::pluck('id')->reject($id)->toArray()
+				)
+			],
 			'parent' => [
 				'int',
-				'present',
+				'required_without:children',
 				Rule::in(
-					Academic_Class::pluck('id')->push('0')->reject($class->id)->toArray()
+					Academic_Class::pluck('id')->push('0')->reject($id)->toArray()
 				)
 			]
 		]);
 
-		// check that the parent attribute is not empty or 0
-		if ($validated['parent'])
+		// first, check that the class is not the root
+		if ($id != 0)
 		{
-			$class->parent()->associate($validated['parent']);
+			if (array_key_exists('parent', $validated))
+			{
+				// check that the parent is not the root (ie 0)
+				if ($validated['parent'])
+				{
+					$class->parent()->associate($validated['parent']);
+				}
+				else
+				{
+					$class->parent()->dissociate();
+				}
+				$class->save();
+			}
+			if (array_key_exists('children', $validated))
+			{
+				// attach all the children
+				// but first, convert all of the children IDs to model instances
+				// TODO: make this more efficient - currently it executes 2 queries, but it could be 1
+				$children = Academic_Class::whereIn('id', $validated['children'])->get();
+				$class->children()->saveMany($children);
+			}
 		}
-		else
+		elseif (array_key_exists('children', $validated))
 		{
-			$class->parent()->dissociate();
+			Academic_Class::whereIn('id', $validated['children'])->update(['parent_id' => null]);
 		}
-		$class->save();
 	}
 }
