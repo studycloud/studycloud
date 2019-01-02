@@ -82,7 +82,7 @@ Tree.prototype.simulationInitialize = function()
 	
 	self.simulation
 		.alphaTarget(-1)
-		.alphaDecay(0.01)
+		.alphaDecay(0.008)
 		.force("ForceLink", d3.forceLink())
 		.force("ForceCharge", d3.forceManyBody());
 		//.force("ForceCenterX", d3.forceX(self.frame.boundary.width/2))
@@ -107,7 +107,7 @@ Tree.prototype.simulationInitialize = function()
 			
 	self.simulation
 		.force("ForceCharge")
-			.strength(-500);
+			.strength(-1000);
 };
 
 Tree.prototype.simulationReheat = function()
@@ -555,8 +555,8 @@ Tree.prototype.computeTreeAttributes = function(selections)
 				d.width = 10;
 				d.height = d.width;
 				d.opacity = 0;
-				d.x_new = self.frame.boundary.width/2;
-				d.y_new = self.frame.boundary.height/4;
+				d.x_new = null;//self.frame.boundary.width/2;
+				d.y_new = null;//self.frame.boundary.height/4;
 				
 				//for every node, store its old position
 				d.x_old = d.x;
