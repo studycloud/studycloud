@@ -37,13 +37,7 @@ function Tree(type, frame_id, server)
 	self.frame.on("resize", self.resizeFrame);
 	
 	self.frame.svg = self.frame.append("svg");
-	
-	self.frame.center = 
-	{
-		x: self.frame.boundary.width/2, 
-		y: self.frame.boundary.height/2 
-	};
-	
+		
 	self.frame.svg
 		.attr("class", "tree");
 	
@@ -62,7 +56,14 @@ function Tree(type, frame_id, server)
 	
 	self.simulationInitialize();
 
-	d3.select(window).on("resize", function() { self.simulationRecenter(); });
+	var timeout_resize;
+	d3.select(window).on("resize", function() 
+		{ 
+			clearTimeout(timeout_resize);
+			timeout_resize = setTimeout(function(){self.simulationRecenter()}, 100); 
+		}
+	);
+	
 	
 	//if (self.debug) self.setData(data);
 	
@@ -84,8 +85,8 @@ Tree.prototype.simulationInitialize = function()
 		.alphaDecay(0.01)
 		.force("ForceLink", d3.forceLink())
 		.force("ForceCharge", d3.forceManyBody())
-		.force("ForceCenterX", d3.forceX(self.frame.center.x))
-		.force("ForceCenterY", d3.forceY(self.frame.center.y));
+		.force("ForceCenterX", d3.forceX(self.frame.boundary.width/2))
+		.force("ForceCenterY", d3.forceY(self.frame.boundary.height/2));
 
 	self.simulation
 		.nodes(self.nodes.data())
@@ -132,26 +133,15 @@ Tree.prototype.simulationRecenter = function(node)
 
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
 
-	self.frame.svg.center =
-	{
-		x: self.frame.boundary.width / 2,
-		y: self.frame.boundary.height / 2
-	};
-
 	self.simulation
 		.force("ForceCenterX", d3.forceX(self.frame.boundary.width / 2))
 		.force("ForceCenterY", d3.forceY(self.frame.boundary.height / 2));
 
-	self.simulationReheat();
+	//self.simulationReheat();
 
 	var node_center = self.nodes.filter(function(d){ return d.level == 0; });
 
-	node_center.each(function(d)
-		{
-			d.fx = self.frame.boundary.width / 2;
-			d.fy = self.frame.boundary.height / 2;
-		}
-	);
+	self.centerOnNode(node_center.node());
 }
 
 Tree.prototype.getNLevelIds = function(node_id, levels_num)
@@ -549,7 +539,117 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 	return linkInterpolator;
 
 }
+
+Tree.prototype.computeTreeAttributes = function(selections)
+{
+	self = this;
 	
+	//Set the new level of each of the nodes in our tree
+	self.nodes
+		.attr("class", "node")
+		.each(function(d)
+			{
+				d.level = 3;
+				d.visible = false;
+				d.labeled = false;
+				d.width = 10;
+				d.height = d.width;
+				d.opacity = 0;
+				d.x_new = self.frame.boundary.width/2;
+				d.y_new = self.frame.boundary.height/4;
+				
+				//for every node, store its old position
+				d.x_old = d.x;
+				d.y_old = d.y;
+			}
+		);
+	
+	self.links.each(function(d){d.level = 3;});
+	
+	selections.parents.nodes
+		.classed("node-parent", true)
+		.each(function(d,i,nodes)
+			{
+				d.level = -1;
+				d.visible = true;
+				d.labeled = true;
+				d.width = self.frame.boundary.width / nodes.length;
+				d.height = 40;
+				d.opacity = 1;
+				d.x_new = d.width*i + d.width/2;
+				d.y_new = d.height/2;
+				
+			}
+		);
+	selections.parents.links.each(function(d){d.level = -1;});
+
+	selections.root.nodes
+		.classed("node-root", true)
+		.each(function(d)
+			{
+				d.level = 0;
+				d.visible = true;
+				d.labeled = true;
+				d.width = 150;
+				d.height = d.width;
+				d.opacity = 1;
+				d.x_new = self.frame.boundary.width/2;
+				d.y_new = self.frame.boundary.height/2;
+				
+			}
+		);
+	
+	selections.children.nodes
+		.classed("node-child", true)
+		.each(function(d, i, nodes)
+			{
+				d.level = 1;
+				d.visible = true;
+				d.labeled = true;
+				d.width = 80;
+				d.height = d.width;
+				d.opacity = 1;
+				d.x_new = null; //Let them move
+				d.y_new = null;
+				console.log(d);				
+			}
+		);
+	selections.children.links.each(function(d){d.level = 1;});
+
+	selections.grandchildren.nodes
+		.classed("node-grandchild", true)
+		.each(function(d)
+			{
+				d.level = 2;
+				d.visible = true;
+				d.labeled = false;
+				d.width = 20;
+				d.height = d.width;
+				d.opacity = 0.3;
+				d.x_new = null; //Let them move
+				d.y_new = null;			
+			}
+		);
+	selections.grandchildren.links.each(function (d) { d.level = 2; });
+	
+	self.simulation.force("ForceLink").distance(function(d)
+		{
+			switch(d.level)
+			{
+			case -1:
+				return 150;
+			case 1: 
+				console.log(d.id);
+				return 150;
+			case 2: 
+				return 25;	
+			default:
+				return 280;
+			}
+		}
+	);
+	
+}
 Tree.prototype.centerOnNode = function (node)
 {
 	//This function centers the tree visualization on a node.
@@ -567,7 +667,7 @@ Tree.prototype.centerOnNode = function (node)
 	ids_combined.nodes = new Set(function*() { yield* ids_ancestor.nodes; yield* ids_descendents.nodes; }());
 	ids_combined.links = new Set(function*() { yield* ids_ancestor.links; yield* ids_descendents.links; }());
 	
-	var selection = 
+	var selections = 
 	{
 		parents: {},
 		root: {},
@@ -575,111 +675,38 @@ Tree.prototype.centerOnNode = function (node)
 		grandchildren:{}
 	};
 	
-	selection.nodes = filterSelectionsByIDs(self.nodes, ids_combined.nodes, "data_id");
-	selection.links = filterSelectionsByIDs(self.links, ids_combined.links, "data_id");
+	selections.nodes = filterSelectionsByIDs(self.nodes, ids_combined.nodes, "data_id");
+	selections.links = filterSelectionsByIDs(self.links, ids_combined.links, "data_id");
 	
 	
+	selections.parents.nodes = filterSelectionsByIDs(self.nodes, ids_ancestor.nodes_separate[1], "data_id");
+	selections.parents.links = filterSelectionsByIDs(self.links, ids_ancestor.links_separate[1], "data_id");
 	
-	selection.parents.nodes = filterSelectionsByIDs(self.nodes, ids_ancestor.nodes_separate[1], "data_id");
-	selection.parents.links = filterSelectionsByIDs(self.links, ids_ancestor.links_separate[1], "data_id");
+	selections.root.nodes = filterSelectionsByIDs(self.nodes, ids_ancestor.nodes_separate[0], "data_id");
 	
-	selection.root.nodes = filterSelectionsByIDs(self.nodes, ids_ancestor.nodes_separate[0], "data_id");
+	selections.children.nodes = filterSelectionsByIDs(self.nodes, ids_descendents.nodes_separate[1], "data_id");
+	selections.children.links = filterSelectionsByIDs(self.links, ids_descendents.links_separate[1], "data_id");
 	
-	selection.children.nodes = filterSelectionsByIDs(self.nodes, ids_descendents.nodes_separate[1], "data_id");
-	selection.children.links = filterSelectionsByIDs(self.links, ids_descendents.links_separate[1], "data_id");
-	
-	selection.grandchildren.nodes = filterSelectionsByIDs(self.nodes, ids_descendents.nodes_separate[2], "data_id");
-	selection.grandchildren.links = filterSelectionsByIDs(self.links, ids_descendents.links_separate[2], "data_id");
+	selections.grandchildren.nodes = filterSelectionsByIDs(self.nodes, ids_descendents.nodes_separate[2], "data_id");
+	selections.grandchildren.links = filterSelectionsByIDs(self.links, ids_descendents.links_separate[2], "data_id");
 	
 	
-	//Set the new level of each of the nodes in our tree
-	self.nodes
-		.attr("class", "node")
-		.each(function(d)
-			{
-				d.level = 3;
-				d.visible = false;
-				d.labeled = false;
-				d.width = 10;
-				d.height = d.width;
-				d.opacity = 0;
-				d.x_new = self.frame.center.x;
-				d.y_new = self.frame.center.y/2;
-				
-				//for every node, store its old position
-				d.x_old = d.x;
-				d.y_old = d.y;
-			}
-		);
-	self.links.each(function(d){d.level = 3;});
-	
-	selection.parents.nodes
-		.classed("node-parent", true)
-		.each(function(d,i,nodes)
-			{
-				d.level = -1;
-				d.visible = true;
-				d.labeled = true;
-				d.width = self.frame.boundary.width / nodes.length;
-				d.height = 40;
-				d.opacity = 1;
-				d.x_new = d.width*i + d.width/2;
-				d.y_new = d.height/2;
-				
-			}
-		);
-	selection.parents.links.each(function(d){d.level = -1;});
+	self.computeTreeAttributes(selections)
 
-	selection.root.nodes
-		.classed("node-root", true)
-		.each(function(d)
+	//Set the on click handlers
+	self.nodes.on("click", function(d)
+	{
+		switch (d.level)
 			{
-				d.level = 0;
-				d.visible = true;
-				d.labeled = true;
-				d.width = 150;
-				d.height = d.width;
-				d.opacity = 1;
-				d.x_new = self.frame.center.x;
-				d.y_new = self.frame.center.y;
-				
+				case -1:
+				case 1:
+				case 2:
+					self.nodeClicked(this)
+				default:
+					//self.nodeClicked(this)
+					break;
 			}
-		);
-	
-	selection.children.nodes
-		.classed("node-child", true)
-		.each(function(d, i, nodes)
-			{
-				d.level = 1;
-				d.visible = true;
-				d.labeled = true;
-				d.width = 80;
-				d.height = d.width;
-				d.opacity = 1;
-				d.x_new = null; //Let them move
-				d.y_new = null;
-				console.log(d);				
-			}
-		);
-	selection.children.links.each(function(d){d.level = 1;});
-
-	selection.grandchildren.nodes
-		.classed("node-grandchild", true)
-		.each(function(d)
-			{
-				d.level = 2;
-				d.visible = true;
-				d.labeled = false;
-				d.width = 20;
-				d.height = d.width;
-				d.opacity = 0.3;
-				d.x_new = null; //Let them move
-				d.y_new = null;			
-			}
-		);
-	selection.grandchildren.links.each(function (d) { d.level = 2; });
-	
-
+	});
 	//Make all of the animations!
 	var transition = d3.transition();
 
@@ -702,6 +729,7 @@ Tree.prototype.centerOnNode = function (node)
 					break;
 			}
 	});
+	
 	
 	//Set the animatable attributes for all of the nodes that we are about to animate
 	self.nodes.select("rect")
@@ -767,119 +795,20 @@ Tree.prototype.centerOnNode = function (node)
 					}
 				}
 			)
-			.on("interrupt", function(d)
-				{	
-					//we got interrupted, clear the fixed position of the circles so that they animate correctly
-					//d.fx = null;
-					//d.fy = null;
-					console.log("Animation Interrupted");
-				}
-			)
 			.attr("opacity",function(d)
 				{
 					return d.opacity;
 				}
 			)
 			.tween("coordinates", self.nodeCoordinateInterpolatorGenerator);
+			
+			
+	self.simulation.stop();
 	
+	self.nodes_simulated = selections.nodes;
+	self.links_simulated = selections.links;
 
 	
-	self.simulation.force("ForceLink").distance(function(d)
-		{
-			switch(d.level)
-			{
-			case -1:
-				return 150;
-			case 1: 
-				console.log(d.id);
-				return 150;
-			case 2: 
-				return 25;	
-			default:
-				return 280;
-			}
-		}
-	);
-	
-		/*
-	self.links
-		.transition(transition)
-			.tween("linkLength", self.linkLengthInterpolatorGenerator);
-	
-	self.frame.svg
-		.transition(transition)
-			.tween("UpdateLinkDistance", function()
-				{
-					return function()
-					{
-						//console.log("hi");
-						self.draw();
-						self.simulation.force("ForceLink").distance(function(d){return d.length;});
-					}
-				}
-			)
-			.on("end", function(d)
-				{
-					self.simulationRestart();
-				}
-			);
-	
-	*/
-	
-	//Not animating links since they aren't shown now
-	/*
-	self.links
-		.transition(transition)
-			.style("opacity", function(d)
-				{
-					switch (d.level)
-					{
-						case -1:
-						case 0: 
-						case 1: 
-						case 2: return 1;
-						case 3: return 0;
-					}
-				}
-			)
-			.on("start", function(d)
-				{
-					switch (d.level)
-					{
-						case -1:
-						case 0: 
-						case 1: 
-						case 2: 
-							this.style.visibility = "hidden";
-							break;
-						case 3:
-							break;
-					}
-				}
-			)
-			.on("end", function(d)
-				{
-					switch (d.level)
-					{
-						case -1:
-						case 0: 
-						case 1: 
-						case 2: 
-							break;
-						case 3:
-							this.style.visibility = "hidden";
-							break;
-					}
-				}
-			);
-	*/
-	
-
-	
-	self.nodes_simulated = selection.nodes;
-	self.links_simulated = selection.links;
-
-
 	self.simulationRestart();
 }
 
