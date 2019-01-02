@@ -41,7 +41,8 @@ class ClassController extends Controller
 	 */
 	public function create()
 	{
-		// return a view for creating a new topic
+		// return a view for creating a new class
+		// currently this view doesn't exist, but it probably should
 	}
 
 	/**
@@ -86,8 +87,9 @@ class ClassController extends Controller
 	 */
 	public function show(Academic_Class $class)
 	{
-		// let the js handle parsing the URL to determine which topic to retrieve
-		return view('classes');
+		// let the js handle parsing the URL to determine which class to retrieve
+		// currently this view doesn't exist, but maybe it should?
+		// return view('classes');
 	}
 
 	/**
