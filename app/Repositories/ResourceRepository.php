@@ -62,7 +62,7 @@ class ResourceRepository
 	 * @param Topic 	$new_topic	the topic which we want to add to $resource
 	 * @param Resource	$resource	the resource to move
 	 */
-	public static function addTopic(Topic $new_topic, Resource $resource) //should this be static? added 8/30/2018
+	public static function addTopic(Topic $new_topic, Resource $resource)
 	{
 		// get the set of disallowed topics for this resource
 		$disallowed_topics = self::disallowedTopics($resource);
@@ -111,7 +111,7 @@ class ResourceRepository
 	 * @param  Resource 	$resource 	the resource whose topics you'd like to detach
 	 * @param  Collection 	$new_topics the topics to detach (as IDs)
 	 */
-	public static function detachTopics($resource, $old_topics) 
+	public static function detachTopics($resource, $old_topics)
 	{
 		return $resource->topics()->detach($old_topics);
 	}
