@@ -84,23 +84,23 @@ Tree.prototype.simulationInitialize = function()
 		.alphaTarget(-1)
 		.alphaDecay(0.01)
 		.force("ForceLink", d3.forceLink())
-		.force("ForceCharge", d3.forceManyBody())
-		.force("ForceCenterX", d3.forceX(self.frame.boundary.width/2))
-		.force("ForceCenterY", d3.forceY(self.frame.boundary.height/2));
+		.force("ForceCharge", d3.forceManyBody());
+		//.force("ForceCenterX", d3.forceX(self.frame.boundary.width/2))
+		//.force("ForceCenterY", d3.forceY(self.frame.boundary.height/2));
 
 	self.simulation
 		.nodes(self.nodes.data())
 		.on('tick', function(){self.draw()});
 
-	self.simulation.force("ForceCenterX")
-		.strength(0.01);
+	//self.simulation.force("ForceCenterX")
+		//.strength(0.01);
 	
-	self.simulation.force("ForceCenterY")
-		.strength(0.01);	
+	//self.simulation.force("ForceCenterY")
+	//	.strength(0.01);	
 		
 	self.simulation
 		.force("ForceLink")
-			.strength(0.6)
+			.strength(1)
 			.links(self.links.data())
 			.id(function(d){return d.id;})
 			.distance(400);
@@ -133,9 +133,9 @@ Tree.prototype.simulationRecenter = function(node)
 
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
 
-	self.simulation
-		.force("ForceCenterX", d3.forceX(self.frame.boundary.width / 2))
-		.force("ForceCenterY", d3.forceY(self.frame.boundary.height / 2));
+	//self.simulation
+		//.force("ForceCenterX", d3.forceX(self.frame.boundary.width / 2))
+		//.force("ForceCenterY", d3.forceY(self.frame.boundary.height / 2));
 
 	//self.simulationReheat();
 
@@ -590,7 +590,7 @@ Tree.prototype.computeTreeAttributes = function(selections)
 				d.level = 0;
 				d.visible = true;
 				d.labeled = true;
-				d.width = 150;
+				d.width = 200;
 				d.height = d.width;
 				d.opacity = 1;
 				d.x_new = self.frame.boundary.width/2;
@@ -606,7 +606,7 @@ Tree.prototype.computeTreeAttributes = function(selections)
 				d.level = 1;
 				d.visible = true;
 				d.labeled = true;
-				d.width = 80;
+				d.width = 140;
 				d.height = d.width;
 				d.opacity = 1;
 				d.x_new = null; //Let them move
@@ -640,9 +640,9 @@ Tree.prototype.computeTreeAttributes = function(selections)
 				return 150;
 			case 1: 
 				console.log(d.id);
-				return 150;
+				return 200;
 			case 2: 
-				return 25;	
+				return 80;	
 			default:
 				return 280;
 			}
