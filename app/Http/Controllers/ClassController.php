@@ -24,7 +24,7 @@ class ClassController extends Controller
 	}
 
 	/**
-	 * Display a listing of the resource.
+	 * Display a listing of the class.
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
@@ -35,7 +35,7 @@ class ClassController extends Controller
 	}
 
 	/**
-	 * Show the form for creating a new resource.
+	 * Show the form for creating a new class.
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
@@ -46,7 +46,7 @@ class ClassController extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Store a newly created class in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
@@ -80,7 +80,7 @@ class ClassController extends Controller
 	}
 
 	/**
-	 * Display the specified resource.
+	 * Display the specified class.
 	 *
 	 * @param  \App\Academic_Class  $academic_Class
 	 * @return \Illuminate\Http\Response
@@ -93,7 +93,7 @@ class ClassController extends Controller
 	}
 
 	/**
-	 * Show the form for editing the specified resource.
+	 * Show the form for editing the specified class.
 	 *
 	 * @param  \App\Academic_Class  $class
 	 * @return \Illuminate\Http\Response
@@ -105,7 +105,7 @@ class ClassController extends Controller
 	}
 
 	/**
-	 * Update the specified resource in storage.
+	 * Update the specified class in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  \App\Academic_Class  $class
@@ -126,7 +126,7 @@ class ClassController extends Controller
 	}
 
 	/**
-	 * Remove the specified resource from storage.
+	 * Remove the specified class from storage.
 	 *
 	 * @param  \App\Academic_Class  $class
 	 * @return \Illuminate\Http\Response
