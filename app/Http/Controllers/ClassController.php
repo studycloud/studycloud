@@ -10,10 +10,17 @@ use Illuminate\Support\Facades\Auth;
 class ClassController extends Controller
 {
 	/**
-	ROUTES FOR THIS CONTROLLER
-		HTTP Verb	URI	Route Name	Action
-		
-	**/
+	 * ROUTES FOR THIS CONTROLLER
+	 *	HTTP Verb	URI						Route Name		Action
+	 *	GET			/classes				classes.index	show the class tree page
+	 *	GET			/classes/create			classes.create	show the class creation page
+	 *	POST		/classes				classes.store	create a new class sent as JSON
+	 *	GET			/classes/{id}			classes.show	show the page for this class
+	 *	GET			/classes/{id}/edit		classes.edit	show the editor for this class
+	 *	PATCH/PUT	/classes/{id}			classes.update	alter a current class to match the attributes sent as JSON
+	 *	DELETE		/classes/{id}			classes.destroy	request that this class be deleted
+	 *	PATCH		/classes/attach/{id}	classes.attach	alter either the parent or children of this class
+	 */
 
 	function __construct()
 	{
