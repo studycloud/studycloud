@@ -84,6 +84,15 @@ class ResourcesHttpTest extends TestCase
 		$response->assertSuccessful();
 		$this->assertEquals($new_content_name, $new_content->name);
 
+		// attach the resource to some items in the tree
+		$new_tree_items = [
+			'topics': [],
+			'class': 1
+		];
+		$response = $this->actingAs($user)->patch('/resources/attach/'.($new_resource->id), $tree_items);
+		$new_class = Resource::latest()->class()->get();
+		// write some new code here once classes work
+
 		// delete the resource we created
 		$response = $this->actingAs($user)->delete('/resources/'.($new_resource->id));
 		// is the Resource and its ResourceContent gone?

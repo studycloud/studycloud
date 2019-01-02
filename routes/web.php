@@ -4,6 +4,7 @@ use App\User;
 use App\Topic;
 use App\Resource;
 use Illuminate\Http\Request;
+use App\Http\Middleware\CheckStatus;
 use App\Http\Resources\TopicResource;
 use App\Http\Resources\ResourceResource;
 
@@ -32,18 +33,20 @@ Route::get('about',
 Route::get('data/resource',
 	function(Request $request)
 	{
-		return new ResourceResource(Resource::find($request->query('id')));
+		return new ResourceResource(Resource::find($request->input('id')));
 	}
-)->name('resources.json');
+)->middleware(CheckStatus::class.':'.Resource::class)->name('resources.json');
 Route::resource('resources', 'ResourceController', ['except' => 
 	'index'
 ]);
+Route::patch('/resources/attach/{resource}', 'ResourceController@attach')->name('resources.attach');
+Route::patch('/resources/detach/{resource}', 'ResourceController@detach')->name('resources.detach');
 
 Route::get('data/topic_tree', 'GetTopicTree');
 Route::get('data/topic',
 	function(Request $request)
 	{
-		return new TopicResource(Topic::find($request->query('id')));
+		return new TopicResource(Topic::find($request->input('id')));
 	}
 )->name('topics.json');
 Route::resource('topics', 'TopicController');

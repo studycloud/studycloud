@@ -2,35 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Topic;
 use App\Resource;
 use Carbon\Carbon;
 use App\ResourceContent;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Middleware\CheckAuthor;
+use App\Http\Middleware\CheckStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
+use App\Http\Repositories\ResourceRepository;
 
 
 class ResourceController extends Controller
 {
 	/**
-	ROUTES FOR THIS CONTROLLER
-		HTTP Verb		URI						Route Name			Action
-		GET				/resources/create		resources.create	show the resource creation page
-		POST			/resources				resources.store		create a new resource sent as JSON
-		GET				/resources/{id}			resources.show		show the page for this resource
-		GET				/resources/{id}/edit	resources.edit		show the editor for this resource (if logged in as the author)
-		PATCH (or PUT)	resources/{id}			resources.update	alter a current resource according to the changes sent as JSON
-		DELETE			/resources/{id}			resources.destroy	request that this resource be deleted
-	**/
+	 * ROUTES FOR THIS CONTROLLER
+	 *	HTTP Verb	URI						Route Name			Action
+	 *	GET			/resources/create		resources.create	show the resource creation page
+	 *	POST		/resources				resources.store		create a new resource sent as JSON
+	 *	GET			/resources/{id}			resources.show		show the page for this resource
+	 *	GET			/resources/{id}/edit	resources.edit		show the editor for this resource (if logged in as the author)
+	 *	PATCH/PUT	/resources/{id}			resources.update	alter a current resource according to the changes sent as JSON
+	 *	PATCH		/resources/attach/{id}	resources.attach	add this resource to a list of topics (or a class) sent as JSON (overriding any conflicts that are currently attached)
+	 *	PATCH		/resources/detach/{id}	resources.detach	remove this resource from a list of topics (or a class) sent as JSON
+	 *	DELETE		/resources/{id}			resources.destroy	request that this resource be deleted 
+	 */
 
 	function __construct()
 	{
 		// verify that the user is signed in for all methods except index, show, and json
 		$this->middleware('auth', ['except' => ['index', 'show']]);
-		// verify that the user is the author of the resource
-		$this->middleware(CheckAuthor::class, ['only' => ['update', 'move', 'destroy']]);
+		// verify that the resource isn't disabled before doing anything with it
+		$this->middleware(CheckStatus::class, ['except' => ['index', 'create', 'store']]);
 	}
 
 	/**
@@ -51,6 +56,7 @@ class ResourceController extends Controller
 	 */
 	public function create()
 	{
+		$this->authorize('create', Resource::class);
 		// load the appropriate view here
 		// return view('resource.create', ['resource' => NULL]);
 	}
@@ -63,6 +69,7 @@ class ResourceController extends Controller
 	 */
 	public function store(Request $request)
 	{
+		$this->authorize('create', Resource::class);
 		// first, validate the request
 		$validated = $request->validate([
 			'name' => 'string|required|max:255',
@@ -97,6 +104,7 @@ class ResourceController extends Controller
 	 */
 	public function show(Resource $resource)
 	{
+		// $this->authorize('view', $resource);
 		return view('resource', ['resource' => $resource]);
 	}
 
@@ -108,6 +116,7 @@ class ResourceController extends Controller
 	 */
 	public function edit(Resource $resource)
 	{
+		$this->authorize('update', $resource);
 		// load the same view as the create method
 		// return view('resource.create', ['resource' => $resource]);
 	}
@@ -121,6 +130,7 @@ class ResourceController extends Controller
 	 */
 	public function update(Request $request, Resource $resource)
 	{
+		$this->authorize('update', $resource);
 		// first, validate the request
 		$validated = $request->validate([
 			'name' => 'sometimes|max:255',
@@ -157,22 +167,6 @@ class ResourceController extends Controller
 		}
 	}
 
-	/**
-	 * Moves the resource into the desired topics. If attempting to 
-	 * move into a topic that is an ancestor or child of the resource's
-	 * current topics, the conflicting topics will be removed, as well.
-	 *
-	 * @param Resource $resource
-	 * @param Topic $topic
-	 * @return \Illuminate\Http\Response
-	 *
-	 *
-	 */
-	public function move(Resource $resource, Topic $topic)
-	{
-		// do stuff
-	}
-
 
 	/**
 	 * Remove the specified resource from storage.
@@ -182,6 +176,7 @@ class ResourceController extends Controller
 	 */
 	public function destroy(Resource $resource)
 	{
+		$this->authorize('delete', $resource);
 		// first, delete attachments this resource has to any topics
 		$resource->topics->pluck('pivot')->each(
 			function ($resource_topic)
@@ -199,4 +194,54 @@ class ResourceController extends Controller
 		// finally, we can delete the resource
 		$resource->delete();
 	}
+
+
+
+	/**
+	 * Attach a resource to some topics or classes (or both!) in the tree, overwriting any current topics or classes that conflict
+	 * @param Resource $resource
+	 * @param \Illuminate\Http\Request  $request
+	 */
+	public function attach(Resource $resource, Request $request){
+		// only the author of the resource can alter what it is attached to
+		$this->authorize('update', $resource);
+		// validating the request
+		// topics and classes are both optional, but should be arrays of IDs when provided
+		$validated = $request->validate([
+			'topics' => 'sometimes|array',
+			'topics.*' => 'exists:topics,id',
+			'class' => 'sometimes|integer|exists:classes,id',
+		]);
+
+		// add the topics (we'll need to disable this code for MVP)
+		foreach($validated['topics'] as $topic){
+			ResourceRepository::addTopic(Topic::find($topic), $resource);
+		}
+		// add the class (add this code once you have a function for it)
+		
+	}
+	
+
+	/**
+	 * Detach a resource from topics or classes (or both!) in the tree
+	 * @param  Resource $resource
+	 * @param  Request  $request
+	 */
+	public function detach(Resource $resource, Request $request){
+		// only the author of resource can alter what it is attached to
+		$this->authorize('update', $resource);
+		// validating the reqeust 
+		// topics and classes are both optional, but should be arrays of IDs when provided
+		$validated = $request->validate([
+			'topics' => 'sometimes|array',
+			'topics.*' => 'exists:topics,id',
+			'class' => 'sometimes|integer|exists:classes,id',
+		]);
+
+		// remove the topics (we'll need to disable this code for MVP)
+		ResourceRepository::detachTopics($resource, $validated['topics']);
+		// remove the class (add this code once you have a function for it)
+		
+	}
+
 }
