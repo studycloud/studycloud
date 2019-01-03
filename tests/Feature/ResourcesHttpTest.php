@@ -48,6 +48,7 @@ class ResourcesHttpTest extends TestCase
 		$new_resource = Resource::latest()->first();
 		$new_content = $new_resource->contents->first();
 		// check: do we have a new Resource and a new ResourceContent?
+		dd($response->exception);
 		$response->assertSuccessful();
 		$this->assertEquals(Resource::count()-1, $resource_count);
 		$this->assertEquals(ResourceContent::count()-1, $content_count);
@@ -85,13 +86,27 @@ class ResourcesHttpTest extends TestCase
 		$this->assertEquals($new_content_name, $new_content->name);
 
 		// attach the resource to some items in the tree
-		$new_tree_items = [
-			'topics': [],
-			'class': 1
-		];
-		$response = $this->actingAs($user)->patch('/resources/attach/'.($new_resource->id), $tree_items);
+		$class = Academic_Class::inRandomOrder()->take(1)->get()->first();
+		$response = $this->actingAs($user)->patch('/resources/attach/'.($new_resource->id),
+			[
+				'class' => $class->id
+			]
+		);
 		$new_class = Resource::latest()->class()->get();
-		// write some new code here once classes work
+		// check: was the attachment successful?
+		$response->assertSuccessful();
+		$this->assertEquals($class->id, $new_class->id);
+
+		// detach the resource from some items in the tree
+		$response = $this->actingAs($user)->patch('/resources/detach/'.($new_resource->id),
+			[
+				'class' => true
+			]
+		);
+		$new_class = Resource::latest()->class()->get();
+		// check: was the detachment successful?
+		$response->assertSuccessful();
+		$this->assertEmpty($new_class);
 
 		// delete the resource we created
 		$response = $this->actingAs($user)->delete('/resources/'.($new_resource->id));

@@ -80,15 +80,16 @@ class ResourceRepository
 
 	/**
 	 * a wrapper function for attaching a class. it will override the currently attached class
-	 * @param  Resource 	$resource 	the resource to attach classes to
-	 * @param  Collection 	$new_class the class to be attached
+	 * @param  Resource 	$resource 		the resource to attach the class to
+	 * @param  Academic_Class|int|string 	$new_class the class to be attached
 	 * @return 
 	 */
 	public static function attachClass($resource, $new_class)
 	{
 		// get the ids of the classes that we can attach
 		$allowed_classes = self::allowedClasses($resource)->pluck('id');
-		if ($allowed_classes->contains($new_class->id))
+		$new_class = is_a($new_class, Academic_Class::class) ? $new_class->id : $new_class;
+		if (!$allowed_classes->contains($new_class))
 		{
 			throw new \Exception("One of the desired classes cannot be attached because it is an ancestor or descendant of one of this resource's current classes. You can use the allowedClasses() method to see which classes can be attached to this resource.");
 			return;

@@ -66,7 +66,7 @@ class ClassController extends Controller
 		$validated = $request->validate([
 			'name' => 'string|required|max:255',
 			'parent' => [
-				'int',
+				'integer',
 				'required',
 				Rule::in(
 					Academic_Class::pluck('id')->push('0')->toArray()
@@ -171,7 +171,7 @@ class ClassController extends Controller
 		$validated = $request->validate([
 			'children' => 'array|required_without:parent',
 			'children.*' => [
-				'int',
+				'integer',
 				'distinct',
 				'required',
 				Rule::in(
@@ -179,7 +179,7 @@ class ClassController extends Controller
 				)
 			],
 			'parent' => [
-				'int',
+				'integer',
 				'required_without:children',
 				Rule::in(
 					Academic_Class::pluck('id')->push('0')->reject($id)->toArray()
