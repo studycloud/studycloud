@@ -7,6 +7,7 @@ use App\Topic;
 use App\Resource;
 use App\Academic_Class;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Helpers\NodesAndConnections;
 use App\Repositories\ClassRepository;
 use App\Repositories\TopicRepository;
@@ -69,14 +70,21 @@ class GetTree extends Controller
 	public function __invoke(Request $request)
 	{
 		// first, validate the input
-		// $validated = $request->validate([
-		// 	'id' => [
-		// 	],
-		// 	'levels_up' => ''
-		// ]);
+		$validated = $request->validate([
+			'id' => [
+				'nullable',
+				'integer',
+				Rule::in(
+					Academic_Class::pluck('id')->push(0)->toArray()
+				)
+			],
+			'levels_up' => 'nullable|integer|min:0',
+			'levels_down' => 'nullable|integer|min:0',
+		]);
 
 		// now, retrieve the input
 		$node_id = $request->input('id');
+		$node_id = is_null($node_id) ? 0 : $node_id;
 		$up = $request->input('levels_up');
 		$down = $request->input('levels_down');
 
