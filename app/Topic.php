@@ -71,12 +71,12 @@ class Topic extends Model
 	public static function getRoot()
 	{
 		$root = collect([
-			"id"=>0, 
-			"name"=>"All Topics", 
-			"author_id"=>0, 
-			"created_at"=>Carbon::now()->toDateTimeString(), 
+			"id"=>0,
+			"name"=>"All Topics",
+			"author_id"=>0,
+			"created_at"=>Carbon::now()->toDateTimeString(),
 			"updated_at"=>Carbon::now()->toDateTimeString()
 		]);
 		return $root;
-	} 
+	}
 }

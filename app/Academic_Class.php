@@ -3,6 +3,7 @@
 namespace App;
 
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Academic_Class extends Model
@@ -52,5 +53,18 @@ class Academic_Class extends Model
 	public function author()
 	{
 		return $this->belongsTo(User::class);
+	}
+
+	/* This function returns a collection that represents a root */
+	public static function getRoot()
+	{
+		$root = collect([
+			"id"=>0,
+			"name"=>"All Classes",
+			"author_id"=>0,
+			"created_at"=>Carbon::now()->toDateTimeString(),
+			"updated_at"=>Carbon::now()->toDateTimeString()
+		]);
+		return $root;
 	}
 }

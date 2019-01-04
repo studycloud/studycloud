@@ -16,9 +16,10 @@ class ClassRepository
 	 * @param  int $levels the number of levels of descendants to get; returns all if $levels is not specified or is less than 0
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function descendants(Academic_Class $class = null, int $levels = null)
+	public function descendants(Academic_Class $class = null, int $levels = null, $root = null)
 	{
 		$tree = collect();
+
 		// base case: $levels == 0
 		// also do a memoization check to prevent us from
 		// executing a query for a class that we've already found
@@ -30,6 +31,14 @@ class ClassRepository
 			if (is_null($class))
 			{
 				$children = self::getTopLevelClasses();
+
+				if (!is_null($root))
+				{
+					foreach ($children as $child) {  //iterates through each top level class
+						// add a pivot element to each class
+						$child->pivot = collect(["parent_id" => $root['id'], "class_id" => $child["id"]]);
+					}
+				}
 			}
 			else
 			{
@@ -37,6 +46,7 @@ class ClassRepository
 				// add the class id to the list of classes that have already been called
 				array_push($this->memoize, $class->id);
 			}
+
 			foreach ($children as $child) {
 				// add the child to the tree
 				// but add a pivot object to it first
@@ -45,7 +55,7 @@ class ClassRepository
 				);
 				$tree = $tree->merge(
 					// RECURSION!
-					$this->descendants($child, $levels - 1)
+					$this->descendants($child, $levels - 1, $root)
 				);
 			}
 		}
@@ -58,9 +68,10 @@ class ClassRepository
 	 * @param  int $levels the number of levels of ancestors to get; returns all if $levels is not specified or is less than 0
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function ancestors(Academic_Class $class = null, int $levels = null)
+	public function ancestors(Academic_Class $class = null, int $levels = null, $root = null)
 	{
 		$tree = collect();
+
 		// base case: $levels == 0
 		// also do a memoization check to prevent us from
 		// executing a query for a class that we've already found
@@ -78,6 +89,13 @@ class ClassRepository
 				$parents = $class->parent()->get();
 				// add the class id to the list of classes that have already been called
 				array_push($this->memoize, $class->id);
+				// add the root and its connection to this class,
+				// if this class doesn't have any parents
+				if ($parents->isEmpty() && !is_null($root))
+				{
+					$root->put("pivot", collect(["parent_id" => $root['id'], "class_id" => $class['id']]));
+					$tree->push($root);
+				}
 			}
 			foreach ($parents as $parent) {
 				// add the parent to the tree
@@ -86,7 +104,7 @@ class ClassRepository
 				);
 				$tree = $tree->merge(
 					// RECURSION!
-					$this->ancestors($parent, $levels - 1)
+					$this->ancestors($parent, $levels - 1, $root)
 				);
 			}
 		}

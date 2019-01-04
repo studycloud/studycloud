@@ -48,7 +48,8 @@ class TopicRepository
 				if (!is_null($root))
 				{
 					foreach ($children as $child) {  //iterates through each top level topic
-						$child->pivot = collect(["parent_id" => $root['id'], "topic_id" => $child["id"]]); //adds pivot element to each topic
+						// add a pivot element to each topic
+						$child->pivot = collect(["parent_id" => $root['id'], "topic_id" => $child["id"]]);
 					}
 				}
 			}
@@ -58,6 +59,7 @@ class TopicRepository
 				// add the topic id to the list of topics that have already been called
 				array_push($this->memoize, $topic->id);
 			}
+
 			foreach ($children as $child) {
 				// add the child to the tree
 				$tree->push(collect($child));
