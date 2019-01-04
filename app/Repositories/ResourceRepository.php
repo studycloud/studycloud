@@ -15,31 +15,49 @@ class ResourceRepository
 	/**
 	 * In a single query, get the resources of all of the topics in a collection of topic ids.
 	 * @param  array 	$topic_ids 	the topic ids of the resources you want returned
+	 * @param bool		$with_pivot	whether to also load a pivot attribute on each resource
 	 * @return Collection         	the resources as Collections
 	 */
-	public static function getByTopics($topic_ids)
+	public static function getByTopics($topic_ids, $with_pivot=true)
 	{
-		// executes only a single query!
-		return Resource::whereHas('topics',
-			function($query) use ($topic_ids)
-			{
-				$query->whereIn('id', $topic_ids);
-			}
-		)->get()->map(
-			function ($resource)
-			{
-				// return the resource as a collection
-				return collect($resource);
-			}
-		);
+		// if we need to load a pivot attribute, we'll need two queries
+		if ($with_pivot)
+		{
+			// executes two queries
+			return Topic::whereIn('id', $topic_ids)->with('resources')->get()
+			->pluck('resources')->collapse()->map(
+				function ($resource)
+				{
+					// return the resource as a collection
+					return collect($resource);
+				}
+			);
+		}
+		else
+		{
+			// executes only a single query!
+			return Resource::whereHas('topics',
+				function($query) use ($topic_ids)
+				{
+					$query->whereIn('id', $topic_ids);
+				}
+			)->get()->map(
+				function ($resource)
+				{
+					// return the resource as a collection
+					return collect($resource);
+				}
+			);
+		}
 	}
 
 	/**
 	 * In a single query, get the resources of all of the classes in a collection of class ids.
 	 * @param  array 	$class_ids 	the class ids of the resources you want returned
+	 * @param bool		$with_pivot	whether to also load a pivot attribute on each resource
 	 * @return Collection         	the resources as Collections
 	 */
-	public static function getByClasses($class_ids)
+	public static function getByClasses($class_ids, $with_pivot=true)
 	{
 		// executes only a single query!
 		return Resource::whereHas('class',
@@ -48,10 +66,19 @@ class ResourceRepository
 				$query->whereIn('id', $class_ids);
 			}
 		)->get()->map(
-			function ($resource)
+			function ($resource) use ($with_pivot)
 			{
 				// return the resource as a collection
-				return collect($resource);
+				$resource = collect($resource);
+				// if we need to include the class relationship as a pivot, add it manually
+				if ($with_pivot)
+				{
+					$resource->put('pivot', [
+						'resource_id' => $resource['id'],
+						'class_id' => $resource->pull('class_id')
+					]);
+				}
+				return $resource;
 			}
 		);
 	}
