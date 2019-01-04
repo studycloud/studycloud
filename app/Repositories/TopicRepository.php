@@ -48,13 +48,12 @@ class TopicRepository
 				if (!is_null($root))
 				{
 					foreach ($children as $child) {  //iterates through each top level topic
-						$child-> pivot = collect(["parent_id" => $root['id'], "topic_id" => $child["id"]]); //adds pivot element to each topic
+						$child->pivot = collect(["parent_id" => $root['id'], "topic_id" => $child["id"]]); //adds pivot element to each topic
 					}
 				}
 			}
 			else
 			{
-				
 				$children = $topic->children()->get();
 				// add the topic id to the list of topics that have already been called
 				array_push($this->memoize, $topic->id);
@@ -98,12 +97,13 @@ class TopicRepository
 				$parents = $topic->parents()->get();
 				// add the topic id to the list of topics that have already been called
 				array_push($this->memoize, $topic->id);
-			}
-
-			if ($parents->isEmpty() && !is_null($root))
-			{
-				$root->put("pivot", collect(["parent_id" => $root['id'], "topic_id" => $topic['id']]));
-				$tree->push($root);
+				// add the root and its connection to this topic,
+				// if this topic doesn't have any parents
+				if ($parents->isEmpty() && !is_null($root))
+				{
+					$root->put("pivot", collect(["parent_id" => $root['id'], "topic_id" => $topic['id']]));
+					$tree->push($root);
+				}
 			}
 
 			foreach ($parents as $parent) {
