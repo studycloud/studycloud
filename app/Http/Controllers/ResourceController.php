@@ -11,8 +11,8 @@ use Illuminate\Validation\Rule;
 use App\Http\Middleware\CheckAuthor;
 use App\Http\Middleware\CheckStatus;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\ResourceRepository;
 use Illuminate\Database\Eloquent\Collection;
-use App\Http\Repositories\ResourceRepository;
 
 
 class ResourceController extends Controller

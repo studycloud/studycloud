@@ -6,6 +6,7 @@ use App\User;
 use App\Resource;
 use Tests\TestCase;
 use App\ResourceUse;
+use App\Academic_Class;
 use App\ResourceContent;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -48,7 +49,6 @@ class ResourcesHttpTest extends TestCase
 		$new_resource = Resource::latest()->first();
 		$new_content = $new_resource->contents->first();
 		// check: do we have a new Resource and a new ResourceContent?
-		dd($response->exception);
 		$response->assertSuccessful();
 		$this->assertEquals(Resource::count()-1, $resource_count);
 		$this->assertEquals(ResourceContent::count()-1, $content_count);
@@ -92,7 +92,7 @@ class ResourcesHttpTest extends TestCase
 				'class' => $class->id
 			]
 		);
-		$new_class = Resource::latest()->class()->get();
+		$new_class = Resource::latest()->first()->class()->get()->first();
 		// check: was the attachment successful?
 		$response->assertSuccessful();
 		$this->assertEquals($class->id, $new_class->id);
@@ -103,7 +103,7 @@ class ResourcesHttpTest extends TestCase
 				'class' => true
 			]
 		);
-		$new_class = Resource::latest()->class()->get();
+		$new_class = Resource::latest()->first()->class()->get()->first();
 		// check: was the detachment successful?
 		$response->assertSuccessful();
 		$this->assertEmpty($new_class);
