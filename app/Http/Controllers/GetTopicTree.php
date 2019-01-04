@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Topic;
-use App\TopicParent;
 use App\Resource;
+use App\TopicParent;
+use Illuminate\Http\Request;
+use App\Helpers\NodesAndConnections;
 use App\Repositories\TopicRepository;
 use App\Repositories\ResourceRepository;
-use App\Helpers\NodesAndConnections;
-// use Barryvdh\Debugbar\Facade as Debugbar;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 
 class GetTopicTree extends Controller
@@ -45,14 +45,15 @@ class GetTopicTree extends Controller
 	 */
 	public function show($topic_id = 0, int $levels_up = null, int $levels_down = null)
 	{
+		$root = Topic::getRoot();
 		$topic = null;
 		if ($topic_id != 0)
 		{
 			$topic = Topic::find($topic_id);
 		}
 		// get the ancestors and descendants of this topic in a flat collection
-		$this->tree = (new TopicRepository)->ancestors($topic, $levels_up)->merge(
-			(new TopicRepository)->descendants($topic, $levels_down)
+		$this->tree = (new TopicRepository)->ancestors($topic, $levels_up, $root)->merge(
+			(new TopicRepository)->descendants($topic, $levels_down, $root)
 		);
 		// convert the data to the nodes/connections format
 		$this->tree = NodesAndConnections::convertTo($this->tree);
@@ -99,6 +100,10 @@ class GetTopicTree extends Controller
 	{
 		// add a 't' to the beginnning of the id
 		$node->put('id', 't'.$node['id']);
+		// add author name; it's more useful than the author id
+		// $node->put('author_name', User::find($node->get('author_id'))->name());
+		// send only the attributes that we need
+		$node = $node->only('id', 'name', 'author_id', 'created_at', 'updated_at');
 		return $node;
 	}
 
@@ -149,6 +154,10 @@ class GetTopicTree extends Controller
 	{
 		// add an 'r' to the beginnning of the id
 		$node->put('id', 'r'.$node['id']);
+		// add author name; it's more useful than the author id
+		// $node->put('author_name', User::find($node->get('author_id'))->name());
+		// send only the attributes that we need
+		$node = $node->only('id', 'name', 'author_id', 'created_at', 'updated_at');
 		return $node;
 	}
 
