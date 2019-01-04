@@ -2,28 +2,83 @@
 
 namespace App\Repositories;
 
-use App\Resource;
 use App\Topic;
+use App\Resource;
+use App\Academic_Class;
+use App\Helpers\NodesAndConnections;
+use App\Repositories\ClassRepository;
 use App\Repositories\TopicRepository;
 use Illuminate\Database\Eloquent\Collection;
-use App\Helpers\NodesAndConnections;
 
 class ResourceRepository
 {
 	/**
 	 * In a single query, get the resources of all of the topics in a collection of topic ids.
 	 * @param  array 	$topic_ids 	the topic ids of the resources you want returned
+	 * @param bool		$with_pivot	whether to also load a pivot attribute on each resource
 	 * @return Collection         	the resources as Collections
 	 */
-	public static function getByTopics($topic_ids)
+	public static function getByTopics($topic_ids, $with_pivot=true)
 	{
-		// to do: possibly reduce this to one query? it currently executes two
-		// it wouldn't be a huge performance boost. not really worth my time
-		return Topic::whereIn('id', $topic_ids)->with('resources')->get()->pluck('resources')->collapse()->map(
-			function ($topic)
+		// if we need to load a pivot attribute, we'll need two queries
+		if ($with_pivot)
+		{
+			// executes two queries
+			return Topic::whereIn('id', $topic_ids)->with('resources')->get()
+			->pluck('resources')->collapse()->map(
+				function ($resource)
+				{
+					// return the resource as a collection
+					return collect($resource);
+				}
+			);
+		}
+		else
+		{
+			// executes only a single query!
+			return Resource::whereHas('topics',
+				function($query) use ($topic_ids)
+				{
+					$query->whereIn('id', $topic_ids);
+				}
+			)->get()->map(
+				function ($resource)
+				{
+					// return the resource as a collection
+					return collect($resource);
+				}
+			);
+		}
+	}
+
+	/**
+	 * In a single query, get the resources of all of the classes in a collection of class ids.
+	 * @param  array 	$class_ids 	the class ids of the resources you want returned
+	 * @param bool		$with_pivot	whether to also load a pivot attribute on each resource
+	 * @return Collection         	the resources as Collections
+	 */
+	public static function getByClasses($class_ids, $with_pivot=true)
+	{
+		// executes only a single query!
+		return Resource::whereHas('class',
+			function($query) use ($class_ids)
 			{
-				// return the topic as a collection
-				return collect($topic);
+				$query->whereIn('id', $class_ids);
+			}
+		)->get()->map(
+			function ($resource) use ($with_pivot)
+			{
+				// return the resource as a collection
+				$resource = collect($resource);
+				// if we need to include the class relationship as a pivot, add it manually
+				if ($with_pivot)
+				{
+					$resource->put('pivot', [
+						'resource_id' => $resource['id'],
+						'class_id' => $resource->pull('class_id')
+					]);
+				}
+				return $resource;
 			}
 		);
 	}
@@ -40,19 +95,33 @@ class ResourceRepository
 		// get the ids of the topics that we can't attach
 		$disallowed_topics = self::disallowedTopics($resource)->pluck('id');
 		// iterate through each topic that we want to attach and make sure it can be added
-		$notAllowed = false;
 		foreach ($new_topics as $topic) {
-			$notAllowed = $notAllowed && $disallowed_topics->contains($topic->id);
+			if ($disallowed_topics->contains($topic->id))
+			{
+				throw new \Exception("One of the desired topics cannot be attached because it is an ancestor or descendant of one of this resource's current topics. You can use the disallowedTopics() method to see which topics cannot be attached to this resource.");
+				return;
+			}
 		}
-		// if any of the topics can't be added
-		if ($notAllowed)
+		return $resource->topics()->attach($new_topics);
+	}
+
+	/**
+	 * a wrapper function for attaching a class. it will override the currently attached class
+	 * @param  Resource 	$resource 		the resource to attach the class to
+	 * @param  Academic_Class|int|string 	$new_class the class to be attached
+	 * @return 
+	 */
+	public static function attachClass($resource, $new_class)
+	{
+		// get the ids of the classes that we can attach
+		$allowed_classes = self::allowedClasses($resource)->pluck('id');
+		$new_class = is_a($new_class, Academic_Class::class) ? $new_class->id : $new_class;
+		if (!$allowed_classes->contains($new_class))
 		{
-			throw new \Exception("One of the desired topics cannot be attached because it is an ancestor or descendant of one of this resource's current topics. You can use the disallowedTopics() method to see which topics cannot be attached to this resource.");
+			throw new \Exception("One of the desired classes cannot be attached because it is an ancestor or descendant of one of this resource's current classes. You can use the allowedClasses() method to see which classes can be attached to this resource.");
+			return;
 		}
-		else
-		{
-			return $resource->topics()->attach($new_topics);
-		}
+		return $resource->class()->associate($new_class)->save();
 	}
 
 	/**
@@ -152,5 +221,28 @@ class ResourceRepository
 	public static function allowedTopics($resource)
 	{
 		return collect(Topic::whereNotIn('id', self::disallowedTopics($resource)->pluck('id'))->get());
+	}
+
+	/**
+	 * which classes isn't this resource allowed to be added to?
+	 * Note: this function executes one more query than allowedClasses() and is therefore a bit slower. don't use it if you don't have to
+	 * Note also: the classes returned in this function won't have pivots
+	 * @param  Resource 	$resource 	the resource whose disallowedClasses you'd like to get
+	 * @return Collection
+	 */
+	public static function disallowedClasses($resource)
+	{
+		return collect(Academic_Class::whereNotIn('id', self::allowedClasses($resource)->pluck('id'))->get());
+	}
+
+	/**
+	 * which classes is this resource allowed to be added to?
+	 * @param  Resource 	$resource 	the resource whose allowedClasses you'd like to get
+	 * @return Collection
+	 */
+	public static function allowedClasses($resource)
+	{
+		// resources can only be added to leaf classes
+		return ClassRepository::getLeafClasses();
 	}
 }

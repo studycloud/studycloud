@@ -30,7 +30,12 @@ $factory->define(App\User::class, function (Faker\Generator $faker)
 $factory->define(App\Academic_Class::class, function (Faker\Generator $faker)
 {
 	return [
-		'name' => $faker->text($maxNbChars = 46)
+		'name' => $faker->text($maxNbChars = 46),
+		'author_id' => $faker->randomElement(
+			// get all user id's
+			// but also allow some of them to be null
+			array_merge(App\User::pluck('id')->toArray(), [null])
+		)
 	];
 });
 
@@ -41,7 +46,9 @@ $factory->define(App\Topic::class, function (Faker\Generator $faker)
 		'name' => ucwords(
 			$faker->words($nb = 3, $asText = true)
 		),
-		'author_id' => $faker->randomElement(App\User::select('id')->get()->toArray())['id']
+		'author_id' => $faker->randomElement(
+			App\User::pluck('id')->toArray()
+		)
 	];
 });
 
@@ -75,8 +82,12 @@ $factory->define(App\Resource::class, function (Faker\Generator $faker)
 		'name' => ucwords(
 			$faker->words($nb = 3, $asText = true)
 		),
-		'author_id' => $faker->randomElement(App\User::select('id')->get()->toArray())['id'],
-		'use_id' => $faker->randomElement(App\ResourceUse::select('id')->get()->toArray())['id']
+		'author_id' => $faker->randomElement(
+			App\User::pluck('id')->toArray()
+		),
+		'use_id' => $faker->randomElement(
+			App\ResourceUse::pluck('id')->toArray()
+		)
 	];
 });
 
@@ -118,8 +129,8 @@ $factory->define(App\RoleUser::class, function (Faker\Generator $faker)
 			// We can use the randomElement formatter to pick a random role_id from the list that is available.
 			// We can call the unique() provider before randomElement so that we are gauranteed to pick a different role_id each time.
 			$role_id = $hacky_faker->unique()->randomElement(
-				App\Role::select('id')->get()->toArray()
-			)['id'];
+				App\Role::pluck('id')->toArray()
+			);
 			// Note that the unique() provider keeps a record of which role_id's have been called. This record will persist for multiple calls to the same faker generator instance.
 			// Laravel apparently uses the same faker generator instance each time factory() is called for a model class. Unfortunately, this also means that unique()'s record will persist for the different user_id's for which we try to create roles. In other words, unique() will apply to all the roles that are generated for all the users instead of only the roles for each user.
 			// The ideal solution would be some way to reset the record that is kept by unique() directly before we switch to generating roles for a new user. The unique() provider is supposed to do that if we pass $reset=true as a parameter to it, but this didn't actually work for me when I tried it. (It was a huge headache.)

@@ -4,6 +4,8 @@ namespace App\Helpers;
 
 use App\Topic;
 use App\Repositories\TopicRepository;
+use App\Academic_Class;
+use App\Repositories\ClassRepository;
 
 /**
  * A class for using hierarchical data in the nested array format.
@@ -24,6 +26,19 @@ class NestedArrays
 	}
 
 	/**
+	 * return the descendants of a class (and the class itself) in nested array format
+	 * @param  Class		$class the class whose descendants we want
+	 * @return array		an array of arrays of class IDs
+	 */
+	public static function classDescendants(Academic_Class $class)
+	{
+		$descendants = (new ClassRepository)->descendants($class);
+		$descendants_as_connections = NodesAndConnections::treeAsConnections($descendants);
+
+		return [$class->id => self::convertToArray($class->id, $descendants_as_connections, "class_id", "parent_id")];
+	}	
+
+	/**
 	 * return the ancestors of a topic (and the topic itself) in nested array format
 	 * @param  Topic		$topic the topic whose ancestors we want
 	 * @return array		an array of arrays of topic IDs
@@ -34,6 +49,19 @@ class NestedArrays
 		$ancestors_as_connections = NodesAndConnections::treeAsConnections($ancestors);
 
 		return [$topic->id => self::convertToArray($topic->id, $ancestors_as_connections, "parent_id", "topic_id")];
+	}
+
+	/**
+	 * return the ancestors of a class (and the class itself) in nested array format
+	 * @param  Class		$class the topic whose ancestors we want
+	 * @return array		an array of arrays of topic IDs
+	 */
+	public static function classAncestors(Academic_Class $class)
+	{
+		$ancestors = (new ClassRepository)->ancestors($class);
+		$ancestors_as_connections = NodesAndConnections::treeAsConnections($ancestors);
+
+		return [$class->id => self::convertToArray($class->id, $ancestors_as_connections, "parent_id", "class_id")];
 	}
 
 	/**

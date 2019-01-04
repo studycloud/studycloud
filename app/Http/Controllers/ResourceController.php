@@ -11,8 +11,8 @@ use Illuminate\Validation\Rule;
 use App\Http\Middleware\CheckAuthor;
 use App\Http\Middleware\CheckStatus;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\ResourceRepository;
 use Illuminate\Database\Eloquent\Collection;
-use App\Http\Repositories\ResourceRepository;
 
 
 class ResourceController extends Controller
@@ -27,7 +27,9 @@ class ResourceController extends Controller
 	 *	PATCH/PUT	/resources/{id}			resources.update	alter a current resource according to the changes sent as JSON
 	 *	PATCH		/resources/attach/{id}	resources.attach	add this resource to a list of topics (or a class) sent as JSON (overriding any conflicts that are currently attached)
 	 *	PATCH		/resources/detach/{id}	resources.detach	remove this resource from a list of topics (or a class) sent as JSON
-	 *	DELETE		/resources/{id}			resources.destroy	request that this resource be deleted 
+	 *	DELETE		/resources/{id}			resources.destroy	request that this resource be deleted
+	 *	PATCH		/resources/attach/{id}	resources.attach	attach this resource to items in the tree
+	 *	PATCH		/resources/detach/{id}	resources.detach	detach this resource from items in the tree
 	 */
 
 	function __construct()
@@ -167,7 +169,6 @@ class ResourceController extends Controller
 		}
 	}
 
-
 	/**
 	 * Remove the specified resource from storage.
 	 *
@@ -195,8 +196,6 @@ class ResourceController extends Controller
 		$resource->delete();
 	}
 
-
-
 	/**
 	 * Attach a resource to some topics or classes (or both!) in the tree, overwriting any current topics or classes that conflict
 	 * @param Resource $resource
@@ -206,21 +205,26 @@ class ResourceController extends Controller
 		// only the author of the resource can alter what it is attached to
 		$this->authorize('update', $resource);
 		// validating the request
-		// topics and classes are both optional, but should be arrays of IDs when provided
+		// topics and classes are both optional, but topics should be an array of IDs when provided
 		$validated = $request->validate([
-			'topics' => 'sometimes|array',
+			'topics' => 'array|required_without:class',
 			'topics.*' => 'exists:topics,id',
-			'class' => 'sometimes|integer|exists:classes,id',
+			'class' => [
+				'required_without:topics',
+				'integer',
+				Rule::in(
+					ResourceRepository::allowedClasses($resource->id)->pluck('id')->toArray()
+				)
+			],
 		]);
 
-		// add the topics (we'll need to disable this code for MVP)
-		foreach($validated['topics'] as $topic){
-			ResourceRepository::addTopic(Topic::find($topic), $resource);
-		}
-		// add the class (add this code once you have a function for it)
-		
+		// add the topics (this code is disabled for MVP)
+		// foreach($validated['topics'] as $topic){
+		// 	ResourceRepository::addTopic(Topic::find($topic), $resource);
+		// }
+		// add the class
+		ResourceRepository::attachClass($resource, $validated['class']);
 	}
-	
 
 	/**
 	 * Detach a resource from topics or classes (or both!) in the tree
@@ -231,17 +235,20 @@ class ResourceController extends Controller
 		// only the author of resource can alter what it is attached to
 		$this->authorize('update', $resource);
 		// validating the reqeust 
-		// topics and classes are both optional, but should be arrays of IDs when provided
+		// topics and classes are both optional, but topics should be an array of IDs when provided
 		$validated = $request->validate([
-			'topics' => 'sometimes|array',
+			'topics' => 'array|required_without:class',
 			'topics.*' => 'exists:topics,id',
-			'class' => 'sometimes|integer|exists:classes,id',
+			'class' => 'required_without:topics|boolean',
 		]);
 
-		// remove the topics (we'll need to disable this code for MVP)
-		ResourceRepository::detachTopics($resource, $validated['topics']);
-		// remove the class (add this code once you have a function for it)
-		
+		// remove the topics (this code is disabled for MVP)
+		// ResourceRepository::detachTopics($resource, $validated['topics']);
+		// remove the class
+		if ($validated['class'])
+		{			
+			$resource->class()->dissociate($validated['class'])->save();
+		}
 	}
 
 }
