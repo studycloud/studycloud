@@ -6,13 +6,16 @@ use App\User;
 use App\Topic;
 use App\Resource;
 use App\TopicParent;
+use App\Academic_Class;
 use Illuminate\Http\Request;
 use App\Helpers\NodesAndConnections;
+use App\Repositories\ClassRepository;
 use App\Repositories\TopicRepository;
+use Illuminate\Support\Facades\Route;
 use App\Repositories\ResourceRepository;
 use Illuminate\Database\Eloquent\Collection;
 
-class GetTopicTree extends Controller
+class GetTree extends Controller
 {
 	/**
 	 * The nodes and connections for this tree.
@@ -21,6 +24,34 @@ class GetTopicTree extends Controller
 	 */
 	protected $tree;
 
+	/**
+	 * The type of tree we are dealing with.
+	 * @var string
+	 */
+	protected $type;
+
+	/**
+	 * The name of the repository class we will use.
+	 * @var string
+	 */
+	protected $repo;
+
+
+	public function __construct(Request $request)
+	{
+		// are we dealing with the topic tree or the class tree?
+		// we can check the route name to figure it out
+		if ($request->route()->named('topic_tree'))
+		{
+			$this->type = Topic::class;
+			$this->repo = TopicRepository::class;
+		}
+		elseif ($request->route()->named('class_tree'))
+		{
+			$this->type = Academic_Class::class;
+			$this->repo = ClassRepository::class;
+		}
+	}
 
 	/**
 	 * a wrapper for show() that parses the query string. This
@@ -30,9 +61,18 @@ class GetTopicTree extends Controller
 	 */
 	public function __invoke(Request $request)
 	{
+		// first, validate the input
+		// $validated = $request->validate([
+		// 	'id' => [
+		// 	],
+		// 	'levels_up' => ''
+		// ]);
+
+		// now, retrieve the input
 		$topic_id = $request->input('id');
 		$up = $request->input('levels_up');
 		$down = $request->input('levels_down');
+
 		return $this->show($topic_id, $up, $down);
 	}
 
@@ -62,12 +102,12 @@ class GetTopicTree extends Controller
 		// get each topic in the tree and process it
 		$this->tree["nodes"]->transform(function($node)
 		{
-			return $this->processTopic($node);
+			return $this->processNode($node);
 		});
 		// get each connection in the tree and process it
 		$this->tree["connections"]->transform(function($connection)
 		{
-			return $this->processTopicConnection($connection);
+			return $this->processConnection($connection);
 		});
 		
 		// get the resources of each topic in the nodes/connections format
@@ -96,7 +136,7 @@ class GetTopicTree extends Controller
 	 * @param  Collection 	$node 	the node to process
 	 * @return Collection       	the processed node
 	 */
-	private function processTopic($node)
+	private function processNode($node)
 	{
 		// add a 't' to the beginnning of the id
 		$node->put('id', 't'.$node['id']);
@@ -113,7 +153,7 @@ class GetTopicTree extends Controller
 	 * @param  Collection 	$connection 	the connection to process
 	 * @return Collection        			the processed pivot as a collection
 	 */
-	private function processTopicConnection($connection)
+	private function processConnection($connection)
 	{
 		// make "parent_id" into "source" and "topic_id" into "target"
 		// also add 't' to the id's
