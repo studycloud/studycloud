@@ -47,13 +47,13 @@ class GetTree extends Controller
 	{
 		// are we dealing with the topic tree or the class tree?
 		// we can check the route name to figure it out
-		if ($request->route()->named('topic_tree'))
+		if ($request->route()->named('tree.topic'))
 		{
 			$this->type = "topic";
 			$this->model_name = Topic::class;
 			$this->repo = TopicRepository::class;
 		}
-		elseif ($request->route()->named('class_tree'))
+		elseif ($request->route()->named('tree.class'))
 		{
 			$this->type = "class";
 			$this->model_name = Academic_Class::class;
@@ -223,28 +223,6 @@ class GetTree extends Controller
 		$connection->prepend('t'.$connection->pull($this->type.'_id'), 'target');
 		$connection->prepend('t'.$connection->pull('parent_id'), 'source');
 		return $connection;
-	}
-
-	/**
-	 * adds the given node and any connections to the appropriate $nodes and $connections collections
-	 * @param Collection 	$nodes 	the nodes to add
-	 */
-	private function addResource($node)
-	{
-		// double check that this node hasn't already been added to $this->tree.get("nodes"). handles duplicate resources
-		if (!$this->tree["nodes"]->pluck('target')->contains('r'.$node["id"]))
-		{
-			$this->tree["nodes"]->push(
-				$this->processResource($node)
-			);
-		}
-
-		if (!is_null($node["pivot"]))
-		{
-			$this->tree.get("connections")->push(
-				$this->processResourceConnectionConnection($node["pivot"])
-			);
-		}
 	}
 
 	/**

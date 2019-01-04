@@ -44,7 +44,7 @@ Route::resource('resources', 'ResourceController', ['except' =>
 Route::patch('/resources/attach/{resource}', 'ResourceController@attach')->name('resources.attach');
 Route::patch('/resources/detach/{resource}', 'ResourceController@detach')->name('resources.detach');
 
-Route::get('data/topic_tree', 'GetTree')->name('topic_tree');
+Route::get('data/topic_tree', 'GetTree')->name('tree.topic');
 Route::get('data/topic',
 	function(Request $request)
 	{
@@ -53,7 +53,7 @@ Route::get('data/topic',
 )->name('topics.json');
 Route::resource('topics', 'TopicController');
 
-Route::get('data/class_tree', 'GetTree')->name('class_tree');
+Route::get('data/class_tree', 'GetTree')->name('tree.class');
 Route::get('data/class',
 	function(Request $request)
 	{
