@@ -53,7 +53,7 @@ Route::get('data/topic',
 )->name('topics.json');
 Route::resource('topics', 'TopicController');
 
-// Route::get('data/class_tree', 'GetTree')->name('class_tree');
+Route::get('data/class_tree', 'GetTree')->name('class_tree');
 Route::get('data/class',
 	function(Request $request)
 	{

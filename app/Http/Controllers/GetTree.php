@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Topic;
 use App\Resource;
-use App\TopicParent;
 use App\Academic_Class;
 use Illuminate\Http\Request;
 use App\Helpers\NodesAndConnections;
@@ -31,6 +30,12 @@ class GetTree extends Controller
 	protected $type;
 
 	/**
+	 * The name of the model class for the tree item.
+	 * @var string
+	 */
+	protected $model_name;
+
+	/**
 	 * The name of the repository class we will use.
 	 * @var string
 	 */
@@ -43,12 +48,14 @@ class GetTree extends Controller
 		// we can check the route name to figure it out
 		if ($request->route()->named('topic_tree'))
 		{
-			$this->type = Topic::class;
+			$this->type = "topic";
+			$this->model_name = Topic::class;
 			$this->repo = TopicRepository::class;
 		}
 		elseif ($request->route()->named('class_tree'))
 		{
-			$this->type = Academic_Class::class;
+			$this->type = "class";
+			$this->model_name = Academic_Class::class;
 			$this->repo = ClassRepository::class;
 		}
 	}
@@ -69,37 +76,69 @@ class GetTree extends Controller
 		// ]);
 
 		// now, retrieve the input
-		$topic_id = $request->input('id');
+		$node_id = $request->input('id');
 		$up = $request->input('levels_up');
 		$down = $request->input('levels_down');
 
-		return $this->show($topic_id, $up, $down);
+		return $this->show($node_id, $up, $down);
 	}
 
 	/**
 	 * converts a portion of the tree to JSON for traversal by the JavaScript team
-	 * @param	integer		$topic_id		the id of the current topic in the tree; defaults to the root of the tree, which has an id of 0
+	 * @param	integer		$node_id		the id of the current node in the tree; defaults to the root of the tree, which has an id of 0
 	 * @param	int|null	$levels_up		the number of ancestor levels of the tree to return; defaults to infinity
 	 * @param	int|null	$levels_down	the number of descendant levels of the tree to return; defaults to infinity
 	 * @return	Collection					the nodes and connections of the target portion of the tree
 	 */
-	public function show($topic_id = 0, int $levels_up = null, int $levels_down = null)
+	public function show($node_id = 0, int $levels_up = null, int $levels_down = null)
 	{
-		$root = Topic::getRoot();
-		$topic = null;
-		if ($topic_id != 0)
+		// first, get the required data
+		$this->getNodes($node_id, $levels_up, $levels_down);
+		// then, convert the data to the nodes/connections format
+		$node_ids = $this->convertFormat();
+
+		// get the converted resources of each node in the tree
+		$resources = $this->getResourceNodes($node_ids);
+
+		// add the resources and connections to the tree
+		$this->tree->put("nodes", $this->tree["nodes"]->merge($resources["nodes"]));
+		$this->tree->put("connections", $this->tree["connections"]->merge($resources["connections"]));
+
+		// return the tree data: a collection of the resulting lists of nodes and connections
+		return $this->tree;
+	}
+
+	/**
+	 * get the raw nodes and connections data
+	 * @param	integer		$node_id		the id of the current node in the tree; defaults to the root of the tree, which has an id of 0
+	 * @param	int|null	$levels_up		the number of ancestor levels of the tree to return; defaults to infinity
+	 * @param	int|null	$levels_down	the number of descendant levels of the tree to return; defaults to infinity
+	 */
+	private function getNodes($node_id, $levels_up, $levels_down)
+	{
+		$root = $this->model_name::getRoot();
+		$node = null;
+		if ($node_id != 0)
 		{
-			$topic = Topic::find($topic_id);
+			$node = $this->model_name::find($node_id);
 		}
-		// get the ancestors and descendants of this topic in a flat collection
-		$this->tree = (new TopicRepository)->ancestors($topic, $levels_up, $root)->merge(
-			(new TopicRepository)->descendants($topic, $levels_down, $root)
+		// get the ancestors and descendants of this node in a flat collection
+		$this->tree = (new $this->repo)->ancestors($node, $levels_up, $root)->merge(
+			(new $this->repo)->descendants($node, $levels_down, $root)
 		);
+	}
+
+	/**
+	 * convert the tree data to the nodes/connections format
+	 * @return Collection	$node_ids	the IDs of each node in the tree
+	 */
+	private function convertFormat()
+	{
 		// convert the data to the nodes/connections format
 		$this->tree = NodesAndConnections::convertTo($this->tree);
-		// get all of the topic_ids
-		$topic_ids = $this->tree["nodes"]->pluck("id");
-		// get each topic in the tree and process it
+		// get all of the node_ids
+		$node_ids = $this->tree["nodes"]->pluck("id");
+		// get each node in the tree and process it
 		$this->tree["nodes"]->transform(function($node)
 		{
 			return $this->processNode($node);
@@ -109,9 +148,29 @@ class GetTree extends Controller
 		{
 			return $this->processConnection($connection);
 		});
-		
-		// get the resources of each topic in the nodes/connections format
-		$resources = NodesAndConnections::convertTo(ResourceRepository::getByTopics($topic_ids));
+		return $node_ids;
+	}
+
+	/**
+	 * get the resources of each node in the tree in the nodes/connections format
+	 * @param  Collection	$node_ids	the IDs of each node in the tree
+	 * @return Collection				the resources
+	 */
+	private function getResourceNodes($node_ids)
+	{
+		// first, get the resources of each node
+		if ($this->type == "topic")
+		{
+			$resources = ResourceRepository::getByTopics($node_ids);
+		}
+		elseif ($this->type == "class")
+		{
+			$resources = ResourceRepository::getByClasses($node_ids);
+		}
+
+		// convert the resources into the nodes/connections format
+		$resources = NodesAndConnections::convertTo($resources);
+
 		// get each resource in the tree and transform it
 		$resources["nodes"]->transform(function($node)
 		{
@@ -122,12 +181,8 @@ class GetTree extends Controller
 		{
 			return $this->processResourceConnection($connection);
 		});
-		// add the resources and connections to the tree
-		$this->tree->put("nodes", $this->tree["nodes"]->merge($resources["nodes"]));
-		$this->tree->put("connections", $this->tree["connections"]->merge($resources["connections"]));
 
-		// return the tree data: a collection of the resulting lists of nodes and connections
-		return $this->tree;
+		return $resources;
 	}
 
 	/**
@@ -155,9 +210,9 @@ class GetTree extends Controller
 	 */
 	private function processConnection($connection)
 	{
-		// make "parent_id" into "source" and "topic_id" into "target"
+		// make "parent_id" into "source" and "<node>_id" into "target"
 		// also add 't' to the id's
-		$connection->prepend('t'.$connection->pull('topic_id'), 'target');
+		$connection->prepend('t'.$connection->pull($this->type.'_id'), 'target');
 		$connection->prepend('t'.$connection->pull('parent_id'), 'source');
 		return $connection;
 	}
@@ -209,10 +264,10 @@ class GetTree extends Controller
 	 */
 	private function processResourceConnection($connection)
 	{
-		// make "topic_id" into "source" and "resource_id" into "target"
-		// also add 't' to the topic_id and 'r' to the resource_id
+		// make "<node>_id" into "source" and "resource_id" into "target"
+		// also add 't' to the <node>_id and 'r' to the resource_id
 		$connection->prepend('r'.$connection->pull('resource_id'), 'target');
-		$connection->prepend('t'.$connection->pull('topic_id'), 'source');
+		$connection->prepend('t'.$connection->pull($this->type.'_id'), 'source');
 		return $connection;
 	}
 }
