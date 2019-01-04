@@ -27,7 +27,9 @@ class ResourceController extends Controller
 	 *	PATCH/PUT	/resources/{id}			resources.update	alter a current resource according to the changes sent as JSON
 	 *	PATCH		/resources/attach/{id}	resources.attach	add this resource to a list of topics (or a class) sent as JSON (overriding any conflicts that are currently attached)
 	 *	PATCH		/resources/detach/{id}	resources.detach	remove this resource from a list of topics (or a class) sent as JSON
-	 *	DELETE		/resources/{id}			resources.destroy	request that this resource be deleted 
+	 *	DELETE		/resources/{id}			resources.destroy	request that this resource be deleted
+	 *	PATCH		/resources/attach/{id}	resources.attach	attach this resource to items in the tree
+	 *	PATCH		/resources/detach/{id}	resources.detach	detach this resource from items in the tree
 	 */
 
 	function __construct()
