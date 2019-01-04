@@ -69,7 +69,7 @@ class ClassController extends Controller
 				'integer',
 				'required',
 				Rule::in(
-					Academic_Class::pluck('id')->push('0')->toArray()
+					Academic_Class::pluck('id')->push(0)->toArray()
 				)
 			]
 		]);
@@ -182,7 +182,7 @@ class ClassController extends Controller
 				'integer',
 				'required_without:children',
 				Rule::in(
-					Academic_Class::pluck('id')->push('0')->reject($id)->toArray()
+					Academic_Class::pluck('id')->push(0)->reject($id)->toArray()
 				)
 			]
 		]);
