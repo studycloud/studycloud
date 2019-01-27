@@ -587,12 +587,12 @@ Server.prototype.detachResource = function(resource_id, content, callBack1, call
 	});
 }
 
-Server.prototype.getTree = function(id, num_levels, handleError, handleSuccess)
+Server.prototype.getTree = function(id, levels_up, levels_down, handleError, handleSuccess)
 {
 	
 	var self = this;
 		
-	url = "/data/class_tree?id=" + id + "&levels_up=" + num_levels + "&levels_down=" + num_levels +id;
+	url = "/data/class_tree?id=" + id + "&levels_up=" + levels_up + "&levels_down=" + levels_down +id;
 	return d3.json(url)
 		.then(function(data){			
 				return handleSuccess(id, data);
