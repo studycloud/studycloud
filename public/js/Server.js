@@ -324,3 +324,77 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 		return handleError(error);
 	});
 }
+
+//patch - needs id
+Server.prototype.getClassesStore = function(id, handleError, handleSuccess)
+{
+	
+	var self = this;
+		
+	url = "/classes"+id;
+	return d3.json(url)
+		.then(function(data){			
+				return handleSuccess(id, data);
+			})
+		
+		.catch(function(error){
+			return handleError(error);			
+		});		
+}
+
+Server.prototype.getClassesJSON = function(id, handleError, handleSuccess)
+{
+	
+	var self = this;
+		
+	url = "/data/class?id="+id;
+	return d3.json(url)
+		.then(function(data){			
+				return handleSuccess(id, data);
+			})
+		
+		.catch(function(error){
+			return handleError(error);			
+		});		
+}
+
+Server.prototype.editClass = function(class_id, content, callBack1, callBack2)
+{
+	
+	var self = this;
+	var url = "/classes/" + class_id;
+	var goodCookie = self.getCookie("XSRF-TOKEN");
+
+	if (goodCookie == ""){
+		return callBack1()
+	}
+
+	const csrftoken = goodCookie;
+	const headers = new Headers({
+        'X-XSRF-TOKEN': csrfToken
+    });
+	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
+		if(error)
+		{
+			if(typeof callback1 === 'function')
+			{
+				return callback1(error);
+			}
+			else
+			{
+				throw error;
+			}
+		}
+		else
+		{
+			if(typeof callback2 === 'function')
+			{
+				return callback2(data);
+			}
+			else
+			{
+				return data;
+			}
+		}
+	});
+}
