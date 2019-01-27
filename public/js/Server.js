@@ -334,7 +334,7 @@ Server.prototype.storeClass = function(class, callback1, callback2)
 	if (goodCookie == ""){
 		return callback1();
 	}
-s
+
 	const csrftoken = goodCookie;
 	const headers = new Headers({
         'X-XSRF-TOKEN': csrfToken
