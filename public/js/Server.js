@@ -62,7 +62,7 @@ Server.prototype.addResource = function(content, callback1, callback2)
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
-		return callBack1();
+		return callback1();
 	}
 s
 	const csrftoken = goodCookie;
@@ -103,7 +103,7 @@ Server.prototype.editResource = function(resource_id, content, callback1, callba
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
-		return callBack1()
+		return callback1()
 	}
 
 	const csrftoken = goodCookie;
@@ -144,7 +144,7 @@ Server.prototype.deleteResource = function(resource_id, callback1, callback2)
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
-		return callBack1();
+		return callback1();
 	}
 
 	const csrftoken = goodCookie;
