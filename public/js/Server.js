@@ -358,11 +358,176 @@ Server.prototype.getClassesJSON = function(id, handleError, handleSuccess)
 		});		
 }
 
-Server.prototype.editClass = function(class_id, content, callBack1, callBack2)
+Server.prototype.updateClass = function(class_id, content, callBack1, callBack2)
 {
 	
 	var self = this;
 	var url = "/classes/" + class_id;
+	var goodCookie = self.getCookie("XSRF-TOKEN");
+
+	if (goodCookie == ""){
+		return callBack1()
+	}
+
+	const csrftoken = goodCookie;
+	const headers = new Headers({
+        'X-XSRF-TOKEN': csrfToken
+    });
+	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
+		if(error)
+		{
+			if(typeof callback1 === 'function')
+			{
+				return callback1(error);
+			}
+			else
+			{
+				throw error;
+			}
+		}
+		else
+		{
+			if(typeof callback2 === 'function')
+			{
+				return callback2(data);
+			}
+			else
+			{
+				return data;
+			}
+		}
+	});
+}
+
+Server.prototype.deleteClass = function(class_id, callback1, callback2)
+{
+	callback1
+	var self = this;
+	var url = "/classes/" + class_id;
+	var goodCookie = self.getCookie("XSRF-TOKEN");
+
+	if (goodCookie == ""){
+		return callback1();
+	}
+
+	const csrftoken = goodCookie;
+	const headers = new Headers({
+        'X-XSRF-TOKEN': csrfToken
+    });
+
+	return d3.json(url, {method: 'delete', headers}).then(function(data, error){
+		if(error)
+		{
+			if(typeof callback1 === 'function')
+			{
+				return callback1(error);
+			}
+			else
+			{
+				throw error;
+			}
+		}
+		else
+		{
+			if(typeof callback2 === 'function') 			
+			{ 
+				return callback2(data);
+			}
+			else
+			{
+				return data;
+			}
+		}
+	});
+}
+
+Server.prototype.attachClass = function(class_id, content, callBack1, callBack2)
+{
+	
+	var self = this;
+	var url = "/classes/attach/" + class_id;
+	var goodCookie = self.getCookie("XSRF-TOKEN");
+
+	if (goodCookie == ""){
+		return callBack1()
+	}
+
+	const csrftoken = goodCookie;
+	const headers = new Headers({
+        'X-XSRF-TOKEN': csrfToken
+    });
+	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
+		if(error)
+		{
+			if(typeof callback1 === 'function')
+			{
+				return callback1(error);
+			}
+			else
+			{
+				throw error;
+			}
+		}
+		else
+		{
+			if(typeof callback2 === 'function')
+			{
+				return callback2(data);
+			}
+			else
+			{
+				return data;
+			}
+		}
+	});
+}
+
+Server.prototype.attachResource = function(resource_id, content, callBack1, callBack2)
+{
+	
+	var self = this;
+	var url = "/resources/attach/" + resource_id;
+	var goodCookie = self.getCookie("XSRF-TOKEN");
+
+	if (goodCookie == ""){
+		return callBack1()
+	}
+
+	const csrftoken = goodCookie;
+	const headers = new Headers({
+        'X-XSRF-TOKEN': csrfToken
+    });
+	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
+		if(error)
+		{
+			if(typeof callback1 === 'function')
+			{
+				return callback1(error);
+			}
+			else
+			{
+				throw error;
+			}
+		}
+		else
+		{
+			if(typeof callback2 === 'function')
+			{
+				return callback2(data);
+			}
+			else
+			{
+				return data;
+			}
+		}
+	});
+}
+
+Server.prototype.detachResource = function(resource_id, content, callBack1, callBack2)
+{
+	
+	var self = this;
+	var url = "/resources/detach/" + resource_id;
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
