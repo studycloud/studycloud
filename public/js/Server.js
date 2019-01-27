@@ -325,7 +325,8 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 	});
 }
 
-Server.prototype.storeClass = function(class, callback1, callback2)
+/*
+Server.prototype.storeClass = function(class_JSON, callback1, callback2)
 {
 	var self = this;
 	var url = "/classes";
@@ -339,7 +340,7 @@ Server.prototype.storeClass = function(class, callback1, callback2)
 	const headers = new Headers({
         'X-XSRF-TOKEN': csrfToken
     });
-	return d3.json(url, {method: 'post', headers, body: class}).then(function(data, error){
+	return d3.json(url, {method: 'post', headers, body: content}).then(function(data, error){
 		if(error)
 		{
 			if(typeof callback1 === 'function')
@@ -602,3 +603,4 @@ Server.prototype.getTree = function(id, levels_up, levels_down, handleError, han
 			return handleError(error);			
 		});		
 }
+/*
