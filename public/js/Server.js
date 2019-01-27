@@ -7,7 +7,7 @@ function Server()
     var self = this;
 }
 
-Server.prototype.getResource = function(resource_id, callBack1, callBack2)
+Server.prototype.getResource = function(resource_id, callback1, callback2)
 {
 	var self = this;
 	
@@ -55,14 +55,14 @@ Server.prototype.getCookie = function(cname)
     return "";
 }
 
-Server.prototype.addResource = function(content, callBack1, callBack2)
+Server.prototype.addResource = function(content, callback1, callback2)
 {
 	var self = this;
 	var url = "/resources";
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
-		return callBack1();
+		return callback1();
 	}
 s
 	const csrftoken = goodCookie;
@@ -95,7 +95,7 @@ s
 	});
 }
 
-Server.prototype.editResource = function(resource_id, content, callBack1, callBack2)
+Server.prototype.editResource = function(resource_id, content, callback1, callback2)
 {
 	
 	var self = this;
@@ -103,7 +103,7 @@ Server.prototype.editResource = function(resource_id, content, callBack1, callBa
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
-		return callBack1()
+		return callback1()
 	}
 
 	const csrftoken = goodCookie;
@@ -136,7 +136,7 @@ Server.prototype.editResource = function(resource_id, content, callBack1, callBa
 	});
 }
 
-Server.prototype.deleteResource = function(resource_id, callBack1, callBack2)
+Server.prototype.deleteResource = function(resource_id, callback1, callback2)
 {
 	callback1
 	var self = this;
@@ -144,7 +144,7 @@ Server.prototype.deleteResource = function(resource_id, callBack1, callBack2)
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
-		return callBack1();
+		return callback1();
 	}
 
 	const csrftoken = goodCookie;
