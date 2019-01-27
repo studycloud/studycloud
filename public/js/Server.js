@@ -325,21 +325,44 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 	});
 }
 
-//patch - needs id
-Server.prototype.getClassesStore = function(id, handleError, handleSuccess)
+Server.prototype.storeClass = function(class, callback1, callback2)
 {
-	
 	var self = this;
-		
-	url = "/classes"+id;
-	return d3.json(url)
-		.then(function(data){			
-				return handleSuccess(id, data);
-			})
-		
-		.catch(function(error){
-			return handleError(error);			
-		});		
+	var url = "/classes";
+	var goodCookie = self.getCookie("XSRF-TOKEN");
+
+	if (goodCookie == ""){
+		return callback1();
+	}
+s
+	const csrftoken = goodCookie;
+	const headers = new Headers({
+        'X-XSRF-TOKEN': csrfToken
+    });
+	return d3.json(url, {method: 'post', headers, body: class}).then(function(data, error){
+		if(error)
+		{
+			if(typeof callback1 === 'function')
+			{
+				return callback1(error);
+			}
+			else
+			{
+				throw error;
+			}
+		}
+		else
+		{
+			if(typeof callback2 === 'function')
+			{
+				return callback2(data);
+			}
+			else
+			{
+				return data;
+			}
+		}
+	});
 }
 
 Server.prototype.getClassesJSON = function(id, handleError, handleSuccess)
@@ -562,4 +585,20 @@ Server.prototype.detachResource = function(resource_id, content, callBack1, call
 			}
 		}
 	});
+}
+
+Server.prototype.getTree = function(id, num_levels, handleError, handleSuccess)
+{
+	
+	var self = this;
+		
+	url = "/data/class_tree?id=" + id + "&levels_up=" + num_levels + "&levels_down=" + num_levels +id;
+	return d3.json(url)
+		.then(function(data){			
+				return handleSuccess(id, data);
+			})
+		
+		.catch(function(error){
+			return handleError(error);			
+		});		
 }
