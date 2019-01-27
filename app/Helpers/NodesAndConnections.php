@@ -22,8 +22,13 @@ class NodesAndConnections
 			// check whether the node has been added already before adding it
 			if (!$nodes->pluck('id')->contains($node['id']))
 			{
+				// remove the pivot if it exists
+				if ($node->has('pivot'))
+				{
+					$node = $node->except(['pivot']);
+				}
 				// add the node without its pivot
-				$nodes->push($node->except(['pivot']));
+				$nodes->push($node);
 			}
 			// add any connections the node may have
 			if ($node->has('pivot'))

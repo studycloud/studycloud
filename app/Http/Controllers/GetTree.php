@@ -134,6 +134,9 @@ class GetTree extends Controller
 		$this->tree = (new $this->repo)->ancestors($node, $levels_up, $root)->merge(
 			(new $this->repo)->descendants($node, $levels_down, $root)
 		);
+		// add the current node to the data
+		// but use the root if the current node is null
+		$this->tree->prepend(collect(is_null($node) ? $root : $node));
 	}
 
 	/**
