@@ -31,6 +31,7 @@ function Tree(type, frame_id, server)
 
 	}
 	
+	//Create the various DOM element groups needed by the tree
 	self.frame = d3.select("#" + frame_id);
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
 	
@@ -56,7 +57,89 @@ function Tree(type, frame_id, server)
 		.append("g")
 			.attr("class", "layer_nodes")
 			.selectAll(".node");
-			
+	
+	
+	//Set up the right click menu
+	self.menu_context = self.frame
+		.append('div')
+		.attr('class', 'menu_context');
+	
+	self.menu_context_items = 
+	[
+		{
+			title: 'Delete',
+			icon:  'delete',
+			color: 'red',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('Item #1 clicked!');
+			}
+		},
+		{
+			title: 'Edit',
+			icon:  'edit',
+			color: 'purple',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('Item #1 clicked!');
+			}
+		},
+		{
+			title: 'Add',
+			icon:  'add',
+			color: 'green',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('Item #1 clicked!');
+			}
+		},
+		{
+			title: 'Capture',
+			icon:   'playlist_add',
+			color: 'blue',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('Item #1 clicked!');
+			}
+		},
+		{
+			title: 'Move',
+			icon:   'open_with',
+			color: 'blue',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('Item #1 clicked!');
+			}
+		},
+		{
+			title: 'Attach',
+			icon:   'link',
+			color: 'orange',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('Item #1 clicked!');
+			}
+		},
+		{
+			title: 'Detach',
+			icon:   'link_off',
+			color: 'red',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				console.log('Item #1 clicked!');
+			}
+		}
+	];
+	
+	self.frame.on('click.menu_context', function(){self.menu_context.style('display', 'none');});
+	
 	self.nodes_simulated = {};
 	self.links_simulated = {};
 	
@@ -280,7 +363,8 @@ Tree.prototype.updateDataNodes = function(selection, data)
 			.append("g")
 			.attr("class", "node")
 			.attr("data_id", function (d) { return d.id; })
-			.on("click", function(d){self.nodeClicked(this)});
+			.on("click", function(){self.nodeClicked(this)})
+			.on('contextmenu', function(d, i){self.nodeMenuOpen(this, d, i)});
 
 
 	nodes
@@ -513,7 +597,7 @@ Tree.prototype.centerOnNode = function (node)
 {
 	//This function centers the tree visualization on a node.
 	
-	self = this;
+	var self = this;
 	
 	data_id = node.__data__.id;
 
@@ -821,12 +905,83 @@ Tree.prototype.centerOnNode = function (node)
 
 Tree.prototype.BreadcrumbStackUpdate = function(id)
 {
-	self = this;
+	var self = this;
 }
 
+//Event Handlers for User events in the tree
+
+//Handle Left click on nodes
 Tree.prototype.nodeClicked = function(node)
 {
-	self = this;
+	var self = this;
 	//self.server.getData(data_id, 1, 2, self.updateDataNLevels.bind(self), function (){});
 	self.centerOnNode(node);
+}
+
+Tree.prototype.nodeMenuOpen = function(node, data, index)
+{
+	
+	
+	var self = this;
+
+	d3.selectAll('.menu_context').html('');
+	
+	var list = self.menu_context.append('ul');
+	
+	var menu_items_new = list.selectAll('li')
+			.data(self.menu_context_items)
+			.enter()
+				.append('li')
+	
+	menu_items_new
+		.style('color', function(d)
+			{
+				return d.color;
+			}
+		)
+		.style('display', function(d)
+			{
+				return d.enabled ? "default" : "none";
+			}	
+		)
+		.on('click', function(d) 
+			{	
+				d.action(node, data, index);
+				self.menu_context.style('display', 'none');
+			}
+		)
+		.on('touchstart', function(d) 
+			{	
+				setTimeout(function(){self.menu_context.style('display', 'none');}, 500);
+				d.action(node, data, index);
+				d3.event.preventDefault();
+				//alert("touchdown");
+			}
+		)
+	
+	menu_items_new
+		.append('i')
+			.classed('material-icons', true)
+			.text(function(d) 
+				{
+					return d.icon;
+				}
+			);
+	menu_items_new
+		.append('span')
+			.text(function(d) 
+				{
+					return d.title;
+				}
+			);
+			
+	
+					
+	// display context menu
+	self.menu_context
+		.style('left', (d3.event.pageX - 2) + 'px')
+		.style('top', (d3.event.pageY - 2) + 'px')
+		.style('display', 'block');
+
+	d3.event.preventDefault();
 }

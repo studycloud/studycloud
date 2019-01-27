@@ -235,6 +235,17 @@ Server.prototype.handleError = function(node, url, error)
 
 Server.prototype.handleSuccess = function(node, data)
 {
-    var self = this;
-    return self.treeHandleSuccess(node, data);
+	var self = this;
+
+	var connections = data.connections;
+	var IDNodeMap = d3.map(data.nodes, function (d) { return d.id; });
+
+	connections.forEach(function(connection)
+		{
+			connection.source = IDNodeMap.get(connection.source);
+			connection.target = IDNodeMap.get(connection.target);
+		}
+	);
+	
+	return self.treeHandleSuccess(node, data);
 };
