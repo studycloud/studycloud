@@ -181,9 +181,7 @@ Server.prototype.deleteResource = function(resource_id, callback1, callback2)
 Server.prototype.getData = function(node, levels_up, levels_down, handleError, handleSuccess)
 {
 	
-    var self = this;
-    
-    
+    var self = this;    
 	// if any of node, levels_up, or levels_down is undefined/null, use an empty string instead
 	// but allow levels to be 0
 	node = node ? node : ""
@@ -270,7 +268,7 @@ Server.prototype.storeTopic = function(name, handleError, handleSuccess)
 	url = "/topics";
 	const csrftoken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
-		method: 'Post',
+		method: 'post',
 		body: JSON.stringify(data),
 		headers: {
 			'X-XSRF-TOKEN': csrftoken,
@@ -285,33 +283,78 @@ Server.prototype.storeTopic = function(name, handleError, handleSuccess)
 	});
 }
 
-Server.prototype.updateTopic = function(id, name, handleError, handleSuccess)
+Server.prototype.updateTopic = function(id, content, callBack1, callBack2)
+{
+	
+	var self = this;
+	var url = "/topics/" + id;
+	var goodCookie = self.getCookie("XSRF-TOKEN");
+
+	if (goodCookie == ""){
+		return callBack1();
+	}
+
+	const csrfToken = goodCookie;
+	const headers = new Headers({
+        'X-XSRF-TOKEN': csrfToken
+	});
+	content['_method'] = "PATCH";
+	return d3.json(url, {method:'post', headers, body: content}).then(function(data, error){
+		if(error)
+		{
+			if(typeof callback1 === 'function')
+			{
+				return callback1(error);
+			}
+			else
+			{
+				throw error;
+			}
+		}
+		else
+		{
+			if(typeof callback2 === 'function')
+			{
+				return callback2(data);
+			}
+			else
+			{
+				return data;
+			}
+		}
+	});
+}
+/* Server.prototype.updateTopic = function(id, name, handleError, handleSuccess)
 {
 	var self = this;
-	data = {"name": name};	
+	data = {"name": name, "_method": "PATCH"};	
 	url = "/topics/" + id;
 	const csrftoken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
-		method: 'Patch',		
+		method: 'post',		
 		body: JSON.stringify(data),
 		headers: {			
 			'X-XSRF-TOKEN': csrftoken,
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		return handleSuccess(data);
+		console.log("success");
+		return handleSuccess(data);		
 	}).catch(function(error){
+		console.log("error");
 		return handleError(error);
 	});
 }
-
+*/
 Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 {
-	var self = this;		
+	var self = this;
+	data = {"_method": "DELETE"};			
 	url = "/topics/" + id;
 	const csrftoken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
-		method: 'Delete',			
+		method: 'post',
+		body: JSON.stringify(data),			
 		headers: {			
 			'X-XSRF-TOKEN': csrftoken,
 			"Content-type": "application/json; charset=UTF-8"
@@ -601,4 +644,4 @@ Server.prototype.getTree = function(id, levels_up, levels_down, handleError, han
 			return handleError(error);			
 		});		
 }
-/*
+*/
