@@ -64,7 +64,7 @@ Server.prototype.addResource = function(content, callback1, callback2)
 	if (goodCookie == ""){
 		return callback1();
 	}
-s
+
 	const csrftoken = goodCookie;
 	const headers = new Headers({
         'X-XSRF-TOKEN': csrfToken
@@ -292,10 +292,9 @@ Server.prototype.updateTopic = function(id, name, handleError, handleSuccess)
 	url = "/topics/" + id;
 	const csrftoken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
-		method: 'Post',		
+		method: 'Patch',		
 		body: JSON.stringify(data),
-		headers: {
-			'X-HTTP-Method-Override': 'PATCH',
+		headers: {			
 			'X-XSRF-TOKEN': csrftoken,
 			"Content-type": "application/json; charset=UTF-8"
 		}
@@ -312,9 +311,8 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 	url = "/topics/" + id;
 	const csrftoken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
-		method: 'Post',			
-		headers: {
-			'X-HTTP-Method-Override': 'DELETE',
+		method: 'Delete',			
+		headers: {			
 			'X-XSRF-TOKEN': csrftoken,
 			"Content-type": "application/json; charset=UTF-8"
 		}
