@@ -627,7 +627,7 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 
 Tree.prototype.computeTreeAttributes = function(selections)
 {
-	self = this;
+	var self = this;
 	
 	//Set the new level of each of the nodes in our tree
 	self.nodes
@@ -740,7 +740,7 @@ Tree.prototype.centerOnNode = function (node)
 {
 	//This function centers the tree visualization on a node.
 	
-	self = this;
+	var self = this;
 	
 	data_id = node.__data__.id;
 
