@@ -20,7 +20,8 @@ $(document).ready(function()
 	{
 		document.getElementById('my-modal').style.display = "block";
 		displayContainer("resource");
-		callback(received)
+		callback(received);
+		
 	});
 
 	// When the user clicks on the create button, also open the modal but with the resource viewer
@@ -28,7 +29,7 @@ $(document).ready(function()
 	{
 		document.getElementById('my-modal').style.display = "block";
 		displayContainer("resource");
-		createResource();
+		createNewResource();
 	});
 
 	// When the user clicks on the create button, also open the modal but with the resource viewer
@@ -36,13 +37,21 @@ $(document).ready(function()
 	{
 		document.getElementById('my-modal').style.display = "block";
 		displayContainer("resource");
-		resourceEditor();
+		editResource();
+	});
+
+	$("#resource-meta-btn").click(function(event)
+	{
+		document.getElementById('my-modal').style.display = "block";
+		displayContainer("resource");
+		requestResource();
 	});
 
 	// When the user clicks on <span> (x), close the modal
 	$("#close-modal").click(function(event) 
 	{
 		document.getElementById('my-modal').style.display = "none";
+		document.getElementById('resource-head').innerHTML = " ";
 		document.getElementById('modules').innerHTML = " "; //clean the display box up
 		//location.reload();
 	});
@@ -56,6 +65,7 @@ window.onclick = function(event)
     if (event.target == document.getElementById('my-modal')) 
     {
 		document.getElementById('my-modal').style.display = "none";
+		document.getElementById('resource-head').innerHTML = " ";
 		document.getElementById('modules').innerHTML = " "; //clean the display box up
 		/*
 		var x = document.getElementsByClassName("module");

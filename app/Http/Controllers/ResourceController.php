@@ -121,6 +121,7 @@ class ResourceController extends Controller
 	 */
 	public function update(Request $request, Resource $resource)
 	{
+		
 		// first, validate the request
 		$validated = $request->validate([
 			'name' => 'sometimes|max:255',
@@ -143,7 +144,7 @@ class ResourceController extends Controller
 			],
 			'contents.*.content' => 'sometimes|string'
 		]);
-
+		
 		// update whichever resource attributes have been sent in the request
 		// note that this uses mass assignment. see the $fillable array on the Resource to see which attributes are allowed
 		$resource->fill($validated)->save();

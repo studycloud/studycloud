@@ -10,7 +10,6 @@
 //  		  ]
 // }
 
-
 // From https://www.w3schools.com/js/js_json_parse.asp
 
 // var xmlhttp = new XMLHttpRequest();
@@ -32,36 +31,50 @@ var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate",
  {"name": "Resource 222222", "type": "text", "content": "sadfdsflkjsfkljasklff", "created": "date", "updated": "date"}\
  ]}';
 var received2 = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher", "use_name":"Notes"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
-var created;
+
 var contentNum = 0;
 
-//var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "link", "content": "http://google.com", "created": "date", "updated": "date"}]}';
-/*$(document).ready(function(){ 
+var resource_id = 1;
+var temp_content_id = 1;
+
+function requestResource(){
+	var server = new Server();
+
+	//first callback function is error (cannot find the resources)
+	//second callback function is getting the data
+	server.getResource(resource_id, error, displayResource);
+}
+
+function editResource(){
+	var server = new Server();
+
+	server.getResource(resource_id, error, resourceEditor);
+}
+
+function editResourceSuccess(data){
+	alert("Success");
+	console.log(data);
+}
+
+function createResourceSuccess(data){
+	alert("Created Resource Success");
+	console.log("got data");
+	console.log(data);
 	
-	if (document.getElementById('resource-container').className == "view"){
-		resourceCreator = false;
-	}
-	else{
-		resourceCreator = true;
-	}
-	//createResource();
-	
-	if (resourceCreator){
-		createResource();
-	}
-	else{
-		callback(received);
-	}
-	// you can also call:
-	// error();
-});*/
+}
+
+//Error callback function, callback 1
+function error(data)
+{
+	console.log(data);
+}
 
 // Callback function that server will give the data.
-function callback(received)
+function displayResource(received)
 {
-	var resource = JSON.parse(received);
-	// add id = 'resource-name so we can edit the style of resource name in scss
-	//document.getElementById('resource-head').innerHTML="<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1><div>contributed by <div id='author-name'></div></div>";
+	console.log(received);
+	var resource = received;
+	
 	document.getElementById('resource-head').innerHTML="<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1><div>contributed by <div id='author-name'></div></div>";
 	set_author(resource.meta.author_name, resource.meta.author_type);
 	for(var i=0;i<1;i++)
@@ -102,14 +115,25 @@ function display_content(num, element)
 	document.getElementById('module-'+num).innerHTML+="<div class='date'>Modified: "+element.modified+"</div>";
 }
 
-// We can't find the resource requested. 
-function error()
-{
-	document.getElementById('resource-head').innerHTML="<h1>Sorry! We don't have that resource. Would you like to write it?</h1>";
-	document.getElementById('modules').innerHTML=""; // Clear modules if anything exists within it. 
-}
+
 
 function createResource()
+{
+	//create all the input to create resources
+	document.getElementById('resource-head').innerHTML="<h1>Resource Editor</h1>"
+	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> <div class 'resource-creator> Resource Name: <br> \
+	<input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = '1'> Notes </option> <option value = '2'> Quiz </option> </select> \
+	<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
+	<input type = 'text' id = 'content-name0'> <br> \
+	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
+	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> <div id = 'more-contents'> </div>\
+	<div> <button type = 'button' id = 'submit-button' onclick = 'submitContent()'> Submit </button> \
+	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
+	<p id = 'demo'> </p></div> ";
+
+}
+
+function createNewResource()
 {
 	//create all the input to create resources
 	document.getElementById('resource-head').innerHTML="<h1>Resource Creator</h1>"
@@ -119,7 +143,7 @@ function createResource()
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
 	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> <div id = 'more-contents'> </div>\
-	<div> <button type = 'button' id = 'submit-button' onclick = 'submitContent()'> Submit </button> \
+	<div> <button type = 'button' id = 'submit-button' onclick = 'submitNewContent()'> Submit </button> \
 	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
 	<p id = 'demo'> </p></div> ";
 
@@ -157,7 +181,57 @@ function submitContent()
 	}
 	
 	//store all the data in json
-	var resourceArray =  {
+	var resource =  {
+		"id": resource_id,
+		"name":resourceName,
+		"use_id": resourceUse,
+		"contents":
+		[
+			{
+				"id": temp_content_id,
+				"name": document.getElementById("content-name0").value,
+				"type": document.getElementById("content-type0").value,
+				"content": document.getElementById("content0").value
+			}
+		]
+	};
+	
+	for (i=1;i < (contentNum+1); i++){
+		var contentArray =
+		{
+			"name": document.getElementById("content-name"+i).value,
+			"type": document.getElementById("content-type"+i).value,
+			"content": document.getElementById("content"+i).value
+		};
+		resource.contents.push(contentArray);
+	}
+
+	//console.log(resource);
+	
+	var server = new Server();
+	
+	server.editResource(resource_id, resource, error, editResourceSuccess);
+
+}
+
+function submitNewContent() 
+{
+	//this function gets triggered with the submit function is clicked
+	//all the userinput are stored in these variables
+	var resourceName = document.getElementById("meta-name").value;
+	var resourceUse = document.getElementById("resource-use").value;
+	var contentName = [];
+	var contentType = [];
+	var content = [];
+
+	for (i=0;i < (contentNum+1); i++){
+		contentName.push(document.getElementById("content-name"+i).value);
+		contentType.push(document.getElementById("content-type"+i).value);
+		content.push(document.getElementById("content"+i).value);
+	}
+	
+	//store all the data in json
+	var resource =  {
 		"name":resourceName,
 		"use_id": resourceUse,
 		"contents":
@@ -177,16 +251,19 @@ function submitContent()
 			"type": document.getElementById("content-type"+i).value,
 			"content": document.getElementById("content"+i).value
 		};
-		resourceArray.contents.push(contentArray);
+		resource.contents.push(contentArray);
 	}
 
-	//document.getElementById("demo").innerHTML = resourceArray.contents[1]["name"];
-	//document.getElementById("demo").innerHTML = resourceArray.contents.length;
+	console.log(resource);
+	
+	var server = new Server();
+	
+	server.addResource(resource, error, createResourceSuccess);
 
 }
 
-function resourceEditor(){
-	var resource = JSON.parse(received);
+function resourceEditor(received){
+	var resource = received;
 	
 	createResource(); //open the resource editor
 	
