@@ -22,6 +22,11 @@
 
 	<meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
 	<meta name="csrf-token" content="{{ csrf_token() }}"> <!-- include csrf_token in all pages, so it can be accessed by js -->
+
+	@if (!Auth::check())
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	@endif
+	<meta name="google-signin-client_id" content="213909112764-djmb30blchgj76rhfflngmls392fgm23.apps.googleusercontent.com"> <!-- include google client id for google sign in -->
 </head>
 <body>
 	<div id="pageWidth">
@@ -42,7 +47,7 @@
 					</li>
 					<!--Component for login/logout.-->
 
-					@include('auth/acct')
+					@include('auth/signin')
 				</ul>
 			</div>
 
