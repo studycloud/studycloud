@@ -61,17 +61,6 @@
 		<!-- Modal content -->
 		<div class="modal-content">
 			<span id="close-modal"><i class="fas fa-times"></i></span>
-			<!-- Container with information about forgot password. -->
-			<div id="forget-container">
-				@component('auth/passwords/email')
-				@endcomponent
-			</div>
-
-			<!-- Container with information about how to register for the website. -->
-			<div id="register-container">
-				@component('auth/register')
-				@endcomponent
-			</div>
 			
 			<!-- Container for resource. -->
 			<div id="resource-container">

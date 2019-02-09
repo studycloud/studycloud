@@ -79,4 +79,6 @@ Route::get('admins/{userid}',
 	}
 );
 
-Auth::routes();
+// you can enable other providers by adding them in the routes' regex constraints
+Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider')->where('provider', '^(google)$')->name('login.oauth');
+Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback')->where('provider', '^(google)$');
