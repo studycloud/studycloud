@@ -170,9 +170,8 @@ return [
 
         /*
          * Package Service Providers...
+         * (before adding something here, check first that the package won't be auto-discovered)
          */
-
-        //
 
         /*
          * Application Service Providers...
