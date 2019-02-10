@@ -55,44 +55,24 @@ Server.prototype.getCookie = function(cname)
     return "";
 }
 
-Server.prototype.addResource = function(content, callback1, callback2)
+Server.prototype.addResource = function(content, handleError, handleSuccess)
 {
-	var self = this;
+	var self = this;		
 	var url = "/resources";
-	var goodCookie = self.getCookie("XSRF-TOKEN");
-
-	if (goodCookie == ""){
-		return callback1();
-	}
-
-	const csrfToken = goodCookie;
-	const headers = new Headers({
-        'X-XSRF-TOKEN': csrfToken
-	});
-	content = JSON.stringify(content);
-	return d3.text(url, {method: 'post', headers, body: content}).then(function(data, error){
-		if(error)
-		{
-			if(typeof callback1 === 'function')
-			{
-				return callback1(error);
-			}
-			else
-			{
-				throw error;
-			}
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(content),
+		headers: {
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
 		}
-		else
-		{
-			if(typeof callback2 === 'function')
-			{
-				return callback2(data);
-			}
-			else
-			{
-				return data;
-			}
-		}
+	}).then(function(data){
+		
+		return handleSuccess(data);		
+	}).catch(function(error){
+		
+		return handleError(error);	
 	});
 }
 
@@ -137,45 +117,23 @@ Server.prototype.editResource = function(resource_id, content, callback1, callba
 	});
 }
 
-Server.prototype.deleteResource = function(resource_id, callback1, callback2)
+Server.prototype.destroyResource = function(id, handleError, handleSuccess)
 {
-	callback1
 	var self = this;
-	var url = "/resources/" + resource_id;
-	var goodCookie = self.getCookie("XSRF-TOKEN");
-
-	if (goodCookie == ""){
-		return callback1();
-	}
-
-	const csrfToken = goodCookie;
-	const headers = new Headers({
-        'X-XSRF-TOKEN': csrfToken
-    });
-
-	return d3.json(url, {method: 'delete', headers}).then(function(data, error){
-		if(error)
-		{
-			if(typeof callback1 === 'function')
-			{
-				return callback1(error);
-			}
-			else
-			{
-				throw error;
-			}
+	data = {"_method": "DELETE"};			
+	url = "/resources/" + id;
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(data),			
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
 		}
-		else
-		{
-			if(typeof callback2 === 'function') 			
-			{ 
-				return callback2(data);
-			}
-			else
-			{
-				return data;
-			}
-		}
+	}).then(function(data){
+		return handleSuccess(data);
+	}).catch(function(error){
+		return handleError(error);
 	});
 }
 
@@ -262,10 +220,10 @@ Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
 		});		
 }
 
-Server.prototype.storeTopic = function(name, handleError, handleSuccess)
+Server.prototype.addTopic = function(content, handleError, handleSuccess)
 {
 	var self = this;
-	data = {"name": name};	
+	data = {"content": content};	
 	url = "/topics";
 	const csrfToken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
@@ -284,53 +242,11 @@ Server.prototype.storeTopic = function(name, handleError, handleSuccess)
 	});
 }
 
-Server.prototype.updateTopic = function(id, content, callBack1, callBack2)
-{
-	
-	var self = this;
-	var url = "/topics/" + id;
-	var goodCookie = self.getCookie("XSRF-TOKEN");
 
-	if (goodCookie == ""){
-		return callBack1();
-	}
-	
-	content = JSON.stringify(content)
-
-	const csrfToken = goodCookie;
-	const headers = new Headers({
-        'X-XSRF-TOKEN': "xACt9bFEtYrChUJaoQPRIHSgsO8uNrDP9pQGjqAk"
-	});
-	//content['_method'] = "PATCH";
-	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
-		if(error)
-		{
-			if(typeof callback1 === 'function')
-			{
-				return callback1(error);
-			}
-			else
-			{
-				throw error;
-			}
-		}
-		else
-		{
-			if(typeof callback2 === 'function')
-			{
-				return callback2(data);
-			}
-			else
-			{
-				return data;
-			}
-		}
-	});
-}
-/* Server.prototype.updateTopic = function(id, name, handleError, handleSuccess)
+Server.prototype.updateTopic = function(id, content, handleError, handleSuccess)
 {
 	var self = this;
-	data = {"name": name, "_method": "PATCH"};	
+	data = {"content": content, "_method": "PATCH"};	
 	url = "/topics/" + id;
 	const csrfToken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
@@ -340,15 +256,13 @@ Server.prototype.updateTopic = function(id, content, callBack1, callBack2)
 			'X-XSRF-TOKEN': csrfToken,
 			"Content-type": "application/json; charset=UTF-8"
 		}
-	}).then(function(data){
-		console.log("success");
+	}).then(function(data){		
 		return handleSuccess(data);		
-	}).catch(function(error){
-		console.log("error");
+	}).catch(function(error){		
 		return handleError(error);
 	});
 }
-*/
+
 Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 {
 	var self = this;
@@ -370,27 +284,6 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 }
 
 
-Server.prototype.storeResource = function(content, handleError, handleSuccess)
-{
-	var self = this;		
-	var url = "/resources";
-	const csrfToken = self.getCookie("XSRF-TOKEN");
-	fetch(url, {
-		method: 'post',
-		body: JSON.stringify(content),
-		headers: {
-			'X-XSRF-TOKEN': csrfToken,
-			"Content-type": "application/json; charset=UTF-8"
-		}
-	}).then(function(data){
-		
-		return handleSuccess(data);		
-	}).catch(function(error){
-		
-		return handleError(error);	
-	});
-}
-/*
 Server.prototype.storeClass = function(class_JSON, callback1, callback2)
 {
 	var self = this;
@@ -488,7 +381,7 @@ Server.prototype.updateClass = function(class_id, content, callBack1, callBack2)
 	});
 }
 
-Server.prototype.deleteClass = function(class_id, callback1, callback2)
+Server.prototype.destroyClass = function(class_id, callback1, callback2)
 {
 	callback1
 	var self = this;
@@ -668,4 +561,3 @@ Server.prototype.getTree = function(id, levels_up, levels_down, handleError, han
 			return handleError(error);			
 		});		
 }
-*/
