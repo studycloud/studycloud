@@ -284,7 +284,7 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 }
 
 
-Server.prototype.storeClass = function(class_JSON, callback1, callback2)
+/*Server.prototype.storeClass = function(class_JSON, callback1, callback2)
 {
 	var self = this;
 	var url = "/classes";
@@ -561,3 +561,4 @@ Server.prototype.getTree = function(id, levels_up, levels_down, handleError, han
 			return handleError(error);			
 		});		
 }
+*/
