@@ -24,6 +24,8 @@
 
 // Dummy data which I would get from the server.
 
+/*
+Dummy Received Data, don't need to use now
 var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher", "use_name":"Quiz"},\
  "contents": \
  [\
@@ -31,17 +33,22 @@ var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate",
  {"name": "Resource 222222", "type": "text", "content": "sadfdsflkjsfkljasklff", "created": "date", "updated": "date"}\
  ]}';
 var received2 = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher", "use_name":"Notes"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
+*/
 
+//use when we have more than 1 content
 var contentNum = 0;
+//use this to fix problem with "add new content" but not submitting
+//having this will clear any unsaved changes
+var preUpdatedContentNum = contentNum;
 
+//use this to interact with Server
+//request resource and send resource JSON to server
 var resource_id = 1;
 var temp_content_id = 1;
 
 function requestResource(){
 	var server = new Server();
 
-	//first callback function is error (cannot find the resources)
-	//second callback function is getting the data
 	server.getResource(resource_id, error, displayResource);
 }
 
@@ -52,15 +59,13 @@ function editResource(){
 }
 
 function editResourceSuccess(data){
-	alert("Success");
+	console.log("editted resource")
 	console.log(data);
 }
 
 function createResourceSuccess(data){
-	alert("Created Resource Success");
-	console.log("got data");
+	console.log("created resource");
 	console.log(data);
-	
 }
 
 //Error callback function, callback 1
@@ -75,6 +80,7 @@ function displayResource(received)
 	console.log(received);
 	var resource = received;
 	
+	//display the received data
 	document.getElementById('resource-head').innerHTML="<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1><div>contributed by <div id='author-name'></div></div>";
 	set_author(resource.meta.author_name, resource.meta.author_type);
 	for(var i=0;i<1;i++)
@@ -115,14 +121,12 @@ function display_content(num, element)
 	document.getElementById('module-'+num).innerHTML+="<div class='date'>Modified: "+element.modified+"</div>";
 }
 
-
-
 function createResource()
 {
 	//create all the input to create resources
 	document.getElementById('resource-head').innerHTML="<h1>Resource Editor</h1>"
 	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> <div class 'resource-creator> Resource Name: <br> \
-	<input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = '1'> Notes </option> <option value = '2'> Quiz </option> </select> \
+	<input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = 1> Notes </option> <option value = 2> Quiz </option> </select> \
 	<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
@@ -138,7 +142,7 @@ function createNewResource()
 	//create all the input to create resources
 	document.getElementById('resource-head').innerHTML="<h1>Resource Creator</h1>"
 	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> <div class 'resource-creator> Resource Name: <br> \
-	<input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = '1'> Notes </option> <option value = '2'> Quiz </option> </select> \
+	<input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = 1> Notes </option> <option value = 2> Quiz </option> </select> \
 	<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
@@ -146,33 +150,70 @@ function createNewResource()
 	<div> <button type = 'button' id = 'submit-button' onclick = 'submitNewContent()'> Submit </button> \
 	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
 	<p id = 'demo'> </p></div> ";
+}
 
+
+function resourceEditor(received)
+{
+	/*
+	Allow the user to edit the resource created by himself
+	Display the resourceEditor and 
+	load the corresponding resourses (specified by resource_id)
+	*/
+
+	var resource = received;
+	
+	createResource(); //open the resource editor
+	
+	//load the resource into the editor
+	document.getElementById("meta-name").value = resource.meta.name;
+	
+	if (resource.meta.use_name == "Notes"){
+		document.getElementById("resource-use").selectedIndex = 0;
+	}
+	else if (resource.meta.use_name == "Quiz"){
+		document.getElementById("resource-use").selectedIndex = 1;
+	}
+	
+	for (i=1; i < resource.contents.length; i++)
+	{
+		newContent();
+	}
+
+	loadContent(resource.contents);
 }
 
 function newContent(){
-	//temperarily store the already typed content in an array
+	//Create a new entry area for a new content
 	var storedContent = temporaryStoreContent(); 
-
-	contentNum += 1;
-	document.getElementById('more-contents').innerHTML += "<div id='content-"+contentNum+"'></div>";
-	document.getElementById('content-'+contentNum).innerHTML += "<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
-	<input type = 'text' id = 'content-name"+contentNum+"'> <br> \
-	Content Type:  <select id = 'content-type"+contentNum+"'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
-	Content: <br> <textarea rows = '5' id = 'content"+contentNum+"'> </textarea> </div> </form>";
+	
+	//use preUpdatedContentNum so if user can decide to add new content but not submit it
+	//if user exit resource editor/creator, clear previous entries
+	preUpdatedContentNum += 1;
+	document.getElementById('more-contents').innerHTML += "<div id='content-"+preUpdatedContentNum+"'></div>";
+	document.getElementById('content-'+preUpdatedContentNum).innerHTML += "<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
+	<input type = 'text' id = 'content-name"+preUpdatedContentNum+"'> <br> \
+	Content Type:  <select id = 'content-type"+preUpdatedContentNum+"'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
+	Content: <br> <textarea rows = '5' id = 'content"+preUpdatedContentNum+"'> </textarea> </div> </form>";
 
 	//load the stored content back to the content textboxes
 	loadContent(storedContent);
 }
 
-function submitContent() 
-{
-	//this function gets triggered with the submit function is clicked
-	//all the userinput are stored in these variables
+function submitContent() {
+	/*
+	Gets triggered with the submit function is clicked in Resource Editor
+	
+	Submit an editted resource
+	Create a resource JSON (w/ resource id & content id)
+	Call the server to edit the resource
+	*/
 	var resourceName = document.getElementById("meta-name").value;
 	var resourceUse = document.getElementById("resource-use").value;
 	var contentName = [];
 	var contentType = [];
 	var content = [];
+	contentNum = preUpdatedContentNum;
 
 	for (i=0;i < (contentNum+1); i++){
 		contentName.push(document.getElementById("content-name"+i).value);
@@ -181,6 +222,8 @@ function submitContent()
 	}
 	
 	//store all the data in json
+	//NEED TO INCLUDE: resouce id, content id
+	//PROBLEM: can't create additional content (this content doesn't have id)
 	var resource =  {
 		"id": resource_id,
 		"name":resourceName,
@@ -206,18 +249,21 @@ function submitContent()
 		resource.contents.push(contentArray);
 	}
 
-	//console.log(resource);
-	
-	var server = new Server();
-	
-	server.editResource(resource_id, resource, error, editResourceSuccess);
+	console.log(resource);
 
+	//call the server to edit the resource
+	var server = new Server();
+	server.editResource(resource_id, resource, error, editResourceSuccess);
 }
 
 function submitNewContent() 
 {
-	//this function gets triggered with the submit function is clicked
-	//all the userinput are stored in these variables
+	/* 
+	Gets triggered when the submit function is clicked in resource creator
+	Submit a new resource
+	
+	Create a resource JSON and call the server to add new resource
+	*/
 	var resourceName = document.getElementById("meta-name").value;
 	var resourceUse = document.getElementById("resource-use").value;
 	var contentName = [];
@@ -231,6 +277,7 @@ function submitNewContent()
 	}
 	
 	//store all the data in json
+	//PROBLEM: can only create 1 content for 1 resource
 	var resource =  {
 		"name":resourceName,
 		"use_id": resourceUse,
@@ -256,37 +303,13 @@ function submitNewContent()
 
 	console.log(resource);
 	
-	var server = new Server();
-	
+	//call the server to add resource
+	var server = new Server();	
 	server.addResource(resource, error, createResourceSuccess);
-
 }
 
-function resourceEditor(received){
-	var resource = received;
-	
-	createResource(); //open the resource editor
-	
-	//load the resource into the editor
-	document.getElementById("meta-name").value = resource.meta.name;
-	
-	if (resource.meta.use_name == "Notes"){
-		document.getElementById("resource-use").selectedIndex = 0;
-	}
-	else if (resource.meta.use_name == "Quiz"){
-		document.getElementById("resource-use").selectedIndex = 1;
-	}
-	
-	
-	for (i=1; i < resource.contents.length; i++)
-	{
-		newContent();
-	}
-
-	loadContent(resource.contents);
-}
-
-function loadContent(contents){
+function loadContent(contents)
+{
 	/*
 	Helper function to load the content back into the textbox
 	Used in:
@@ -310,7 +333,8 @@ function loadContent(contents){
 	}
 }
 
-function temporaryStoreContent(){
+function temporaryStoreContent()
+{
 	/*
 	Helper function to temporarily store the content typed in the textbox into 
 	an array. 
@@ -324,7 +348,11 @@ function temporaryStoreContent(){
 		}
 	];
 
-	for (i=1;i < (contentNum+1); i++){
+	//use preUpdataedContentNum here because...
+	//If the user has entries in a new content (but hasn't click submit)
+	//then he clicks on "New Content" again,
+	//using preUpdatedContentNum will save his entries
+	for (i=1;i < (preUpdatedContentNum+1); i++){
 		var contentArray =
 		{
 			"name": document.getElementById("content-name"+i).value,
@@ -337,3 +365,9 @@ function temporaryStoreContent(){
 	return contents;
 }
 
+function resetContentNum (){
+	//when the user close the resource editor/creator
+	//reset preUpdatedContent Num
+	//clear unused changes
+	preUpdatedContentNum = contentNum;
+}

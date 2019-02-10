@@ -15,15 +15,6 @@ $(document).ready(function()
 		displayContainer("forget");
 	});
 
-	// When the user clicks on the forget button, also open the modal but with the forget content
-	$("#resource-btn").click(function(event)
-	{
-		document.getElementById('my-modal').style.display = "block";
-		displayContainer("resource");
-		callback(received);
-		
-	});
-
 	// When the user clicks on the create button, also open the modal but with the resource viewer
 	$("#creator-btn").click(function(event)
 	{
@@ -53,6 +44,7 @@ $(document).ready(function()
 		document.getElementById('my-modal').style.display = "none";
 		document.getElementById('resource-head').innerHTML = " ";
 		document.getElementById('modules').innerHTML = " "; //clean the display box up
+		resetContentNum();
 		//location.reload();
 	});
 
@@ -67,6 +59,7 @@ window.onclick = function(event)
 		document.getElementById('my-modal').style.display = "none";
 		document.getElementById('resource-head').innerHTML = " ";
 		document.getElementById('modules').innerHTML = " "; //clean the display box up
+		resetContentNum();
 		/*
 		var x = document.getElementsByClassName("module");
 		for (var i; i<x.length; i++){
