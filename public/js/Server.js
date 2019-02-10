@@ -284,7 +284,45 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 }
 
 
-/*Server.prototype.storeClass = function(class_JSON, callback1, callback2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Server.prototype.addClass = function(content, handleError, handleSuccess)
+{
+	var self = this;		
+	var url = "/classes";
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(content),
+		headers: {
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		
+		return handleSuccess(data);		
+	}).catch(function(error){
+		
+		return handleError(error);	
+	});
+}
+
+
+//same as classes.store
+/*
+Server.prototype.addClass = function(content, callback1, callback2)
 {
 	var self = this;
 	var url = "/classes";
@@ -323,6 +361,7 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 		}
 	});
 }
+*/
 
 Server.prototype.getClassesJSON = function(id, handleError, handleSuccess)
 {
@@ -340,6 +379,28 @@ Server.prototype.getClassesJSON = function(id, handleError, handleSuccess)
 		});		
 }
 
+
+Server.prototype.updateClass = function(class_id, content, handleError, handleSuccess)
+{
+	var self = this;
+	data = {"content": content, "_method": "PATCH"};	
+	url = "/classes/" + class_id;
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',		
+		body: JSON.stringify(data),
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){		
+		return handleSuccess(data);		
+	}).catch(function(error){		
+		return handleError(error);
+	});
+}
+
+/*
 Server.prototype.updateClass = function(class_id, content, callBack1, callBack2)
 {
 	
@@ -380,7 +441,29 @@ Server.prototype.updateClass = function(class_id, content, callBack1, callBack2)
 		}
 	});
 }
+*/
 
+Server.prototype.destroyClass = function(class_id, handleError, handleSuccess)
+{
+	var self = this;
+	data = {"_method": "DELETE"};			
+	url = "/classes/" + class_id;
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(data),			
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		return handleSuccess(data);
+	}).catch(function(error){
+		return handleError(error);
+	});
+}
+
+/*
 Server.prototype.destroyClass = function(class_id, callback1, callback2)
 {
 	callback1
@@ -422,7 +505,29 @@ Server.prototype.destroyClass = function(class_id, callback1, callback2)
 		}
 	});
 }
+*/
 
+Server.prototype.attachClass = function(class_id, handleError, handleSuccess)
+{
+	var self = this;
+	data = {"_method": "PATCH"};			
+	url = "/classes/attach/" + class_id;
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(data),			
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		return handleSuccess(data);
+	}).catch(function(error){
+		return handleError(error);
+	});
+}
+
+/*
 Server.prototype.attachClass = function(class_id, content, callBack1, callBack2)
 {
 	
@@ -463,7 +568,29 @@ Server.prototype.attachClass = function(class_id, content, callBack1, callBack2)
 		}
 	});
 }
+*/
 
+Server.prototype.attachResource = function(resource_id, handleError, handleSuccess)
+{
+	var self = this;
+	data = {"_method": "PATCH"};			
+	url = "/resources/attach/" + resource_id;
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(data),			
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		return handleSuccess(data);
+	}).catch(function(error){
+		return handleError(error);
+	});
+}
+
+/*
 Server.prototype.attachResource = function(resource_id, content, callBack1, callBack2)
 {
 	
@@ -504,7 +631,29 @@ Server.prototype.attachResource = function(resource_id, content, callBack1, call
 		}
 	});
 }
+*/
 
+Server.prototype.detachResource = function(resource_id, handleError, handleSuccess)
+{
+	var self = this;
+	data = {"_method": "PATCH"};			
+	url = "/classes/detach/" + resource_id;
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(data),			
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		return handleSuccess(data);
+	}).catch(function(error){
+		return handleError(error);
+	});
+}
+
+/*
 Server.prototype.detachResource = function(resource_id, content, callBack1, callBack2)
 {
 	
@@ -545,6 +694,7 @@ Server.prototype.detachResource = function(resource_id, content, callBack1, call
 		}
 	});
 }
+*/
 
 Server.prototype.getTree = function(id, levels_up, levels_down, handleError, handleSuccess)
 {
@@ -561,4 +711,4 @@ Server.prototype.getTree = function(id, levels_up, levels_down, handleError, han
 			return handleError(error);			
 		});		
 }
-*/
+
