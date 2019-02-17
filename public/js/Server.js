@@ -55,6 +55,7 @@ Server.prototype.getCookie = function(cname)
     return "";
 }
 
+
 Server.prototype.addResource = function(content, handleError, handleSuccess)
 {
 	var self = this;		
@@ -153,11 +154,9 @@ Server.prototype.getData = function(node, levels_up, levels_down, handleError, h
     		return self.handleError(url, error, handleError);
     	}
     	else {			
-    		return self.handleSuccess(data, handleSuccess);
+    		return self.handleSuccess(node,data,handleSuccess);
 		}	
     });
-	
-
 };
 
 
@@ -193,20 +192,25 @@ Server.prototype.handleError = function(url, error, treeHandleError)
 };
 
 
-Server.prototype.handleSuccess = function(data, treeHandleSuccess)
-{
-	
+Server.prototype.handleSuccess = function(node, data, treeHandleSuccess)
+{	
 	var self = this;
-	if(!(typeof treeHandleSuccess === 'function'))
-	{
-		return data;
-	}
-    return treeHandleSuccess(data);
+
+	var connections = data.connections;
+	var IDNodeMap = d3.map(data.nodes, function (d) { return d.id; });
+
+	connections.forEach(function(connection)
+		{
+			connection.source = IDNodeMap.get(connection.source);
+			connection.target = IDNodeMap.get(connection.target);
+		}
+	);
+	
+	return treeHandleSuccess(node, data);
 };
 
 Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
-{
-	
+{	
 	var self = this;
 		
 	url = "/data/topic?id="+id;
@@ -340,9 +344,11 @@ Server.prototype.addClass = function(content, callback1, callback2)
 
 	const csrfToken = goodCookie;
 	const headers = new Headers({
-        'X-XSRF-TOKEN': csrfToken
+        'X-XSRF-TOKEN': csrfToken,
+		'Content-type': "applications/json; charset=UTF-8"
     });
 	return d3.json(url, {method: 'post', headers, body: content}).then(function(data, error){
+
 		if(error)
 		{
 			if(typeof callback1 === 'function')
@@ -386,6 +392,7 @@ Server.prototype.getClassesJSON = function(id, handleError, handleSuccess)
 }
 
 
+
 Server.prototype.updateClass = function(class_id, content, handleError, handleSuccess)
 {
 	var self = this;
@@ -415,14 +422,22 @@ Server.prototype.updateClass = function(class_id, content, callBack1, callBack2)
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
+
 		return callBack1()
+
 	}
+	
+	content['_method'] = "PATCH";
 
 	const csrfToken = goodCookie;
 	const headers = new Headers({
-        'X-XSRF-TOKEN': csrfToken
+        'X-XSRF-TOKEN': csrftoken,
+		'Content-type': "applications/json; charset=UTF-8",
+		'X-HTTP-Method-Override': "PATCH"
     });
+
 	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
+
 		if(error)
 		{
 			if(typeof callback1 === 'function')
@@ -448,6 +463,7 @@ Server.prototype.updateClass = function(class_id, content, callBack1, callBack2)
 	});
 }
 */
+
 
 Server.prototype.destroyClass = function(class_id, handleError, handleSuccess)
 {
@@ -483,7 +499,7 @@ Server.prototype.destroyClass = function(class_id, callback1, callback2)
 
 	const csrfToken = goodCookie;
 	const headers = new Headers({
-        'X-XSRF-TOKEN': csrfToken
+        'X-XSRF-TOKEN': csrftoken
     });
 
 	return d3.json(url, {method: 'delete', headers}).then(function(data, error){
@@ -502,6 +518,7 @@ Server.prototype.destroyClass = function(class_id, callback1, callback2)
 		{
 			if(typeof callback2 === 'function') 			
 			{ 
+
 				return callback2(data);
 			}
 			else
@@ -512,6 +529,7 @@ Server.prototype.destroyClass = function(class_id, callback1, callback2)
 	});
 }
 */
+
 
 Server.prototype.attachClass = function(class_id, handleError, handleSuccess)
 {
@@ -536,7 +554,6 @@ Server.prototype.attachClass = function(class_id, handleError, handleSuccess)
 /*
 Server.prototype.attachClass = function(class_id, content, callBack1, callBack2)
 {
-	
 	var self = this;
 	var url = "/classes/attach/" + class_id;
 	var goodCookie = self.getCookie("XSRF-TOKEN");
@@ -672,7 +689,6 @@ Server.prototype.detachResource = function(resource_id, content, callBack1, call
 	if (goodCookie == ""){
 		return callBack1()
 	}
-
 	const csrfToken = goodCookie;
 	const headers = new Headers({
         'X-XSRF-TOKEN': csrfToken
@@ -719,4 +735,3 @@ Server.prototype.getTree = function(id, levels_up, levels_down, handleError, han
 			return handleError(error);			
 		});		
 }
-

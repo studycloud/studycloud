@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Topic extends Model
 {
@@ -64,5 +65,18 @@ class Topic extends Model
 	public function detachResources($old_resources)
 	{
 		return $this->resources()->detachResources($old_resources);
+	}
+
+	/* This function returns a collection that represents a root */
+	public static function getRoot()
+	{
+		$root = collect([
+			"id"=>0,
+			"name"=>"All Topics",
+			"author_id"=>0,
+			"created_at"=>Carbon::now()->toDateTimeString(),
+			"updated_at"=>Carbon::now()->toDateTimeString()
+		]);
+		return $root;
 	}
 }

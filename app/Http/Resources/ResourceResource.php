@@ -8,8 +8,9 @@ use Illuminate\Http\Resources\Json\Resource;
 class ResourceResource extends Resource
 {
 	/**
-	ROUTES FOR THIS CONTROLLER
-		GET /data/resource?id={id} resources.json  get the JSON representation of this resource
+	 * ROUTES FOR THIS CONTROLLER
+	 *	HTTP Verb	URI						Route Name		Action
+	 *	GET 		/data/resource?id={id}	resources.json	get the JSON representation of this resource
 	 */
 
 	/**
@@ -29,15 +30,15 @@ class ResourceResource extends Resource
 		];
 
 		/**
-		set contents of this resource to be
-		a list of collections each with the following attributes:
-			id
-			name
-			type
-			content
-			created - formatted as April 1, 2018 1:05 AM
-			updated - formatted as April 1, 2018 1:05 AM
-		**/
+		 * set contents of this resource to be
+		 * a list of collections each with the following attributes:
+		 * 	id
+		 * 	name
+		 * 	type
+		 * 	content
+		 * 	created - formatted as April 1, 2018 1:05 AM
+		 * 	updated - formatted as April 1, 2018 1:05 AM
+		 */
 		$date_format = 'M j, Y g:i A';
 		$contents = $this->contents->map(
 			function($content) use ($date_format)

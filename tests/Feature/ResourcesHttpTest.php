@@ -6,6 +6,7 @@ use App\User;
 use App\Resource;
 use Tests\TestCase;
 use App\ResourceUse;
+use App\Academic_Class;
 use App\ResourceContent;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -83,6 +84,29 @@ class ResourcesHttpTest extends TestCase
 		// check: was the edit successful?
 		$response->assertSuccessful();
 		$this->assertEquals($new_content_name, $new_content->name);
+
+		// attach the resource to some items in the tree
+		$class = Academic_Class::inRandomOrder()->take(1)->get()->first();
+		$response = $this->actingAs($user)->patch('/resources/attach/'.($new_resource->id),
+			[
+				'class' => $class->id
+			]
+		);
+		$new_class = Resource::latest()->first()->class()->get()->first();
+		// check: was the attachment successful?
+		$response->assertSuccessful();
+		$this->assertEquals($class->id, $new_class->id);
+
+		// detach the resource from some items in the tree
+		$response = $this->actingAs($user)->patch('/resources/detach/'.($new_resource->id),
+			[
+				'class' => true
+			]
+		);
+		$new_class = Resource::latest()->first()->class()->get()->first();
+		// check: was the detachment successful?
+		$response->assertSuccessful();
+		$this->assertEmpty($new_class);
 
 		// delete the resource we created
 		$response = $this->actingAs($user)->delete('/resources/'.($new_resource->id));

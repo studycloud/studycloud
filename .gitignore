@@ -11,3 +11,6 @@ Homestead.yaml
 /storage/framework/views/*.php
 **/.DS_Store
 **/._.DS_Store
+**/.vscode/
+**/.vs
+

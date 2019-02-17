@@ -32,7 +32,7 @@
 .navbar {
 	@extend %navbar-gradient;
 	font-family: $main-font;
-	font-size: 20px;
+	font-size: $main-font-size;
 	ul {
 		text-align: center;
 		list-style-type: none;
@@ -48,13 +48,11 @@
 			margin: 0;
 			padding: 0.3em;
 			a, input { // Default behavior of navbar items.
-				font-weight: bolder;
 				color: $navbar-text-color;
 				display: block;
 				text-decoration: none;
 				text-align: center;
 				font-size: inherit;
-				// font-size: 20px;
 				padding: 0.35em;
 				white-space: nowrap;
 				border-radius: 0.1em;
@@ -88,8 +86,9 @@
 					border-radius: 0.1em;
 					width: 100%;
 					resize: none;
-					font-size: 18px;
-					font-family: inherit;
+					font-size: $body-font-size;
+					font-family: $body-font;
+					padding: 10px 0px;
 					&:focus {
 						color: $search-box-text-focus-color;
 						background: $search-box-bg-focus-color;
@@ -124,6 +123,8 @@
 #log-in-hidden { // Content box containing login form.
 	padding: 5px;
 	text-align: right;
+	font-family: $body-font;
+	font-size: $body-font-size - 2px;
 
     position: absolute;
     background-color: $login-dropdown-color;
@@ -152,7 +153,6 @@
 	    text-decoration: none;
 	    border-radius: 0;
 	    background: none;
-	    font-size: 12px;
 	    font-weight: normal;
 	    text-align: right;
 
@@ -172,18 +172,33 @@
 		transition: all 0.15s;
 		border-radius: 0.1em;
 		resize: none;
-		font-size: inherit;
+		font-size: 18px;
 		font-family: inherit;
 		margin-bottom: 2%;
 	}
 
-	#remember {
-		margin: 0 0 0 auto;
-		input {
-			margin: 2%;
-			display: inline;
+	#rememberDiv { // Div containing remember me checkbox and label.
+		display: inline;
+
+		// CUSTOM CHECKBOXES (source: https://codepen.io/jamesbarnett/pen/yILjk)
+
+		/* Hide the default checkbox. */
+		input[type=checkbox] {
+			display: none;
+		}
+
+		/* Set the unchecked icon. */
+		input[type=checkbox] + label:before {
+			font-family: "FontAwesome";
+		    content: "\F0C8";
+		}
+
+		/* Set the checked icon. */
+		input[type=checkbox]:checked + label:before {
+			content: "\F14A";
 		}
 	}
+
 
 	#logInSub { // Style your submit button.
 	    border: none;
