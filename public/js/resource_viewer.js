@@ -43,27 +43,33 @@ var preUpdatedContentNum = contentNum;
 
 //use this to interact with Server
 //request resource and send resource JSON to server
-var resource_id = 1;
-var temp_content_id = 1;
+var resource_id = 23;
+var temp_content_id = 23;
 
 function requestResource(){
+	//call the server to get the JSON for resource (specified by resource_id)
+	//use to display resource
 	var server = new Server();
 
 	server.getResource(resource_id, error, displayResource);
 }
 
 function editResource(){
+	//call the server to get the JSON for resource (specified by resource_id)
+	//use to edit resource
 	var server = new Server();
 
 	server.getResource(resource_id, error, resourceEditor);
 }
 
 function editResourceSuccess(data){
+	//callback 2 function for editing resources
 	console.log("editted resource")
 	console.log(data);
 }
 
 function createResourceSuccess(data){
+	//callback 2 function for creating resourcess
 	console.log("created resource");
 	console.log(data);
 }
@@ -208,6 +214,7 @@ function submitContent() {
 	Create a resource JSON (w/ resource id & content id)
 	Call the server to edit the resource
 	*/
+	console.log(temp_content_id);
 	var resourceName = document.getElementById("meta-name").value;
 	var resourceUse = document.getElementById("resource-use").value;
 	var contentName = [];
@@ -254,6 +261,11 @@ function submitContent() {
 	//call the server to edit the resource
 	var server = new Server();
 	server.editResource(resource_id, resource, error, editResourceSuccess);
+
+	//close the content editor
+	document.getElementById('my-modal').style.display = "none";
+	document.getElementById('resource-head').innerHTML = " ";
+	document.getElementById('modules').innerHTML = " "; //clean the display box up
 }
 
 function submitNewContent() 
@@ -306,6 +318,11 @@ function submitNewContent()
 	//call the server to add resource
 	var server = new Server();	
 	server.addResource(resource, error, createResourceSuccess);
+	
+	//close the content creator
+	document.getElementById('my-modal').style.display = "none";
+	document.getElementById('resource-head').innerHTML = " ";
+	document.getElementById('modules').innerHTML = " "; //clean the display box up
 }
 
 function loadContent(contents)
