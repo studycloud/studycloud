@@ -6,11 +6,11 @@
 
 $page-background: $ground;
 // Import a color scheme. 
-// @import "./original.scss";
-// @import "./umbrella.scss";
-// @import "./bold.scss";
-// @import "./universe.scss";
-@import "./emo.scss";
+// @import "./colorSchemes/original.scss";
+// @import "./colorSchemes/umbrella.scss";
+// @import "./colorSchemes/bold.scss";
+// @import "./colorSchemes/universe.scss";
+@import "./colorSchemes/emo.scss";
 
 // NAVBAR
 
@@ -45,3 +45,4 @@ $content-title-color: $accent-2;
 $content-border-color: $accent-2;
 
 $content-bg-color: hsla(360, 0%, 52%, 0.3);
+

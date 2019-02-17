@@ -237,7 +237,8 @@ table {
 }
 
 .navbar {
-  font-family: "Cinzel", cursive;
+  font-family: "Open Sans", sans-serif;
+  text-transform: lowercase;
   font-size: 20px;
 }
 
@@ -318,6 +319,7 @@ table {
   resize: none;
   font-size: 14px;
   font-family: "Open Sans", sans-serif;
+  text-transform: normal;
   padding: 10px 0px;
 }
 
@@ -353,6 +355,7 @@ table {
   text-align: right;
   font-family: "Open Sans", sans-serif;
   font-size: 12px;
+  text-transform: normal;
   position: absolute;
   background-color: #fefefe;
   -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -506,6 +509,8 @@ table {
 html {
   font-family: "Open Sans", sans-serif;
   background: white;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #pageWidth {

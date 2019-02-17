@@ -32,6 +32,7 @@
 .navbar {
 	@extend %navbar-gradient;
 	font-family: $main-font;
+	text-transform: $main-transform;
 	font-size: $main-font-size;
 	ul {
 		text-align: center;
@@ -88,6 +89,7 @@
 					resize: none;
 					font-size: $body-font-size;
 					font-family: $body-font;
+					text-transform: $body-transform;
 					padding: 10px 0px;
 					&:focus {
 						color: $search-box-text-focus-color;
@@ -125,6 +127,7 @@
 	text-align: right;
 	font-family: $body-font;
 	font-size: $body-font-size - 2px;
+	text-transform: $body-transform;
 
     position: absolute;
     background-color: $login-dropdown-color;

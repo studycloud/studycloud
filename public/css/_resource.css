@@ -1,4 +1,4 @@
-.resource-background {
+@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One|Cinzel|Cinzel+Decorative|Space+Mono|Roboto+Mono);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);.resource-background {
   padding: 20px;
 }
 
@@ -25,5 +25,24 @@
 
 .module {
   padding: 10px;
+}
+
+.submit-button,
+.cancel-button {
+  padding: 10px;
+  border: 0;
+  border-radius: 5px;
+  text-transform: lowercase;
+  font-family: "Open Sans", sans-serif;
+}
+
+.submit-button {
+  background: #3fc53f;
+  color: white;
+}
+
+.cancel-button {
+  background: #cbcbcb;
+  color: black;
 }
 

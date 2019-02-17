@@ -29,8 +29,10 @@ $main-font-family-14: 'Roboto Mono', cursive;	// Monospace... meh. I think if we
 
 $body-font: 'Open Sans', sans-serif;
 $body-font-size: 14px;
+$body-transform: normal;
 
-$main-font: $main-font-family-11;
+$main-font: $body-font;
 $main-font-size: 20px;
+$main-transform: lowercase;
 
 $font-awesome: 'FontAwesome'
