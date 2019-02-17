@@ -3,6 +3,8 @@
 	<title>Study Cloud</title>
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/index.css') }}">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous"> <!-- Fontawesome for icons -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"> <!--Google material design icons-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- for jQuery -->
 	@stack('styles') {{-- include whatever code has been pushed to the styles stack --}}
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/_resource.css') }}">
@@ -14,6 +16,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
 	<script src="{{ asset('js/Server.js') }}"></script>
 	<script src="{{ asset('js/D3HelperFunction.js') }}"></script>
+	<script src="{{ asset('js/d3-transform.js') }}"></script>
 	<script src="{{ asset('js/Tree.js') }}"></script>
 	@stack('scripts')
 

@@ -29,9 +29,10 @@ class TopicRepository
 	 * @param  int $levels the number of levels of descendants to get; returns all if $levels is not specified or is less than 0
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function descendants(Topic $topic = null, int $levels = null)
+	public function descendants(Topic $topic = null, int $levels = null, $root = null)
 	{
 		$tree = collect();
+		
 		// base case: $levels == 0
 		// also do a memoization check to prevent us from
 		// executing a query for a topic that we've already found
@@ -43,6 +44,14 @@ class TopicRepository
 			if (is_null($topic))
 			{
 				$children = self::getTopLevelTopics();
+
+				if (!is_null($root))
+				{
+					foreach ($children as $child) {  //iterates through each top level topic
+						// add a pivot element to each topic
+						$child->pivot = collect(["parent_id" => $root['id'], "topic_id" => $child["id"]]);
+					}
+				}
 			}
 			else
 			{
@@ -50,12 +59,13 @@ class TopicRepository
 				// add the topic id to the list of topics that have already been called
 				array_push($this->memoize, $topic->id);
 			}
+
 			foreach ($children as $child) {
 				// add the child to the tree
 				$tree->push(collect($child));
 				$tree = $tree->merge(
 					// RECURSION!
-					$this->descendants($child, $levels - 1)
+					$this->descendants($child, $levels - 1, $root)
 				);
 			}
 		}
@@ -68,9 +78,10 @@ class TopicRepository
 	 * @param  int $levels the number of levels of ancestors to get; returns all if $levels is not specified or is less than 0
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function ancestors(Topic $topic = null, int $levels = null)
+	public function ancestors(Topic $topic = null, int $levels = null, $root = null)
 	{
 		$tree = collect();
+
 		// base case: $levels == 0
 		// also do a memoization check to prevent us from
 		// executing a query for a topic that we've already found
@@ -88,13 +99,21 @@ class TopicRepository
 				$parents = $topic->parents()->get();
 				// add the topic id to the list of topics that have already been called
 				array_push($this->memoize, $topic->id);
+				// add the root and its connection to this topic,
+				// if this topic doesn't have any parents
+				if ($parents->isEmpty() && !is_null($root))
+				{
+					$root->put("pivot", collect(["parent_id" => $root['id'], "topic_id" => $topic['id']]));
+					$tree->push($root);
+				}
 			}
+
 			foreach ($parents as $parent) {
 				// add the parent to the tree
 				$tree->push(collect($parent));
 				$tree = $tree->merge(
 					// RECURSION!
-					$this->ancestors($parent, $levels - 1)
+					$this->ancestors($parent, $levels - 1, $root)
 				);
 			}
 		}

@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);/* The purpose of this file is to reset all CSS properties that the browser may otherwise want to reset. Taken directly from the webpage cited below.*/
+@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One|Cinzel|Cinzel+Decorative|Space+Mono|Roboto+Mono);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);/* The purpose of this file is to reset all CSS properties that the browser may otherwise want to reset. Taken directly from the webpage cited below.*/
 
 /*
 	http://meyerweb.com/eric/tools/css/reset/ 
@@ -139,9 +139,9 @@ table {
 }
 
 .navbar {
-  background: #333A56;
-  background: -webkit-gradient(linear, left top, left bottom, from(#465C8B), to(#333A56));
-  background: linear-gradient(#465C8B, #333A56);
+  background: black;
+  background: -webkit-gradient(linear, left top, left bottom, from(#333333), to(black));
+  background: linear-gradient(#333333, black);
 }
 
 /* ----------------------------------------------
@@ -237,7 +237,7 @@ table {
 }
 
 .navbar {
-  font-family: "Gugi", cursive;
+  font-family: "Cinzel", cursive;
   font-size: 20px;
 }
 
@@ -271,7 +271,6 @@ table {
 
 .navbar ul li a,
 .navbar ul li input {
-  font-weight: bolder;
   color: white;
   display: block;
   text-decoration: none;
@@ -286,7 +285,7 @@ table {
 
 .navbar ul li a:hover,
 .navbar ul li input:hover {
-  background-color: #daccf7;
+  background-color: #0044b3;
   color: black;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
@@ -311,14 +310,15 @@ table {
   border-color: transparent;
   color: white;
   outline: none;
-  background: #bec9df;
+  background: #999999;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
   border-radius: 0.1em;
   width: 100%;
   resize: none;
-  font-size: 18px;
-  font-family: inherit;
+  font-size: 14px;
+  font-family: "Open Sans", sans-serif;
+  padding: 10px 0px;
 }
 
 .navbar ul #search #search-form #search-text:focus {
@@ -338,12 +338,12 @@ table {
 }
 
 .navbar ul #log-in #log-in-button {
-  background-color: #daccf7;
+  background-color: #0044b3;
 }
 
 .navbar ul #log-in #log-in-button:hover,
 .navbar ul #log-in #log-in-button:focus {
-  background-color: #ab98c6;
+  background-color: #ed6639;
 }
 
 /* LOGIN DROPDOWN */
@@ -351,6 +351,8 @@ table {
 #log-in-hidden {
   padding: 5px;
   text-align: right;
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
   position: absolute;
   background-color: #fefefe;
   -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -378,19 +380,18 @@ table {
 }
 
 #log-in-hidden .link-default {
-  color: #333A56;
+  color: black;
   padding-top: 2px;
   padding-bottom: 2px;
   text-decoration: none;
   border-radius: 0;
   background: none;
-  font-size: 12px;
   font-weight: normal;
   text-align: right;
 }
 
 #log-in-hidden .link-default:hover {
-  color: #675682;
+  color: #0044b3;
   background: none;
 }
 
@@ -400,23 +401,34 @@ table {
   border-color: transparent;
   color: white;
   outline: none;
-  background: #bec9df;
+  background: #999999;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
   border-radius: 0.1em;
   resize: none;
-  font-size: inherit;
+  font-size: 18px;
   font-family: inherit;
   margin-bottom: 2%;
 }
 
-#log-in-hidden #remember {
-  margin: 0 0 0 auto;
+#log-in-hidden #rememberDiv {
+  display: inline;
+  /* Hide the default checkbox. */
+  /* Set the unchecked icon. */
+  /* Set the checked icon. */
 }
 
-#log-in-hidden #remember input {
-  margin: 2%;
-  display: inline;
+#log-in-hidden #rememberDiv input[type=checkbox] {
+  display: none;
+}
+
+#log-in-hidden #rememberDiv input[type=checkbox] + label:before {
+  font-family: "FontAwesome";
+  content: "\F0C8";
+}
+
+#log-in-hidden #rememberDiv input[type=checkbox]:checked + label:before {
+  content: "\F14A";
 }
 
 #log-in-hidden #logInSub {
@@ -424,7 +436,7 @@ table {
   color: white;
   text-decoration: none;
   text-align: right;
-  background: #ab98c6;
+  background: #ed6639;
   margin: 2% 0 2% auto;
 }
 
@@ -486,13 +498,14 @@ table {
 }
 
 .navbar {
-  background: #333A56;
-  background: -webkit-gradient(linear, left top, left bottom, from(#465C8B), to(#333A56));
-  background: linear-gradient(#465C8B, #333A56);
+  background: black;
+  background: -webkit-gradient(linear, left top, left bottom, from(#333333), to(black));
+  background: linear-gradient(#333333, black);
 }
 
 html {
   font-family: "Open Sans", sans-serif;
+  background: white;
 }
 
 #pageWidth {
@@ -503,7 +516,7 @@ html {
 
 #main {
   background-color: rgba(133, 133, 133, 0.3);
-  font-size: 16px;
+  font-size: 14px;
   width: 100%;
 }
 

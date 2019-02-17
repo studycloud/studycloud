@@ -1,4 +1,5 @@
-tree_topics = new Tree("topic", "topic-tree");
+server = new Server();
+tree_topics = new Tree("topic", "topic-tree", server);
 
 var data=
 {
@@ -25,6 +26,30 @@ var data=
       "created_at": "2017-11-02 21:02:03",
       "updated_at": "2017-11-02 21:02:03",
       "id": "t3"
+    },
+    {
+      "name": "Topic C",
+      "author_id": 50,
+      "use_id": 20,
+      "created_at": "2017-11-02 21:02:03",
+      "updated_at": "2017-11-02 21:02:03",
+      "id": "t11"
+    },
+    {
+      "name": "Topic D",
+      "author_id": 40,
+      "use_id": 21,
+      "created_at": "2017-11-02 21:02:03",
+      "updated_at": "2017-11-02 21:02:03",
+      "id": "t12"
+    },
+    {
+      "name": "Topic E",
+      "author_id": 16,
+      "use_id": 22,
+      "created_at": "2017-11-02 21:02:03",
+      "updated_at": "2017-11-02 21:02:03",
+      "id": "t13"
     },
     {
       "name": "Topic AA",
@@ -65,7 +90,7 @@ var data=
       "created_at": "2017-11-02 21:02:03",
       "updated_at": "2017-11-02 21:02:03",
       "id": "t8"
-    },
+    },	
     {
       "name": "Topic BBA",
       "author_id": 3,
@@ -75,11 +100,26 @@ var data=
       "id": "t9"
     }
   ],
-  "links": [
+  "connections": [
     {
       "source": "t1",
       "target": "t2",
 	  "id": "l1"
+    },
+    {
+      "source": "t1",
+      "target": "t11",
+	  "id": "l10"
+    },
+    {
+      "source": "t1",
+      "target": "t12",
+	  "id": "l11"
+    },
+    {
+      "source": "t1",
+      "target": "t13",
+	  "id": "l12"
     },
     {
       "source": "t1",
@@ -115,11 +155,32 @@ var data=
       "source": "t8",
       "target": "t9",
 	  "id": "l8"
+    },
+	{
+      "source": "t3",
+      "target": "t4",
+	  "id": "l9"
     }
   ]
 };	
 
+var connections = data.connections;
+	var IDNodeMap = d3.map(data.nodes, function (d) { return d.id; });
+
+	connections.forEach(function(connection)
+		{
+			connection.source = IDNodeMap.get(connection.source);
+			connection.target = IDNodeMap.get(connection.target);
+		}
+	);
+
 tree_topics.setData(data);
+
+
+tree_topics.nodeClicked(d3.select(".node").node());
+
+//tree_topics.server.getData(0, 1, 3, tree_topics.updateDataNLevels.bind(tree_topics), function (node, url, error) { console.log(node, url, error); });
+//tree_topics.setData(data);
 
 // server_topics = new Server();
 
