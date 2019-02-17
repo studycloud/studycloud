@@ -81,6 +81,7 @@
 
 	</div>
 
-	<button id="resource-btn">this is a temporary button</button>
-
+	<button id="creator-btn">temporary resource creator button</button>
+	<button id="editor-btn">temporary resource editor button</button>
+	<button id="resource-meta-btn">resource meta button</button>
 </body></html>

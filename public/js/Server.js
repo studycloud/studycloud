@@ -7,7 +7,7 @@ function Server()
     var self = this;
 }
 
-Server.prototype.getResource = function(resource_id, callBack1, callBack2)
+Server.prototype.getResource = function(resource_id, callback1, callback2)
 {
 	var self = this;
 	
@@ -55,14 +55,14 @@ Server.prototype.getCookie = function(cname)
     return "";
 }
 
-Server.prototype.addResource = function(content, callBack1, callBack2)
+Server.prototype.addResource = function(content, callback1, callback2)
 {
 	var self = this;
 	var url = "/resources";
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
-		return callBack1();
+		return callback1();
 	}
 
 	const csrfToken = goodCookie;
@@ -96,14 +96,14 @@ Server.prototype.addResource = function(content, callBack1, callBack2)
 	});
 }
 
-Server.prototype.editResource = function(resource_id, content, callBack1, callBack2)
+Server.prototype.editResource = function(resource_id, content, callback1, callback2)
 {
 	var self = this;
 	var url = "/resources/" + resource_id;
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
-		return callBack1();
+		return callback1()
 	}
 	
 	content['_method'] = "PATCH";
@@ -140,14 +140,14 @@ Server.prototype.editResource = function(resource_id, content, callBack1, callBa
 	});
 }
 
-Server.prototype.deleteResource = function(resource_id, callBack1, callBack2)
+Server.prototype.deleteResource = function(resource_id, callback1, callback2)
 {
 	var self = this;
 	var url = "/resources/" + resource_id;
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
-		return callBack1();
+		return callback1();
 	}
 
 	const csrftoken = goodCookie;

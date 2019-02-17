@@ -131,7 +131,7 @@ class ResourceController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(Request $request, Resource $resource)
-	{
+  {
 		$this->authorize('update', $resource);
 		// first, validate the request
 		$validated = $request->validate([
@@ -155,7 +155,7 @@ class ResourceController extends Controller
 			],
 			'contents.*.content' => 'sometimes|string'
 		]);
-
+		
 		// update whichever resource attributes have been sent in the request
 		// note that this uses mass assignment. see the $fillable array on the Resource to see which attributes are allowed
 		$resource->fill($validated)->save();
