@@ -298,6 +298,12 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 
 
 
+
+
+
+
+
+
 Server.prototype.addClass = function(content, handleError, handleSuccess)
 {
 	var self = this;		
@@ -570,10 +576,11 @@ Server.prototype.attachClass = function(class_id, content, callBack1, callBack2)
 }
 */
 
-Server.prototype.attachResource = function(resource_id, handleError, handleSuccess)
+Server.prototype.attachResource = function(resource_id, content, handleError, handleSuccess)
 {
 	var self = this;
-	data = {"_method": "PATCH"};			
+	//data = {"_method": "PATCH"};	
+	data = {"content": content, "_method": "PATCH"};		
 	url = "/resources/attach/" + resource_id;
 	const csrfToken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
@@ -633,10 +640,11 @@ Server.prototype.attachResource = function(resource_id, content, callBack1, call
 }
 */
 
-Server.prototype.detachResource = function(resource_id, handleError, handleSuccess)
+Server.prototype.detachResource = function(resource_id, content, handleError, handleSuccess)
 {
 	var self = this;
-	data = {"_method": "PATCH"};			
+	//data = {"_method": "PATCH"};
+	data = {"content": content, "_method": "PATCH"};
 	url = "/classes/detach/" + resource_id;
 	const csrfToken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
