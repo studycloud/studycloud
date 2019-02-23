@@ -245,9 +245,17 @@ class ResourceController extends Controller
 		// remove the topics (this code is disabled for MVP)
 		// ResourceRepository::detachTopics($resource, $validated['topics']);
 		// remove the class
+		// note that removing a class from a resource will automatically attach the resource to the root
+		// so we have to check that this operation is truly allowed first
 		if ($validated['class'])
-		{			
-			$resource->class()->dissociate($validated['class'])->save();
+		{
+			if (Academic_Class::getRoot()->status == 1) {
+				$resource->class()->dissociate($validated['class'])->save();
+			}
+			else
+			{
+				abort(405, "Detaching this resource will attach it to the root, which is currently not allowed.");
+			}
 		}
 	}
 

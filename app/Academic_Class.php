@@ -64,7 +64,7 @@ class Academic_Class extends Model
 			"author_id"=>0,
 			"created_at"=>Carbon::now()->toDateTimeString(),
 			"updated_at"=>Carbon::now()->toDateTimeString(),
-			"status"=>0
+			"status"=>1
 		]);
 		return $root;
 	}

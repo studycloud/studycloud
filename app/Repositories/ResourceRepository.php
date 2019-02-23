@@ -242,7 +242,7 @@ class ResourceRepository
 	 */
 	public static function allowedClasses($resource)
 	{
-		// resources can only be added to leaf classes
-		return ClassRepository::getLeafClasses();
+		// resources can be added to any class that doesn't have a status of 0
+		return Academic_Class::where('status', 1)->get();
 	}
 }
