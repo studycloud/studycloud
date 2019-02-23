@@ -209,7 +209,14 @@ class GetTree extends Controller
 		// add author name; it's more useful than the author id
 		// $node->put('author_name', User::find($node->get('author_id'))->name());
 		// send only the attributes that we need
-		$node = $node->only('id', 'name', 'author_id', 'created_at', 'updated_at');
+		if ($this->type == 'class')
+		{
+			$node = $node->only('id', 'name', 'author_id', 'status', 'created_at', 'updated_at');
+		}
+		else
+		{
+			$node = $node->only('id', 'name', 'author_id', 'created_at', 'updated_at');
+		}
 		return $node;
 	}
 
