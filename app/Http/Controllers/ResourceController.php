@@ -213,7 +213,7 @@ class ResourceController extends Controller
 				'required_without:topics',
 				'integer',
 				Rule::in(
-					ResourceRepository::allowedClasses($resource->id)->pluck('id')->toArray()
+					ResourceRepository::allowedClasses($resource)->pluck('id')->toArray()
 				)
 			],
 		]);
