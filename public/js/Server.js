@@ -90,7 +90,7 @@ Server.prototype.editResource = function(resource_id, content, callback1, callba
 	content = JSON.stringify(content);
 	const csrfToken = goodCookie;
 	const headers = new Headers({
-        'X-XSRF-TOKEN': csrTtoken
+        'X-XSRF-TOKEN': csrfTtoken
     });
 	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
 		if(error)
@@ -289,6 +289,243 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Server.prototype.addClass = function(content, handleError, handleSuccess)
+{
+	var self = this;		
+	var url = "/classes";
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(content),
+		headers: {
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		
+		return handleSuccess(data);		
+	}).catch(function(error){
+		
+		return handleError(error);	
+	});
+}
+
+Server.prototype.getClassesJSON = function(id, handleError, handleSuccess)
+{
+	
+	var self = this;
+		
+	url = "/data/class?id="+id;
+	return d3.json(url)
+		.then(function(data){			
+				return handleSuccess(id, data);
+			})
+		
+		.catch(function(error){
+			return handleError(error);			
+		});		
+}
+
+Server.prototype.updateClass = function(class_id, content, handleError, handleSuccess)
+{
+	var self = this;
+	data = {"content": content, "_method": "PATCH"};	
+	url = "/classes/" + class_id;
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',		
+		body: JSON.stringify(data),
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){		
+		return handleSuccess(data);		
+	}).catch(function(error){		
+		return handleError(error);
+	});
+}
+
+Server.prototype.destroyClass = function(class_id, handleError, handleSuccess)
+{
+	var self = this;
+	data = {"_method": "DELETE"};			
+	url = "/classes/" + class_id;
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(data),			
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		return handleSuccess(data);
+	}).catch(function(error){
+		return handleError(error);
+	});
+}
+
+Server.prototype.attachClass = function(class_id, data, handleError, handleSuccess)
+{
+	var self = this;
+	data["_method"] = "PATCH";
+	url = "/classes/attach/" + class_id;	
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(data),			
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		return handleSuccess(data);
+	}).catch(function(error){
+		return handleError(error);
+	});
+}
+
+Server.prototype.attachResource = function(resource_id, content, handleError, handleSuccess)
+{
+	var self = this;
+	//data = {"_method": "PATCH"};	
+	data = {"content": content, "_method": "PATCH"};		
+	url = "/resources/attach/" + resource_id;
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(data),			
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		return handleSuccess(data);
+	}).catch(function(error){
+		return handleError(error);
+	});
+}
+
+/*
+Server.prototype.attachResource = function(resource_id, content, callBack1, callBack2)
+{
+	
+	var self = this;
+	var url = "/resources/attach/" + resource_id;
+	var goodCookie = self.getCookie("XSRF-TOKEN");
+
+	if (goodCookie == ""){
+		return callBack1()
+	}
+
+	const csrfToken = goodCookie;
+	const headers = new Headers({
+        'X-XSRF-TOKEN': csrfToken
+    });
+	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
+		if(error)
+		{
+			if(typeof callback1 === 'function')
+			{
+				return callback1(error);
+			}
+			else
+			{
+				throw error;
+			}
+		}
+		else
+		{
+			if(typeof callback2 === 'function')
+			{
+				return callback2(data);
+			}
+			else
+			{
+				return data;
+			}
+		}
+	});
+}
+*/
+
+Server.prototype.detachResource = function(resource_id, content, handleError, handleSuccess)
+{
+	var self = this;
+	//data = {"_method": "PATCH"};
+	data = {"content": content, "_method": "PATCH"};
+	url = "/classes/detach/" + resource_id;
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(data),			
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		return handleSuccess(data);
+	}).catch(function(error){
+		return handleError(error);
+	});
+}
+
+/*
+Server.prototype.detachResource = function(resource_id, content, callBack1, callBack2)
+{
+	
+	var self = this;
+	var url = "/resources/detach/" + resource_id;
+	var goodCookie = self.getCookie("XSRF-TOKEN");
+
+	if (goodCookie == ""){
+		return callBack1()
+	}
+	const csrfToken = goodCookie;
+	const headers = new Headers({
+        'X-XSRF-TOKEN': csrfToken
+    });
+	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
+		if(error)
+		{
+			if(typeof callback1 === 'function')
+			{
+				return callback1(error);
+			}
+			else
+			{
+				throw error;
+			}
+		}
+		else
+		{
+			if(typeof callback2 === 'function')
+			{
+				return callback2(data);
+			}
+			else
+			{
+				return data;
+			}
+		}
+	});
+}
+*/
 
 
 
