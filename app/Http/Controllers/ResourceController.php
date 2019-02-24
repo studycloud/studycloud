@@ -82,12 +82,27 @@ class ResourceController extends Controller
 				'required',
 				Rule::in(ResourceContent::getPossibleTypes())
 			],
-			'contents.*.content' => 'string'
+			'contents.*.content' => 'string',
+			'class_id' => [
+				'required',
+				'integer',
+				Rule::in(
+					ResourceRepository::allowedClasses(null)->push(0)->pluck('id')->toArray()
+				)
+			]
 		]);
 
 		// create a new Resource using mass assignment to add 'name' and 'use_id' attributes
 		$resource = (new Resource)->fill($validated);
 		$resource->author_id = Auth::id();
+		if ($validated['class_id'] != 0)
+		{
+			$resource->class_id = $validated['class_id'];
+		}
+		elseif (Academic_Class::getRoot()->status == 0)
+		{
+			abort(403, "Resources cannot be attached to the root");
+		} // else we will default to the root
 		$resource->save();
 		// create new ResourceContents and attach them to this Resource
 		$contents = [];
