@@ -269,7 +269,7 @@ class ResourceController extends Controller
 			}
 			else
 			{
-				abort(405, "Detaching this resource will attach it to the root, which is currently not allowed.");
+				abort(403, "Detaching this resource will attach it to the root, which is currently not allowed.");
 			}
 		}
 	}

@@ -144,12 +144,12 @@ class ClassController extends Controller
 		// before deleting the class, make sure it doesn't have any classes attached underneath it
 		if ($class->children()->count() > 0)
 		{
-			abort(405, "You cannot delete a class that has children");
+			abort(403, "You cannot delete a class that has children");
 		}
 		// also make sure it doesn't have any resources attached to it
 		if ($class->resources()->count() > 0)
 		{
-			abort(405, "You cannot delete a class that has resources");
+			abort(403, "You cannot delete a class that has resources");
 		}
 		// actually delete the class
 		$class->delete();
