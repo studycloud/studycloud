@@ -25,6 +25,7 @@ class ClassResource extends Resource
 		return [
 			'name' => $this->name,
 			'author_name' => $author ? $author->name() : null,
+			'status' => $this->status,
 			'created' => $this->created_at->format($date_format),
 			'updated' => $this->updated_at->format($date_format)
 		];
