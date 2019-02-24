@@ -264,12 +264,12 @@ class ResourceController extends Controller
 		// so we have to check that this operation is truly allowed first
 		if ($validated['class'])
 		{
-			if (Academic_Class::getRoot()->status == 1) {
-				$resource->class()->dissociate($validated['class'])->save();
+			if (Academic_Class::getRoot()->status == 0) {
+				abort(403, "Detaching this resource will attach it to the root, which is currently not allowed.");
 			}
 			else
 			{
-				abort(403, "Detaching this resource will attach it to the root, which is currently not allowed.");
+				$resource->class()->dissociate($validated['class'])->save();
 			}
 		}
 	}
