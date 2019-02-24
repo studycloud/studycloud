@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Topic;
 use App\Resource;
 use Carbon\Carbon;
+use App\Academic_Class;
 use App\ResourceContent;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -99,7 +100,7 @@ class ResourceController extends Controller
 		{
 			$resource->class_id = $validated['class_id'];
 		}
-		elseif (Academic_Class::getRoot()->status == 0)
+		elseif (Academic_Class::getRoot()['status'] == 0)
 		{
 			abort(403, "Resources cannot be attached to the root");
 		} // else we will default to the root
@@ -264,7 +265,7 @@ class ResourceController extends Controller
 		// so we have to check that this operation is truly allowed first
 		if ($validated['class'])
 		{
-			if (Academic_Class::getRoot()->status == 0) {
+			if (Academic_Class::getRoot()['status'] == 0) {
 				abort(403, "Detaching this resource will attach it to the root, which is currently not allowed.");
 			}
 			else
