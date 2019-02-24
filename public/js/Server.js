@@ -90,7 +90,7 @@ Server.prototype.editResource = function(resource_id, content, callback1, callba
 	content = JSON.stringify(content);
 	const csrfToken = goodCookie;
 	const headers = new Headers({
-        'X-XSRF-TOKEN': csrTtoken
+        'X-XSRF-TOKEN': csrfToken
     });
 	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
 		if(error)

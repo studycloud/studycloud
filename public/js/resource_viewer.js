@@ -35,6 +35,51 @@ var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate",
 var received2 = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher", "use_name":"Notes"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
 */
 
+//Dummy Data about the class
+var classData = {
+	"data": [
+		{
+			"id": 2,
+			"name": "Biology"
+		},
+		{
+			"id": 3,
+			"name": "Chemistry"
+		},
+		{
+			"id": 4,
+			"name": "CS5"
+		},
+		{
+			"id": 5,
+			"name": "Calculus"
+		},
+		{
+			"id": 6,
+			"name": "Linear Algebra"
+		},
+		{
+			"id": 7,
+			"name": "Writ 1"
+		},
+		{
+			"id": 8,
+			"name": "HSA 10"
+		},
+		{
+			"id": 9,
+			"name": "Special Relativity"
+		},
+		{
+			"id": 10,
+			"name": "Physics: Mechanics"
+		},
+		{
+			"id": 11,
+			"name": "Physics: E&M"
+		},
+	]
+};
 //use when we have more than 1 content
 var contentNum = 0;
 //use this to fix problem with "add new content" but not submitting
@@ -43,10 +88,11 @@ var preUpdatedContentNum = contentNum;
 
 //use this to interact with Server
 //request resource and send resource JSON to server
-var resource_id = 23;
-var temp_content_id = 23;
+var resource_id = 1;
+var temp_content_id = 1;
 
-function requestResource(){
+function requestResource()
+{
 	//call the server to get the JSON for resource (specified by resource_id)
 	//use to display resource
 	var server = new Server();
@@ -54,7 +100,8 @@ function requestResource(){
 	server.getResource(resource_id, error, displayResource);
 }
 
-function editResource(){
+function editResource()
+{
 	//call the server to get the JSON for resource (specified by resource_id)
 	//use to edit resource
 	var server = new Server();
@@ -62,13 +109,15 @@ function editResource(){
 	server.getResource(resource_id, error, resourceEditor);
 }
 
-function editResourceSuccess(data){
+function editResourceSuccess(data)
+{
 	//callback 2 function for editing resources
 	console.log("editted resource")
 	console.log(data);
 }
 
-function createResourceSuccess(data){
+function createResourceSuccess(data)
+{
 	//callback 2 function for creating resourcess
 	console.log("created resource");
 	console.log(data);
@@ -129,11 +178,12 @@ function display_content(num, element)
 
 function createResource()
 {
+	selectorCode = createClassSelection(classData); //selector code for class attachment
 	//create all the input to create resources
 	document.getElementById('resource-head').innerHTML="<h1>Resource Editor</h1>"
 	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> <div class 'resource-creator> Resource Name: <br> \
-	<input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = 1> Notes </option> <option value = 2> Quiz </option> </select> \
-	<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
+	<input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = 1> Notes </option> <option value = 2> Quiz </option> </select> <br>" + selectorCode + "<div class=resource-divider></div> \
+	<br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
 	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> <div id = 'more-contents'> </div>\
@@ -145,11 +195,12 @@ function createResource()
 
 function createNewResource()
 {
+	selectorCode = createClassSelection(classData); //selector code for class attachment
 	//create all the input to create resources
 	document.getElementById('resource-head').innerHTML="<h1>Resource Creator</h1>"
 	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> <div class 'resource-creator> Resource Name: <br> \
-	<input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = 1> Notes </option> <option value = 2> Quiz </option> </select> \
-	<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
+	<input type = 'text' id = 'meta-name'> <br> Resource Use:  <select id = 'resource-use'> <option value = 1> Notes </option> <option value = 2> Quiz </option> </select> <br>" + selectorCode + "<div class=resource-divider></div> \
+	<br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
 	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> <div id = 'more-contents'> </div>\
@@ -169,7 +220,7 @@ function resourceEditor(received)
 
 	var resource = received;
 	
-	createResource(); //open the resource editor
+	//createResource(); //open the resource editor
 	
 	//load the resource into the editor
 	document.getElementById("meta-name").value = resource.meta.name;
@@ -189,7 +240,8 @@ function resourceEditor(received)
 	loadContent(resource.contents);
 }
 
-function newContent(){
+function newContent()
+{
 	//Create a new entry area for a new content
 	var storedContent = temporaryStoreContent(); 
 	
@@ -206,7 +258,8 @@ function newContent(){
 	loadContent(storedContent);
 }
 
-function submitContent() {
+function submitContent() 
+{
 	/*
 	Gets triggered with the submit function is clicked in Resource Editor
 	
@@ -382,9 +435,33 @@ function temporaryStoreContent()
 	return contents;
 }
 
-function resetContentNum (){
+function resetContentNum ()
+{
 	//when the user close the resource editor/creator
 	//reset preUpdatedContent Num
 	//clear unused changes
 	preUpdatedContentNum = contentNum;
 }
+
+function createClassSelection (classJson)
+{
+	/*
+	@classJson receive data about the class from max's Tree
+
+	create the htmlCode to create the selector for classAttachment
+	*/
+	var classData = classJson;
+	
+	htmlCode = "<select name = 'classAttach' theme='google' width='400' style='' \
+		placeholder='Attach Your Resource To A Class' data-search='true'> ";
+	
+  for (i = 0; i < classData.data.length; i ++){
+		var c = classData.data[i];
+		htmlCode += "<option value = '" + c.id + "'> " + c.name + "</option>";
+	}
+
+	htmlCode += "</select>";
+
+	return htmlCode;
+}
+
