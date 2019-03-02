@@ -165,6 +165,17 @@ class ClassRepository
 		}
 		return $isAncestor;
 	}
+
+	/**
+	 * change the parent and add children to a class all at once
+	 * @param  [type] $parent   [description]
+	 * @param  array  $children [description]
+	 * @return [type]           [description]
+	 */
+	public static function moveClasses($parent=null, $children=[])
+	{
+		// 
+	}
 	
 	public static function printAsciiDescendants($class)
 	{
