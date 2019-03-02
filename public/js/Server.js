@@ -416,14 +416,15 @@ Server.prototype.getTree = function(id, levels_up, levels_down, handleError, han
 	id = id ? id : ""
 	levels_up = levels_up || levels_up === 0 ? levels_up : ""
 	levels_down = levels_down || levels_down === 0 ? levels_down : ""		
-	url = "/data/class_tree?id=" + id + "&levels_up=" + levels_up + "&levels_down=" + levels_down +id;
-	return d3.json(url)
-		.then(function(data){			
-				return handleSuccess(id, data);
-			})		
-		.catch(function(error){
-			return handleError(error);			
-		});		
-}
+	url = "/data/class_tree?id=" + id + "&levels_up=" + levels_up + "&levels_down=" + levels_down;
+	return d3.json(url, {method: 'get'}).then(function(data, error){
+    	if (error){			
+    		return handleError(error);
+    	}
+    	else {			
+    		return handleSuccess(id,data);
+		}	
+    });
+};
 
 
