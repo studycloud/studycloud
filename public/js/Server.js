@@ -129,7 +129,7 @@ Server.prototype.getData = function(node, levels_up, levels_down, handleError, h
 	levels_up = levels_up || levels_up === 0 ? levels_up : ""
 	levels_down = levels_down || levels_down === 0 ? levels_down : ""
 	// what is the url for this request?
-	url = "/data/topic_tree/?topic="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
+	url = "/data/topic_tree?id="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
     return d3.json(url, {method: 'get'}).then(function(data, error){
     	if (error){			
     		return self.handleError(url, error, handleError);
@@ -412,16 +412,18 @@ Server.prototype.detachResource = function(resource_id, content, handleError, ha
 
 Server.prototype.getTree = function(id, levels_up, levels_down, handleError, handleSuccess)
 {
-	
 	var self = this;
-		
+	id = id ? id : ""
+	levels_up = levels_up || levels_up === 0 ? levels_up : ""
+	levels_down = levels_down || levels_down === 0 ? levels_down : ""		
 	url = "/data/class_tree?id=" + id + "&levels_up=" + levels_up + "&levels_down=" + levels_down +id;
 	return d3.json(url)
 		.then(function(data){			
 				return handleSuccess(id, data);
-			})
-		
+			})		
 		.catch(function(error){
 			return handleError(error);			
 		});		
 }
+
+
