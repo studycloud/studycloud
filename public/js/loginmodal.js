@@ -21,7 +21,7 @@ $(document).ready(function()
 		document.getElementById('my-modal').style.display = "block";
 		displayContainer("resource");
 		createNewResource();
-		$('select[name="classAttach').selectstyle({
+		$('select[name="attach').selectstyle({
 			width  : 400,
 			height : 300,
 			theme  : 'light',
@@ -37,7 +37,7 @@ $(document).ready(function()
 		displayContainer("resource");
 		createResource();
 		editResource();
-		$('select[name="classAttach').selectstyle({
+		$('select[name="attach').selectstyle({
 			width  : 400,
 			height : 300,
 			theme  : 'light',
