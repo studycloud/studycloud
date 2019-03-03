@@ -19,23 +19,21 @@ class NodesAndConnections
 		$connections = collect();
 
 		foreach ($old_nodes as $node) {
+			// add any connections the node may have
+			if ($node->has('pivot'))
+			{
+				$connections->push(collect($node['pivot']));
+			}
 			// check whether the node has been added already before adding it
 			if (!$nodes->pluck('id')->contains($node['id']))
 			{
-				$pivot = null;
 				// remove the pivot if it exists
 				if ($node->has('pivot'))
 				{
-					$pivot = $node['pivot'];
 					$node = $node->except(['pivot']);
 				}
 				// add the node without its pivot
 				$nodes->push($node);
-			}
-			// add any connections the node may have
-			if (!is_null($pivot))
-			{
-				$connections->push(collect($pivot));
 			}
 		}
 
