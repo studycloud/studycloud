@@ -142,16 +142,16 @@ Server.prototype.getData = function(node, levels_up, levels_down, handleError, h
 
 
 Server.prototype.handleError = function(url, error, treeHandleError)
-{
-	
+{	
 	var self = this;
 	if(!(typeof treeHandleError === 'function')){
-
 		return(error);
 	}
 	if (error == "Error: Internal Server Error")
+		console.log(response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()))
 		return d3.json(url, {method: 'get'}).then(function(data, error){
 			if (error){
+				
 				if(error != "Error: Internal Server Error")
 				{					
 					throw(error);
