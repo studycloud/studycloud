@@ -167,14 +167,35 @@ class ClassRepository
 	}
 
 	/**
-	 * change the parent and add children to a class all at once
-	 * @param  [type] $parent   [description]
-	 * @param  array  $children [description]
-	 * @return [type]           [description]
+	 * check whether we can change the parent and children of a class all at once
+	 * @param	int|null			$class		the class id for the class we want to attach things to or null for the root
+	 * @param	int|null			$parent		the id of the new parent class or null if we shouldn't replace the current one
+	 * @param	array 				$children 	an array of class id's that should be attached as children to this class
+	 * @param	bool				$sync 		whether to perform an 'attach' where children are added or a 'sync' where children are replaced
+	 * @param	Collection|null		$tree		all parents and children of $class in the connections format; if null, queries will be performed to retrieve the required data
+	 * @param	string|null						if the parent and children cannot be added, returns a message explaining why; otherwise, returns null
 	 */
-	public static function moveClasses($parent=null, $children=[])
+	public static function checkClassAttach($class=null, $parent=null, $children=[], bool $sync=false, $tree=null)
 	{
-		// 
+		// if we're dealing with the root class
+		if (is_null($class))
+		{
+			// the root class cannot have a parent
+			if (!is_null($parent))
+			{
+				return "The root class cannot be assigned a parent";
+			}
+			// you can attach any children to the root
+			return null;
+		}
+		// get whatever data is required
+		if (is_null($tree))
+		{
+			$ancestors = (new ClassRepository)->ancestors($class);
+			$descendants = (new ClassRepository)->descendants($class);
+			$tree = $ancestors->merge($descendants);
+			$tree = NodesAndConnections::treeAsConnections($tree);
+		}
 	}
 	
 	public static function printAsciiDescendants($class)
