@@ -154,6 +154,15 @@ function Tree(type, frame_id, server)
 
 	self.server = server;
 
+	//Setup Local variables that we keep track of about nodes in our tree. This is necessary so that they stay persistent across data updates
+	self.locals = {};
+	self.locals.nodes = {};
+	self.locals.links = {};
+
+	
+	self.locals.style = d3.local();
+	self.locals.coordinates = d3.local();
+
 }
 
 
@@ -168,19 +177,19 @@ Tree.prototype.simulationInitialize = function()
 		.alphaTarget(-1)
 		.alphaDecay(0.002)
 		.force("ForceLink", d3.forceLink())
-		.force("ForceCharge", d3.forceManyBody());
-		//.force("ForceCenterX", d3.forceX(self.frame.boundary.width/2))
-		//.force("ForceCenterY", d3.forceY(self.frame.boundary.height/2));
+		.force("ForceCharge", d3.forceManyBody())
+		.force("ForceCenterX", d3.forceX(self.frame.boundary.width/2))
+		.force("ForceCenterY", d3.forceY(self.frame.boundary.height/2));
 
 	self.simulation
 		.nodes(self.nodes.data())
 		.on('tick', function(){self.draw()});
 
-	//self.simulation.force("ForceCenterX")
-		//.strength(0.01);
+	self.simulation.force("ForceCenterX")
+		.strength(0.11);
 	
-	//self.simulation.force("ForceCenterY")
-	//	.strength(0.01);	
+	self.simulation.force("ForceCenterY")
+		.strength(0.11);	
 		
 	self.simulation
 		.force("ForceLink")
@@ -326,7 +335,7 @@ Tree.prototype.cleanDataNodes = function(data)
 	{
 		if (d.x === undefined || d.y === undefined)
 		{
-			console.log("foooo");
+			console.log("Nodes Data Cleaned");
 			d.x = 0;
 			d.y = 0;
 		}
@@ -336,8 +345,9 @@ Tree.prototype.cleanDataNodes = function(data)
 
 Tree.prototype.updateDataNodes = function(selection, data)
 {
+
 	var self = this;
-	
+
 	console.log("Updating node data for ", selection, " to ", data);
 	
 	self.cleanDataNodes(data);
@@ -347,17 +357,17 @@ Tree.prototype.updateDataNodes = function(selection, data)
 	var nodes = selection
 		.enter()
 			.append("g")
-			.attr("class", "node")
-			.attr("data_id", function (d) { return d.id; })
-			.on("click", function(){self.nodeClicked(this);})
-			.on('contextmenu', function(d, i){self.nodeMenuOpen(this, d, i);});
+				.attr("class", "node")
+				.attr("data_id", function (d) { return d.id; })
+				.on("click", function(){self.nodeClicked(this);})
+				.on('contextmenu', function(d, i){self.nodeMenuOpen(this, d, i);});
 
 
 	nodes
 		.append("rect")
 			.attr("fill", function(d)
 			{
-				//generate our fill color based on the date created, author, and name
+				//generate our fill color based on the node id;
 				var random_number_generator = new Math.seedrandom(d.id);
 				var color = d3.interpolateRainbow(random_number_generator());
 				return color;
@@ -365,9 +375,42 @@ Tree.prototype.updateDataNodes = function(selection, data)
 			)
 			.attr("width", "100")
 			.attr("height", "100");
+
+	nodes.append("text");
 	
+	nodes.each(function(d)
+		{			
+			var style = 
+			{
+				labeled: false,
+				level: 3,
+				opacity: 0,
+				visible: false,
+				width: 0,
+				height: 0
+			};
+
+			var coordinates = 
+			{
+				x: 0,
+				y: 0,
+				fx: null,
+				fy: null,
+				x_new: null,
+				x_old: null,
+				y_new: null,
+				y_old: null
+			};
+
+			self.locals.style.set(this, style);
+			self.locals.coordinates.set(this, coordinates);
+		}
+	);
+	
+	nodes = nodes.merge(selection);
+
 	nodes
-		.append("text")
+		.select("text")
 			.attr("text-anchor", "middle")
 			.attr("fill", "white")
 			.attr("stroke", "black")
@@ -382,7 +425,6 @@ Tree.prototype.updateDataNodes = function(selection, data)
 	var transform = d3.transform()
 		.scale(0);
 	
-	
 	selection
 		.exit()
 			.attr("class", "node-deleted")
@@ -394,27 +436,11 @@ Tree.prototype.updateDataNodes = function(selection, data)
 				
 	
 	self.nodes = self.frame.select(".layer_nodes").selectAll(".node");
-	
-	//initialize the node data that we use ourselves
-	self.nodes.each(function(d)
-		{
-			d.level = 3;
-			d.visible = false;
-			d.labeled = false;
-			d.width = 10;
-			d.height = d.width;
-			d.opacity = 0;
-			d.x_new = null;
-			d.y_new = null;
-			d.fx = null;
-			d.fy = null;
-			d.x = 0;
-			d.y = 0;
-			d.x_old = d.x;
-			d.y_old = d.y;
-		}
-	);
-	
+
+		//initialize the node data that we use ourselves
+
+
+
 };
 
 Tree.prototype.updateDataLinks = function(selection, data)
@@ -487,8 +513,6 @@ Tree.prototype.updateDataNLevels = function(node_id, levels_num_children, levels
 	//combine children and parent sets
 	var ids_updated_combined;
 	
-	
-	
 	ids_updated_combined.nodes = new Set(function*() { yield* ids_updated.children.nodes; yield* ids_updated.parents.nodes; }());
 	ids_updated_combined.links = new Set(function*() { yield* ids_updated.children.links; yield* ids_updated.parents.links; }());
 	
@@ -551,14 +575,14 @@ Tree.prototype.draw = function()
 };
 
 
-Tree.prototype.nodeCoordinateInterpolatorGenerator = function(d, )
+Tree.prototype.nodeCoordinateInterpolatorGenerator = function(d, dom_element)
 {
-	//create interpolate functions between where we are and where we want to be
+	var self = this;
+	//create interpolate functions between where we are and where we want to be	
+	var coordinates = self.locals.coordinates.get(dom_element);
 
-	console.log("Origin: (" + d.x_old + "," + d.x_old + ") Destination: (" + d.x_new + "," + d.y_new + ")");
-	
-	var interpolate_x = d3.interpolateNumber(d.x_old, d.x_new);
-	var interpolate_y = d3.interpolateNumber(d.y_old, d.y_new);
+	var interpolate_x = d3.interpolateNumber(coordinates.x_old, coordinates.x_new);
+	var interpolate_y = d3.interpolateNumber(coordinates.y_old, coordinates.y_new);
 	
 	return function(p)
 	{
@@ -592,7 +616,7 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 	
 	var distance_final;
 	
-	switch(d.level)
+	switch(self.locals.nodes.level.get(this))
 	{
 	case -1:
 		distance_final = 530;
@@ -628,24 +652,31 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 Tree.prototype.computeTreeAttributes = function(selections)
 {
 	var self = this;
-	
+	var node_locals = self.locals.nodes;
+
 	//Set the new level of each of the nodes in our tree
 	self.nodes
 		.attr("class", "node")
 		.each(function(d)
 			{
-				d.level = 3;
-				d.visible = false;
-				d.labeled = false;
-				d.width = 10;
-				d.height = d.width;
-				d.opacity = 0;
-				d.x_new = null;//self.frame.boundary.width/2;
-				d.y_new = null;//self.frame.boundary.height/4;
-				
-				//for every node, store its old position
-				d.x_old = d.x;
-				d.y_old = d.y;
+				var style = self.locals.style.get(this);
+				var coordinates = self.locals.coordinates.get(this);
+
+				style.level = 3;
+				style.visible = false;
+				style.opacity = 0;
+				style.labeled = false;
+				style.width = 10;
+				style.height = 10;
+
+				coordinates.x =  0;
+				coordinates.y =  0;
+				coordinates.fx = null;
+				coordinates.fy = null;
+				coordinates.x_old = d.x;
+				coordinates.y_old = d.y;
+				coordinates.x_new = null;
+				coordinates.y_new = null;
 			}
 		);
 	
@@ -655,15 +686,19 @@ Tree.prototype.computeTreeAttributes = function(selections)
 		.classed("node-parent", true)
 		.each(function(d,i,nodes)
 			{
-				d.level = -1;
-				d.visible = true;
-				d.labeled = true;
-				d.width = self.frame.boundary.width / nodes.length;
-				d.height = 40;
-				d.opacity = 1;
-				d.x_new = d.width*i + d.width/2;
-				d.y_new = d.height/2;
 				
+				var style = self.locals.style.get(this);
+				var coordinates = self.locals.coordinates.get(this);
+
+				style.level = -1;
+				style.visible = true;
+				style.opacity = 1;
+				style.labeled = true;
+				style.width = self.frame.boundary.width / nodes.length;
+				style.height = 40;
+
+				coordinates.x_new = style.width*i + style.width/2;
+				coordinates.y_new = style.height/2;
 			}
 		);
 	selections.parents.links.each(function(d){d.level = -1;});
@@ -672,15 +707,18 @@ Tree.prototype.computeTreeAttributes = function(selections)
 		.classed("node-root", true)
 		.each(function(d)
 			{
-				d.level = 0;
-				d.visible = true;
-				d.labeled = true;
-				d.width = 200;
-				d.height = d.width;
-				d.opacity = 1;
-				d.x_new = self.frame.boundary.width/2;
-				d.y_new = self.frame.boundary.height/2;
-				
+				var style = self.locals.style.get(this);
+				var coordinates = self.locals.coordinates.get(this);
+
+				style.level = 0;
+				style.visible = true;
+				style.opacity = 1;
+				style.labeled = true;
+				style.width = 200;
+				style.height = style.height;
+
+				coordinates.x_new = self.frame.boundary.width/2;
+				coordinates.y_new = self.frame.boundary.height/2;
 			}
 		);
 	
@@ -688,15 +726,18 @@ Tree.prototype.computeTreeAttributes = function(selections)
 		.classed("node-child", true)
 		.each(function(d, i, nodes)
 			{
-				d.level = 1;
-				d.visible = true;
-				d.labeled = true;
-				d.width = 140;
-				d.height = d.width;
-				d.opacity = 1;
-				d.x_new = null; //Let them move
-				d.y_new = null;
-				console.log(d);				
+				var style = self.locals.style.get(this);
+				var coordinates = self.locals.coordinates.get(this);
+
+				style.level = 1;
+				style.visible = true;
+				style.opacity = 1;
+				style.labeled = true;
+				style.width = 140;
+				style.height = style.width;
+
+				coordinates.x_new = null;
+				coordinates.y_new = null;
 			}
 		);
 	selections.children.links.each(function(d){d.level = 1;});
@@ -705,14 +746,18 @@ Tree.prototype.computeTreeAttributes = function(selections)
 		.classed("node-grandchild", true)
 		.each(function(d)
 			{
-				d.level = 2;
-				d.visible = true;
-				d.labeled = false;
-				d.width = 20;
-				d.height = d.width;
-				d.opacity = 0.3;
-				d.x_new = null; //Let them move
-				d.y_new = null;			
+				var style = self.locals.style.get(this);
+				var coordinates = self.locals.coordinates.get(this);
+
+				style.level = 2;
+				style.visible = true;
+				style.opacity = 0.3;
+				style.labeled = false;
+				style.width = 20;
+				style.height = style.width;
+
+				coordinates.x_new = null;
+				coordinates.y_new = null;		
 			}
 		);
 	selections.grandchildren.links.each(function (d) { d.level = 2; });
@@ -724,7 +769,6 @@ Tree.prototype.computeTreeAttributes = function(selections)
 			case -1:
 				return 150;
 			case 1: 
-				console.log(d.id);
 				return 200;
 			case 2: 
 				return 50;	
@@ -782,7 +826,7 @@ Tree.prototype.centerOnNode = function (node)
 	//Set the on click handlers
 	self.nodes.on("click", function(d)
 	{
-		switch (d.level)
+		switch (self.locals.nodes.level.get(this))
 			{
 				case -1:
 				case 1:
@@ -805,7 +849,7 @@ Tree.prototype.centerOnNode = function (node)
 	//Set the on click handlers
 	self.nodes.on("click", function(d)
 	{
-		switch (d.level)
+		switch (self.locals.style.get(this).level)
 			{
 				case -1:
 				case 1:
@@ -824,20 +868,20 @@ Tree.prototype.centerOnNode = function (node)
 		.transition(transition)
 			.attr("width", function(d)
 				{
-					return d.width;
+					return self.locals.style.get(this).width;
 				}
 			)
 			.attr("height", function(d)
 				{
-					return d.height;
+					return self.locals.style.get(this).height;
 				}
 			)
 			.attr("rx", function(d)
 				{
-					if (d.level === -1)
+					if (self.locals.style.get(this).level === -1)
 						return 0;
 					else
-						return d.width/2;
+						return self.locals.style.get(this).width/2;
 				}
 			);
 			
@@ -861,7 +905,7 @@ Tree.prototype.centerOnNode = function (node)
 			)
 			.attr("opacity",function(d)
 				{
-					return d.opacity;
+					return self.locals.style.get(this).opacity;
 				}
 			);
 			
@@ -869,7 +913,7 @@ Tree.prototype.centerOnNode = function (node)
 		.transition(transition)
 			.on("start", function(d)
 				{	
-					if (d.visible)
+					if (self.locals.style.get(this).visible)
 					{
 						this.style.visibility = "unset";
 					}
@@ -877,7 +921,7 @@ Tree.prototype.centerOnNode = function (node)
 			)
 			.on("end", function(d)
 				{
-					if (!d.visible)
+					if (!self.locals.style.get(this).visible)
 					{
 						this.style.visibility = "hidden";
 					}
@@ -885,10 +929,14 @@ Tree.prototype.centerOnNode = function (node)
 			)
 			.attr("opacity",function(d)
 				{
-					return d.opacity;
+					return self.locals.style.get(this).opacity;
 				}
 			)
-			.tween("coordinates", self.nodeCoordinateInterpolatorGenerator);
+			.tween("coordinates", function(d)
+				{
+					self.nodeCoordinateInterpolatorGenerator.bind(self)(d, this);
+				}
+			);
 			
 			
 	self.simulation.stop();
@@ -955,7 +1003,7 @@ Tree.prototype.nodeMenuOpen = function(node, data, index)
 				d3.event.preventDefault();
 				//alert("touchdown");
 			}
-		)
+		);
 	
 	menu_items_new
 		.append('i')
