@@ -229,11 +229,36 @@ table {
   color: white;
 }
 
-.logo-full {
-  display: block;
-  margin: auto;
-  padding: 10px;
-  width: 55%;
+#nameplate {
+  width: 80%;
+  float: center;
+}
+
+#nameplate a {
+  text-decoration: none;
+  color: black;
+  display: grid;
+  grid-template-columns: 1fr 5fr 1fr;
+}
+
+#nameplate a object {
+  width: 100px;
+  padding: 20px;
+}
+
+#nameplate a div div {
+  text-align: center;
+  font-family: "Open Sans", sans-serif;
+  text-transform: lowercase;
+  font-size: 40px;
+  font-weight: bold;
+  position: relative;
+  top: 55px;
+}
+
+#nameplate a svg {
+  width: 140px;
+  height: 140px;
 }
 
 .navbar {

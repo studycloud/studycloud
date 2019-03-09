@@ -19,11 +19,49 @@
 
 // MASTHEAD
 
-.logo-full { // For svg.
-	display: block;
-	margin: auto;
-	padding: 10px;
-	width: 55%;
+// .logo-full { // For svg.
+// 	display: block;
+// 	margin: auto;
+// 	padding: 10px;
+// 	width: 55%;
+// }
+
+#nameplate {
+	width: 80%;
+	float: center;
+	a {
+		text-decoration: none;
+		color: $primary-0;
+		display: grid;
+		grid-template-columns: 1fr 5fr 1fr;
+
+		// School logo
+		object {
+			width: 100px;
+			padding: 20px;
+		}
+		
+		div {
+			div {
+				// Font formatting. 
+				text-align: center;
+				font-family: $main-font;
+				text-transform: $main-transform;
+				font-size: $main-font-size + 20;
+				font-weight: bold;
+
+				// Position in the middle of the text box--sorry, hardcoded. For now. 
+				position: relative;
+				top: 140px/2-30px/2;
+			}
+		}
+
+		// Study Cloud logo
+		svg {
+			width: 140px;
+			height: 140px;
+		}
+	}
 }
 
 
