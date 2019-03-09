@@ -171,11 +171,10 @@ class ClassRepository
 	 * @param	int|null			$class		the class id for the class we want to attach things to or null for the root
 	 * @param	int|null			$parent		the id of the new parent class or null if we shouldn't replace the current one
 	 * @param	array 				$children 	an array of class id's that should be attached as children to this class
-	 * @param	bool				$sync 		whether to perform an 'attach' where children are added or a 'sync' where children are replaced
 	 * @param	Collection|null		$tree		all parents and children of $class in the connections format; if null, queries will be performed to retrieve the required data
 	 * @param	string|null						if the parent and children cannot be added, returns a message explaining why; otherwise, returns null
 	 */
-	public static function checkClassAttach($class=null, $parent=null, $children=[], bool $sync=false, $tree=null)
+	public static function checkClassAttach($class=null, $parent=null, $children=[], $tree=null)
 	{
 		// if we're dealing with the root class
 		if (is_null($class))
@@ -191,11 +190,13 @@ class ClassRepository
 		// get whatever data is required
 		if (is_null($tree))
 		{
-			$ancestors = (new ClassRepository)->ancestors($class);
-			$descendants = (new ClassRepository)->descendants($class);
-			$tree = $ancestors->merge($descendants);
+			$tree = (new ClassRepository)->ancestors($class)->merge(
+				(new ClassRepository)->descendants($class)
+			);
 			$tree = NodesAndConnections::treeAsConnections($tree);
 		}
+		// return failure if the new parent is a descendant of $class
+		if (self::isDescendant())
 	}
 	
 	public static function printAsciiDescendants($class)
