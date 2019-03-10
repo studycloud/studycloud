@@ -183,4 +183,3 @@ tree_topics.nodeClicked(d3.select(".node").node());
 //tree_topics.setData(data);
 
 // server_topics = new Server();
-

@@ -17,7 +17,8 @@ $teacher-color: green;
 }
 
 #resource-name {
-	font-size: 30px;
+	font-size: 50px;
+	font-weight: bold;
 }
 
 #author-name {
@@ -35,17 +36,26 @@ $teacher-color: green;
 .date {
 	color: lighten($text-default, 50%);
 	font-size: 12px;
+	margin-top: 5px;
 }
 
 .module {
 	// TODO please style accordingly.
+	font-size: 20px; //change the font size of the resource
 	padding: 10px;
 }
 
+.resource-divider{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	height: 2px;
+	background-color: black;
+}
 
 // TODO Maybe these stylings should be global? I don't know. 
 h1 {
-
+	font-size: 50px;
+	font-weight: bold;
 }
 
 h2 {
