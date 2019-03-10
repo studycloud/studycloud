@@ -241,7 +241,7 @@ Tree.prototype.getNLevelIds = function(node_id, levels_num)
 {
 	var self = this;
 
-	console.log("getNLevelIds on " + node_id + " for level " + levels_num);
+	//console.log("getNLevelIds on " + node_id + " for level " + levels_num);
 
 	//These sets contain ids of elements found in our search
 	var ids_retrieved = 
@@ -305,9 +305,9 @@ Tree.prototype.getNLevelIdsRecurse = function(ids_retrieved, node_id, levels_num
 	}
 	else
 	{
-		console.log("levels_num: " + levels_num);
-		console.log("level_relative: " + level_relative);
-		console.log(ids_retrieved.links_separate);
+		//console.log("levels_num: " + levels_num);
+		//console.log("level_relative: " + level_relative);
+		//console.log(ids_retrieved.links_separate);
 		
 		//We are searching for children, so check if our current node is a parent of any nodes, and traverse downwards
 		self.links.each(function (link)
@@ -586,17 +586,18 @@ Tree.prototype.nodeCoordinateInterpolatorGenerator = function(d, dom_element)
 	
 	return function(p)
 	{
-		if (d.x_new !== null)
+	
+		if (coordinates.x_new !== null)
 		{
 			d.fx = interpolate_x(p);
-			d.x = d.fx;
+			d.x = d.fx;	
 		}
 		else
 		{
 			d.fx = null;
 		}
 			
-		if (d.y_new !== null)
+		if (coordinates.y_new !== null)
 		{
 			d.fy = interpolate_y(p);
 			d.y = d.fy;
@@ -715,7 +716,7 @@ Tree.prototype.computeTreeAttributes = function(selections)
 				style.opacity = 1;
 				style.labeled = true;
 				style.width = 200;
-				style.height = style.height;
+				style.height = style.width;
 
 				coordinates.x_new = self.frame.boundary.width/2;
 				coordinates.y_new = self.frame.boundary.height/2;
@@ -889,7 +890,7 @@ Tree.prototype.centerOnNode = function (node)
 		.transition(transition)
 			.on("start", function(d)
 				{	
-					if (d.labeled)
+					if (self.locals.style.get(this).labeled)
 					{
 						this.style.visibility = "unset";
 					}
@@ -897,7 +898,7 @@ Tree.prototype.centerOnNode = function (node)
 			)
 			.on("end", function(d)
 				{
-					if (!d.labeled)
+					if (!self.locals.style.get(this).labeled)
 					{
 						this.style.visibility = "hidden";
 					}
@@ -934,7 +935,7 @@ Tree.prototype.centerOnNode = function (node)
 			)
 			.tween("coordinates", function(d)
 				{
-					self.nodeCoordinateInterpolatorGenerator.bind(self)(d, this);
+					return self.nodeCoordinateInterpolatorGenerator.bind(self)(d, this);
 				}
 			);
 			
@@ -962,7 +963,7 @@ Tree.prototype.nodeClicked = function(node)
 	var self = this;
 	//self.server.getData(data_id, 1, 2, self.updateDataNLevels.bind(self), function (){});
 	self.centerOnNode(node);
-}
+};
 
 Tree.prototype.nodeMenuOpen = function(node, data, index)
 {
