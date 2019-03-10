@@ -350,7 +350,18 @@ Tree.prototype.updateDataNodes = function(selection, data)
 
 	console.log("Updating node data for ", selection, " to ", data);
 	
-	self.cleanDataNodes(data);
+
+	// save coordinates because they are overwritten with undefined coordinates from the server
+	self.nodes.each(function(d)
+		{
+			var coordinates = self.locals.coordinates.get(this);
+
+			coordinates.x = d.x;
+			coordinates.x = d.y;
+			coordinates.fx = d.fx;
+			coordinates.fy = d.fy;
+		}
+	);
 
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
 
@@ -421,7 +432,8 @@ Tree.prototype.updateDataNodes = function(selection, data)
 			.text(function(d){return d.name;});
 		
 	
-		
+	// animate removal of the old nodes
+	
 	var transform = d3.transform()
 		.scale(0);
 	
@@ -434,12 +446,21 @@ Tree.prototype.updateDataNodes = function(selection, data)
 				.attr("transform", transform)
 				.remove();
 				
-	
+
 	self.nodes = self.frame.select(".layer_nodes").selectAll(".node");
 
-		//initialize the node data that we use ourselves
+	
+	// restore coordinates that we saved earlier in this function
+	self.nodes.each(function(d)
+		{
+			var coordinates = self.locals.coordinates.get(this);
 
-
+			d.x = coordinates.x;
+			d.y = coordinates.x;
+			d.fx = coordinates.fx;
+			d.fy = coordinates.fy;
+		}
+	);
 
 };
 
