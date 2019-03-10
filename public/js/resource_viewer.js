@@ -94,7 +94,7 @@ var resourceUseData = {
 		},
 		{
 			"id": 3,
-			"name": "Quiz"
+			"name": "Flashcards"
 		},
 		{
 			"id": 4,
@@ -119,8 +119,8 @@ var preUpdatedContentNum = contentNum;
 
 //use this to interact with Server
 //request resource and send resource JSON to server
-var resource_id = 1;
-var temp_content_id = 1;
+var resource_id = 24;
+var temp_content_id = 24;
 
 function requestResource()
 {
@@ -165,7 +165,7 @@ function displayResource(received)
 {
 	console.log(received);
 	var resource = received;
-	
+
 	//display the received data
 	document.getElementById('resource-head').innerHTML="<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1><div>contributed by <div id='author-name'></div></div>";
 	set_author(resource.meta.author_name, resource.meta.author_type);
@@ -251,16 +251,19 @@ function resourceEditor(received)
 
 	var resource = received;
 	
-	//createResource(); //open the resource editor
-	
 	//load the resource into the editor
 	document.getElementById("meta-name").value = resource.meta.name;
-	
-	if (resource.meta.use_name == "Notes"){
-		document.getElementById("resource-use").selectedIndex = 0;
-	}
-	else if (resource.meta.use_name == "Quiz"){
-		document.getElementById("resource-use").selectedIndex = 1;
+
+	//load the resource use in the resource use drop down selector
+	//display the given resource use
+	$('div#select_style_text').html(resource.meta.use_name);
+
+	//make the selector's selected value match the given resource use id
+	for (i = 0; i < resourceUseData.data.length; i ++){
+		var u = resourceUseData.data[i];
+		if (u.name == resource.meta.use_name){
+			$('select[name="attach"]').val(u.id);
+		}
 	}
 
 	for (i=1; i < resource.contents.length; i++)
@@ -485,9 +488,9 @@ function resourceUseSelection (resourceUseJson)
 	var htmlCode = "<select id = 'resource-use' name = 'attach' theme='google' width='400' style='' \
 		placeholder='Select the Use of Your Resource' data-search='true'> ";
 	
-  for (i = 0; i < resourceUse.data.length; i ++){
+  	for (i = 0; i < resourceUse.data.length; i ++){
 		var u = resourceUse.data[i];
-		htmlCode += "<option value = '" + u.id + "'> " + u.name + "</option>";
+		htmlCode += "<option value = '" + u.id + "'>" + u.name + "</option>";
 	}
 
 	htmlCode += "</select>";

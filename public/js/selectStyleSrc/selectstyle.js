@@ -91,7 +91,7 @@
 			var txt = $(this).data('title'),
 				vl = $(this).attr('value'),
 				sid = $(this).parent('ul').attr('sid');
-			$('select[name="attach').val(vl);
+			$('select[name="attach"]').val(vl);
 			$(this).parents('ul#select_style_ul').hide();
 			$(this).parents('ul#select_style_ul').parent('div').find('div#select_style_text').html(txt);
 			$('#'+sid).children('option').filter(function(){return $(this).val()==vl}).prop('selected',true).change();

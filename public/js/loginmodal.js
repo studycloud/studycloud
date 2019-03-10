@@ -37,7 +37,7 @@ $(document).ready(function()
 		displayContainer("resource");
 		createResource();
 		editResource();
-		$('select[name="attach').selectstyle({
+		$('select[name="attach"]').selectstyle({
 			width  : 400,
 			height : 300,
 			theme  : 'light',
