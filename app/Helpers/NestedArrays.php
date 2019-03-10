@@ -27,8 +27,8 @@ class NestedArrays
 
 	/**
 	 * return the descendants of a class (and the class itself) in nested array format
-	 * @param  Class		$class the class whose descendants we want
-	 * @return array		an array of arrays of class IDs
+	 * @param  Academic_Class	$class the class whose descendants we want
+	 * @return array			an array of arrays of class IDs
 	 */
 	public static function classDescendants(Academic_Class $class)
 	{
@@ -53,8 +53,8 @@ class NestedArrays
 
 	/**
 	 * return the ancestors of a class (and the class itself) in nested array format
-	 * @param  Class		$class the topic whose ancestors we want
-	 * @return array		an array of arrays of topic IDs
+	 * @param  Academic_Class	$class the topic whose ancestors we want
+	 * @return array			an array of arrays of topic IDs
 	 */
 	public static function classAncestors(Academic_Class $class)
 	{
