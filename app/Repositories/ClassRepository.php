@@ -125,6 +125,13 @@ class ClassRepository
 		)->get();
 	}
 
+	/**
+	 * given a portion of the tree, check to see whether $descendant_class_id is a descendant of $class_id
+	 * @param  int 			$class_id           	the ancestor class
+	 * @param  int  		$descendant_class_id   	the descendant to search for
+	 * @param  Collection 	$disallowed_classes 		a portion of the tree to traverse, as a collection of connections
+	 * @return boolean                  			whether $descendant_class_id is an descendant of $class
+	 */
 	public static function isDescendant($class_id, $descendant_class_id, $disallowed_classes)
 	{
 		// base case: descendant_class is an descendant of class if they are the same
@@ -144,7 +151,14 @@ class ClassRepository
 		}
 		return $isDescendant;
 	}
-	
+
+	/**
+	 * given a portion of the tree, check to see whether $ancestor_class_id is an ancestor of $class_id
+	 * @param  int 			$class_id 			the descendant class
+	 * @param  int 			$ancestor_class_id 	the ancestor to search for
+	 * @param  Collection  	$disallowed_classes 	a portion of the tree to traverse, as a collection of connections
+	 * @return boolean                  		whether $ancestor_class_id is an ancestor of $class
+	 */
 	public static function isAncestor($class_id, $ancestor_class_id, $disallowed_classes)
 	{
 		// base case: ancestor_class is an ancestor of class if they are the same
@@ -174,7 +188,7 @@ class ClassRepository
 	 * @param	Collection|null		$tree		all parents and children of $class in the connections format; if null, queries will be performed to retrieve the required data
 	 * @param	string|null						if the parent and children cannot be added, returns a message explaining why; otherwise, returns null
 	 */
-	public static function checkClassAttach($class=null, $parent=null, $children=[], $tree=null)
+	public static function validateClassAttach($class=null, $parent=null, $children=[], $tree=null)
 	{
 		// if we're dealing with the root class
 		if (is_null($class))
@@ -187,16 +201,60 @@ class ClassRepository
 			// you can attach any children to the root
 			return null;
 		}
-		// get whatever data is required
+		// get the descendants that are required
 		if (is_null($tree))
 		{
-			$tree = (new ClassRepository)->ancestors($class)->merge(
+			$tree = NodesAndConnections::treeAsConnections(
 				(new ClassRepository)->descendants($class)
 			);
-			$tree = NodesAndConnections::treeAsConnections($tree);
 		}
 		// return failure if the new parent is a descendant of $class
-		if (self::isDescendant())
+		// make sure to include the new children when you check
+		if (self::isDescendant($class, $parent, $tree))
+		{
+			return "New parent class ".$parent." is a descendent. It cannot be added as a parent.";
+		}
+		// get the ancestors that are required
+		if (is_null($tree))
+		{
+			// check if we need to retrieve the new ancestors
+			if (!is_null($parent))
+			{
+				// get the ancestors of the new parent
+				$tree = NodesAndConnections::treeAsConnections(
+					(new ClassRepository)->ancestors($parent)
+				);
+				// add the connection between the current parent and the new parent
+				$tree->prepend(
+					collect([
+						'parent_id' => $parent,
+						'class_id' => $class
+					])
+				);
+			}
+			else	// retrieve the current ancestors
+			{
+				$tree = NodesAndConnections::treeAsConnections(
+					(new ClassRepository)->ancestors($class)
+				);
+			}
+		}
+		// return failure if the children we want to add are ancestors of $class
+		foreach ($children as $child)
+		{
+			if (self::isAncestor($class, $child, $tree))
+			{
+				// this will stop on first failure but maybe we want it to find all bad children?
+				if (is_null($parent))
+				{
+					return "New child class ".$child." is an ancestor. It cannot be added as a child.";
+				}
+				else
+				{
+					return "New child class ".$child." will be an ancestor. It cannot be added as a child.";
+				}
+			}
+		}
 	}
 	
 	public static function printAsciiDescendants($class)
