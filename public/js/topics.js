@@ -9,7 +9,7 @@ var data=
       "author_id": 9,
       "created_at": "2017-11-02 21:02:03",
       "updated_at": "2017-11-02 21:02:03",
-      "id": "t1"
+      "id": "t0"
     },
     {
       "name": "Topic A",
@@ -102,27 +102,27 @@ var data=
   ],
   "connections": [
     {
-      "source": "t1",
+      "source": "t0",
       "target": "t2",
 	  "id": "l1"
     },
     {
-      "source": "t1",
+      "source": "t0",
       "target": "t11",
 	  "id": "l10"
     },
     {
-      "source": "t1",
+      "source": "t0",
       "target": "t12",
 	  "id": "l11"
     },
     {
-      "source": "t1",
+      "source": "t0",
       "target": "t13",
 	  "id": "l12"
     },
     {
-      "source": "t1",
+      "source": "t0",
       "target": "t3",
 	  "id": "l2"
     },
