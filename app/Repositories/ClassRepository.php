@@ -129,25 +129,25 @@ class ClassRepository
 	 * given a portion of the tree, check to see whether $descendant_class_id is a descendant of $class_id
 	 * @param  int 			$class_id           	the ancestor class
 	 * @param  int  		$descendant_class_id   	the descendant to search for
-	 * @param  Collection 	$disallowed_classes 		a portion of the tree to traverse, as a collection of connections
+	 * @param  Collection 	$connections 		a portion of the tree to traverse, as a collection of connections
 	 * @return boolean                  			whether $descendant_class_id is an descendant of $class
 	 */
-	public static function isDescendant($class_id, $descendant_class_id, $disallowed_classes)
+	public static function isDescendant($class_id, $descendant_class_id, $connections)
 	{
 		// base case: descendant_class is an descendant of class if they are the same
 		if ($class_id == $descendant_class_id)
 		{
 			return true;
 		}
-		// get the class collections in $disallowed_classes with parent_ids equal to $class_id
-		$classes = $disallowed_classes->where('parent_id', $class_id);
+		// get the class collections in $connections with parent_ids equal to $class_id
+		$classes = $connections->where('parent_id', $class_id);
 		$isDescendant = false;
 		// call isDescendant() with each of the classes
 		// and then OR all of the results together to get a final value
 		foreach ($classes as $class)
 		{
 			// is the parent of this $class a descendant of $descendant_class_id?
-			$isDescendant = $isDescendant || self::isDescendant($class['class_id'], $descendant_class_id, $disallowed_classes);
+			$isDescendant = $isDescendant || self::isDescendant($class['class_id'], $descendant_class_id, $connections);
 		}
 		return $isDescendant;
 	}
@@ -156,28 +156,35 @@ class ClassRepository
 	 * given a portion of the tree, check to see whether $ancestor_class_id is an ancestor of $class_id
 	 * @param  int 			$class_id 			the descendant class
 	 * @param  int 			$ancestor_class_id 	the ancestor to search for
-	 * @param  Collection  	$disallowed_classes 	a portion of the tree to traverse, as a collection of connections
+	 * @param  Collection  	$connections 	a portion of the tree to traverse, as a collection of connections
 	 * @return boolean                  		whether $ancestor_class_id is an ancestor of $class
 	 */
-	public static function isAncestor($class_id, $ancestor_class_id, $disallowed_classes)
+	public static function isAncestor($class_id, $ancestor_class_id, $connections)
 	{
 		// base case: ancestor_class is an ancestor of class if they are the same
-		if ($class_id == $ancestor_class_id)
+		while ($class_id != $ancestor_class_id)
 		{
-			return true;
+			// get the connections in $connections with class_ids equal to $class_id
+			$classes = $connections->where('class_id', $class_id);
+			// check that the number of classes is 1 before attempting to continue searching the tree
+			if ($classes->count() > 1)
+			{
+				throw new Exception('The class with ID '.$class_id.' has multiple parents.');
+			}
+			elseif ($classes->count() < 1)
+			{			
+				return false;
+			}
+			else
+			{
+				// set the current parent to be the new descendant class
+				// ie move up the tree
+				$class_id = $classes->first()['parent_id'];
+			}
 		}
-		// get the connections in $disallowed_classes with class_ids equal to $class_id
-		$classes = $disallowed_classes->where('class_id', $class_id);
-		$isAncestor = false;
-		// call isAncestor() with each of the classes' parents
-		// (ie ask whether $ancestor_class_id is an ancestor of each class's parent)
-		// and then OR all of the results together to get a final value
-		foreach ($classes as $class)
-		{
-			// is the parent of this $class an ancestor of $ancestor_class_id?
-			$isAncestor = $isAncestor || self::isAncestor($class['parent_id'], $ancestor_class_id, $disallowed_classes);
-		}
-		return $isAncestor;
+		// if we get here, it means that we exited the while loop
+		// because we found the ancestor
+		return true;
 	}
 
 	/**
