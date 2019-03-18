@@ -130,49 +130,60 @@ class ClassRepository
 	 * @param  int 			$class_id				the ancestor class
 	 * @param  int|array	$descendant_class_id	the descendant to search for
 	 * @param  Collection	$connections			a portion of the tree to traverse, as a collection of connections
+	 * @param  boolean		$search_tree			should we perform a full tree search? set $search_tree to false if the $connections provided lead only to descendants of $class_id
 	 * @return  boolean|array						whether $descendant_class_id is an descendant of $class; if $descendant_class_id is an array, return the elements in it that are descendants
 	 */
-	public static function isDescendant($class_id, $descendant_class_id, $connections)
+	public static function isDescendant($class_id, $descendant_class_id, $connections, $search_tree=true)
 	{
-		if (is_array($descendant_class_id))
+		if ($search_tree)
 		{
-			$descendants = [];
-			$descendant_idx = array_search($class_id, $descendant_class_id, $strict=true);
-			// base case: descendant_class is an descendant of class if class is contained within it
-			if ($descendant_idx !== false)
+			if (is_array($descendant_class_id))
 			{
-				$descendants = [$class_id];
-				unset($descendant_class_id[$descendant_idx]);
-			}
-			// get the class collections in $connections with parent_ids equal to $class_id
-			$classes = $connections->where('parent_id', $class_id);
-			// call isDescendant() with each of the classes
-			// and then merge all of the results together to get a final value
-			return $classes->map(
-				function ($class) use ($descendant_class_id, $connections)
+				$descendants = [];
+				$descendant_idx = array_search($class_id, $descendant_class_id, $strict=true);
+				// base case: descendant_class is an descendant of class if class is contained within it
+				if ($descendant_idx !== false)
 				{
-					return self::isDescendant($class['class_id'], $descendant_class_id, $connections);
+					$descendants = [$class_id];
+					unset($descendant_class_id[$descendant_idx]);
 				}
-			)->flatten()->merge($descendants)->toArray();
+				// get the class collections in $connections with parent_ids equal to $class_id
+				$classes = $connections->where('parent_id', $class_id);
+				// call isDescendant() with each of the classes
+				// and then merge all of the results together to get a final value
+				return $classes->map(
+					function ($class) use ($descendant_class_id, $connections)
+					{
+						return self::isDescendant($class['class_id'], $descendant_class_id, $connections);
+					}
+				)->flatten()->merge($descendants)->toArray();
+			}
+			else
+			{
+				// base case: descendant_class is an descendant of class if they are the same
+				if ($class_id == $descendant_class_id)
+				{
+					return true;
+				}
+				$isDescendant = false;
+				// get the class collections in $connections with parent_ids equal to $class_id
+				$classes = $connections->where('parent_id', $class_id);
+				// call isDescendant() with each of the classes
+				// and then OR all of the results together to get a final value
+				foreach ($classes as $class)
+				{
+					// is the parent of this $class a descendant of $descendant_class_id?
+					$isDescendant = $isDescendant || self::isDescendant($class['class_id'], $descendant_class_id, $connections);
+				}
+				return $isDescendant;
+			}
 		}
 		else
 		{
-			// base case: descendant_class is an descendant of class if they are the same
-			if ($class_id == $descendant_class_id)
-			{
-				return true;
-			}
-			$isDescendant = false;
-			// get the class collections in $connections with parent_ids equal to $class_id
-			$classes = $connections->where('parent_id', $class_id);
-			// call isDescendant() with each of the classes
-			// and then OR all of the results together to get a final value
-			foreach ($classes as $class)
-			{
-				// is the parent of this $class a descendant of $descendant_class_id?
-				$isDescendant = $isDescendant || self::isDescendant($class['class_id'], $descendant_class_id, $connections);
-			}
-			return $isDescendant;
+			// perform a simple intersection operation to find the elements in $descendant_class_id that are class_id's in $connections
+			$descendants = $connections->pluck('class_id')->push($class_id)->intersect($descendant_class_id)->values()->toArray();
+			// if the input was an array, return the descendants, otherwise, return whether we found the descendant
+			return is_array($descendant_class_id) ? $descendants : count($descendants) == 1;
 		}
 	}
 
@@ -181,47 +192,58 @@ class ClassRepository
 	 * @param  int			$class_id			the descendant class
 	 * @param  int|array	$ancestor_class_id	the ancestor to search for
 	 * @param  Collection	$connections		a portion of the tree to traverse, as a collection of connections
+	 * @param  boolean		$search_tree		should we perform a full tree search? set $search_tree to false if the $connections provided lead only to ancestors of $class_id
 	 * @return boolean|array					whether $ancestor_class_id is an ancestor of $class; if $ancestor_class_id is an array, return the elements in it that are ancestors
 	 */
-	public static function isAncestor($class_id, $ancestor_class_id, $connections)
+	public static function isAncestor($class_id, $ancestor_class_id, $connections, $search_tree=true)
 	{
-		$ancestors = [];
-		// base case: ancestor_class is an ancestor of class if they are the same
-		while ($class_id !== $ancestor_class_id)
+		if ($search_tree)
 		{
-			if (is_array($ancestor_class_id))
+			$ancestors = [];
+			// base case: ancestor_class is an ancestor of class if they are the same
+			while ($class_id !== $ancestor_class_id)
 			{
-				$ancestor_idx = array_search($class_id, $ancestor_class_id, $strict=true);
-				// base case: ancestor_class is an ancestor of class if class is contained within it
-				if ($ancestor_idx !== false)
+				if (is_array($ancestor_class_id))
 				{
-					$ancestors[] = $class_id;
-					unset($ancestor_class_id[$ancestor_idx]);
+					$ancestor_idx = array_search($class_id, $ancestor_class_id, $strict=true);
+					// base case: ancestor_class is an ancestor of class if class is contained within it
+					if ($ancestor_idx !== false)
+					{
+						$ancestors[] = $class_id;
+						unset($ancestor_class_id[$ancestor_idx]);
+					}
+				}
+				// get the connections in $connections with class_ids equal to $class_id
+				$classes = $connections->where('class_id', $class_id);
+				// check that the number of classes is 1 before attempting to continue searching the tree
+				if ($classes->count() > 1)
+				{
+					throw new Exception('The class with ID '.$class_id.' has multiple parents.');
+				}
+				elseif ($classes->count() < 1)
+				{
+					// note: we are gauranteed to reach this point if $ancestor_class_id is an array b/c the while condition will never be true
+					// check if $ancestor_class_id is an array and if it is, return any ancestors we've found so far
+					return is_array($ancestor_class_id) ? $ancestors : false;
+				}
+				else
+				{
+					// set the current parent to be the new descendant class
+					// ie move up the tree
+					$class_id = $classes->first()['parent_id'];
 				}
 			}
-			// get the connections in $connections with class_ids equal to $class_id
-			$classes = $connections->where('class_id', $class_id);
-			// check that the number of classes is 1 before attempting to continue searching the tree
-			if ($classes->count() > 1)
-			{
-				throw new Exception('The class with ID '.$class_id.' has multiple parents.');
-			}
-			elseif ($classes->count() < 1)
-			{
-				// note: we are gauranteed to reach this point if $ancestor_class_id is an array b/c the while condition will never be true
-				// check if $ancestor_class_id is an array and if it is, return any ancestors we've found so far
-				return is_array($ancestor_class_id) ? $ancestors : false;
-			}
-			else
-			{
-				// set the current parent to be the new descendant class
-				// ie move up the tree
-				$class_id = $classes->first()['parent_id'];
-			}
+			// if we get here, it means that we exited the while loop
+			// because we found the ancestor
+			return true;
 		}
-		// if we get here, it means that we exited the while loop
-		// because we found the ancestor
-		return true;
+		else
+		{
+			// perform a simple intersection operation to find the elements in $ancestor_class_id that are parent_id's in $connections
+			$ancestors = $connections->pluck('parent_id')->push($class_id)->intersect($ancestor_class_id)->values()->toArray();
+			// if the input was an array, return the ancestors, otherwise, return whether we found the ancestor
+			return is_array($ancestor_class_id) ? $ancestors : count($ancestors) == 1;
+		}
 	}
 
 	/**
