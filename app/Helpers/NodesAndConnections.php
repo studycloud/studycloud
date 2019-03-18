@@ -53,6 +53,34 @@ class NodesAndConnections
 	}
 
 	/**
+	 * put ancestor and descendant data in the separated connections format
+	 * @param  Collection $ancestors   the ancestor data
+	 * @param  Collection $descendants the descendant data
+	 * @return Collection              the ancestors and descendants in the separated connections format, representing a portion of the tree
+	 */
+	public static function treeAsSeparatedConnections($ancestors, $descendants)
+	{
+		return collect([
+			'ancestors' => self::treeAsConnections($ancestors),
+			'descendants' => self::treeAsConnections($descendants)
+		]);
+	}
+
+	/**
+	 * return a tree as separate connections
+	 * @param  string $repository the name of the class to use to get the ancestors and descendants from
+	 * @param  array $args        any arguments to pass to the ancestors and descendants functions
+	 * @return Collection         the tree in the separated connections format
+	 */
+	public static function separatedTree($repository, ...$args)
+	{
+		return self::treeAsSeparatedConnections(
+			(new $repository)->ancestors(...$args),
+			(new $repository)->descendants(...$args)
+		);
+	}
+
+	/**
 	 * some data won't have pivot objects, but conversion function depends on their existence
 	 * let's format an $node into the "nodes with pivot" format
 	 * @param array		$node	the data that needs to be converted; the node must have a 'parent_id' attribute
