@@ -127,43 +127,78 @@ class ClassRepository
 
 	/**
 	 * given a portion of the tree, check to see whether $descendant_class_id is a descendant of $class_id
-	 * @param  int 			$class_id           	the ancestor class
-	 * @param  int  		$descendant_class_id   	the descendant to search for
-	 * @param  Collection 	$connections 		a portion of the tree to traverse, as a collection of connections
-	 * @return boolean                  			whether $descendant_class_id is an descendant of $class
+	 * @param  int 			$class_id				the ancestor class
+	 * @param  int|array	$descendant_class_id	the descendant to search for
+	 * @param  Collection	$connections			a portion of the tree to traverse, as a collection of connections
+	 * @return  boolean|array						whether $descendant_class_id is an descendant of $class; if $descendant_class_id is an array, return the elements in it that are descendants
 	 */
 	public static function isDescendant($class_id, $descendant_class_id, $connections)
 	{
-		// base case: descendant_class is an descendant of class if they are the same
-		if ($class_id == $descendant_class_id)
+		if (is_array($descendant_class_id))
 		{
-			return true;
+			$descendants = [];
+			$descendant_idx = array_search($class_id, $descendant_class_id, $strict=true);
+			// base case: descendant_class is an descendant of class if class is contained within it
+			if ($descendant_idx !== false)
+			{
+				$descendants = [$class_id];
+				unset($descendant_class_id[$descendant_idx]);
+			}
+			// get the class collections in $connections with parent_ids equal to $class_id
+			$classes = $connections->where('parent_id', $class_id);
+			// call isDescendant() with each of the classes
+			// and then merge all of the results together to get a final value
+			return $classes->map(
+				function ($class) use ($descendant_class_id, $connections)
+				{
+					return self::isDescendant($class['class_id'], $descendant_class_id, $connections);
+				}
+			)->flatten()->merge($descendants)->toArray();
 		}
-		// get the class collections in $connections with parent_ids equal to $class_id
-		$classes = $connections->where('parent_id', $class_id);
-		$isDescendant = false;
-		// call isDescendant() with each of the classes
-		// and then OR all of the results together to get a final value
-		foreach ($classes as $class)
+		else
 		{
-			// is the parent of this $class a descendant of $descendant_class_id?
-			$isDescendant = $isDescendant || self::isDescendant($class['class_id'], $descendant_class_id, $connections);
+			// base case: descendant_class is an descendant of class if they are the same
+			if ($class_id == $descendant_class_id)
+			{
+				return true;
+			}
+			$isDescendant = false;
+			// get the class collections in $connections with parent_ids equal to $class_id
+			$classes = $connections->where('parent_id', $class_id);
+			// call isDescendant() with each of the classes
+			// and then OR all of the results together to get a final value
+			foreach ($classes as $class)
+			{
+				// is the parent of this $class a descendant of $descendant_class_id?
+				$isDescendant = $isDescendant || self::isDescendant($class['class_id'], $descendant_class_id, $connections);
+			}
+			return $isDescendant;
 		}
-		return $isDescendant;
 	}
 
 	/**
 	 * given a portion of the tree, check to see whether $ancestor_class_id is an ancestor of $class_id
-	 * @param  int 			$class_id 			the descendant class
-	 * @param  int 			$ancestor_class_id 	the ancestor to search for
-	 * @param  Collection  	$connections 	a portion of the tree to traverse, as a collection of connections
-	 * @return boolean                  		whether $ancestor_class_id is an ancestor of $class
+	 * @param  int			$class_id			the descendant class
+	 * @param  int|array	$ancestor_class_id	the ancestor to search for
+	 * @param  Collection	$connections		a portion of the tree to traverse, as a collection of connections
+	 * @return boolean|array					whether $ancestor_class_id is an ancestor of $class; if $ancestor_class_id is an array, return the elements in it that are ancestors
 	 */
 	public static function isAncestor($class_id, $ancestor_class_id, $connections)
 	{
+		$ancestors = [];
 		// base case: ancestor_class is an ancestor of class if they are the same
-		while ($class_id != $ancestor_class_id)
+		while ($class_id !== $ancestor_class_id)
 		{
+			if (is_array($ancestor_class_id))
+			{
+				$ancestor_idx = array_search($class_id, $ancestor_class_id, $strict=true);
+				// base case: ancestor_class is an ancestor of class if class is contained within it
+				if ($ancestor_idx !== false)
+				{
+					$ancestors[] = $class_id;
+					unset($ancestor_class_id[$ancestor_idx]);
+				}
+			}
 			// get the connections in $connections with class_ids equal to $class_id
 			$classes = $connections->where('class_id', $class_id);
 			// check that the number of classes is 1 before attempting to continue searching the tree
@@ -172,8 +207,10 @@ class ClassRepository
 				throw new Exception('The class with ID '.$class_id.' has multiple parents.');
 			}
 			elseif ($classes->count() < 1)
-			{			
-				return false;
+			{
+				// note: we are gauranteed to reach this point if $ancestor_class_id is an array b/c the while condition will never be true
+				// check if $ancestor_class_id is an array and if it is, return any ancestors we've found so far
+				return is_array($ancestor_class_id) ? $ancestors : false;
 			}
 			else
 			{
@@ -219,7 +256,7 @@ class ClassRepository
 		// make sure to include the new children when you check
 		if (self::isDescendant($class, $parent, $tree))
 		{
-			return "New parent class ".$parent." is a descendent. It cannot be added as a parent.";
+			return "New parent class ".$parent." is a descendant. It cannot be added as a parent.";
 		}
 		// get the ancestors that are required
 		if (is_null($tree))
