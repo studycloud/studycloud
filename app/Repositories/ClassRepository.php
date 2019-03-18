@@ -130,12 +130,12 @@ class ClassRepository
 	 * @param  int 			$class_id				the ancestor class
 	 * @param  int|array	$descendant_class_id	the descendant to search for
 	 * @param  Collection	$connections			a portion of the tree to traverse, as a collection of connections
-	 * @param  boolean		$search_tree			should we perform a full tree search? set $search_tree to false if the $connections provided lead only to descendants of $class_id
+	 * @param  boolean		$tree_search			should we perform a full tree search? set $tree_search to false if the $connections provided lead only to descendants of $class_id
 	 * @return  boolean|array						whether $descendant_class_id is an descendant of $class; if $descendant_class_id is an array, return the elements in it that are descendants
 	 */
-	public static function isDescendant($class_id, $descendant_class_id, $connections, $search_tree=true)
+	public static function isDescendant($class_id, $descendant_class_id, $connections, $tree_search=true)
 	{
-		if ($search_tree)
+		if ($tree_search)
 		{
 			if (is_array($descendant_class_id))
 			{
@@ -182,7 +182,8 @@ class ClassRepository
 		{
 			// perform a simple intersection operation to find the elements in $descendant_class_id that are class_id's in $connections
 			$descendants = $connections->pluck('class_id')->push($class_id)->intersect($descendant_class_id)->values()->toArray();
-			// if the input was an array, return the descendants, otherwise, return whether we found the descendant
+			// if the input was an array, return the descendants
+			// otherwise, return whether we found the descendant
 			return is_array($descendant_class_id) ? $descendants : count($descendants) == 1;
 		}
 	}
@@ -192,12 +193,12 @@ class ClassRepository
 	 * @param  int			$class_id			the descendant class
 	 * @param  int|array	$ancestor_class_id	the ancestor to search for
 	 * @param  Collection	$connections		a portion of the tree to traverse, as a collection of connections
-	 * @param  boolean		$search_tree		should we perform a full tree search? set $search_tree to false if the $connections provided lead only to ancestors of $class_id
+	 * @param  boolean		$tree_search		should we perform a full tree search? set $tree_search to false if the $connections provided lead only to ancestors of $class_id
 	 * @return boolean|array					whether $ancestor_class_id is an ancestor of $class; if $ancestor_class_id is an array, return the elements in it that are ancestors
 	 */
-	public static function isAncestor($class_id, $ancestor_class_id, $connections, $search_tree=true)
+	public static function isAncestor($class_id, $ancestor_class_id, $connections, $tree_search=true)
 	{
-		if ($search_tree)
+		if ($tree_search)
 		{
 			$ancestors = [];
 			// base case: ancestor_class is an ancestor of class if they are the same
@@ -241,7 +242,8 @@ class ClassRepository
 		{
 			// perform a simple intersection operation to find the elements in $ancestor_class_id that are parent_id's in $connections
 			$ancestors = $connections->pluck('parent_id')->push($class_id)->intersect($ancestor_class_id)->values()->toArray();
-			// if the input was an array, return the ancestors, otherwise, return whether we found the ancestor
+			// if the input was an array, return the ancestors
+			// otherwise, return whether we found the ancestor
 			return is_array($ancestor_class_id) ? $ancestors : count($ancestors) == 1;
 		}
 	}
@@ -276,7 +278,7 @@ class ClassRepository
 		}
 		// return failure if the new parent is a descendant of $class
 		// make sure to include the new children when you check
-		if (self::isDescendant($class, $parent, $tree))
+		if (self::isDescendant($class, $parent, $tree, false))
 		{
 			return "New parent class ".$parent." is a descendant. It cannot be added as a parent.";
 		}
@@ -308,7 +310,7 @@ class ClassRepository
 		// return failure if the children we want to add are ancestors of $class
 		foreach ($children as $child)
 		{
-			if (self::isAncestor($class, $child, $tree))
+			if (self::isAncestor($class, $child, $tree, false))
 			{
 				// this will stop on first failure but maybe we want it to find all bad children?
 				if (is_null($parent))
