@@ -14,7 +14,7 @@ class ValidClassAttachment implements Rule
 	 * the error message if validation does not pass
 	 * @var string
 	 */
-	protected $message = "The class attachment is invalid";
+	protected $message = "The parent class attachment is invalid.";
 
 	/**
 	 * the class we are attaching things to

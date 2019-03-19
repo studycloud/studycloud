@@ -6,6 +6,9 @@ use App\Academic_Class;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use App\Rules\ValidClassParentAttachment;
+use Illuminate\Support\Facades\Validator;
+use App\Rules\ValidClassChildrenAttachment;
 
 class ClassController extends Controller
 {
@@ -169,6 +172,14 @@ class ClassController extends Controller
 		// note that the parent attribute can either be empty or 0,
 		// which would mean that we must attach the root as the parent
 		$validated = $request->validate([
+			'parent' => [
+				'integer',
+				'required_without:children',
+				Rule::in(
+					Academic_Class::pluck('id')->push(0)->reject($id)->toArray()
+				),
+				new ValidClassParentAttachment($class)
+			],
 			'children' => 'array|required_without:parent',
 			'children.*' => [
 				'integer',
@@ -177,15 +188,21 @@ class ClassController extends Controller
 				Rule::in(
 					Academic_Class::pluck('id')->reject($id)->toArray()
 				)
-			],
-			'parent' => [
-				'integer',
-				'required_without:children',
-				Rule::in(
-					Academic_Class::pluck('id')->push(0)->reject($id)->toArray()
-				)
 			]
 		]);
+
+		// now that we have validated the request, let's finish validating the children
+		// make sure to pass it the validated parent, if there is one
+		Validator::make($request->all(),
+			[
+				'children' => [
+					new ValidClassChildrenAttachment(
+						$class,
+						array_key_exists('parent', $validated) ? $validated['parent'] : null
+					)
+				]
+			]
+		)->validate();
 
 		// first, check that the class is not the root
 		if ($id != 0)
