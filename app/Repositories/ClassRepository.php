@@ -272,7 +272,7 @@ class ClassRepository
 		if (is_null($tree))
 		{
 			$get_tree = true;
-			$tree = NodesAndConnections::treeAsSeparatedConnections((new ClassRepository)->descendants($class), collect());
+			$tree = NodesAndConnections::treeAsSeparatedConnections(collect(), (new ClassRepository)->descendants($class));
 		}
 		// return failure if the new parent is a descendant of $class
 		// make sure to include the new children when you check
@@ -286,10 +286,15 @@ class ClassRepository
 			// check if we need to retrieve the new ancestors
 			if (!is_null($parent))
 			{
-				// get the ancestors of the new parent
-				$tree['ancestors'] = NodesAndConnections::treeAsConnections(
-					(new ClassRepository)->ancestors($parent)
-				);
+				if ($parent !== 0)
+				{
+					// get the ancestors of the new parent
+					$tree['ancestors'] = NodesAndConnections::treeAsConnections(
+						(new ClassRepository)->ancestors(
+							Academic_Class::find($parent), null, Academic_Class::getRoot()
+						)
+					);
+				}
 				// add the connection between the current parent and the new parent
 				$tree['ancestors']->prepend(
 					collect([
@@ -301,26 +306,37 @@ class ClassRepository
 			else	// retrieve the current ancestors
 			{
 				$tree['ancestors'] = NodesAndConnections::treeAsConnections(
-					(new ClassRepository)->ancestors($class)
+					(new ClassRepository)->ancestors(
+						$class, null, Academic_Class::getRoot()
+					)
 				);
 			}
 		}
-		// return failure if the children we want to add are ancestors of $class
-		foreach ($children as $child)
+		// find all new children that are ancestors of $class
+		$bad_children = self::isAncestor($class->id, $children, $tree);
+		if (count($bad_children) > 1)
 		{
-			if (self::isAncestor($class->id, $child, $tree))
+			if (is_null($parent))
 			{
-				// this will stop on first failure but maybe we want it to find all bad children?
-				if (is_null($parent))
-				{
-					return "Class ".$child." is an ancestor of class ".$class->id.". It cannot be added as its child.";
-				}
-				else
-				{
-					return "Class ".$child." will be an ancestor of class ".$class->id.". It cannot be added as its child.";
-				}
+				return "Classes ".readable_array($bad_children)." are ancestors of class ".$class->id.". They cannot be added as its children.";
+			}
+			else
+			{
+				return "By making class ".$parent." the parent of class ".$class->id.", classes ".readable_array($bad_children)." will become ancestors of class ".$class->id.". They cannot be added as its children.";
 			}
 		}
+		elseif (count($bad_children) == 1)
+		{
+			if (is_null($parent))
+			{
+				return "Class ".$bad_children[0]." is an ancestor of class ".$class->id.". It cannot be added as its child.";
+			}
+			else
+			{
+				return "By making class ".$parent." the parent of class ".$class->id.", class ".$bad_children[0]." will become an ancestor of class ".$class->id.". It cannot be added as its child.";
+			}
+		}
+		return null;
 	}
 	
 	public static function printAsciiDescendants($class)
