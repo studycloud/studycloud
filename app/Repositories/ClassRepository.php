@@ -129,13 +129,12 @@ class ClassRepository
 	 * given a portion of the tree, check to see whether $descendant_class_id is a descendant of $class_id
 	 * @param  int 			$class_id				the ancestor class
 	 * @param  int|array	$descendant_class_id	the descendant to search for
-	 * @param  Collection	$connections			a portion of the tree to traverse, as a collection of connections
-	 * @param  boolean		$tree_search			should we perform a full tree search? set $tree_search to false if the $connections provided lead only to descendants of $class_id
+	 * @param  Collection	$connections			a portion of the tree to traverse, in the connections or separated connections format
 	 * @return  boolean|array						whether $descendant_class_id is an descendant of $class; if $descendant_class_id is an array, return the elements in it that are descendants
 	 */
-	public static function isDescendant($class_id, $descendant_class_id, $connections, $tree_search=true)
+	public static function isDescendant($class_id, $descendant_class_id, $connections)
 	{
-		if ($tree_search)
+		if (!$connections->has('descendants'))
 		{
 			if (is_array($descendant_class_id))
 			{
@@ -181,7 +180,7 @@ class ClassRepository
 		else
 		{
 			// perform a simple intersection operation to find the elements in $descendant_class_id that are class_id's in $connections
-			$descendants = $connections->pluck('class_id')->push($class_id)->intersect($descendant_class_id)->values()->toArray();
+			$descendants = $connections['descendants']->pluck('class_id')->push($class_id)->intersect($descendant_class_id)->values()->toArray();
 			// if the input was an array, return the descendants
 			// otherwise, return whether we found the descendant
 			return is_array($descendant_class_id) ? $descendants : count($descendants) == 1;
@@ -192,13 +191,12 @@ class ClassRepository
 	 * given a portion of the tree, check to see whether $ancestor_class_id is an ancestor of $class_id
 	 * @param  int			$class_id			the descendant class
 	 * @param  int|array	$ancestor_class_id	the ancestor to search for
-	 * @param  Collection	$connections		a portion of the tree to traverse, as a collection of connections
-	 * @param  boolean		$tree_search		should we perform a full tree search? set $tree_search to false if the $connections provided lead only to ancestors of $class_id
+	 * @param  Collection	$connections		a portion of the tree to traverse, in the connections or separated connections format
 	 * @return boolean|array					whether $ancestor_class_id is an ancestor of $class; if $ancestor_class_id is an array, return the elements in it that are ancestors
 	 */
-	public static function isAncestor($class_id, $ancestor_class_id, $connections, $tree_search=true)
+	public static function isAncestor($class_id, $ancestor_class_id, $connections)
 	{
-		if ($tree_search)
+		if (!$connections->has('ancestors'))
 		{
 			$ancestors = [];
 			// base case: ancestor_class is an ancestor of class if they are the same
@@ -241,7 +239,7 @@ class ClassRepository
 		else
 		{
 			// perform a simple intersection operation to find the elements in $ancestor_class_id that are parent_id's in $connections
-			$ancestors = $connections->pluck('parent_id')->push($class_id)->intersect($ancestor_class_id)->values()->toArray();
+			$ancestors = $connections['ancestors']->pluck('parent_id')->push($class_id)->intersect($ancestor_class_id)->values()->toArray();
 			// if the input was an array, return the ancestors
 			// otherwise, return whether we found the ancestor
 			return is_array($ancestor_class_id) ? $ancestors : count($ancestors) == 1;
@@ -250,16 +248,16 @@ class ClassRepository
 
 	/**
 	 * check whether we can change the parent and children of a class all at once
-	 * @param	int|null			$class		the class id for the class we want to attach things to or null for the root
+	 * @param	Academic_Class|null	$class		the class we want to attach things to or null for the root
 	 * @param	int|null			$parent		the id of the new parent class or null if we shouldn't replace the current one
 	 * @param	array 				$children 	an array of class id's that should be attached as children to this class
-	 * @param	Collection|null		$tree		all parents and children of $class in the connections format; if null, queries will be performed to retrieve the required data
+	 * @param	Collection|null		$tree		all parents and children of $class in the separated connections format; if null, queries will be performed to retrieve the required data
 	 * @param	string|null						if the parent and children cannot be added, returns a message explaining why; otherwise, returns null
 	 */
 	public static function validateClassAttach($class=null, $parent=null, $children=[], $tree=null)
 	{
 		// if we're dealing with the root class
-		if (is_null($class))
+		if (is_null($class) || $class->id == 0)
 		{
 			// the root class cannot have a parent
 			if (!is_null($parent))
@@ -269,40 +267,40 @@ class ClassRepository
 			// you can attach any children to the root
 			return null;
 		}
+		$get_tree = false;
 		// get the descendants that are required
 		if (is_null($tree))
 		{
-			$tree = NodesAndConnections::treeAsConnections(
-				(new ClassRepository)->descendants($class)
-			);
+			$get_tree = true;
+			$tree = NodesAndConnections::treeAsSeparatedConnections((new ClassRepository)->descendants($class), collect());
 		}
 		// return failure if the new parent is a descendant of $class
 		// make sure to include the new children when you check
-		if (self::isDescendant($class, $parent, $tree, false))
+		if (self::isDescendant($class->id, $parent, $tree))
 		{
-			return "New parent class ".$parent." is a descendant. It cannot be added as a parent.";
+			return "Class ".$parent." is a descendant of class ".$class->id.". It cannot be added as its parent.";
 		}
 		// get the ancestors that are required
-		if (is_null($tree))
+		if ($get_tree)
 		{
 			// check if we need to retrieve the new ancestors
 			if (!is_null($parent))
 			{
 				// get the ancestors of the new parent
-				$tree = NodesAndConnections::treeAsConnections(
+				$tree['ancestors'] = NodesAndConnections::treeAsConnections(
 					(new ClassRepository)->ancestors($parent)
 				);
 				// add the connection between the current parent and the new parent
-				$tree->prepend(
+				$tree['ancestors']->prepend(
 					collect([
 						'parent_id' => $parent,
-						'class_id' => $class
+						'class_id' => $class->id
 					])
 				);
 			}
 			else	// retrieve the current ancestors
 			{
-				$tree = NodesAndConnections::treeAsConnections(
+				$tree['ancestors'] = NodesAndConnections::treeAsConnections(
 					(new ClassRepository)->ancestors($class)
 				);
 			}
@@ -310,16 +308,16 @@ class ClassRepository
 		// return failure if the children we want to add are ancestors of $class
 		foreach ($children as $child)
 		{
-			if (self::isAncestor($class, $child, $tree, false))
+			if (self::isAncestor($class->id, $child, $tree))
 			{
 				// this will stop on first failure but maybe we want it to find all bad children?
 				if (is_null($parent))
 				{
-					return "New child class ".$child." is an ancestor. It cannot be added as a child.";
+					return "Class ".$child." is an ancestor of class ".$class->id.". It cannot be added as its child.";
 				}
 				else
 				{
-					return "New child class ".$child." will be an ancestor. It cannot be added as a child.";
+					return "Class ".$child." will be an ancestor of class ".$class->id.". It cannot be added as its child.";
 				}
 			}
 		}
