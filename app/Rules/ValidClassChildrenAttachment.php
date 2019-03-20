@@ -101,14 +101,14 @@ class ValidClassChildrenAttachment implements Rule
 	 * @param  mixed   $children   an array of class id's that should be attached as children to this class
 	 * @return bool
 	 */
-	public function passes($attribute, $children)
+	public function passes($attribute, $children=[])
 	{
 		// check if we're dealing with the root class
 		// you can attach any children to the root
 		if (!$this->class_is_root)
 		{
 			// find all new children that are ancestors of $this->class
-			$bad_children = ClassRepository::isAncestor($this->class->id, $this->children, $this->tree);
+			$bad_children = ClassRepository::isAncestor($this->class->id, $children, $this->tree);
 			if (count($bad_children) > 1)
 			{
 				if (is_null($this->parent))

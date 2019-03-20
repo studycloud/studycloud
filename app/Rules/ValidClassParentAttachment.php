@@ -8,7 +8,7 @@ use App\Repositories\ClassRepository;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 
-class ValidClassAttachment implements Rule
+class ValidClassParentAttachment implements Rule
 {
 	/**
 	 * the error message if validation does not pass
@@ -67,16 +67,16 @@ class ValidClassAttachment implements Rule
 	public function passes($attribute, $parent=null)
 	{
 		// the root class cannot have a parent
-		if ($this->class_is_root and is_null($this->parent))
+		if ($this->class_is_root and is_null($parent))
 		{
 		   $this->message = "The root class cannot be assigned a parent.";
 		   return false;
 		}
 		// return failure if the new parent is a descendant of $this->class
 		// make sure to include the new children when you check
-		if (ClassRepository::isDescendant($this->class->id, $this->parent, $this->tree))
+		if (ClassRepository::isDescendant($this->class->id, $parent, $this->tree))
 		{
-			$this->message = "Class ".$this->parent." is a descendant of class ".$this->class->id.". It cannot be added as its parent.";
+			$this->message = "Class ".$parent." is a descendant of class ".$this->class->id.". It cannot be added as its parent.";
 			return false;
 		}
 		return true;

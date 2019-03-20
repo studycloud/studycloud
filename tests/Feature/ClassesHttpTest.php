@@ -21,7 +21,9 @@ class ClassesHttpTest extends TestCase
 		// how many Classes do we have?
 		$class_count = Academic_Class::count();
 		// make a new class but don't add it to database yet
-		$class = factory(Academic_Class::class)->make();
+		$class = factory(Academic_Class::class)->make([
+			'author_id' => User::inRandomOrder()->take(1)->get()->first()['id']
+		]);
 		$user = User::find($class->author_id);
 
 		// make a request to create a new class
