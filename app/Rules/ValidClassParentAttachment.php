@@ -67,7 +67,7 @@ class ValidClassParentAttachment implements Rule
 	public function passes($attribute, $parent=null)
 	{
 		// the root class cannot have a parent
-		if ($this->class_is_root and is_null($parent))
+		if ($this->class_is_root and !is_null($parent))
 		{
 		   $this->message = "The root class cannot be assigned a parent.";
 		   return false;
