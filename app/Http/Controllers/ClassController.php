@@ -6,6 +6,9 @@ use App\Academic_Class;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use App\Rules\ValidClassParentAttachment;
+use Illuminate\Support\Facades\Validator;
+use App\Rules\ValidClassChildrenAttachment;
 
 class ClassController extends Controller
 {
@@ -165,27 +168,42 @@ class ClassController extends Controller
 	public function attach(Request $request, Academic_Class $class = null)
 	{
 		$id = is_null($class) ? 0 : $class->id;
+		$all_classes = Academic_Class::all();
 		// first, validate the request
 		// note that the parent attribute can either be empty or 0,
 		// which would mean that we must attach the root as the parent
 		$validated = $request->validate([
+			'parent' => [
+				'integer',
+				'required_without:children',
+				Rule::in(
+					$all_classes->pluck('id')->push(0)->reject($id)->toArray()
+				),
+				new ValidClassParentAttachment($class)
+			],
 			'children' => 'array|required_without:parent',
 			'children.*' => [
 				'integer',
 				'distinct',
 				'required',
 				Rule::in(
-					Academic_Class::pluck('id')->reject($id)->toArray()
-				)
-			],
-			'parent' => [
-				'integer',
-				'required_without:children',
-				Rule::in(
-					Academic_Class::pluck('id')->push(0)->reject($id)->toArray()
+					$all_classes->pluck('id')->reject($id)->toArray()
 				)
 			]
 		]);
+
+		// now that we have validated the request, let's finish validating the children
+		// make sure to pass it the validated parent, if there is one
+		Validator::make($request->all(),
+			[
+				'children' => [
+					new ValidClassChildrenAttachment(
+						$class,
+						array_key_exists('parent', $validated) ? $validated['parent'] : null
+					)
+				]
+			]
+		)->validate();
 
 		// first, check that the class is not the root
 		if ($id != 0)
@@ -208,7 +226,7 @@ class ClassController extends Controller
 				// attach all the children
 				// but first, convert all of the children IDs to model instances
 				// TODO: make this more efficient - currently it executes 2 queries, but it could be 1
-				$children = Academic_Class::whereIn('id', $validated['children'])->get();
+				$children = $all_classes->whereIn('id', $validated['children']);
 				$class->children()->saveMany($children);
 			}
 		}
