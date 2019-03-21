@@ -20,7 +20,18 @@ class ClassAttachmentHttpTest extends TestCase
 		// retrieve a random user to run the tests with
 		$user = User::inRandomOrder()->first();
 
-		// create a subtree to run tests on
+		// create a subtree to run tests on:
+		/**
+			  root
+			  /  \
+		 other    0
+		classes  / \
+			    1   2
+			   /|\  |\
+			  3 4 5 6 7
+			   / \
+			  8   9
+		*/
 		$classes = $this->createTree($user);
 
 		// TEST 1: basic test
@@ -203,15 +214,15 @@ class ClassAttachmentHttpTest extends TestCase
 		]);
 		// attach the classes so that they form a subtree under the root:
 		/**
-		 	  root
-		 	     \
-		 	      0
-		 	     / \
-		 	    1   2
-		 	   /|\  |\
-		 	  3 4 5 6 7
-		 	   / \
-		 	  8   9
+			  root
+			  /  \
+		 other    0
+		classes  / \
+			    1   2
+			   /|\  |\
+			  3 4 5 6 7
+			   / \
+			  8   9
 		*/
 		// attach classes 1 and 2 as children of class 0
 		$classes[0]->children()->saveMany($classes->slice(1, 2));
