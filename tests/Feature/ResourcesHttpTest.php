@@ -8,6 +8,7 @@ use Tests\TestCase;
 use App\ResourceUse;
 use App\Academic_Class;
 use App\ResourceContent;
+use App\Repositories\ResourceRepository;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -33,10 +34,13 @@ class ResourcesHttpTest extends TestCase
 		);
 
 		// make a request to create a new resource
+		// but first, get a class to attach it to
+		$class = ResourceRepository::allowedClasses(null)->random();
 		$response = $this->actingAs($user)->post('/resources/',
 			[
 				'name' => $resource->name,
 				'use_id' => $resource->use_id,
+				'class_id' => $class->id,
 				'contents' => [
 					[
 						'name' => $content->name,
@@ -52,9 +56,11 @@ class ResourcesHttpTest extends TestCase
 		$response->assertSuccessful();
 		$this->assertEquals(Resource::count()-1, $resource_count);
 		$this->assertEquals(ResourceContent::count()-1, $content_count);
-		// check: are the names what we expect?
+		// check: is the name and content what we expect?
 		$this->assertEquals($resource->name, $new_resource->name);
 		$this->assertEquals($content->name, $new_content->name);
+		// check: is the class what we expect?
+		$this->assertEquals($class->id, $new_resource->class_id);
 
 		// edit the created resource
 		$new_name = "Test Resource";
@@ -86,7 +92,7 @@ class ResourcesHttpTest extends TestCase
 		$this->assertEquals($new_content_name, $new_content->name);
 
 		// attach the resource to some items in the tree
-		$class = Academic_Class::inRandomOrder()->take(1)->get()->first();
+		$class = ResourceRepository::allowedClasses($new_resource)->random();
 		$response = $this->actingAs($user)->patch('/resources/attach/'.($new_resource->id),
 			[
 				'class' => $class->id

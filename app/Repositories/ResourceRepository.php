@@ -237,12 +237,12 @@ class ResourceRepository
 
 	/**
 	 * which classes is this resource allowed to be added to?
-	 * @param  Resource 	$resource 	the resource whose allowedClasses you'd like to get
+	 * @param  Resource|null 	$resource 	the resource whose allowedClasses you'd like to get; may be null if the resource hasn't been created yet
 	 * @return Collection
 	 */
 	public static function allowedClasses($resource)
 	{
-		// resources can only be added to leaf classes
-		return ClassRepository::getLeafClasses();
+		// resources can be added to any class that doesn't have a status of 0
+		return Academic_Class::where('status', 1)->get();
 	}
 }

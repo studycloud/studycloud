@@ -1,8 +1,10 @@
 <?php
 
 use App\Resource;
+use App\Academic_Class;
 use Illuminate\Database\Seeder;
 use App\Repositories\ClassRepository;
+use App\Repositories\ResourceRepository;
 
 class ResourceClassTableSeeder extends Seeder
 {
@@ -18,20 +20,21 @@ class ResourceClassTableSeeder extends Seeder
 	 */
 	public function run()
 	{
-		// big picture: iterate through each resource and pick a class for them from the leaf classes
-		// since we want every resource to have at least one topic
+		// big picture: iterate through each resource and pick a class for them from the allowed classes
+		// since we want every resource to have at least one class
 		
-		// get the leaf classes
-		$classes = ClassRepository::getLeafClasses();
+		// get the allowed classes
+		$classes = Academic_Class::all();
 		
 		Resource::all()->shuffle()->each(
 			function($resource) use ($classes)
 			{
+				$available_classes = ResourceRepository::allowedClasses($resource);
 				$class = null;
 				// pick a class if one exists
 				while (is_null($class) && $classes->count() > 0)
 				{
-					$class = $classes->random();
+					$class = $classes->intersect($available_classes)->random();
 					// if this class already has too many resources
 					if ($class->resources()->count() >= self::NUM_MAX_RESOURCES)
 					{
