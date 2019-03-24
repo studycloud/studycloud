@@ -174,6 +174,7 @@ class ClassController extends Controller
 		// which would mean that we must attach the root as the parent
 		$validated = $request->validate([
 			'parent' => [
+				'bail',
 				'integer',
 				'required_without:children',
 				Rule::in(
@@ -183,6 +184,7 @@ class ClassController extends Controller
 			],
 			'children' => 'array|required_without:parent',
 			'children.*' => [
+				'bail',
 				'integer',
 				'distinct',
 				'required',
@@ -205,7 +207,8 @@ class ClassController extends Controller
 			]
 		)->validate();
 
-		// first, check that the class is not the root
+		// before attaching the parent,
+		// first check that the class is not the root
 		if ($id != 0)
 		{
 			if (array_key_exists('parent', $validated))
@@ -221,15 +224,13 @@ class ClassController extends Controller
 				}
 				$class->save();
 			}
-			if (array_key_exists('children', $validated))
-			{
-				// attach all the children
-				Academic_Class::whereIn('id', $validated['children'])->update(['parent_id' => $id]);
-			}
 		}
-		elseif (array_key_exists('children', $validated))
+		// attach the children if needed
+		if (array_key_exists('children', $validated))
 		{
-			Academic_Class::whereIn('id', $validated['children'])->update(['parent_id' => null]);
+			$id = $id === 0 ? null : $id;
+			// attach all the children
+			Academic_Class::whereIn('id', $validated['children'])->update(['parent_id' => $id]);
 		}
 	}
 }
