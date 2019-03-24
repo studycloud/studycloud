@@ -168,7 +168,7 @@ class ClassController extends Controller
 	public function attach(Request $request, Academic_Class $class = null)
 	{
 		$id = is_null($class) ? 0 : $class->id;
-		$all_classes = Academic_Class::all();
+		$all_classes = Academic_Class::pluck('id');
 		// first, validate the request
 		// note that the parent attribute can either be empty or 0,
 		// which would mean that we must attach the root as the parent
@@ -177,7 +177,7 @@ class ClassController extends Controller
 				'integer',
 				'required_without:children',
 				Rule::in(
-					$all_classes->pluck('id')->push(0)->reject($id)->toArray()
+					$all_classes->push(0)->reject($id)->toArray()
 				),
 				new ValidClassParentAttachment($class)
 			],
@@ -187,7 +187,7 @@ class ClassController extends Controller
 				'distinct',
 				'required',
 				Rule::in(
-					$all_classes->pluck('id')->reject($id)->toArray()
+					$all_classes->reject($id)->toArray()
 				)
 			]
 		]);
@@ -224,10 +224,7 @@ class ClassController extends Controller
 			if (array_key_exists('children', $validated))
 			{
 				// attach all the children
-				// but first, convert all of the children IDs to model instances
-				// TODO: make this more efficient - currently it executes 2 queries, but it could be 1
-				$children = $all_classes->whereIn('id', $validated['children']);
-				$class->children()->saveMany($children);
+				Academic_Class::whereIn('id', $validated['children'])->update(['parent_id' => $id]);
 			}
 		}
 		elseif (array_key_exists('children', $validated))
