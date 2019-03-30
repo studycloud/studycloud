@@ -10,6 +10,10 @@
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/_resource.css') }}">
 	<script type="text/javascript" src="{{ asset('js/header.js') }}"></script> <!-- javascript for header but mostly for login drop down -->
 	<script type="text/javascript" src="{{ asset('js/loginmodal.js') }}"></script> <!-- javascript for forgetting your login -->
+	<!-- Need to decide where to put this later (prevents it from getting loaded everytime) -->
+	<script type="text/javascript">
+	resourceUseData = @json( App\ResourceUse::select('id', 'name')->get() );
+	</script>
 	<script type="text/javascript" src="{{ asset('js/resource_viewer.js') }}"></script> <!-- aw heck -->
 	<!-- Tree scripts -->
 	<script src="https://d3js.org/d3.v5.js"></script>

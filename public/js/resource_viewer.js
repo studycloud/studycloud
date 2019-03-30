@@ -35,55 +35,9 @@ var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate",
 var received2 = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher", "use_name":"Notes"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
 */
 
-/*Dummy Data about the class (don't need to use this anymore)
-var classData = {
-	"data": [
-		{
-			"id": 2,
-			"name": "Biology"
-		},
-		{
-			"id": 3,
-			"name": "Chemistry"
-		},
-		{
-			"id": 4,
-			"name": "CS5"
-		},
-		{
-			"id": 5,
-			"name": "Calculus"
-		},
-		{
-			"id": 6,
-			"name": "Linear Algebra"
-		},
-		{
-			"id": 7,
-			"name": "Writ 1"
-		},
-		{
-			"id": 8,
-			"name": "HSA 10"
-		},
-		{
-			"id": 9,
-			"name": "Special Relativity"
-		},
-		{
-			"id": 10,
-			"name": "Physics: Mechanics"
-		},
-		{
-			"id": 11,
-			"name": "Physics: E&M"
-		},
-	]
-};
-*/
-/*
-var resourceUseData = {
-	"data": [
+/*Dummy Data about the resource use (don't need to use this anymore)
+var resourceUseData = 
+[
 		{
 			"id": 1,
 			"name": "Class Notes"
@@ -108,8 +62,7 @@ var resourceUseData = {
 			"id": 6,
 			"name": "Reading Notes"
 		}
-	]
-};*/
+];*/
 
 //use when we have more than 1 content
 var contentNum = 0;
@@ -258,8 +211,8 @@ function resourceEditor(received)
 	$('div#select_style_text').html(resource.meta.use_name);
 
 	//make the selector's selected value match the given resource use id
-	for (i = 0; i < resourceUseData.data.length; i ++){
-		var u = resourceUseData.data[i];
+	for (i = 0; i < resourceUseData.length; i ++){
+		var u = resourceUseData[i];
 		if (u.name == resource.meta.use_name){
 			$('select[name="attach"]').val(u.id);
 		}
@@ -475,20 +428,19 @@ function resetContentNum ()
 	preUpdatedContentNum = contentNum;
 }
 
-function resourceUseSelection (resourceUseJson)
+function resourceUseSelection (resourceUse)
 {
 	/*
-	@classJson receive data about the class from max's Tree
+	@param resourceUse: an array of all the resource use
 
-	create the htmlCode to create the selector for classAttachment
+	create the htmlCode to create the selector for resourceAttachment
 	*/
-	var resourceUse= resourceUseJson;
-	
+
 	var htmlCode = "<select id = 'resource-use' name = 'attach' theme='google' width='400' style='' \
 		placeholder='Select the Use of Your Resource' data-search='true'> ";
 	
-  	for (i = 0; i < resourceUse.data.length; i ++){
-		var u = resourceUse.data[i];
+  	for (i = 0; i < resourceUse.length; i ++){
+		var u = resourceUse[i];
 		htmlCode += "<option value = '" + u.id + "'>" + u.name + "</option>";
 	}
 
@@ -496,4 +448,3 @@ function resourceUseSelection (resourceUseJson)
 
 	return htmlCode;
 }
-
