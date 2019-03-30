@@ -7,34 +7,28 @@ function Server()
     var self = this;
 }
 
-Server.prototype.getResource = function(resource_id, callback1, callback2)
+Server.prototype.getResource = function(resource_id, handleError, handleSuccess)
 {
-	var self = this;
-	
-	var url = "/data/resource?id=" + resource_id;
-	return d3.json(url, {method:'get'}).then(function(data, error){
-		if(error)
-		{
-			if(typeof callback1 === 'function')
-			{
-				return callback1(error);
-			}
-			else
-			{
-				throw error;
-			}
+	var self = this;		
+	url = "/data/resource?id=" + resource_id;	
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'get',		
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			"Content-type": "application/json; charset=UTF-8"
 		}
+	}).then(function(data){	
+		if (data.ok)
+			return handleSuccess(data);
 		else
-		{
-			if(typeof callback2 === 'function')
-			{
-				return callback2(data);
-			}
-			else
-			{
-				return data;
-			}
-		}
+			console.log(data.status);
+			console.log(data.statusText);
+			//data.text().then(function(errorJSON){(console.log(errorJSON))});
+			responseData = {statusCode: data.status, statusText: data.statusText};					
+			handleError(responseData.statusCode);			
+	}).catch(function(error){		
+		return handleError(error);
 	});
 }
 
@@ -68,14 +62,30 @@ Server.prototype.addResource = function(content, handleError, handleSuccess)
 			'X-XSRF-TOKEN': csrfToken,
 			"Content-type": "application/json; charset=UTF-8"
 		}
-	}).then(function(data){
-		
-		return handleSuccess(data);		
-	}).catch(function(error){
-		
-		return handleError(error);	
+	}).then(function(data){	
+		if (data.ok)
+			return handleSuccess(data);
+		else
+			console.log(data.status);
+			console.log(data.statusText);
+			//data.text().then(function(errorJSON){(console.log(errorJSON))});
+			responseData = {statusCode: data.status, statusText: data.statusText};					
+			handleError(responseData.statusCode);			
+	}).catch(function(error){		
+		return handleError(error);
 	});
 }
+// 	}).then(function(data){		
+// 		return handleSuccess(data);		
+// 	}).catch(function(error){
+// 		if (response.status ==422) {		 	
+// 			error.json().then(function(data){
+// 				console.log(data);
+// 			});		
+// 		}		
+// 		return handleError(error);	
+// 	});
+// }
 
 Server.prototype.editResource = function(id, content, handleError, handleSuccess)
 {
@@ -147,8 +157,8 @@ Server.prototype.handleError = function(url, error, treeHandleError)
 	if(!(typeof treeHandleError === 'function')){
 		return(error);
 	}
-	if (error == "Error: Internal Server Error")
-		console.log(response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()))
+	if (error == "Error: Internal Server Error"){
+		
 		return d3.json(url, {method: 'get'}).then(function(data, error){
 			if (error){
 				
@@ -166,6 +176,7 @@ Server.prototype.handleError = function(url, error, treeHandleError)
 				return self.handleSuccess(data);
 			}
 		});
+	}
 	else{		
 		return treeHandleError(error);
 	}
