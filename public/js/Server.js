@@ -16,17 +16,25 @@ Server.prototype.getResource = function(resource_id, handleError, handleSuccess)
 		method: 'get',		
 		headers: {			
 			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){	
 		if (data.ok)
 			return handleSuccess(data);
 		else
+		{
 			console.log(data.status);
 			console.log(data.statusText);
-			//data.text().then(function(errorJSON){(console.log(errorJSON))});
-			responseData = {statusCode: data.status, statusText: data.statusText};					
-			handleError(responseData.statusCode);			
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
 	}).catch(function(error){		
 		return handleError(error);
 	});
@@ -60,17 +68,25 @@ Server.prototype.addResource = function(content, handleError, handleSuccess)
 		body: JSON.stringify(content),
 		headers: {
 			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){	
 		if (data.ok)
 			return handleSuccess(data);
 		else
+		{
 			console.log(data.status);
 			console.log(data.statusText);
-			//data.text().then(function(errorJSON){(console.log(errorJSON))});
-			responseData = {statusCode: data.status, statusText: data.statusText};					
-			handleError(responseData.statusCode);			
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}		
 	}).catch(function(error){		
 		return handleError(error);
 	});
@@ -99,10 +115,25 @@ Server.prototype.editResource = function(id, content, handleError, handleSuccess
 		body: JSON.stringify(data),
 		headers: {			
 			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
-	}).then(function(data){		
-		return handleSuccess(data);		
+	}).then(function(data){	
+		if (data.ok)
+			return handleSuccess(data);
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
 	}).catch(function(error){		
 		return handleError(error);
 	});
@@ -120,10 +151,25 @@ Server.prototype.destroyResource = function(id, handleError, handleSuccess)
 		body: JSON.stringify(data),			
 		headers: {			
 			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		return handleSuccess(data);
+		if (data.ok)
+			return handleSuccess(data);
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
 	}).catch(function(error){
 		return handleError(error);
 	});
@@ -207,10 +253,23 @@ Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
 		
 	url = "/data/topic?id="+id;
 	return d3.json(url)
-		.then(function(data){			
+		.then(function(data){
+			if (data.ok)
 				return handleSuccess(data);
+			else
+			{
+				console.log(data.status);
+				console.log(data.statusText);
+				if(data.status === 422)
+				{
+					errorJSON = data.text().then(function(errorJSON){return errorJSON});
+					responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+				}
+				else
+					responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+				handleError(responseData);
+			}
 			})
-		
 		.catch(function(error){
 			return handleError(error);			
 		});		
@@ -227,11 +286,25 @@ Server.prototype.addTopic = function(content, handleError, handleSuccess)
 		body: JSON.stringify(data),
 		headers: {
 			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		
-		return handleSuccess(data);		
+		if (data.ok)
+			return handleSuccess(data);
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
 	}).catch(function(error){
 		
 		return handleError(error);	
@@ -251,10 +324,25 @@ Server.prototype.updateTopic = function(id, content, handleError, handleSuccess)
 		body: JSON.stringify(data),
 		headers: {			
 			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){		
-		return handleSuccess(data);		
+		if (data.ok)
+			return handleSuccess(data);
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
 	}).catch(function(error){		
 		return handleError(error);
 	});
@@ -271,10 +359,25 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 		body: JSON.stringify(data),			
 		headers: {			
 			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		return handleSuccess(data);
+		if (data.ok)
+			return handleSuccess(data);
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
 	}).catch(function(error){
 		return handleError(error);
 	});
@@ -290,11 +393,25 @@ Server.prototype.addClass = function(content, handleError, handleSuccess)
 		body: JSON.stringify(content),
 		headers: {
 			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		
-		return handleSuccess(data);		
+		if (data.ok)
+			return handleSuccess(data);
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}	
 	}).catch(function(error){
 		
 		return handleError(error);	
@@ -311,7 +428,21 @@ Server.prototype.getClassesJSON = function(class_id, handleError, handleSuccess)
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){		
-		return handleSuccess(data);		
+		if (data.ok)
+			return handleSuccess(data);
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}	
 	}).catch(function(error){		
 		return handleError(error);
 	});
@@ -330,10 +461,25 @@ Server.prototype.updateClass = function(class_id, content, handleError, handleSu
 		body: JSON.stringify(data),
 		headers: {			
 			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){		
-		return handleSuccess(data);		
+		if (data.ok)
+			return handleSuccess(data);
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}	
 	}).catch(function(error){		
 		return handleError(error);
 	});
@@ -350,10 +496,25 @@ Server.prototype.destroyClass = function(class_id, handleError, handleSuccess)
 		body: JSON.stringify(data),			
 		headers: {			
 			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		return handleSuccess(data);
+		if (data.ok)
+			return handleSuccess(data);
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
 	}).catch(function(error){
 		return handleError(error);
 	});
@@ -370,10 +531,25 @@ Server.prototype.attachClass = function(class_id, data, handleError, handleSucce
 		body: JSON.stringify(data),			
 		headers: {			
 			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		return handleSuccess(data);
+		if (data.ok)
+			return handleSuccess(data);
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
 	}).catch(function(error){
 		return handleError(error);
 	});
@@ -391,10 +567,25 @@ Server.prototype.attachResource = function(resource_id, content, handleError, ha
 		body: JSON.stringify(data),			
 		headers: {			
 			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		return handleSuccess(data);
+		if (data.ok)
+			return handleSuccess(data);
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
 	}).catch(function(error){
 		return handleError(error);
 	});
@@ -412,10 +603,25 @@ Server.prototype.detachResource = function(resource_id, content, handleError, ha
 		body: JSON.stringify(data),			
 		headers: {			
 			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		return handleSuccess(data);
+		if (data.ok)
+			return handleSuccess(data);
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
 	}).catch(function(error){
 		return handleError(error);
 	});
