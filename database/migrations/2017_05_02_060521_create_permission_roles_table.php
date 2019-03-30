@@ -20,7 +20,7 @@ class CreatePermissionRolesTable extends Migration
             $table->integer('role_id')->unsigned();
             $table->foreign('role_id')->references('id')->on('roles');
             $table->primary(['permission_id','role_id']);
-            $table->timestamp('created_at')->useCurrent();;
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 
