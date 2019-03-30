@@ -81,7 +81,7 @@ var classData = {
 	]
 };
 */
-
+/*
 var resourceUseData = {
 	"data": [
 		{
@@ -109,7 +109,7 @@ var resourceUseData = {
 			"name": "Reading Notes"
 		}
 	]
-};
+};*/
 
 //use when we have more than 1 content
 var contentNum = 0;
@@ -248,7 +248,6 @@ function resourceEditor(received)
 	Display the resourceEditor and 
 	load the corresponding resourses (specified by resource_id)
 	*/
-
 	var resource = received;
 	
 	//load the resource into the editor

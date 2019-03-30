@@ -65,7 +65,8 @@
 			var val = $(this).val(), flag=false;
 			$('#nosearch').remove();
 			$(this).parent().parent().find('li').each(function(index, el) {
-				if($(el).text().indexOf(val) > -1){
+				var text = $(el).text().toLowerCase();
+				if(text.indexOf(val.toLowerCase()) > -1){
 					$(el).show();
 					flag=true;
 				}
