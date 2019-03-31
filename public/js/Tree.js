@@ -398,7 +398,8 @@ Tree.prototype.updateDataNodes = function(selection, data)
 				opacity: 0,
 				visible: false,
 				width: 0,
-				height: 0
+				height: 0,
+				updated: true
 			};
 
 			var coordinates = 
@@ -419,18 +420,6 @@ Tree.prototype.updateDataNodes = function(selection, data)
 	);
 	
 	nodes = nodes.merge(selection);
-
-	nodes
-		.select("text")
-			.attr("text-anchor", "middle")
-			.attr("fill", "white")
-			.attr("stroke", "black")
-			.attr("stroke-width", "0.02em")
-			.attr("font-size", "22")
-			.attr("font-family", "sans-serif")
-			.attr("font-weight", "bold")
-			.text(function(d){return d.name;});
-		
 	
 	// animate removal of the old nodes
 	
@@ -514,7 +503,7 @@ Tree.prototype.setData = function(data)
 	self.nodes_simulated = self.nodes;
 	self.links_simulated = self.links;
 	
-	self.simulationRestart();
+	//self.simulationRestart();
 };
 
 Tree.prototype.updateDataNLevels = function(node_id, levels_num_children, levels_num_parents, data)
@@ -564,6 +553,32 @@ Tree.prototype.drawLinks = function()
 Tree.prototype.drawNodes = function()
 {
 	var self = this;
+
+	self.nodes.each(function()
+		{
+			//Get the style object for the current node
+			var style = self.locals.style.get(this);
+			
+			//Check if the style has changed since the last time we rendered 
+			//	so we don't run uncessesary code
+			if (style.updated === true)
+			{
+				
+			}
+			
+		}
+	);
+
+	self.nodes
+		.select("text")
+			.attr("text-anchor", "middle")
+			.attr("fill", "white")
+			.attr("stroke", "black")
+			.attr("stroke-width", "0.02em")
+			.attr("font-size", "22")
+			.attr("font-family", "sans-serif")
+			.attr("font-weight", "bold")
+			.text(function(d){return d.name;});
 
 	var transform_node = d3.transform()
 		.translate(function(d)
