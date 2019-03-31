@@ -7,156 +7,33 @@ function Server()
     var self = this;
 }
 
-Server.prototype.getResource = function(resource_id, handleError, handleSuccess)
+Server.prototype.getData = function(node, levels_up, levels_down, handleError, handleSuccess)
 {
-	var self = this;		
-	url = "/data/resource?id=" + resource_id;	
+	
+    var self = this;    
+	// if any of node, levels_up, or levels_down is undefined/null, use an empty string instead
+	// but allow levels to be 0
+	node = node ? node : "";
+	levels_up = levels_up || levels_up === 0 ? levels_up : "";
+	levels_down = levels_down || levels_down === 0 ? levels_down : "";
+	// what is the url for this request?	
+	url = "/data/topic_tree?id="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
 	const csrfToken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
-		method: 'get',		
-		headers: {			
-			'X-XSRF-TOKEN': csrfToken,
-			'X-Requested-With': "XMLHttpRequest",
-			"Content-type": "application/json; charset=UTF-8"
-		}
-	}).then(function(data){	
-		if (data.ok)
-			return handleSuccess(data);
-		else
-		{
-			console.log(data.status);
-			console.log(data.statusText);
-			if(data.status === 422)
-			{
-				errorJSON = data.text().then(function(errorJSON){return errorJSON});
-				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
-			}
-			else
-				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
-			handleError(responseData);
-		}
-	}).catch(function(error){		
-		return handleError(error);
-	});
-}
-
-Server.prototype.getCookie = function(cname)
-{
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-
-
-Server.prototype.addResource = function(content, handleError, handleSuccess)
-{
-	var self = this;		
-	var url = "/resources";
-	const csrfToken = self.getCookie("XSRF-TOKEN");
-	fetch(url, {
-		method: 'post',
-		body: JSON.stringify(content),
-		headers: {
-			'X-XSRF-TOKEN': csrfToken,
-			'X-Requested-With': "XMLHttpRequest",
-			"Content-type": "application/json; charset=UTF-8"
-		}
-	}).then(function(data){	
-		if (data.ok)
-			return handleSuccess(data);
-		else
-		{
-			console.log(data.status);
-			console.log(data.statusText);
-			if(data.status === 422)
-			{
-				errorJSON = data.text().then(function(errorJSON){return errorJSON});
-				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
-			}
-			else
-				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
-			handleError(responseData);
-		}		
-	}).catch(function(error){		
-		return handleError(error);
-	});
-}
-// 	}).then(function(data){		
-// 		return handleSuccess(data);		
-// 	}).catch(function(error){
-// 		if (response.status ==422) {		 	
-// 			error.json().then(function(data){
-// 				console.log(data);
-// 			});		
-// 		}		
-// 		return handleError(error);	
-// 	});
-// }
-
-Server.prototype.editResource = function(id, content, handleError, handleSuccess)
-{
-	var self = this;
-	content["_method"] = "PATCH";
-	data = content;
-	url = "/resources/" + id;	
-	const csrfToken = self.getCookie("XSRF-TOKEN");
-	fetch(url, {
-		method: 'post',		
-		body: JSON.stringify(data),
-		headers: {			
-			'X-XSRF-TOKEN': csrfToken,
-			'X-Requested-With': "XMLHttpRequest",
-			"Content-type": "application/json; charset=UTF-8"
-		}
-	}).then(function(data){	
-		if (data.ok)
-			return handleSuccess(data);
-		else
-		{
-			console.log(data.status);
-			console.log(data.statusText);
-			if(data.status === 422)
-			{
-				errorJSON = data.text().then(function(errorJSON){return errorJSON});
-				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
-			}
-			else
-				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
-			handleError(responseData);
-		}
-	}).catch(function(error){		
-		return handleError(error);
-	});
-}
-
-
-Server.prototype.destroyResource = function(id, handleError, handleSuccess)
-{
-	var self = this;
-	data = {"_method": "DELETE"};			
-	url = "/resources/" + id;
-	const csrfToken = self.getCookie("XSRF-TOKEN");
-	fetch(url, {
-		method: 'post',
-		body: JSON.stringify(data),			
+		method: 'get',
+					
 		headers: {			
 			'X-XSRF-TOKEN': csrfToken,
 			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		if (data.ok)
-			return handleSuccess(data);
+		
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
 		else
 		{
 			console.log(data.status);
@@ -172,28 +49,7 @@ Server.prototype.destroyResource = function(id, handleError, handleSuccess)
 		}
 	}).catch(function(error){
 		return handleError(error);
-	});
-}
-
-Server.prototype.getData = function(node, levels_up, levels_down, handleError, handleSuccess)
-{
-	
-    var self = this;    
-	// if any of node, levels_up, or levels_down is undefined/null, use an empty string instead
-	// but allow levels to be 0
-	node = node ? node : ""
-	levels_up = levels_up || levels_up === 0 ? levels_up : ""
-	levels_down = levels_down || levels_down === 0 ? levels_down : ""
-	// what is the url for this request?
-	url = "/data/topic_tree?id="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
-    return d3.json(url, {method: 'get'}).then(function(data, error){
-    	if (error){			
-    		return self.handleError(url, error, handleError);
-    	}
-    	else {			
-    		return self.handleSuccess(node,data,handleSuccess);
-		}	
-    });
+	});	
 };
 
 
@@ -247,6 +103,253 @@ Server.prototype.handleSuccess = function(node, data, treeHandleSuccess)
 	return treeHandleSuccess(node, data);
 };
 
+Server.prototype.getResource = function(resource_id, handleError, handleSuccess)
+{
+	var self = this;		
+	url = "/data/resource?id=" + resource_id;	
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'get',		
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){	
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
+	}).catch(function(error){		
+		return handleError(error);
+	});
+}
+
+Server.prototype.getCookie = function(cname)
+{
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+
+Server.prototype.addResource = function(content, handleError, handleSuccess)
+{
+	var self = this;		
+	var url = "/resources";
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(content),
+		headers: {
+			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){	
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}		
+	}).catch(function(error){		
+		return handleError(error);
+	});
+}
+
+Server.prototype.editResource = function(id, content, handleError, handleSuccess)
+{
+	var self = this;
+	content["_method"] = "PATCH";
+	data = content;
+	url = "/resources/" + id;	
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',		
+		body: JSON.stringify(data),
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){	
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
+	}).catch(function(error){		
+		return handleError(error);
+	});
+}
+
+
+Server.prototype.destroyResource = function(id, handleError, handleSuccess)
+{
+	var self = this;
+	data = {"_method": "DELETE"};			
+	url = "/resources/" + id;
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(data),			
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
+	}).catch(function(error){
+		return handleError(error);
+	});
+}
+
+Server.prototype.attachResource = function(resource_id, content, handleError, handleSuccess)
+{
+	var self = this;
+	content["_method"] = "PATCH";
+	data = content;		
+	url = "/resources/attach/" + resource_id;
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(data),			
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
+	}).catch(function(error){
+		return handleError(error);
+	});
+}
+
+Server.prototype.detachResource = function(resource_id, content, handleError, handleSuccess)
+{
+	var self = this;
+	content["_method"] = "PATCH";
+	data = content;
+	url = "/resources/detach/" + resource_id;
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'post',
+		body: JSON.stringify(data),			
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
+		else
+		{
+			console.log(data.status);
+			console.log(data.statusText);
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
+		}
+	}).catch(function(error){
+		return handleError(error);
+	});
+}
+
 Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
 {	
 	var self = this;
@@ -254,8 +357,11 @@ Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
 	url = "/data/topic?id="+id;
 	return d3.json(url)
 		.then(function(data){
-			if (data.ok)
-				return handleSuccess(data);
+			if (data.ok){			
+				data.json().then(function(nodesConnections){
+					return handleSuccess(nodesConnections,data);
+				});
+			}
 			else
 			{
 				console.log(data.status);
@@ -290,8 +396,11 @@ Server.prototype.addTopic = function(content, handleError, handleSuccess)
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		if (data.ok)
-			return handleSuccess(data);
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
 		else
 		{
 			console.log(data.status);
@@ -328,8 +437,11 @@ Server.prototype.updateTopic = function(id, content, handleError, handleSuccess)
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){		
-		if (data.ok)
-			return handleSuccess(data);
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
 		else
 		{
 			console.log(data.status);
@@ -363,8 +475,11 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		if (data.ok)
-			return handleSuccess(data);
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
 		else
 		{
 			console.log(data.status);
@@ -397,8 +512,11 @@ Server.prototype.addClass = function(content, handleError, handleSuccess)
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		if (data.ok)
-			return handleSuccess(data);
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
 		else
 		{
 			console.log(data.status);
@@ -428,8 +546,11 @@ Server.prototype.getClassesJSON = function(class_id, handleError, handleSuccess)
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){		
-		if (data.ok)
-			return handleSuccess(data);
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
 		else
 		{
 			console.log(data.status);
@@ -465,8 +586,11 @@ Server.prototype.updateClass = function(class_id, content, handleError, handleSu
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){		
-		if (data.ok)
-			return handleSuccess(data);
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
 		else
 		{
 			console.log(data.status);
@@ -500,8 +624,11 @@ Server.prototype.destroyClass = function(class_id, handleError, handleSuccess)
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		if (data.ok)
-			return handleSuccess(data);
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
+		}
 		else
 		{
 			console.log(data.status);
@@ -535,80 +662,11 @@ Server.prototype.attachClass = function(class_id, data, handleError, handleSucce
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){
-		if (data.ok)
-			return handleSuccess(data);
-		else
-		{
-			console.log(data.status);
-			console.log(data.statusText);
-			if(data.status === 422)
-			{
-				errorJSON = data.text().then(function(errorJSON){return errorJSON});
-				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
-			}
-			else
-				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
-			handleError(responseData);
+		if (data.ok){			
+			data.json().then(function(nodesConnections){
+				return handleSuccess(nodesConnections,data);
+			});
 		}
-	}).catch(function(error){
-		return handleError(error);
-	});
-}
-
-Server.prototype.attachResource = function(resource_id, content, handleError, handleSuccess)
-{
-	var self = this;
-	content["_method"] = "PATCH";
-	data = content;		
-	url = "/resources/attach/" + resource_id;
-	const csrfToken = self.getCookie("XSRF-TOKEN");
-	fetch(url, {
-		method: 'post',
-		body: JSON.stringify(data),			
-		headers: {			
-			'X-XSRF-TOKEN': csrfToken,
-			'X-Requested-With': "XMLHttpRequest",
-			"Content-type": "application/json; charset=UTF-8"
-		}
-	}).then(function(data){
-		if (data.ok)
-			return handleSuccess(data);
-		else
-		{
-			console.log(data.status);
-			console.log(data.statusText);
-			if(data.status === 422)
-			{
-				errorJSON = data.text().then(function(errorJSON){return errorJSON});
-				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
-			}
-			else
-				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
-			handleError(responseData);
-		}
-	}).catch(function(error){
-		return handleError(error);
-	});
-}
-
-Server.prototype.detachResource = function(resource_id, content, handleError, handleSuccess)
-{
-	var self = this;
-	content["_method"] = "PATCH";
-	data = content;
-	url = "/resources/detach/" + resource_id;
-	const csrfToken = self.getCookie("XSRF-TOKEN");
-	fetch(url, {
-		method: 'post',
-		body: JSON.stringify(data),			
-		headers: {			
-			'X-XSRF-TOKEN': csrfToken,
-			'X-Requested-With': "XMLHttpRequest",
-			"Content-type": "application/json; charset=UTF-8"
-		}
-	}).then(function(data){
-		if (data.ok)
-			return handleSuccess(data);
 		else
 		{
 			console.log(data.status);

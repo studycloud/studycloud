@@ -467,22 +467,31 @@ Server.prototype.updateClass = function(class_id, content, handleSuccess, handle
 		{			
 			if(typeof handleSuccess === 'function')
 			{
-				return handleSuccess(XMLHttpRequest);
+				statusCode: {
+					422: function() {
+						
+					}
+					console.log
+				}
+				console.log("error: "+textStatus+"\n"+errorThrown);
+				console.log(XMLHttpRequest);				
 			}
 			else
 			{
-				console.log("error: "+textStatus+"\n"+errorThrown);
-				console.log(XMLHttpRequest);
+				console.log("reached1")
+				return handleSuccess(XMLHttpRequest);
 			}
 		},
 		success: function(response)
 		{
 			if(typeof handleError === 'function')
 			{
+				console.log("reached2")
 				return handleError(response);
 			}
 			else
 			{
+				console.log("reached3")
 				return response;
 			}
 		}
