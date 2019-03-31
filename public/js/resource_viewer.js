@@ -132,7 +132,8 @@ function set_author(name, type)
 {
 	// Clear all classes on the author-name field. 
 	var cl=document.getElementById('author-name').classList;
-	for(var i=cl.length; i>0; i--) {
+	for(var i=cl.length; i>0; i--) 
+	{
 	    cl.remove(cl[0]);
 	}
 	document.getElementById('author-name').classList.add(type);
@@ -181,7 +182,6 @@ function createResource()
 
 function createNewResource(nodeId)
 {
-	console.log(typeof(nodeId));
 	selectorCode = resourceUseSelection(resourceUseData); //selector code for resource use attachment
 	//create all the input to create resources
 	document.getElementById('resource-head').innerHTML="<h1>Resource Creator</h1>"
@@ -217,9 +217,11 @@ function resourceEditor(received)
 	$('div#select_style_text').html(resource.meta.use_name);
 
 	//make the selector's selected value match the given resource use id
-	for (i = 0; i < resourceUseData.length; i ++){
+	for (i = 0; i < resourceUseData.length; i ++)
+	{
 		var u = resourceUseData[i];
-		if (u.name == resource.meta.use_name){
+		if (u.name == resource.meta.use_name)
+		{
 			$('select[name="attach"]').val(u.id);
 		}
 	}
@@ -263,19 +265,21 @@ function submitContent()
 	var resource_use = document.getElementById("resource-use").value;
 	var content_name_array = [];
 	var content_type_array = [];
-	var content = [];
+	var content_array = [];
 	content_num = pre_updated_content_num;
 
-	for (i=0;i < (content_num+1); i++){
+	for (i=0;i < (content_num+1); i++)
+	{
 		content_name_array.push(document.getElementById("content-name"+i).value);
 		content_type_array.push(document.getElementById("content-type"+i).value);
-		content.push(document.getElementById("content"+i).value);
+		content_array.push(document.getElementById("content"+i).value);
 	}
 	
 	//store all the data in json
 	//NEED TO INCLUDE: resouce id, content id
 	//PROBLEM: can't create additional content (this content doesn't have id)
-	var resource =  {
+	var resource =  
+	{
 		"id": resource_id,
 		"name":resource_name,
 		"use_id": resource_use,
@@ -290,7 +294,8 @@ function submitContent()
 		]
 	};
 	
-	for (i=1;i < (content_num+1); i++){
+	for (i=1;i < (content_num+1); i++)
+	{
 		var content_array =
 		{
 			"name": document.getElementById("content-name"+i).value,
@@ -325,17 +330,19 @@ function submitNewContent(node_id_num)
 	var class_id = node_id_num.toString();
 	var content_name_array = [];
 	var content_type_array = [];
-	var content = [];
+	var content_array = [];
 
-	for (i=0;i < (content_num+1); i++){
+	for (i=0;i < (content_num+1); i++)
+	{
 		content_name_array.push(document.getElementById("content-name"+i).value);
 		content_type_array.push(document.getElementById("content-type"+i).value);
-		content.push(document.getElementById("content"+i).value);
+		content_array.push(document.getElementById("content"+i).value);
 	}
 	
 	//store all the data in json
 	//PROBLEM: can only create 1 content for 1 resource
-	var resource =  {
+	var resource =  
+	{
 		"name":resource_name,
 		"use_id": resource_use,
 		"class_id": class_id,
@@ -349,7 +356,8 @@ function submitNewContent(node_id_num)
 		]
 	};
 	
-	for (i=1;i < (content_num+1); i++){
+	for (i=1;i < (content_num+1); i++)
+	{
 		var content_array =
 		{
 			"name": document.getElementById("content-name"+i).value,
@@ -403,7 +411,8 @@ function temporaryStoreContent()
 	an array. 
 	Return this contents array to get put back to the textbox after a new content is created
 	*/
-	var contents = [
+	var contents = 
+	[
 		{
 			"name": document.getElementById("content-name0").value,
 			"type": document.getElementById("content-type0").value,
@@ -415,7 +424,8 @@ function temporaryStoreContent()
 	//If the user has entries in a new content (but hasn't click submit)
 	//then he clicks on "New Content" again,
 	//using pre_updated_content_num will save his entries
-	for (i=1;i < (pre_updated_content_num+1); i++){
+	for (i=1;i < (pre_updated_content_num+1); i++)
+	{
 		var contentArray =
 		{
 			"name": document.getElementById("content-name"+i).value,
@@ -447,7 +457,8 @@ function resourceUseSelection (resource_use)
 	var html_code = "<select id = 'resource-use' name = 'attach' theme='google' width='400' style='' \
 		placeholder='Select the Use of Your Resource' data-search='true'> ";
 	
-  	for (i = 0; i < resource_use.length; i ++){
+	for (i = 0; i < resource_use.length; i ++)
+	{
 		var u = resource_use[i];
 		html_code += "<option value = '" + u.id + "'>" + u.name + "</option>";
 	}
