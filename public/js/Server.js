@@ -26,7 +26,7 @@ Server.prototype.getResource = function(resource_id, handleError, handleSuccess)
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -78,7 +78,7 @@ Server.prototype.addResource = function(content, handleError, handleSuccess)
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -125,7 +125,7 @@ Server.prototype.editResource = function(id, content, handleError, handleSuccess
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -161,7 +161,7 @@ Server.prototype.destroyResource = function(id, handleError, handleSuccess)
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -206,7 +206,7 @@ Server.prototype.getData = function(node, levels_up, levels_down, handleError, h
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -229,10 +229,10 @@ Server.prototype.getData = function(node, levels_up, levels_down, handleError, h
 };
 
 
-Server.prototype.handleError = function(url, error, treeHandleError)
+Server.prototype.handleError = function(url, error, externalHandle)
 {	
 	var self = this;
-	if(!(typeof treeHandleError === 'function')){
+	if(!(typeof externalHandle === 'function')){
 		return(error);
 	}
 	if (error == "Error: Internal Server Error"){
@@ -246,7 +246,7 @@ Server.prototype.handleError = function(url, error, treeHandleError)
 				}
 				else
 				{					
-					return treeHandleError(error);
+					return externalHandle(error);
 					
 				}
 			}
@@ -256,7 +256,7 @@ Server.prototype.handleError = function(url, error, treeHandleError)
 		});
 	}
 	else{		
-		return treeHandleError(error);
+		return externalHandle(error);
 	}
     
 };
@@ -284,15 +284,22 @@ Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
 	var self = this;
 		
 	url = "/data/topic?id="+id;
-	return d3.json(url)
-		.then(function(data){
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'get',		
+		headers: {			
+			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){
 			if (data.ok)
 				return handleSuccess(data);
 			else
 			{
 				console.log(data.status);
 				console.log(data.statusText);
-				if(data.status === 422)
+				if(data.status >= 300)
 				{
 					errorJSON = data.text().then(function(errorJSON){return errorJSON});
 					responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -310,7 +317,7 @@ Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
 Server.prototype.addTopic = function(content, handleError, handleSuccess)
 {
 	var self = this;
-	data = {"content": content};	
+	data = content;	
 	url = "/topics";
 	const csrfToken = self.getCookie("XSRF-TOKEN");
 	fetch(url, {
@@ -328,7 +335,7 @@ Server.prototype.addTopic = function(content, handleError, handleSuccess)
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -366,7 +373,7 @@ Server.prototype.updateTopic = function(id, content, handleError, handleSuccess)
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -401,7 +408,7 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -435,7 +442,7 @@ Server.prototype.addClass = function(content, handleError, handleSuccess)
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -466,7 +473,7 @@ Server.prototype.getClassesJSON = function(class_id, handleError, handleSuccess)
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -503,7 +510,7 @@ Server.prototype.updateClass = function(class_id, content, handleError, handleSu
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -538,7 +545,7 @@ Server.prototype.destroyClass = function(class_id, handleError, handleSuccess)
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -573,7 +580,7 @@ Server.prototype.attachClass = function(class_id, data, handleError, handleSucce
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -609,7 +616,7 @@ Server.prototype.attachResource = function(resource_id, content, handleError, ha
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -645,7 +652,7 @@ Server.prototype.detachResource = function(resource_id, content, handleError, ha
 		{
 			console.log(data.status);
 			console.log(data.statusText);
-			if(data.status === 422)
+			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
