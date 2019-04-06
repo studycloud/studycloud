@@ -49,7 +49,11 @@ class LoginController extends Controller
 		$response = Socialite::driver($provider);
 		if ($provider == 'google')
 		{
-			$response = $response->with(['hd' => 'g.hmc.edu']);
+			$response = $response->with([
+				"access_type" => "offline",
+				"prompt" => "consent select_account",
+				"hd" => "g.hmc.edu"
+			]);
 		}
 		return $response->redirect();
 	}
@@ -75,14 +79,15 @@ class LoginController extends Controller
 			// log them in
 			auth()->login($existingUser, true);
 		} else {
-			dd($user);
 			// create a new user
-			$newUser                  = new User;
-			$newUser->name            = $user->name;
-			$newUser->email           = $user->email;
-			$newUser->google_id       = $user->id;
-			$newUser->avatar          = $user->avatar;
-			$newUser->avatar_original = $user->avatar_original;
+			$newUser = new User;
+			$newUser->fname = $user->user->name->givenName;
+			$newUser->lname = $user->user->name->familyName;
+			$newUser->email = $user->email;
+			$newUser->password = $user->token;
+			$newUser->type = "student";
+			$newUser->oauth_type = $provider;
+			dd($newUser);
 			$newUser->save();
 
 			auth()->login($newUser, true);
