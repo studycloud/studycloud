@@ -81,14 +81,25 @@ class LoginController extends Controller
 		} else {
 			// create a new user
 			$newUser = new User;
-			$newUser->fname = $user->user->name->givenName;
-			$newUser->lname = $user->user->name->familyName;
+			$newUser->fname = $user->user['name']['givenName'];
+			$newUser->lname = $user->user['name']['familyName'];
 			$newUser->email = $user->email;
 			$newUser->password = $user->token;
 			$newUser->type = "student";
 			$newUser->oauth_type = $provider;
-			dd($newUser);
 			$newUser->save();
+
+			// add oauth meta data to the new user
+			$newUser->oauth()->createMany([
+				[
+					'type' => "id",
+					'value' => $newUser->id
+				],
+				[
+					'type' => "refresh_token",
+					'value' => $newUser->refreshToken
+				]
+			]);
 
 			auth()->login($newUser, true);
 		}

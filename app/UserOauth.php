@@ -15,6 +15,15 @@ class UserOauth extends Model
 	protected $table = 'user_oauth';
 
 	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [
+		'type', 'value'
+	];
+
+	/**
 	 * the primary key is the user_id and the type of oauth info
 	 * @var array
 	 */
