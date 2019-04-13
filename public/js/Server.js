@@ -21,7 +21,7 @@ Server.prototype.getResource = function(resource_id, handleError, handleSuccess)
 		}
 	}).then(function(data){	
 		if (data.ok)
-			return handleSuccess(data);
+			handleSuccess(data);
 		else
 		{
 			console.log(data.status);
@@ -73,7 +73,9 @@ Server.prototype.addResource = function(content, handleError, handleSuccess)
 		}
 	}).then(function(data){	
 		if (data.ok)
-			return handleSuccess(data);
+		{
+			return handleSuccess(data.json());
+		}
 		else
 		{
 			console.log(data.status);
@@ -120,7 +122,9 @@ Server.prototype.editResource = function(id, content, handleError, handleSuccess
 		}
 	}).then(function(data){	
 		if (data.ok)
-			return handleSuccess(data);
+		{
+			return handleSuccess(data.json());
+		}
 		else
 		{
 			console.log(data.status);
@@ -156,7 +160,9 @@ Server.prototype.destroyResource = function(id, handleError, handleSuccess)
 		}
 	}).then(function(data){
 		if (data.ok)
-			return handleSuccess(data);
+		{
+			return handleSuccess(data.json());
+		}
 		else
 		{
 			console.log(data.status);
@@ -330,7 +336,9 @@ Server.prototype.addTopic = function(content, handleError, handleSuccess)
 		}
 	}).then(function(data){
 		if (data.ok)
-			return handleSuccess(data);
+		{
+			return handleSuccess(data.json());
+		}
 		else
 		{
 			console.log(data.status);
@@ -368,7 +376,9 @@ Server.prototype.updateTopic = function(id, content, handleError, handleSuccess)
 		}
 	}).then(function(data){		
 		if (data.ok)
-			return handleSuccess(data);
+		{
+			return handleSuccess(data.json());
+		}
 		else
 		{
 			console.log(data.status);
@@ -403,7 +413,9 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 		}
 	}).then(function(data){
 		if (data.ok)
-			return handleSuccess(data);
+		{
+			return handleSuccess(data.json());
+		}
 		else
 		{
 			console.log(data.status);
@@ -437,7 +449,9 @@ Server.prototype.addClass = function(content, handleError, handleSuccess)
 		}
 	}).then(function(data){
 		if (data.ok)
-			return handleSuccess(data);
+		{
+			return handleSuccess(data.json());
+		}
 		else
 		{
 			console.log(data.status);
@@ -468,7 +482,9 @@ Server.prototype.getClassesJSON = function(class_id, handleError, handleSuccess)
 		}
 	}).then(function(data){		
 		if (data.ok)
-			return handleSuccess(data);
+		{
+			return handleSuccess(data.json());
+		}
 		else
 		{
 			console.log(data.status);
@@ -505,7 +521,9 @@ Server.prototype.updateClass = function(class_id, content, handleError, handleSu
 		}
 	}).then(function(data){		
 		if (data.ok)
-			return handleSuccess(data);
+		{
+			return handleSuccess(data.json());
+		}
 		else
 		{
 			console.log(data.status);
@@ -540,7 +558,9 @@ Server.prototype.destroyClass = function(class_id, handleError, handleSuccess)
 		}
 	}).then(function(data){
 		if (data.ok)
-			return handleSuccess(data);
+		{
+			return handleSuccess(data.json());
+		}
 		else
 		{
 			console.log(data.status);
@@ -575,7 +595,9 @@ Server.prototype.attachClass = function(class_id, data, handleError, handleSucce
 		}
 	}).then(function(data){
 		if (data.ok)
-			return handleSuccess(data);
+		{
+			return handleSuccess(data.json());
+		}
 		else
 		{
 			console.log(data.status);
@@ -611,7 +633,9 @@ Server.prototype.attachResource = function(resource_id, content, handleError, ha
 		}
 	}).then(function(data){
 		if (data.ok)
-			return handleSuccess(data);
+		{
+			return handleSuccess(data.json());
+		}
 		else
 		{
 			console.log(data.status);
@@ -647,7 +671,9 @@ Server.prototype.detachResource = function(resource_id, content, handleError, ha
 		}
 	}).then(function(data){
 		if (data.ok)
-			return handleSuccess(data);
+		{
+			return handleSuccess(data.json());
+		}
 		else
 		{
 			console.log(data.status);
