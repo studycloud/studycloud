@@ -47,7 +47,7 @@
 					</li>
 					<!--Component for login/logout.-->
 
-					@include('auth/signin')
+					@include('auth/acct')
 				</ul>
 			</div>
 

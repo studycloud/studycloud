@@ -344,6 +344,7 @@ table {
 .navbar ul #log-in #log-in-button:hover,
 .navbar ul #log-in #log-in-button:focus {
   background-color: #ed6639;
+  cursor: pointer;
 }
 
 /* LOGIN DROPDOWN */

@@ -79,8 +79,15 @@ Route::get('admins/{userid}',
 	}
 );
 
-// authentication routes
-$this->post('logout', 'Auth\LoginController@logout')->name('logout');
+if (App::environment('local'))
+{
+	Auth::routes();
+}
+else
+{
+	// authentication routes
+	$this->post('logout', 'Auth\LoginController@logout')->name('logout');
+}
 
 // you can enable other providers by adding them in the routes' regex constraints
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider')->where('provider', '^(google)$')->name('login.oauth');
