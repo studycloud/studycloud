@@ -32,6 +32,11 @@
 
 	<meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
 	<meta name="csrf-token" content="{{ csrf_token() }}"> <!-- include csrf_token in all pages, so it can be accessed by js -->
+
+	@if (!Auth::check())
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	@endif
+	<meta name="google-signin-client_id" content="213909112764-djmb30blchgj76rhfflngmls392fgm23.apps.googleusercontent.com"> <!-- include google client id for google sign in -->
 </head>
 <body>
 	<div id="pageWidth">
@@ -66,17 +71,6 @@
 		<!-- Modal content -->
 		<div class="modal-content">
 			<span id="close-modal"><i class="fas fa-times"></i></span>
-			<!-- Container with information about forgot password. -->
-			<div id="forget-container">
-				@component('auth/passwords/email')
-				@endcomponent
-			</div>
-
-			<!-- Container with information about how to register for the website. -->
-			<div id="register-container">
-				@component('auth/register')
-				@endcomponent
-			</div>
 			
 			<!-- Container for resource. -->
 			<div id="resource-container">

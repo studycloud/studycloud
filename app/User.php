@@ -46,6 +46,14 @@ class User extends Authenticatable
 	}
 
 	/**
+	 * return the oauth meta data for this user
+	 */
+	public function oauth()
+	{
+		return $this->hasMany(UserOauth::class);
+	}
+
+	/**
 	 * gives this user a role. returns false if the user already has it.
 	 * addRole can take as input either a string representing a role (ex: "moderator") or an instance of Role. An exception will be raised if these criteria are not met
 	 */
