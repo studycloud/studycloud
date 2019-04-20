@@ -21,7 +21,9 @@ class ClassesHttpTest extends TestCase
 		// how many Classes do we have?
 		$class_count = Academic_Class::count();
 		// make a new class but don't add it to database yet
-		$class = factory(Academic_Class::class)->make();
+		$class = factory(Academic_Class::class)->make([
+			'author_id' => User::inRandomOrder()->take(1)->get()->first()['id']
+		]);
 		$user = User::find($class->author_id);
 
 		// make a request to create a new class
@@ -87,20 +89,6 @@ class ClassesHttpTest extends TestCase
 			)
 		);
 		$this->assertEmpty($new_class->children()->get());
-
-		// attach this class to a parent class
-		$parent = Academic_Class::inRandomOrder()->take(1)->get()->first();
-		$response = $this->actingAs($user)->patch('/classes/attach/'.($new_class->id),
-			[
-				'parent' => $parent->id
-			]
-		);
-		$new_class = Academic_Class::latest()->first();
-		$new_parent = $new_class->parent()->get()->first();
-		// check: was the attachment successful?
-		$response->assertSuccessful();
-		$this->assertEquals($new_parent->id, $parent->id);
-		$this->assertNotContains($new_class->id, ClassRepository::getTopLevelClasses()->pluck('id')->toArray());
 
 		// delete the class we created
 		$response = $this->actingAs($user)->delete('/classes/'.($new_class->id));

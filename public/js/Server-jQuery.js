@@ -12,7 +12,7 @@ function Server()
 	});
 }
 
-Server.prototype.getResource = function(resource_id, callback1, callback2)
+Server.prototype.getResource = function(resource_id, handleSuccess, handleError)
 {
 	var self = this;
 	var url = "/data/resource";
@@ -24,9 +24,9 @@ Server.prototype.getResource = function(resource_id, callback1, callback2)
 		dataType: 'json',
 		error: function(XMLHttpRequest, textStatus, errorThrown)
 		{			
-			if(typeof callback1 === 'function')
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(XMLHttpRequest);
+				return handleSuccess(XMLHttpRequest);
 			}
 			else
 			{
@@ -36,9 +36,9 @@ Server.prototype.getResource = function(resource_id, callback1, callback2)
 		},
 		success: function(response)
 		{
-			if(typeof callback2 === 'function')
+			if(typeof handleError === 'function')
 			{
-				return callback2(response);
+				return handleError(response);
 			}
 			else
 			{
@@ -48,7 +48,7 @@ Server.prototype.getResource = function(resource_id, callback1, callback2)
 	});
 }
 
-Server.prototype.addResource = function(content, callback1, callback2)
+Server.prototype.addResource = function(content, handleSuccess, handleError)
 {
 	var self = this;
 	var url = "/resources";
@@ -60,9 +60,9 @@ Server.prototype.addResource = function(content, callback1, callback2)
 		dataType: 'json',
 		error: function(XMLHttpRequest, textStatus, errorThrown)
 		{			
-			if(typeof callback1 === 'function')
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(XMLHttpRequest);
+				return handleSuccess(XMLHttpRequest);
 			}
 			else
 			{
@@ -72,9 +72,9 @@ Server.prototype.addResource = function(content, callback1, callback2)
 		},
 		success: function(response)
 		{
-			if(typeof callback2 === 'function')
+			if(typeof handleError === 'function')
 			{
-				return callback2(response);
+				return handleError(response);
 			}
 			else
 			{
@@ -84,7 +84,7 @@ Server.prototype.addResource = function(content, callback1, callback2)
 	});
 }
 
-Server.prototype.editResource = function(resource_id, content, callback1, callback2)
+Server.prototype.updateResource = function(resource_id, content, handleSuccess, handleError)
 {
 	var self = this;
 	var url = "/resources/" + resource_id;
@@ -97,9 +97,9 @@ Server.prototype.editResource = function(resource_id, content, callback1, callba
 		dataType: 'json',
 		error: function(XMLHttpRequest, textStatus, errorThrown)
 		{			
-			if(typeof callback1 === 'function')
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(XMLHttpRequest);
+				return handleSuccess(XMLHttpRequest);
 			}
 			else
 			{
@@ -109,9 +109,9 @@ Server.prototype.editResource = function(resource_id, content, callback1, callba
 		},
 		success: function(response)
 		{
-			if(typeof callback2 === 'function')
+			if(typeof handleError === 'function')
 			{
-				return callback2(response);
+				return handleError(response);
 			}
 			else
 			{
@@ -121,7 +121,7 @@ Server.prototype.editResource = function(resource_id, content, callback1, callba
 	});
 }
 
-Server.prototype.deleteResource = function(resource_id, callback1, callback2)
+Server.prototype.deleteResource = function(resource_id, handleSuccess, handleError)
 {
 	var self = this;
 	var url = "/resources/" + resource_id;
@@ -133,9 +133,9 @@ Server.prototype.deleteResource = function(resource_id, callback1, callback2)
 		dataType: 'json',
 		error: function(XMLHttpRequest, textStatus, errorThrown)
 		{			
-			if(typeof callback1 === 'function')
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(XMLHttpRequest);
+				return handleSuccess(XMLHttpRequest);
 			}
 			else
 			{
@@ -145,9 +145,9 @@ Server.prototype.deleteResource = function(resource_id, callback1, callback2)
 		},
 		success: function(response)
 		{
-			if(typeof callback2 === 'function')
+			if(typeof handleError === 'function')
 			{
-				return callback2(response);
+				return handleError(response);
 			}
 			else
 			{
@@ -157,7 +157,7 @@ Server.prototype.deleteResource = function(resource_id, callback1, callback2)
 	});
 }
 
-Server.prototype.getData = function(node, levels_up, levels_down, handleError, handleSuccess)
+Server.prototype.getData = function(node, levels_up, levels_down, handleSuccess, handleError)
 {
     var self = this;    
 	// if any of node, levels_up, or levels_down is undefined/null, use an empty string instead
@@ -169,15 +169,15 @@ Server.prototype.getData = function(node, levels_up, levels_down, handleError, h
 	url = "/data/topic_tree/?topic="+node+"&levels_up="+levels_up+"&levels_down="+levels_down;
     return d3.json(url, {method: 'get'}).then(function(data, error){
     	if (error){			
-    		return self.handleError(url, error, handleError);
+    		return self.handleSuccess(url, error, handleSuccess);
     	}
     	else {			
-    		return self.handleSuccess(data, handleSuccess);
+    		return self.handleError(data, handleError);
 		}	
     });
 };
 
-Server.prototype.handleError = function(url, error, treeHandleError)
+Server.prototype.handleSuccess = function(url, error, treeHandleError)
 {
 	var self = this;
 	if(!(typeof treeHandleError === 'function')){
@@ -198,7 +198,7 @@ Server.prototype.handleError = function(url, error, treeHandleError)
 				}
 			}
 			else {				
-				return self.handleSuccess(data);
+				return self.handleError(data);
 			}
 		});
 	else{		
@@ -207,7 +207,7 @@ Server.prototype.handleError = function(url, error, treeHandleError)
     
 };
 
-Server.prototype.handleSuccess = function(data, treeHandleSuccess)
+Server.prototype.handleError = function(data, treeHandleSuccess)
 {
 	var self = this;
 	if(!(typeof treeHandleSuccess === 'function'))
@@ -220,7 +220,7 @@ Server.prototype.handleSuccess = function(data, treeHandleSuccess)
 
 
 
-Server.prototype.getTopic = function(id, callback1, callback2)
+Server.prototype.getTopic = function(id, handleSuccess, handleError)
 {
 	var self = this;
 	var url = "/data/topic";
@@ -232,9 +232,9 @@ Server.prototype.getTopic = function(id, callback1, callback2)
 		dataType: 'json',
 		error: function(XMLHttpRequest, textStatus, errorThrown)
 		{			
-			if(typeof callback1 === 'function')
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(XMLHttpRequest);
+				return handleSuccess(XMLHttpRequest);
 			}
 			else
 			{
@@ -244,9 +244,9 @@ Server.prototype.getTopic = function(id, callback1, callback2)
 		},
 		success: function(response)
 		{
-			if(typeof callback2 === 'function')
+			if(typeof handleError === 'function')
 			{
-				return callback2(response);
+				return handleError(response);
 			}
 			else
 			{
@@ -256,7 +256,7 @@ Server.prototype.getTopic = function(id, callback1, callback2)
 	});	
 }
 
-Server.prototype.addTopic = function(content, callback1, callback2)
+Server.prototype.addTopic = function(content, handleSuccess, handleError)
 {
 	var self = this;
 	var url = "/topics";
@@ -267,9 +267,9 @@ Server.prototype.addTopic = function(content, callback1, callback2)
 		data: content,
 		error: function(XMLHttpRequest, textStatus, errorThrown)
 		{			
-			if(typeof callback1 === 'function')
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(XMLHttpRequest);
+				return handleSuccess(XMLHttpRequest);
 			}
 			else
 			{
@@ -279,9 +279,9 @@ Server.prototype.addTopic = function(content, callback1, callback2)
 		},
 		success: function(response)
 		{
-			if(typeof callback2 === 'function')
+			if(typeof handleError === 'function')
 			{
-				return callback2(response);
+				return handleError(response);
 			}
 			else
 			{
@@ -291,7 +291,7 @@ Server.prototype.addTopic = function(content, callback1, callback2)
 	});
 }
 
-Server.prototype.updateTopic = function(id, content, callback1, callBack2)
+Server.prototype.updateTopic = function(id, content, handleSuccess, callBack2)
 {
 	var self = this;
 	var url = "/topics/" + id;
@@ -303,9 +303,9 @@ Server.prototype.updateTopic = function(id, content, callback1, callBack2)
 		data: content,
 		error: function(XMLHttpRequest, textStatus, errorThrown)
 		{			
-			if(typeof callback1 === 'function')
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(XMLHttpRequest);
+				return handleSuccess(XMLHttpRequest);
 			}
 			else
 			{
@@ -315,9 +315,9 @@ Server.prototype.updateTopic = function(id, content, callback1, callBack2)
 		},
 		success: function(response)
 		{
-			if(typeof callback2 === 'function')
+			if(typeof handleError === 'function')
 			{
-				return callback2(response);
+				return handleError(response);
 			}
 			else
 			{
@@ -327,7 +327,7 @@ Server.prototype.updateTopic = function(id, content, callback1, callBack2)
 	});
 }
 
-Server.prototype.deleteTopic = function(id, callback1, callback2)
+Server.prototype.deleteTopic = function(id, handleSuccess, handleError)
 {
 	var self = this;
 	var url = "/topics/" + id;
@@ -338,9 +338,9 @@ Server.prototype.deleteTopic = function(id, callback1, callback2)
 		data: {'_method': "DELETE"},
 		error: function(XMLHttpRequest, textStatus, errorThrown)
 		{			
-			if(typeof callback1 === 'function')
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(XMLHttpRequest);
+				return handleSuccess(XMLHttpRequest);
 			}
 			else
 			{
@@ -350,9 +350,9 @@ Server.prototype.deleteTopic = function(id, callback1, callback2)
 		},
 		success: function(response)
 		{
-			if(typeof callback2 === 'function')
+			if(typeof handleError === 'function')
 			{
-				return callback2(response);
+				return handleError(response);
 			}
 			else
 			{
@@ -362,84 +362,76 @@ Server.prototype.deleteTopic = function(id, callback1, callback2)
 	});
 }
 
-/*
-Server.prototype.storeClass = function(class_JSON, callback1, callback2)
+Server.prototype.addClass = function(content, handleSuccess, handleError)
 {
 	var self = this;
 	var url = "/classes";
-	var goodCookie = self.getCookie("XSRF-TOKEN");
 
-	if (goodCookie == ""){
-		return callback1();
-	}
-
-	const csrftoken = goodCookie;
-	const headers = new Headers({
-        'X-XSRF-TOKEN': csrfToken
-    });
-	return d3.json(url, {method: 'post', headers, body: content}).then(function(data, error){
-		if(error)
-		{
-			if(typeof callback1 === 'function')
+	$.ajax({
+		url: url,
+		type: 'POST',
+		data: content,
+		dataType: 'json',
+		error: function(XMLHttpRequest, textStatus, errorThrown)
+		{			
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(error);
+				return handleSuccess(XMLHttpRequest);
 			}
 			else
 			{
-				throw error;
+				console.log("error: "+textStatus+"\n"+errorThrown);
+				console.log(XMLHttpRequest);
 			}
-		}
-		else
+		},
+		success: function(response)
 		{
-			if(typeof callback2 === 'function')
+			if(typeof handleError === 'function')
 			{
-				return callback2(data);
+				return handleError(response);
 			}
 			else
 			{
-				return data;
+				return response;
 			}
 		}
 	});
 }
 
-Server.prototype.getClassesJSON = function(id, handleError, handleSuccess)
+Server.prototype.getClassesJSON = function(id, handleSuccess, handleError)
 {
 	
 	var self = this;
 		
 	url = "/data/class?id="+id;
-	return d3.json(url)
+	
+	fetch(url, {
+		method: 'get',			
+		headers: {	
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	})
 		.then(function(data){			
-				return handleSuccess(id, data);
+				return handleError(id, data);
 			})
 		
 		.catch(function(error){
-			return handleError(error);			
+			return handleSuccess(error);			
 		});		
 }
 
-Server.prototype.updateClass = function(class_id, content, callBack1, callBack2)
+/*
+Server.prototype.updateClass = function(class_id, content, handleSuccess, handleError)
 {
 	
 	var self = this;
-	var url = "/classes/" + class_id;
-	var goodCookie = self.getCookie("XSRF-TOKEN");
-
-	if (goodCookie == ""){
-		return callBack1()
-	}
-
-	const csrftoken = goodCookie;
-	const headers = new Headers({
-        'X-XSRF-TOKEN': csrfToken
-    });
+	var url = "/classes/" + class_id;		
 	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
 		if(error)
 		{
-			if(typeof callback1 === 'function')
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(error);
+				return handleSuccess(error);
 			}
 			else
 			{
@@ -448,9 +440,9 @@ Server.prototype.updateClass = function(class_id, content, callBack1, callBack2)
 		}
 		else
 		{
-			if(typeof callback2 === 'function')
+			if(typeof handleError === 'function')
 			{
-				return callback2(data);
+				return handleError(data);
 			}
 			else
 			{
@@ -459,16 +451,62 @@ Server.prototype.updateClass = function(class_id, content, callBack1, callBack2)
 		}
 	});
 }
-
-Server.prototype.deleteClass = function(class_id, callback1, callback2)
+*/
+Server.prototype.updateClass = function(class_id, content, handleSuccess, handleError)
 {
-	callback1
+	var self = this;
+	var url = "/classes/" + class_id;
+	content['_method'] = "PATCH";
+
+	$.ajax({
+		url: url,
+		type: 'POST',
+		data: content,
+		dataType: 'json',
+		error: function(XMLHttpRequest, textStatus, errorThrown)
+		{			
+			if(typeof handleSuccess === 'function')
+			{
+				statusCode: {
+					422: function() {
+						
+					}
+					console.log
+				}
+				console.log("error: "+textStatus+"\n"+errorThrown);
+				console.log(XMLHttpRequest);				
+			}
+			else
+			{
+				console.log("reached1")
+				return handleSuccess(XMLHttpRequest);
+			}
+		},
+		success: function(response)
+		{
+			if(typeof handleError === 'function')
+			{
+				console.log("reached2")
+				return handleError(response);
+			}
+			else
+			{
+				console.log("reached3")
+				return response;
+			}
+		}
+	});
+}
+
+Server.prototype.deleteClass = function(class_id, handleSuccess, handleError)
+{
+	handleSuccess
 	var self = this;
 	var url = "/classes/" + class_id;
 	var goodCookie = self.getCookie("XSRF-TOKEN");
 
 	if (goodCookie == ""){
-		return callback1();
+		return handleSuccess();
 	}
 
 	const csrftoken = goodCookie;
@@ -479,9 +517,9 @@ Server.prototype.deleteClass = function(class_id, callback1, callback2)
 	return d3.json(url, {method: 'delete', headers}).then(function(data, error){
 		if(error)
 		{
-			if(typeof callback1 === 'function')
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(error);
+				return handleSuccess(error);
 			}
 			else
 			{
@@ -490,9 +528,9 @@ Server.prototype.deleteClass = function(class_id, callback1, callback2)
 		}
 		else
 		{
-			if(typeof callback2 === 'function') 			
+			if(typeof handleError === 'function') 			
 			{ 
-				return callback2(data);
+				return handleError(data);
 			}
 			else
 			{
@@ -520,9 +558,9 @@ Server.prototype.attachClass = function(class_id, content, callBack1, callBack2)
 	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
 		if(error)
 		{
-			if(typeof callback1 === 'function')
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(error);
+				return handleSuccess(error);
 			}
 			else
 			{
@@ -531,9 +569,9 @@ Server.prototype.attachClass = function(class_id, content, callBack1, callBack2)
 		}
 		else
 		{
-			if(typeof callback2 === 'function')
+			if(typeof handleError === 'function')
 			{
-				return callback2(data);
+				return handleError(data);
 			}
 			else
 			{
@@ -561,9 +599,9 @@ Server.prototype.attachResource = function(resource_id, content, callBack1, call
 	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
 		if(error)
 		{
-			if(typeof callback1 === 'function')
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(error);
+				return handleSuccess(error);
 			}
 			else
 			{
@@ -572,9 +610,9 @@ Server.prototype.attachResource = function(resource_id, content, callBack1, call
 		}
 		else
 		{
-			if(typeof callback2 === 'function')
+			if(typeof handleError === 'function')
 			{
-				return callback2(data);
+				return handleError(data);
 			}
 			else
 			{
@@ -602,9 +640,9 @@ Server.prototype.detachResource = function(resource_id, content, callBack1, call
 	return d3.json(url, {method:'patch', headers, body: content}).then(function(data, error){
 		if(error)
 		{
-			if(typeof callback1 === 'function')
+			if(typeof handleSuccess === 'function')
 			{
-				return callback1(error);
+				return handleSuccess(error);
 			}
 			else
 			{
@@ -613,9 +651,9 @@ Server.prototype.detachResource = function(resource_id, content, callBack1, call
 		}
 		else
 		{
-			if(typeof callback2 === 'function')
+			if(typeof handleError === 'function')
 			{
-				return callback2(data);
+				return handleError(data);
 			}
 			else
 			{
@@ -625,7 +663,7 @@ Server.prototype.detachResource = function(resource_id, content, callBack1, call
 	});
 }
 
-Server.prototype.getTree = function(id, levels_up, levels_down, handleError, handleSuccess)
+Server.prototype.getTree = function(id, levels_up, levels_down, handleSuccess, handleError)
 {
 	
 	var self = this;
@@ -633,11 +671,10 @@ Server.prototype.getTree = function(id, levels_up, levels_down, handleError, han
 	url = "/data/class_tree?id=" + id + "&levels_up=" + levels_up + "&levels_down=" + levels_down +id;
 	return d3.json(url)
 		.then(function(data){			
-				return handleSuccess(id, data);
+				return handleError(id, data);
 			})
 		
 		.catch(function(error){
-			return handleError(error);			
+			return handleSuccess(error);			
 		});		
 }
-*/

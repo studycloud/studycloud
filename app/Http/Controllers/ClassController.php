@@ -6,6 +6,9 @@ use App\Academic_Class;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use App\Rules\ValidClassParentAttachment;
+use Illuminate\Support\Facades\Validator;
+use App\Rules\ValidClassChildrenAttachment;
 
 class ClassController extends Controller
 {
@@ -144,12 +147,12 @@ class ClassController extends Controller
 		// before deleting the class, make sure it doesn't have any classes attached underneath it
 		if ($class->children()->count() > 0)
 		{
-			abort(405, "You cannot delete a class that has children");
+			abort(403, "You cannot delete a class that has children");
 		}
 		// also make sure it doesn't have any resources attached to it
 		if ($class->resources()->count() > 0)
 		{
-			abort(405, "You cannot delete a class that has resources");
+			abort(403, "You cannot delete a class that has resources");
 		}
 		// actually delete the class
 		$class->delete();
@@ -165,29 +168,47 @@ class ClassController extends Controller
 	public function attach(Request $request, Academic_Class $class = null)
 	{
 		$id = is_null($class) ? 0 : $class->id;
+		$all_classes = Academic_Class::pluck('id');
 		// first, validate the request
 		// note that the parent attribute can either be empty or 0,
 		// which would mean that we must attach the root as the parent
 		$validated = $request->validate([
+			'parent' => [
+				'bail',
+				'integer',
+				'required_without:children',
+				Rule::in(
+					$all_classes->push(0)->reject($id)->toArray()
+				),
+				new ValidClassParentAttachment($class)
+			],
 			'children' => 'array|required_without:parent',
 			'children.*' => [
+				'bail',
 				'integer',
 				'distinct',
 				'required',
 				Rule::in(
-					Academic_Class::pluck('id')->reject($id)->toArray()
-				)
-			],
-			'parent' => [
-				'integer',
-				'required_without:children',
-				Rule::in(
-					Academic_Class::pluck('id')->push(0)->reject($id)->toArray()
+					$all_classes->reject($id)->toArray()
 				)
 			]
 		]);
 
-		// first, check that the class is not the root
+		// now that we have validated the request, let's finish validating the children
+		// make sure to pass it the validated parent, if there is one
+		Validator::make($request->all(),
+			[
+				'children' => [
+					new ValidClassChildrenAttachment(
+						$class,
+						array_key_exists('parent', $validated) ? $validated['parent'] : null
+					)
+				]
+			]
+		)->validate();
+
+		// before attaching the parent,
+		// first check that the class is not the root
 		if ($id != 0)
 		{
 			if (array_key_exists('parent', $validated))
@@ -203,18 +224,13 @@ class ClassController extends Controller
 				}
 				$class->save();
 			}
-			if (array_key_exists('children', $validated))
-			{
-				// attach all the children
-				// but first, convert all of the children IDs to model instances
-				// TODO: make this more efficient - currently it executes 2 queries, but it could be 1
-				$children = Academic_Class::whereIn('id', $validated['children'])->get();
-				$class->children()->saveMany($children);
-			}
 		}
-		elseif (array_key_exists('children', $validated))
+		// attach the children if needed
+		if (array_key_exists('children', $validated))
 		{
-			Academic_Class::whereIn('id', $validated['children'])->update(['parent_id' => null]);
+			$id = $id === 0 ? null : $id;
+			// attach all the children
+			Academic_Class::whereIn('id', $validated['children'])->update(['parent_id' => $id]);
 		}
 	}
 }

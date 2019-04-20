@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Topic;
 use App\Resource;
 use Carbon\Carbon;
+use App\Academic_Class;
 use App\ResourceContent;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -82,12 +83,27 @@ class ResourceController extends Controller
 				'required',
 				Rule::in(ResourceContent::getPossibleTypes())
 			],
-			'contents.*.content' => 'string'
+			'contents.*.content' => 'string',
+			'class_id' => [
+				'required',
+				'integer',
+				Rule::in(
+					ResourceRepository::allowedClasses(null)->push(0)->pluck('id')->toArray()
+				)
+			]
 		]);
 
 		// create a new Resource using mass assignment to add 'name' and 'use_id' attributes
 		$resource = (new Resource)->fill($validated);
 		$resource->author_id = Auth::id();
+		if ($validated['class_id'] != 0)
+		{
+			$resource->class_id = $validated['class_id'];
+		}
+		elseif (Academic_Class::getRoot()['status'] == 0)
+		{
+			abort(403, "Resources cannot be attached to the root");
+		} // else we will default to the root
 		$resource->save();
 		// create new ResourceContents and attach them to this Resource
 		$contents = [];
@@ -213,7 +229,7 @@ class ResourceController extends Controller
 				'required_without:topics',
 				'integer',
 				Rule::in(
-					ResourceRepository::allowedClasses($resource->id)->pluck('id')->toArray()
+					ResourceRepository::allowedClasses($resource)->pluck('id')->toArray()
 				)
 			],
 		]);
@@ -245,9 +261,17 @@ class ResourceController extends Controller
 		// remove the topics (this code is disabled for MVP)
 		// ResourceRepository::detachTopics($resource, $validated['topics']);
 		// remove the class
+		// note that removing a class from a resource will automatically attach the resource to the root
+		// so we have to check that this operation is truly allowed first
 		if ($validated['class'])
-		{			
-			$resource->class()->dissociate($validated['class'])->save();
+		{
+			if (Academic_Class::getRoot()['status'] == 0) {
+				abort(403, "Detaching this resource will attach it to the root, which is currently not allowed.");
+			}
+			else
+			{
+				$resource->class()->dissociate($validated['class'])->save();
+			}
 		}
 	}
 

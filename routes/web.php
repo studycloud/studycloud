@@ -62,10 +62,10 @@ Route::get('data/class',
 	}
 )->name('topics.json');
 Route::resource('classes', 'ClassController');
-Route::patch('/classes/attach/{class}',
-	function (Request $request, $class)
+Route::patch('/classes/attach/{class?}',
+	function (Request $request, $class = null)
 	{
-		$class = $class == 0 ? null : Academic_Class::find($class);
+		$class = $class == 0 || is_null($class) ? null : Academic_Class::find($class);
 		return (new ClassController)->attach($request, $class);
 	}
 )->name('resources.attach');

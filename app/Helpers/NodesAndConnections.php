@@ -19,23 +19,21 @@ class NodesAndConnections
 		$connections = collect();
 
 		foreach ($old_nodes as $node) {
+			// add any connections the node may have
+			if ($node->has('pivot'))
+			{
+				$connections->push(collect($node['pivot']));
+			}
 			// check whether the node has been added already before adding it
 			if (!$nodes->pluck('id')->contains($node['id']))
 			{
-				$pivot = null;
 				// remove the pivot if it exists
 				if ($node->has('pivot'))
 				{
-					$pivot = $node['pivot'];
 					$node = $node->except(['pivot']);
 				}
 				// add the node without its pivot
 				$nodes->push($node);
-			}
-			// add any connections the node may have
-			if (!is_null($pivot))
-			{
-				$connections->push(collect($pivot));
 			}
 		}
 
@@ -50,6 +48,34 @@ class NodesAndConnections
 	public static function treeAsConnections($old_nodes)
 	{
 		return self::convertTo($old_nodes)["connections"];
+	}
+
+	/**
+	 * put ancestor and descendant data in the separated connections format
+	 * @param  Collection $ancestors   the ancestor data
+	 * @param  Collection $descendants the descendant data
+	 * @return Collection              the ancestors and descendants in the separated connections format, representing a portion of the tree
+	 */
+	public static function treeAsSeparatedConnections($ancestors, $descendants)
+	{
+		return collect([
+			'ancestors' => self::treeAsConnections($ancestors),
+			'descendants' => self::treeAsConnections($descendants)
+		]);
+	}
+
+	/**
+	 * return a tree as separate connections
+	 * @param  string $repository the name of the class to use to get the ancestors and descendants from
+	 * @param  array $args        any arguments to pass to the ancestors and descendants functions
+	 * @return Collection         the tree in the separated connections format
+	 */
+	public static function separatedTree($repository, ...$args)
+	{
+		return self::treeAsSeparatedConnections(
+			(new $repository)->ancestors(...$args),
+			(new $repository)->descendants(...$args)
+		);
 	}
 
 	/**
