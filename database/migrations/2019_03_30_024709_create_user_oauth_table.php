@@ -18,7 +18,7 @@ class CreateUserOauthTable extends Migration
 			$table->foreign('user_id')->references('id')->on('users');
 			$table->string('type', 50);
 			$table->string('value', 350);
-            $table->primary(['user_id','type']);
+			$table->primary(['user_id','type']);
 			$table->timestamps();
 		});
 	}
