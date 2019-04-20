@@ -10,14 +10,24 @@
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/_resource.css') }}">
 	<script type="text/javascript" src="{{ asset('js/header.js') }}"></script> <!-- javascript for header but mostly for login drop down -->
 	<script type="text/javascript" src="{{ asset('js/loginmodal.js') }}"></script> <!-- javascript for forgetting your login -->
+	<!-- Need to decide where to put this later (prevents it from getting loaded everytime) -->
+	<script type="text/javascript">
+	resourceUseData = @json( App\ResourceUse::select('id', 'name')->get() );
+	</script>
 	<script type="text/javascript" src="{{ asset('js/resource_viewer.js') }}"></script> <!-- aw heck -->
 	<!-- Tree scripts -->
 	<script src="https://d3js.org/d3.v5.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
-	<script src="{{ asset('js/Server.js') }}"></script>
+	<script src="{{ asset('js/Server-jQuery.js') }}"></script>
 	<script src="{{ asset('js/D3HelperFunction.js') }}"></script>
 	<script src="{{ asset('js/d3-transform.js') }}"></script>
 	<script src="{{ asset('js/Tree.js') }}"></script>
+
+	<!-- jQuery and selectionstyle plugins in for class attachement-->
+	<link href="{{ asset('js/selectStyleSrc/selectstyle.css') }}" rel="stylesheet">
+	<script src="//code.jquery.com/jquery.min.js"></script>
+	<script src="{{ asset('js/selectStyleSrc/selectstyle.js') }}"></script>
+
 	@stack('scripts')
 
 	<meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
@@ -81,7 +91,7 @@
 
 	</div>
 
-	<button id="creator-btn">temporary resource creator button</button>
+	<!--button id="creator-btn">temporary resource creator button</button-->
 	<button id="editor-btn">temporary resource editor button</button>
 	<button id="resource-meta-btn">resource meta button</button>
 </body></html>

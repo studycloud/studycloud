@@ -91,6 +91,26 @@ function Tree(type, frame_id, server)
 			}
 		},
 		{
+			title: 'Add Resource',
+			icon:  'add',
+			color: 'green',
+			enabled: true,
+			action: function(node, d, i) 
+			{
+				//desired: if it's on a resource, don't show the "add resource" context menu option
+				//but for now, temporarily we'll put an alert
+				
+				if (d.id[0] != "r")
+				{
+					openResourceCreator(d.id);
+				}
+				else
+				{
+					alert("You can only add a resource to a class");
+				}
+			}
+		},
+		{
 			title: 'Capture',
 			icon:   'playlist_add',
 			color: 'blue',

@@ -16,19 +16,18 @@ $(document).ready(function()
 	});
 
 	// When the user clicks on the create button, also open the modal but with the resource viewer
-	$("#creator-btn").click(function(event)
-	{
-		document.getElementById('my-modal').style.display = "block";
-		displayContainer("resource");
-		createNewResource();
-	});
-
-	// When the user clicks on the create button, also open the modal but with the resource viewer
 	$("#editor-btn").click(function(event)
 	{
 		document.getElementById('my-modal').style.display = "block";
 		displayContainer("resource");
+		createResource();
 		editResource();
+		$('select[name="attach"]').selectstyle({
+			width  : 400,
+			height : 300,
+			theme  : 'light',
+			onchange : function(val){}
+		});
 	});
 
 	$("#resource-meta-btn").click(function(event)
@@ -87,6 +86,21 @@ function displayContainer(container)
 		}
 	}
 
+}
+
+// When the user clicks on the create button, also open the modal but with the resource viewer
+function openResourceCreator (nodeId)
+{
+	document.getElementById('my-modal').style.display = "block";
+	displayContainer("resource");
+	createNewResource(nodeId);
+	$('select[name="attach').selectstyle({
+		width  : 400,
+		height : 300,
+		theme  : 'light',
+		onchange : function(val){}
+	});
+	
 }
 
 /*
