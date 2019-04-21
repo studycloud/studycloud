@@ -24,8 +24,6 @@ Server.prototype.getResource = function(resource_id, handleError, handleSuccess)
 			handleSuccess(data);
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -78,8 +76,6 @@ Server.prototype.addResource = function(content, handleError, handleSuccess)
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -127,8 +123,6 @@ Server.prototype.editResource = function(id, content, handleError, handleSuccess
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -165,8 +159,6 @@ Server.prototype.destroyResource = function(id, handleError, handleSuccess)
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -210,8 +202,6 @@ Server.prototype.getData = function(node, levels_up, levels_down, handleError, h
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -268,7 +258,7 @@ Server.prototype.handleError = function(url, error, externalHandle)
 };
 
 
-Server.prototype.handleSuccess = function(node, data, treeHandleSuccess)
+Server.prototype.handleSuccess = function(node, data, externalHandleSuccess)
 {	
 	var self = this;
 
@@ -282,7 +272,7 @@ Server.prototype.handleSuccess = function(node, data, treeHandleSuccess)
 		}
 	);
 	
-	return treeHandleSuccess(node, data);
+	return externalHandleSuccess(node, data);
 };
 
 Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
@@ -303,8 +293,6 @@ Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
 				return handleSuccess(data);
 			else
 			{
-				console.log(data.status);
-				console.log(data.statusText);
 				if(data.status >= 300)
 				{
 					errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -341,8 +329,6 @@ Server.prototype.addTopic = function(content, handleError, handleSuccess)
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -381,8 +367,6 @@ Server.prototype.updateTopic = function(id, content, handleError, handleSuccess)
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -418,8 +402,6 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -454,8 +436,6 @@ Server.prototype.addClass = function(content, handleError, handleSuccess)
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -478,6 +458,8 @@ Server.prototype.getClassesJSON = function(class_id, handleError, handleSuccess)
 	fetch(url, {
 		method: 'get',			
 		headers: {	
+			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
 	}).then(function(data){		
@@ -487,8 +469,6 @@ Server.prototype.getClassesJSON = function(class_id, handleError, handleSuccess)
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -501,7 +481,7 @@ Server.prototype.getClassesJSON = function(class_id, handleError, handleSuccess)
 	}).catch(function(error){		
 		return handleError(error);
 	});
-}	
+};
 
 
 Server.prototype.updateClass = function(class_id, content, handleError, handleSuccess)
@@ -526,8 +506,6 @@ Server.prototype.updateClass = function(class_id, content, handleError, handleSu
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -563,8 +541,6 @@ Server.prototype.destroyClass = function(class_id, handleError, handleSuccess)
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -600,8 +576,6 @@ Server.prototype.attachClass = function(class_id, data, handleError, handleSucce
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -638,8 +612,6 @@ Server.prototype.attachResource = function(resource_id, content, handleError, ha
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -676,8 +648,6 @@ Server.prototype.detachResource = function(resource_id, content, handleError, ha
 		}
 		else
 		{
-			console.log(data.status);
-			console.log(data.statusText);
 			if(data.status >= 300)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
@@ -699,14 +669,35 @@ Server.prototype.getTree = function(id, levels_up, levels_down, handleError, han
 	levels_up = levels_up || levels_up === 0 ? levels_up : ""
 	levels_down = levels_down || levels_down === 0 ? levels_down : ""		
 	url = "/data/class_tree?id=" + id + "&levels_up=" + levels_up + "&levels_down=" + levels_down;
-	return d3.json(url, {method: 'get'}).then(function(data, error){
-    	if (error){			
-    		return handleError(error);
-    	}
-    	else {			
-    		return handleSuccess(id,data);
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'get',			
+		headers: {	
+			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){		
+		if (data.ok)
+		{
+			return handleSuccess(data.json());
+		}
+		else
+		{
+			if(data.status >= 300)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};					
+			handleError(responseData);
 		}	
-    });
+	}).catch(function(error){		
+		return handleError(error);
+	});
 };
+
+
 
 
