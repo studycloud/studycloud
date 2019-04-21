@@ -24,7 +24,7 @@ Server.prototype.getResource = function(resource_id, handleError, handleSuccess)
 			handleSuccess(data);
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -76,7 +76,7 @@ Server.prototype.addResource = function(content, handleError, handleSuccess)
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -123,7 +123,7 @@ Server.prototype.editResource = function(id, content, handleError, handleSuccess
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -159,7 +159,7 @@ Server.prototype.destroyResource = function(id, handleError, handleSuccess)
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -202,7 +202,7 @@ Server.prototype.getData = function(node, levels_up, levels_down, handleError, h
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -293,7 +293,7 @@ Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
 				return handleSuccess(data);
 			else
 			{
-				if(data.status >= 300)
+				if(data.status === 422)
 				{
 					errorJSON = data.text().then(function(errorJSON){return errorJSON});
 					responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -329,7 +329,7 @@ Server.prototype.addTopic = function(content, handleError, handleSuccess)
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -367,7 +367,7 @@ Server.prototype.updateTopic = function(id, content, handleError, handleSuccess)
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -402,7 +402,7 @@ Server.prototype.destroyTopic = function(id, handleError, handleSuccess)
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -436,7 +436,7 @@ Server.prototype.addClass = function(content, handleError, handleSuccess)
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -469,7 +469,7 @@ Server.prototype.getClassesJSON = function(class_id, handleError, handleSuccess)
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -506,7 +506,7 @@ Server.prototype.updateClass = function(class_id, content, handleError, handleSu
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -541,7 +541,7 @@ Server.prototype.destroyClass = function(class_id, handleError, handleSuccess)
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -576,7 +576,7 @@ Server.prototype.attachClass = function(class_id, data, handleError, handleSucce
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -612,7 +612,7 @@ Server.prototype.attachResource = function(resource_id, content, handleError, ha
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -648,7 +648,7 @@ Server.prototype.detachResource = function(resource_id, content, handleError, ha
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
@@ -684,7 +684,7 @@ Server.prototype.getTree = function(id, levels_up, levels_down, handleError, han
 		}
 		else
 		{
-			if(data.status >= 300)
+			if(data.status === 422)
 			{
 				errorJSON = data.text().then(function(errorJSON){return errorJSON});
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
