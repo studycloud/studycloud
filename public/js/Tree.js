@@ -21,10 +21,12 @@ function Tree(type, frame_id, server)
 		
 		data.connections = [];
 		
-
+		// creates a tree with nodes_count nodes
 		for(i = 0; i < nodes_count; i++)
 		{	
+			// create a node
 			data.nodes[i] = {id: i.toString()};
+			// randomly assign two children the node we just created
 			data.connections.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:i.toString()});
 			data.connections.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:(i+nodes_count).toString()});
 		}
@@ -33,8 +35,10 @@ function Tree(type, frame_id, server)
 	
 	//Create the various DOM element groups needed by the tree
 	self.frame = d3.select("#" + frame_id);
+	// get the dimensions of the frame: width, height, bottom, top, left, right, etc
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
 	
+	// is this code ueless? there is no resizeFramee function anymore
 	self.frame.on("resize", self.resizeFrame);
 	
 	self.frame.svg = self.frame.append("svg");
