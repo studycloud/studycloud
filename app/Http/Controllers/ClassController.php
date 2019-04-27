@@ -153,8 +153,8 @@ class ClassController extends Controller
 			'children_count' => 'integer|max:0',
 			'resources_count' => 'integer|max:0'
 		], [
-			'children_count' => 'You cannot delete a class that has children.',
-			'resources_count' => 'You cannot delete a class that has resources.'
+			'children_count.max' => 'You cannot delete a class that has children.',
+			'resources_count.max' => 'You cannot delete a class that has resources.'
 		])->validate();
 		// actually delete the class
 		$class->delete();
