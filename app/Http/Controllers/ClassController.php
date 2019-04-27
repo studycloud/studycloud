@@ -163,10 +163,10 @@ class ClassController extends Controller
 				'author_id' => 'required'
 			],
 			[
-				'author_id' => "This class was created by the administrators. You cannot edit it."
+				'author_id.required' => "This class was created by the administrators. You cannot edit it."
 			]
 		)->validate();
-		
+
 		// TODO: make custom validation logic for the stuff below?
 		// before deleting the class, make sure it doesn't have any classes attached underneath it
 		if ($class->children()->count() > 0)
