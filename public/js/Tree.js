@@ -38,11 +38,12 @@ function Tree(type, frame_id, server)
 	// get the dimensions of the frame: width, height, bottom, top, left, right, etc
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
 	
-	// is this code ueless? there is no resizeFramee function anymore
+	// is this code useful? there is no resizeFrame function anymore
 	self.frame.on("resize", self.resizeFrame);
 	
+	// create the svg tag that will hold the visualization
 	self.frame.svg = self.frame.append("svg");
-		
+
 	self.frame.svg
 		.attr("class", "tree");
 	
