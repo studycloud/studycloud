@@ -1,9 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
-
-use App\Resource;
 use App\Topic;
+use App\Resource;
+use Illuminate\Database\Seeder;
 use App\Repositories\ResourceRepository;
 
 class ResourceTopicTableSeeder extends Seeder

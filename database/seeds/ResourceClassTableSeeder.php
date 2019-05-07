@@ -16,6 +16,7 @@ class ResourceClassTableSeeder extends Seeder
 	/**
 	 * With what probability should resources be assigned to classes farther down the tree than those closer to the root?
 	 * Use 1 if you want resource-class attachments to be weighted by depth and 0 otherwise.
+	 * A weight much greater than 1 will force resources to be at the leafs.
 	 */
 	const WEIGHT = 0.6;
 

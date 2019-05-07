@@ -254,19 +254,20 @@ class ClassRepository
 	 */
 	public static function depths(Collection $classes, $start_depth=0)
 	{
-		// get a collection where the keys are the class IDs and the values are their parent_id
-		$classes = $classes->sortBy('parent_id')->pluck('parent_id', 'id')->toArray();
 		$depths = [];
+		// get a collection where the keys are the class IDs and the values are their parent_id's
+		$classes = $classes->pluck('parent_id', 'id');
+		// get the classes that are underneath the root of this subtree
+		$top_classes = $classes->diff($classes->keys())->keys()->toArray();
+		$classes = $classes->toArray();
 
 		// big picture: pick classes that have the lowest parent_id and then iterate down the tree
 		// keep doing that until we run out of classes
-		while (!empty($classes))
+		foreach ($top_classes as $top_class)
 		{
-			// get class with the lowest parent_id
-			$parent = reset($classes);
-			// get depths for all clases under $parent
-			$depth = self::depth($classes, $parent, $start_depth);
-			// remove classes that we already have depths for
+			// get depths for all clases under $top_class
+			$depth = self::depth($classes, $top_class, $start_depth);
+			// remove classes that we already have depths for; speeds up computation time
 			$classes = array_diff_key($classes, $depth);
 			// append depths to depths we currently have
 			$depths = $depths + $depth;
