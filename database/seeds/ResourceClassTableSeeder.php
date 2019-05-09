@@ -14,9 +14,13 @@ class ResourceClassTableSeeder extends Seeder
 	const NUM_MAX_RESOURCES = 3;
 
 	/**
-	 * With what probability should resources be assigned to classes farther down the tree than those closer to the root?
-	 * Use 1 if you want resource-class attachments to be weighted by depth and 0 otherwise.
-	 * A weight much greater than 1 will force resources to be at the leafs.
+	 * With what probability should resources be assigned to classes farther
+	 * down the tree than those closer to the root?
+	 * Use 1 if you want resource-class attachments to be weighted by class
+	 * depth or 0 if you want resources to be assigned to classes completely
+	 * randomly. A weight much greater than 1 will force resources to be at the
+	 * leafs and a negative weight will put resources closer to the root, instead.
+	 * For more info, see the docstring for the "scale" parameter of the wrand() function in app\Helpers\Helper.php
 	 */
 	const WEIGHT = 0.6;
 
