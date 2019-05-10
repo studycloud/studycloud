@@ -101,7 +101,7 @@ if (!function_exists('wrand'))
 
 		// now, run the algorithm to get the random key
 		// first, we choose a random number between 0 and $total_sum
-		$rand = mt_rand() / mt_getrandmax() * $total_sum;
+		$rand = mt_rand(0, $total_sum*1000000) / 1000000;
 		// then, we gradually subtract the weights from that number until we pass 0
 		foreach ($weighted_values as $value => $weight)
 		{
