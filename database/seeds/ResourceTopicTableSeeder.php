@@ -51,7 +51,7 @@ class ResourceTopicTableSeeder extends Seeder
 			if ($available_topics->count() > 0)
 			{
 				// pick a topic randomly, then add it to the resource
-				$topic = $available_topics->random();
+				$topic = $available_topics->random(); // pick it randomly using wrand() and where the weights are the avg of a topic's depths
 				$resource->topics()->attach($topic);
 			}
 		}

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Topic;
 use App\Helpers\NestedArrays;
+use Illuminate\Support\Collection;
 
 class TopicRepository
 {
@@ -173,6 +174,93 @@ class TopicRepository
 			$isAncestor = $isAncestor || self::isAncestor($topic['parent_id'], $ancestor_topic_id, $disallowed_topics);
 		}
 		return $isAncestor;
+	}
+
+	/**
+	 * retrieve the depths of each topic in $connections
+	 * @param  Collection	$connections	the connections from topics for which we want depths, as a Collection of topic/parent Collections; the topics without a parent are those at depth of $depth+1
+	 * @param  int			$depth			the depth of the root of this subtree
+	 * @return array		$depths			an array of depths where the keys are the IDs of the connections and the values are an array containing all depths
+	 */
+	public static function depths(Collection $connections, $depth=0)
+	{
+		// get the topics that are directly underneath the root of this subtree
+		$top_topics = $connections->pluck('parent_id')->unique()->diff($connections->pluck('topic_id'))->values();
+		// add connections for the top_topics to $connections
+		$connections = $top_topics->map(
+			function($topic)
+			{
+				return collect(['topic_id'=>$topic, 'parent_id'=>null]);
+			}
+		)->merge($connections->toBase());
+		// group connections by topic and get a collection to work with
+		// $working = $connections->mapToGroups(
+		// 	function ($connection)
+		// 	{
+		// 		return [$connection['topic_id'] => $connection['parent_id']];
+		// 	}
+		// )->map(
+		// 	function ($parents, $topic)
+		// 	{
+		// 		return collect([
+		// 			'topic_id'=>$topic,
+		// 			'parents'=>array_fill_keys($parents->toArray(), null),
+		// 			'complete'=>false,
+		// 			'saw'=>false
+		// 		]);
+		// 	}
+		// )->keyBy('topic_id');
+		$working = $connections->groupBy('topic_id')->map->count()->map(
+			function ($parent_count, $topic)
+			{
+				return collect([
+					'topic_id'=>$topic,
+					'parents'=>$parent_count,
+					'depths'=>collect([]),
+					'complete'=>false,
+					'saw'=>false
+				]);
+			}
+		)->keyBy('topic_id');
+		$level = collect([null]);
+		// while we haven't finished finding the depths of all the topics
+		while ($working->whereStrict('complete', true)->count() != $working->count())
+		{
+			$depth += 1;
+			// iterate down the tree, each time working with all topics at this level of the tree
+			$level = $level->map(
+				function($parent) use ($connections, $working, $depth)
+				{
+					// get all children of the current parent topic
+					$children = $connections->whereStrict('parent_id', $parent)->pluck('topic_id');
+					// if we've looked for the children of $parent before
+					if ($working->has($parent))
+					{
+						if ($working[$parent]['saw'])
+						{
+							// don't edit the depths of the children
+							// just return them
+							return $children;
+						}
+						// record that we've seen the children of this parent now
+						$working[$parent]['saw'] = true;
+					}
+					foreach ($children as $child)
+					{
+						// record the current depth for each of the children
+						$working[$child]['depths']->push($depth);
+						// if we've found all of the depths for a topic, mark it as complete
+						if (count($working[$child]['depths']) == $working[$child]['parents'])
+						{
+							$working[$child]['complete'] = true;
+						}
+					}
+					return $children;
+				}
+			)->flatten();
+		}
+		// return simple depths array from the topic/parents collection
+		return $working->pluck('depths', 'topic_id')->toArray();
 	}
 
 	/**
