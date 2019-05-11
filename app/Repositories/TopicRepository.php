@@ -193,23 +193,7 @@ class TopicRepository
 				return collect(['topic_id'=>$topic, 'parent_id'=>null]);
 			}
 		)->merge($connections->toBase());
-		// group connections by topic and get a collection to work with
-		// $working = $connections->mapToGroups(
-		// 	function ($connection)
-		// 	{
-		// 		return [$connection['topic_id'] => $connection['parent_id']];
-		// 	}
-		// )->map(
-		// 	function ($parents, $topic)
-		// 	{
-		// 		return collect([
-		// 			'topic_id'=>$topic,
-		// 			'parents'=>array_fill_keys($parents->toArray(), null),
-		// 			'complete'=>false,
-		// 			'saw'=>false
-		// 		]);
-		// 	}
-		// )->keyBy('topic_id');
+		// group connections by topic and get a collection to work with in our algorithm
 		$working = $connections->groupBy('topic_id')->map->count()->map(
 			function ($parent_count, $topic)
 			{
@@ -222,44 +206,42 @@ class TopicRepository
 				]);
 			}
 		)->keyBy('topic_id');
+		// initialize $level for use within the while loop
 		$level = collect([null]);
 		// while we haven't finished finding the depths of all the topics
 		while ($working->whereStrict('complete', true)->count() != $working->count())
 		{
 			$depth += 1;
 			// iterate down the tree, each time working with all topics at this level of the tree
+			// and retrieving all topics at the next level
+			// (ie a depth-first search)
 			$level = $level->map(
 				function($parent) use ($connections, $working, $depth)
 				{
 					// get all children of the current parent topic
 					$children = $connections->whereStrict('parent_id', $parent)->pluck('topic_id');
-					// if we've looked for the children of $parent before
-					if ($working->has($parent))
+					// if we haven't looked for the children of $parent before (or it is the root, which doesn't have a parent)
+					if (!$working->has($parent) || !$working[$parent]['saw'])
 					{
-						if ($working[$parent]['saw'])
-						{
-							// don't edit the depths of the children
-							// just return them
-							return $children;
-						}
 						// record that we've seen the children of this parent now
-						$working[$parent]['saw'] = true;
-					}
-					foreach ($children as $child)
-					{
-						// record the current depth for each of the children
-						$working[$child]['depths']->push($depth);
-						// if we've found all of the depths for a topic, mark it as complete
-						if (count($working[$child]['depths']) == $working[$child]['parents'])
+						$working->has($parent) && $working[$parent]['saw'] = true;
+						// foreach of the children...
+						foreach ($children as $child)
 						{
-							$working[$child]['complete'] = true;
+							// record the current depth
+							$working[$child]['depths']->push($depth);
+							// if we've found all of the depths, mark it as complete
+							if (count($working[$child]['depths']) == $working[$child]['parents'])
+							{
+								$working[$child]['complete'] = true;
+							}
 						}
 					}
 					return $children;
 				}
 			)->flatten();
 		}
-		// return simple depths array from the topic/parents collection
+		// return simple array from the working collection
 		return $working->pluck('depths', 'topic_id')->toArray();
 	}
 
