@@ -249,8 +249,9 @@ class ClassRepository
 
 	/**
 	 * retrieve the depths of each class in $classes
-	 * @param  Collection	$classes	the classes for which we want depths, as a Collection of Models
-	 * @return array		$depths		an array of depths where the keys are the IDs of the classes and the values are the depths
+	 * @param  Collection	$classes		the classes for which we want depths, as a Collection of Models
+	 * @param  int			$start_depth	the depth of the root of this subtree
+	 * @return array		$depths			an array of depths where the keys are the IDs of the classes and the values are the depths
 	 */
 	public static function depths(Collection $classes, $start_depth=0)
 	{
