@@ -8,6 +8,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- for jQuery -->
 	@stack('styles') {{-- include whatever code has been pushed to the styles stack --}}
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/_resource.css') }}">
+	<link rel="stylesheet" type="text/css" href="/storage/LogoTree.css"> <!-- TODO tree is probably not supposed to be here -->
 	<script type="text/javascript" src="{{ asset('js/header.js') }}"></script> <!-- javascript for header but mostly for login drop down -->
 	<script type="text/javascript" src="{{ asset('js/loginmodal.js') }}"></script> <!-- javascript for forgetting your login -->
 	<!-- Need to decide where to put this later (prevents it from getting loaded everytime) -->
