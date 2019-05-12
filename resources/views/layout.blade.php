@@ -19,6 +19,7 @@
 	<script src="https://d3js.org/d3.v5.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
 	<script src="{{ asset('js/Server.js') }}"></script>
+	<script src="{{ asset('js/Permissions.js') }}"></script>
 	<script src="{{ asset('js/D3HelperFunction.js') }}"></script>
 	<script src="{{ asset('js/d3-transform.js') }}"></script>
 	<script src="{{ asset('js/Tree.js') }}"></script>
