@@ -1,28 +1,28 @@
 <!-- Contains empty template for every page that is loaded; includes navbar. Content will be inserted into div with the id main. -->
 <html><head>
-    <title>Study Cloud</title>
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/index.css') }}">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous"> <!-- Fontawesome for icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        rel="stylesheet"> <!--Google material design icons-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- for jQuery -->
-    @stack('styles') {{-- include whatever code has been pushed to the styles stack --}}
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/_resource.css') }}">
-    <link rel="stylesheet" type="text/css" href="/storage/LogoTree.css"> <!-- TODO tree is probably not supposed to be here -->
-    <script type="text/javascript" src="{{ asset('js/header.js') }}"></script> <!-- javascript for header but mostly for login drop down -->
-    <script type="text/javascript" src="{{ asset('js/loginmodal.js') }}"></script> <!-- javascript for forgetting your login -->
-    <!-- Need to decide where to put this later (prevents it from getting loaded everytime) -->
-    <script type="text/javascript">
-        resourceUseData = @json( App\ResourceUse::select('id', 'name')->get() );
-    </script>
-    <script type="text/javascript" src="{{ asset('js/resource_viewer.js') }}"></script> <!-- aw heck -->
-    <!-- Tree scripts -->
-    <script src="https://d3js.org/d3.v5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
-    <script src="{{ asset('js/Server.js') }}"></script>
-    <script src="{{ asset('js/D3HelperFunction.js') }}"></script>
-    <script src="{{ asset('js/d3-transform.js') }}"></script>
-    <script src="{{ asset('js/Tree.js') }}"></script>
+	<title>Study Cloud</title>
+	<link rel="stylesheet" type="text/css" href="{{ asset('css/index.css') }}">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous"> <!-- Fontawesome for icons -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"> <!--Google material design icons-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- for jQuery -->
+	@stack('styles') {{-- include whatever code has been pushed to the styles stack --}}
+	<link rel="stylesheet" type="text/css" href="{{ asset('css/_resource.css') }}">
+	<script type="text/javascript" src="{{ asset('js/header.js') }}"></script> <!-- javascript for header but mostly for login drop down -->
+	<script type="text/javascript" src="{{ asset('js/loginmodal.js') }}"></script> <!-- javascript for forgetting your login -->
+	<!-- Need to decide where to put this later (prevents it from getting loaded everytime) -->
+	<script type="text/javascript">
+	resourceUseData = @json( App\ResourceUse::select('id', 'name')->get() );
+	</script>
+	<script type="text/javascript" src="{{ asset('js/resource_viewer.js') }}"></script> <!-- aw heck -->
+	<!-- Tree scripts -->
+	<script src="https://d3js.org/d3.v5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
+	<script src="{{ asset('js/Server.js') }}"></script>
+	<script src="{{ asset('js/Permissions.js') }}"></script>
+	<script src="{{ asset('js/D3HelperFunction.js') }}"></script>
+	<script src="{{ asset('js/d3-transform.js') }}"></script>
+	<script src="{{ asset('js/Tree.js') }}"></script>
 
     <!-- jQuery and selectionstyle plugins in for class attachement-->
     <link href="{{ asset('js/selectStyleSrc/selectstyle.css') }}" rel="stylesheet">
