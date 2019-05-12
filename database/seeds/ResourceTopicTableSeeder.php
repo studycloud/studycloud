@@ -57,7 +57,7 @@ class ResourceTopicTableSeeder extends Seeder
 
 		// before we attempt to calculate the depths, check whether they'll even be useful
 		// this saves computational time
-		if (self::WEIGHT !== 0)
+		if (self::WEIGHT != 0)
 		{
 			// get the depths of each topic for later use
 			// apply the DEPTH_METHOD to each array of depths
