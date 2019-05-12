@@ -24,7 +24,7 @@ class ResourceTopicTableSeeder extends Seeder
 	 * leafs and a negative weight will put resources closer to the root, instead.
 	 * For more info, see the docstring for the "scale" parameter of the wrand() function in app\Helpers\Helper.php
 	 */
-	const WEIGHT = 2;
+	const WEIGHT = 1.2;
 
 	/**
 	 * If WEIGHT is non-zero, resources are attached to topics according to a
@@ -54,10 +54,21 @@ class ResourceTopicTableSeeder extends Seeder
 
 		// how many topics are in the topics table?
 		$num_total_topics = Topic::count(); 
-		
-		// get the depths of each topic for later use
-		// apply the DEPTH_METHOD to each array of depths
-		$depths = TopicRepository::depths(TopicParent::all(), 1)->map->{self::DEPTH_METHOD}();
+
+		// before we attempt to calculate the depths, check whether they'll even be useful
+		// this saves computational time
+		if (self::WEIGHT !== 0)
+		{
+			// get the depths of each topic for later use
+			// apply the DEPTH_METHOD to each array of depths
+			$depths = TopicRepository::depths(TopicParent::all(), 1)->map->{self::DEPTH_METHOD}();
+		}
+		else
+		{
+			// it doesn't matter what our depths are, since self::WEIGHT is 0
+			// so just make all of them 1
+			$depths = collect(array_fill_keys(Topics::pluck('id')->toArray(), 1));
+		}
 
 		Resource::all()->each(
 			function($curr_resource) use ($num_total_topics, $depths)

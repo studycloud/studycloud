@@ -36,7 +36,20 @@ class ResourceClassTableSeeder extends Seeder
 		
 		// get the allowed classes
 		$classes = Academic_Class::all();
-		$depths = collect(ClassRepository::depths($classes, 1));
+
+		// before we attempt to calculate the depths, check whether they'll even be useful
+		// this saves computational time
+		if (self::WEIGHT !== 0)
+		{
+			// get the depths of each class for later use
+			$depths = collect(ClassRepository::depths($classes, 1));
+		}
+		else
+		{
+			// it doesn't matter what our depths are, since self::WEIGHT is 0
+			// so just make all of them 1
+			$depths = collect(array_fill_keys($classes->pluck('id')->toArray(), 1));
+		}
 
 		Resource::all()->shuffle()->each(
 			function($resource) use ($classes, $depths)
