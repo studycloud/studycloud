@@ -36,7 +36,8 @@ Route::get('about',
 Route::get('data/resource',
 	function(Request $request)
 	{
-		return new ResourceResource(Resource::find($request->input('id')));
+		// we don't need to check whether it exists. the checkstatus attribute will do that for us
+		return new ResourceResource(Resource::findOrFail($request->input('id')));
 	}
 )->middleware(CheckStatus::class.':'.Resource::class)->name('resources.json');
 Route::resource('resources', 'ResourceController', ['except' => 
@@ -49,7 +50,7 @@ Route::get('data/topic_tree', 'GetTree')->name('tree.topic');
 Route::get('data/topic',
 	function(Request $request)
 	{
-		return new TopicResource(Topic::find($request->input('id')));
+		return new TopicResource(Topic::findOrFail($request->input('id')));
 	}
 )->name('topics.json');
 Route::resource('topics', 'TopicController');
@@ -58,14 +59,14 @@ Route::get('data/class_tree', 'GetTree')->name('tree.class');
 Route::get('data/class',
 	function(Request $request)
 	{
-		return new ClassResource(Academic_Class::find($request->query('id')));
+		return new ClassResource(Academic_Class::findOrFail($request->input('id')));
 	}
 )->name('topics.json');
 Route::resource('classes', 'ClassController');
 Route::patch('/classes/attach/{class?}',
 	function (Request $request, $class = null)
 	{
-		$class = $class == 0 || is_null($class) ? null : Academic_Class::find($class);
+		$class = $class == 0 || is_null($class) ? null : Academic_Class::findOrFail($class);
 		return (new ClassController)->attach($request, $class);
 	}
 )->name('resources.attach');
@@ -73,7 +74,7 @@ Route::patch('/classes/attach/{class?}',
 Route::get('admins/{userid}',
 	function($user_id)
 	{
-		$user = User::find($user_id);
+		$user = User::findOrFail($user_id);
 		// return $user;
 		return view('admins', compact('user'));
 	}

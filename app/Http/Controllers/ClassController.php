@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Academic_Class;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -169,15 +170,17 @@ class ClassController extends Controller
 
 		// TODO: make custom validation logic for the stuff below?
 		// before deleting the class, make sure it doesn't have any classes attached underneath it
-		if ($class->children()->count() > 0)
-		{
-			abort(403, "You cannot delete a class that has children");
-		}
 		// also make sure it doesn't have any resources attached to it
-		if ($class->resources()->count() > 0)
-		{
-			abort(403, "You cannot delete a class that has resources");
-		}
+		Validator::make([
+			'children_count' => $class->children()->count(),
+			'resources_count' => $class->resources()->count()
+		], [
+			'children_count' => 'integer|max:0',
+			'resources_count' => 'integer|max:0'
+		], [
+			'children_count.max' => 'You cannot delete a class that has children.',
+			'resources_count.max' => 'You cannot delete a class that has resources.'
+		])->validate();
 		// actually delete the class
 		$class->delete();
 	}
