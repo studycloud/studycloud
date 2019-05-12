@@ -297,7 +297,11 @@ class ClassRepository
 		}
 		return $depths;
 	}
-	
+
+	/**
+	 * print the descendants of $class as an ascii tree
+	 * @param  Class|int  $class the class whose descendants we'd like to print
+	 */
 	public static function printAsciiDescendants($class)
 	{
 		if (is_int($class))
@@ -307,7 +311,11 @@ class ClassRepository
 
 		echo NestedArrays::convertToAscii(NestedArrays::classDescendants($class));
 	}
-	
+
+	/**
+	 * print the ancestors of $class as an ascii tree
+	 * @param  Class|int  $class the class whose ancestors we'd like to print
+	 */
 	public static function printAsciiAncestors($class)
 	{
 		if (is_int($class))
@@ -317,9 +325,25 @@ class ClassRepository
 
 		echo NestedArrays::convertToAscii(NestedArrays::classAncestors($class));
 	}
-	
-	public static function asciiTree($class)
+
+	/**
+	 * convenience function for printing both ancestors and descendants of $class as an ascii tree
+	 * @param  Academic_Class|int|null  $clsss the clsss whose ancestors and descendants we'd like to print
+	 */
+	public static function asciiTree($class=null)
 	{
+		// handle null or 0 as the $class
+		if (!$class)
+		{
+			self::getTopLevelClasses()->pluck('id')->each(
+				function($class)
+				{
+					echo self::printAsciiDescendants($class);
+				}
+			);
+			return;
+		}
+
 		if (is_int($class))
 		{
 			$class = Academic_Class::find($class);

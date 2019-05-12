@@ -275,10 +275,22 @@ class TopicRepository
 
 	/**
 	 * convenience function for printing both ancestors and descendants of $topic as an ascii tree
-	 * @param  Topic|int  $topic the topic whose ancestors and descendants we'd like to print
+	 * @param  Topic|int|null  $topic the topic whose ancestors and descendants we'd like to print
 	 */
-	public static function asciiTree($topic)
+	public static function asciiTree($topic=null)
 	{
+		// handle null or 0 as the $topic
+		if (!$topic)
+		{
+			self::getTopLevelTopics()->pluck('id')->each(
+				function($topic)
+				{
+					echo self::printAsciiDescendants($topic);
+				}
+			);
+			return;
+		}
+
 		if (is_int($topic))
 		{
 			$topic = Topic::find($topic);
