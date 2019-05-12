@@ -178,6 +178,9 @@ class TopicRepository
 
 	/**
 	 * retrieve the depths of each topic in $connections
+	 * The depths of a topic are defined as the lengths of the shortest paths
+	 * between each of the topic's parents and the root of the tree. Thus,
+	 * each topic will have n depths (where n is the number of parents of the topic).
 	 * @param  Collection	$connections	the connections from topics for which we want depths, as a Collection of topic/parent Collections; the topics without a parent are those at depth of $depth+1
 	 * @param  int			$depth			the depth of the root of this subtree
 	 * @return Collection	$depths			a collection of depths where the keys are the IDs of the topics and the values are an array containing all their depths

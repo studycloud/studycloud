@@ -27,13 +27,18 @@ class ResourceTopicTableSeeder extends Seeder
 	const WEIGHT = 2;
 
 	/**
-	 * If WEIGHT is non-zero, how should the depth of each topic be calculated?
-	 * You can use...
-	 * - "average" if it should be the mean of all depths for that topic,
-	 * - "median" if it should be the middle depth for that topic,
-	 * - "max" if it should be the longest depth,
-	 * - "min" if it should be the shortest depth, and
-	 * - "mode" if it should be the most common depth
+	 * If WEIGHT is non-zero, resources are attached to topics according to a
+	 * probabilistic model derived from each topics depths. Since a topic may
+	 * have multiple depths, you must decide how to reduce the depths of each
+	 * topic to a single number.
+	 * How should the depth of each topic be calculated? You can use...
+	 *   - "average" if it should be the mean of all depths for that topic,
+	 *   - "median" if it should be the middle depth for that topic,
+	 *   - "max" if it should be the longest depth,
+	 *   - "min" if it should be the shortest depth, and
+	 *   - "mode" if it should be the most common depth
+	 * For more information on how depths of a topic are defined, see the
+	 * docstring of the TopicRepository's depths() function in app\Repositories\TopicRepository.php
 	 */
 	const DEPTH_METHOD = "average";
 
