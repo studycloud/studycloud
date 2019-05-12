@@ -24,6 +24,7 @@ class ResourceResource extends Resource
 		// set meta tag that specifies the resource's meta data
 		$meta = [
 			"name" => $this->name,
+			"author_id" => $this->author->id,
 			"author_name" => $this->author->name(),
 			"author_type" => $this->author->type,
 			"use_name" => $this->use->name
