@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Anton|Carter+One|Contrail+One|Do+Hyeon|Gugi|Jua|Paytone+One|Righteous|Titan+One|Cinzel|Cinzel+Decorative|Space+Mono|Roboto+Mono);@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://fonts.googleapis.com/css?family=Chela+One|Fredoka+One);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);/* Contains formatting for the homepage content. */
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);/* Contains formatting for the homepage content. */
 
 #main {
   text-align: center;
@@ -19,7 +19,8 @@
 
 .boxTitle {
   /* Possibly you might make boxtitle font size respond to how much text there is? */
-  font-family: "Cinzel", cursive;
+  font-family: "Open Sans", sans-serif;
+  text-transform: lowercase;
   font-size: 20px;
   color: white;
   font-weight: bold;

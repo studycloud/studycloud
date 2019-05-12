@@ -19,11 +19,44 @@
 
 // MASTHEAD
 
-.logo-full { // For svg.
-	display: block;
+
+#nameplate {
+	width: 500px;
 	margin: auto;
-	padding: 10px;
-	width: 55%;
+	a {
+		text-decoration: none;
+		color: $primary-0;
+		display: grid;
+		grid-template-columns: 1fr 5fr 1fr;
+
+		// School logo
+		object {
+			width: 100px;
+			padding: 20px;
+		}
+		
+		div {
+			div {
+				// Font formatting. 
+				text-align: center;
+				font-family: $main-font;
+				text-transform: $main-transform;
+				font-size: $main-font-size + 20;
+				font-weight: bold;
+
+				// Position in the middle of the text box--sorry, hardcoded. For now. 
+				position: relative;
+				top: 140px/2-30px/2;
+			}
+		}
+
+		// Study Cloud logo
+		svg {
+			width: 140px;
+			height: 140px;
+			z-index: 1000;
+		}
+	}
 }
 
 
@@ -32,7 +65,9 @@
 .navbar {
 	@extend %navbar-gradient;
 	font-family: $main-font;
+	text-transform: $main-transform;
 	font-size: $main-font-size;
+	font-weight: bold;
 	ul {
 		text-align: center;
 		list-style-type: none;
@@ -88,6 +123,7 @@
 					resize: none;
 					font-size: $body-font-size;
 					font-family: $body-font;
+					text-transform: $body-transform;
 					padding: 10px 0px;
 					&:focus {
 						color: $search-box-text-focus-color;
@@ -126,6 +162,7 @@
 	text-align: right;
 	font-family: $body-font;
 	font-size: $body-font-size - 2px;
+	text-transform: $body-transform;
 
     position: absolute;
     background-color: $login-dropdown-color;

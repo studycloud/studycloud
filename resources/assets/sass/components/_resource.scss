@@ -1,6 +1,7 @@
 // Sass file for the resource viewer. 
 
 @import "../helpers/color.scss";
+@import "../helpers/fonts.scss";
 
 
 $student-color: purple;
@@ -50,6 +51,26 @@ $teacher-color: green;
 	margin-bottom: 5px;
 	height: 2px;
 	background-color: black;
+}
+
+%button {
+	padding: 10px;
+    border: 0;
+    border-radius: 5px;
+    text-transform: $main-transform;
+    font-family: $body-font;
+}
+
+.submit-button {
+	@extend %button;
+    background: $action-yes;
+    color: $text-invert;
+}
+
+.cancel-button {
+	@extend %button;
+    background: $action-meh;
+    color: $text-default;
 }
 
 // TODO Maybe these stylings should be global? I don't know. 
