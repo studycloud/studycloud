@@ -1,4 +1,4 @@
-.resource-background {
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);.resource-background {
   padding: 20px;
 }
 
@@ -35,6 +35,25 @@
   margin-bottom: 5px;
   height: 2px;
   background-color: black;
+}
+
+.submit-button,
+.cancel-button {
+  padding: 10px;
+  border: 0;
+  border-radius: 5px;
+  text-transform: lowercase;
+  font-family: "Open Sans", sans-serif;
+}
+
+.submit-button {
+  background: #3fc53f;
+  color: white;
+}
+
+.cancel-button {
+  background: #cbcbcb;
+  color: black;
 }
 
 h1 {

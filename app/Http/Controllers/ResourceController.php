@@ -238,6 +238,7 @@ class ResourceController extends Controller
 		// foreach($validated['topics'] as $topic){
 		// 	ResourceRepository::addTopic(Topic::find($topic), $resource);
 		// }
+
 		// add the class
 		ResourceRepository::attachClass($resource, $validated['class']);
 	}
@@ -260,6 +261,7 @@ class ResourceController extends Controller
 
 		// remove the topics (this code is disabled for MVP)
 		// ResourceRepository::detachTopics($resource, $validated['topics']);
+
 		// remove the class
 		// note that removing a class from a resource will automatically attach the resource to the root
 		// so we have to check that this operation is truly allowed first

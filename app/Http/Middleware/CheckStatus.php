@@ -27,7 +27,7 @@ class CheckStatus
         elseif ($request->input('id') && class_exists($class_name))
         {
             // if there is an ID associated with the request, we can still attempt to retrieve the item
-            $item = (new $class_name)::find($request->input('id'));
+            $item = (new $class_name)::findOrFail($request->input('id'));
         }
         else
         {
