@@ -1,43 +1,43 @@
 <!-- Contains empty template for every page that is loaded; includes navbar. Content will be inserted into div with the id main. -->
 <html><head>
-	<title>Study Cloud</title>
-	<link rel="stylesheet" type="text/css" href="{{ asset('css/index.css') }}">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous"> <!-- Fontawesome for icons -->
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"> <!--Google material design icons-->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- for jQuery -->
-	@stack('styles') {{-- include whatever code has been pushed to the styles stack --}}
-	<link rel="stylesheet" type="text/css" href="{{ asset('css/_resource.css') }}">
-  <link rel="stylesheet" type="text/css" href="/storage/LogoTree.css"> <!-- TODO tree is probably not supposed to be here -->
-	<script type="text/javascript" src="{{ asset('js/header.js') }}"></script> <!-- javascript for header but mostly for login drop down -->
-	<script type="text/javascript" src="{{ asset('js/loginmodal.js') }}"></script> <!-- javascript for forgetting your login -->
-	<!-- Need to decide where to put this later (prevents it from getting loaded everytime) -->
-	<script type="text/javascript">
-	resourceUseData = @json( App\ResourceUse::select('id', 'name')->get() );
-	</script>
-	<script type="text/javascript" src="{{ asset('js/resource_viewer.js') }}"></script> <!-- aw heck -->
-	<!-- Tree scripts -->
-	<script src="https://d3js.org/d3.v5.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
-	<script src="{{ asset('js/Server.js') }}"></script>
-	<script src="{{ asset('js/D3HelperFunction.js') }}"></script>
-	<script src="{{ asset('js/d3-transform.js') }}"></script>
-	<script src="{{ asset('js/Tree.js') }}"></script>
+    <title>Study Cloud</title>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/index.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous"> <!-- Fontawesome for icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet"> <!--Google material design icons-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- for jQuery -->
+    @stack('styles') {{-- include whatever code has been pushed to the styles stack --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/_resource.css') }}">
+    <link rel="stylesheet" type="text/css" href="/storage/LogoTree.css"> <!-- TODO tree is probably not supposed to be here -->
+    <script type="text/javascript" src="{{ asset('js/header.js') }}"></script> <!-- javascript for header but mostly for login drop down -->
+    <script type="text/javascript" src="{{ asset('js/loginmodal.js') }}"></script> <!-- javascript for forgetting your login -->
+    <!-- Need to decide where to put this later (prevents it from getting loaded everytime) -->
+    <script type="text/javascript">
+        resourceUseData = @json( App\ResourceUse::select('id', 'name')->get() );
+    </script>
+    <script type="text/javascript" src="{{ asset('js/resource_viewer.js') }}"></script> <!-- aw heck -->
+    <!-- Tree scripts -->
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
+    <script src="{{ asset('js/Server.js') }}"></script>
+    <script src="{{ asset('js/D3HelperFunction.js') }}"></script>
+    <script src="{{ asset('js/d3-transform.js') }}"></script>
+    <script src="{{ asset('js/Tree.js') }}"></script>
 
-	<!-- jQuery and selectionstyle plugins in for class attachement-->
-	<link href="{{ asset('js/selectStyleSrc/selectstyle.css') }}" rel="stylesheet">
-	<script src="//code.jquery.com/jquery.min.js"></script>
-	<script src="{{ asset('js/selectStyleSrc/selectstyle.js') }}"></script>
+    <!-- jQuery and selectionstyle plugins in for class attachement-->
+    <link href="{{ asset('js/selectStyleSrc/selectstyle.css') }}" rel="stylesheet">
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <script src="{{ asset('js/selectStyleSrc/selectstyle.js') }}"></script>
 
-	@stack('scripts')
+    @stack('scripts')
 
-	<meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
-	<meta name="csrf-token" content="{{ csrf_token() }}"> <!-- include csrf_token in all pages, so it can be accessed by js -->
+    <meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
+    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- include csrf_token in all pages, so it can be accessed by js -->
 
-	@if (!Auth::check())
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
-	@endif
-	<meta name="google-signin-client_id" content="213909112764-djmb30blchgj76rhfflngmls392fgm23.apps.googleusercontent.com"> <!-- include google client id for google sign in -->
+    @if (!Auth::check())
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    @endif
+    <meta name="google-signin-client_id" content="213909112764-djmb30blchgj76rhfflngmls392fgm23.apps.googleusercontent.com"> <!-- include google client id for google sign in -->
 </head>
 <body onload="Starter()">
     <div id="pageWidth">
@@ -519,37 +519,10 @@
     <!-- The Modal -->
     <div id="my-modal" class="modal">
 
-<<<<<<< HEAD
-		<!-- Modal content -->
-		<div class="modal-content">
-			<span id="close-modal"><i class="fas fa-times"></i></span>
-			
-			<!-- Container for resource. -->
-			<div id="resource-container">
-				<div class="resource-background">
-					<div id="resource-head"></div>
-					<div id="modules"> <!-- This is where you put the modules. -->
-					</div>
-				</div>
-			</div>
-			
-		</div>
-=======
         <!-- Modal content -->
         <div class="modal-content">
             <span id="close-modal"><i class="fas fa-times"></i></span>
-            <!-- Container with information about forgot password. -->
-            <div id="forget-container">
-                @component('auth/passwords/email')
-                @endcomponent
-            </div>
 
-            <!-- Container with information about how to register for the website. -->
-            <div id="register-container">
-                @component('auth/register')
-                @endcomponent
-            </div>
-            
             <!-- Container for resource. -->
             <div id="resource-container">
                 <div class="resource-background">
@@ -558,23 +531,16 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
->>>>>>> rearrange-header
 
     </div>
 
-<<<<<<< HEAD
-	<!--button id="creator-btn">temporary resource creator button</button-->
-	<button id="editor-btn">temporary resource editor button</button>
-	<button id="resource-meta-btn">resource meta button</button>
-</body></html>
-=======
-    <button id="resource-btn">this is a temporary button</button>
-
+    <!--button id="creator-btn">temporary resource creator button</button-->
+    <button id="editor-btn">temporary resource editor button</button>
+    <button id="resource-meta-btn">resource meta button</button>
 </body>
 <footer>
     <script src="/storage/Logo Tree.js"></script> <!-- TODO or here -->
 </footer>
 </html>
->>>>>>> rearrange-header
