@@ -180,7 +180,7 @@ class TopicRepository
 	 * retrieve the depths of each topic in $connections
 	 * @param  Collection	$connections	the connections from topics for which we want depths, as a Collection of topic/parent Collections; the topics without a parent are those at depth of $depth+1
 	 * @param  int			$depth			the depth of the root of this subtree
-	 * @return array		$depths			an array of depths where the keys are the IDs of the connections and the values are an array containing all depths
+	 * @return Collection	$depths			a collection of depths where the keys are the IDs of the topics and the values are an array containing all their depths
 	 */
 	public static function depths(Collection $connections, $depth=0)
 	{
@@ -242,7 +242,7 @@ class TopicRepository
 			)->flatten();
 		}
 		// return simple array from the working collection
-		return $working->pluck('depths', 'topic_id')->toArray();
+		return $working->pluck('depths', 'topic_id');
 	}
 
 	/**
