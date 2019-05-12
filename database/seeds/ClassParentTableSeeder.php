@@ -54,22 +54,21 @@ class ClassParentTableSeeder extends Seeder
 	{
 		// how many classes should be at this level of the tree?
 		// keep choosing a random number until the choice isn't 1
+		$num_max_classes = min(self::NUM_MAX_CLASSES, $this->classes->count());
 		while (
 			is_null($num_classes_level) ||
-			(!$root && ($num_classes_level == 1 && self::NUM_MAX_CLASSES != 1))
+			(!$root && ($num_classes_level == 1 && $num_max_classes != 1))
 		)
 		{
-			$num_classes_level = rand( $num_classes_level_min, min(self::NUM_MAX_CLASSES, $this->classes->count()) );
+			$num_classes_level = rand($num_classes_level_min, $num_max_classes);
 		}
 		$children = collect();
 		// choose children to add to this parent
 		while ($num_classes_level > 0)
 		{
-			echo "this got run for parent = ".$parent." and num_class = ".$num_classes_level."\n";
 			$child = $this->chooseClass();
 			if (!is_null($child))
 			{
-				echo "pushing\n";
 				$children->push($child);
 			}
 			$num_classes_level--;
