@@ -21,10 +21,13 @@ function Tree(type, frame_id, server)
 		
 		data.connections = [];
 		
-
+		// creates a tree with nodes_count nodes
 		for(i = 0; i < nodes_count; i++)
 		{	
+			// create a node
 			data.nodes[i] = {id: i.toString()};
+			// randomly assign two children the node we just created
+			// doesn't this create potential loops in the tree?
 			data.connections.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:i.toString()});
 			data.connections.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:(i+nodes_count).toString()});
 		}
@@ -33,12 +36,15 @@ function Tree(type, frame_id, server)
 	
 	//Create the various DOM element groups needed by the tree
 	self.frame = d3.select("#" + frame_id);
+	// get the dimensions of the frame: width, height, bottom, top, left, right, etc
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
 	
+	// is this code useful? there is no resizeFrame function anymore
 	self.frame.on("resize", self.resizeFrame);
 	
+	// create the svg tag that will hold the visualization
 	self.frame.svg = self.frame.append("svg");
-		
+
 	self.frame.svg
 		.attr("class", "tree");
 	
@@ -131,7 +137,8 @@ function Tree(type, frame_id, server)
 			}
 		}
 	];
-	
+
+	// hide the contexxt menu after we click on a context menu item
 	self.frame.on('click.menu_context', function(){self.menu_context.style('display', 'none');});
 	
 	self.nodes_simulated = {};
@@ -139,6 +146,7 @@ function Tree(type, frame_id, server)
 	
 	self.simulationInitialize();
 
+	// recenter the simulation every decisecond
 	var timeout_resize;
 	d3.select(window).on("resize", function() 
 		{ 
@@ -150,6 +158,7 @@ function Tree(type, frame_id, server)
 	
 	//if (self.debug) self.setData(data);
 	
+	// set the breadcrumb stack for use when we decide to implement it
 	self.breadcrumbStack = [0];
 
 	self.server = server;
@@ -159,18 +168,19 @@ function Tree(type, frame_id, server)
 	self.locals.nodes = {};
 	self.locals.links = {};
 
-	
+	// create d3 local objects, which will be useful when we want to set data on a DOM element later
 	self.locals.style = d3.local();
 	self.locals.coordinates = d3.local();
-
 }
 
 Tree.prototype.simulationInitialize = function()
 {
 	var self = this;
 	
+	// create a force simulation object
 	self.simulation = d3.forceSimulation();
-	
+
+	// set properties of the force simulation
 	self.simulation
 		.alpha(0.5)
 		.alphaTarget(-1)
@@ -180,23 +190,25 @@ Tree.prototype.simulationInitialize = function()
 		.force("ForceCenterX", d3.forceX(self.frame.boundary.width/2))
 		.force("ForceCenterY", d3.forceY(self.frame.boundary.height/2));
 
+	// every time a tick event is fired on a node, call self.draw()
 	self.simulation
 		.nodes(self.nodes.data())
 		.on('tick', function(){self.draw()});
 
 	self.simulation.force("ForceCenterX")
 		.strength(0.11);
-	
+
 	self.simulation.force("ForceCenterY")
 		.strength(0.11);	
-		
+
+	// does the id function set the data_id attribute on every link?
 	self.simulation
 		.force("ForceLink")
 			.strength(1)
 			.links(self.links.data())
 			.id(function(d){return d.id;})
 			.distance(400);
-			
+
 	self.simulation
 		.force("ForceCharge")
 			.strength(-1000);
