@@ -231,7 +231,7 @@ table {
 
 #nameplate {
   width: 80%;
-  float: center;
+  margin: auto;
 }
 
 #nameplate a {
