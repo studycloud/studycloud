@@ -19,3 +19,7 @@ $bg-light: #fefefe;
 
 $link-default: $primary-0;
 $link-hover: $accent-2;
+
+$action-yes: #3fc53f;
+$action-meh: darken($bg-light, 20%);
+$action-no: red;

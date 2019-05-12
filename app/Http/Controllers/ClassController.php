@@ -124,6 +124,18 @@ class ClassController extends Controller
 	 */
 	public function update(Request $request, Academic_Class $class)
 	{
+		// check that the author of this class is not null
+		// a null author indicates that the class is not editable by the average user
+		// TODO: convert this check to an auth rule
+		Validator::make($class->toArray(),
+			[
+				'author_id' => 'required'
+			],
+			[
+				'author_id' => "This class was created by the administrators. You cannot edit it."
+			]
+		)->validate();
+
 		// first, validate the request
 		// note that we make the 'name' attribute required because there aren't any other attributes to validate
 		$validated = $request->validate([
@@ -144,6 +156,19 @@ class ClassController extends Controller
 	 */
 	public function destroy(Academic_Class $class)
 	{
+		// check that the author of this class is not null
+		// a null author indicates that the class is not editable by the average user
+		// TODO: convert this check to an auth rule
+		Validator::make($class->toArray(),
+			[
+				'author_id' => 'required'
+			],
+			[
+				'author_id.required' => "This class was created by the administrators. You cannot edit it."
+			]
+		)->validate();
+
+		// TODO: make custom validation logic for the stuff below?
 		// before deleting the class, make sure it doesn't have any classes attached underneath it
 		// also make sure it doesn't have any resources attached to it
 		Validator::make([

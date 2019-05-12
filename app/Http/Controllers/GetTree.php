@@ -75,7 +75,7 @@ class GetTree extends Controller
 				'nullable',
 				'integer',
 				Rule::in(
-					Academic_Class::pluck('id')->push(0)->toArray()
+					$this->model_name::pluck('id')->push(0)->toArray()
 				)
 			],
 			'levels_up' => 'nullable|integer|min:0',
