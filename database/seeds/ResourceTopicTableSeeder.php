@@ -24,7 +24,7 @@ class ResourceTopicTableSeeder extends Seeder
 	 * leafs and a negative weight will put resources closer to the root, instead.
 	 * For more info, see the docstring for the "scale" parameter of the wrand() function in app\Helpers\Helper.php
 	 */
-	const WEIGHT = 0.6;
+	const WEIGHT = 2;
 
 	/**
 	 * If WEIGHT is non-zero, how should the depth of each topic be calculated?
