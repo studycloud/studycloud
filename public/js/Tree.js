@@ -165,7 +165,6 @@ function Tree(type, frame_id, server)
 
 }
 
-
 Tree.prototype.simulationInitialize = function()
 {
 	var self = this;
@@ -365,6 +364,7 @@ Tree.prototype.updateDataNodes = function(selection, data)
 
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
 
+	// add visual components for each node
 	var nodes = selection
 		.enter()
 			.append("g")
@@ -372,33 +372,24 @@ Tree.prototype.updateDataNodes = function(selection, data)
 				.attr("data_id", function (d) { return d.id; })
 				.on("click", function(){self.nodeClicked(this);})
 				.on('contextmenu', function(d, i){self.nodeMenuOpen(this, d, i);});
-
-
-	nodes
-		.append("rect")
-			.attr("fill", function(d)
-			{
-				//generate our fill color based on the node id;
-				var random_number_generator = new Math.seedrandom(d.id);
-				var color = d3.interpolateRainbow(random_number_generator());
-				return color;
-			}
-			)
-			.attr("width", "100")
-			.attr("height", "100");
-
+	nodes.append("rect");
 	nodes.append("text");
-	
+
 	nodes.each(function(d)
-		{			
+		{
+			// generate our fill color based on the node id
+			var random_number_generator = new Math.seedrandom(d.id);
+			var color = d3.interpolateRainbow(random_number_generator());
+
 			var style = 
 			{
 				labeled: false,
 				level: 3,
 				opacity: 0,
 				visible: false,
-				width: 0,
-				height: 0,
+				width: 100,
+				height: 100,
+				color: color,
 				updated: true
 			};
 
@@ -419,8 +410,6 @@ Tree.prototype.updateDataNodes = function(selection, data)
 		}
 	);
 	
-	nodes = nodes.merge(selection);
-	
 	// animate removal of the old nodes
 	
 	var transform = d3.transform()
@@ -434,10 +423,9 @@ Tree.prototype.updateDataNodes = function(selection, data)
 				.style("opacity", "0")
 				.attr("transform", transform)
 				.remove();
-				
+
 
 	self.nodes = self.frame.select(".layer_nodes").selectAll(".node");
-
 	
 	// restore coordinates that we saved earlier in this function
 	self.nodes.each(function(d)
@@ -450,7 +438,6 @@ Tree.prototype.updateDataNodes = function(selection, data)
 			d.fy = coordinates.fy;
 		}
 	);
-
 };
 
 Tree.prototype.updateDataLinks = function(selection, data)
@@ -554,51 +541,142 @@ Tree.prototype.drawNodes = function()
 {
 	var self = this;
 
-	self.nodes.each(function()
+	self.nodes.each(function(d)
 		{
 			//Get the style object for the current node
 			var style = self.locals.style.get(this);
 			
-			//Check if the style has changed since the last time we rendered 
-			//	so we don't run uncessesary code
+			// Check if the style has changed since the last time we rendered 
+			// so we don't run uncessesary code
 			if (style.updated === true)
 			{
+				var transition = d3.transition();
+				transition.duration(500);
+				transition.ease(d3.easeBackOut.overshoot(0.8));
+
+				var node = d3.select(this);
+
+				// Only run this code when we are not centering
+				// (since we do not need to change these transitions when centering)
 				
+				node.attr('transform', d3.transform()
+					.translate(function(d)
+						{
+							return [d.x, d.y];
+						}
+					)
+				);
+
+				node.select("rect")
+					.attr("fill", function(d)
+						{
+							return style.color;
+						}
+					)
+					.attr('transform', d3.transform()
+						.translate(function(d)
+							{
+								var width = this.width.animVal.value;
+								var height = this.height.animVal.value;
+								return [-width/2, -height/2];
+							}
+						)
+					);
+
+				node.select("rect")
+					.transition(transition)
+						.attr("width", function(d)
+							{
+								return style.width;
+							}
+						)
+						.attr("height", function(d)
+							{
+								return style.height;
+							}
+						)
+						.attr("rx", function(d)
+							{
+								if (style.level === -1)
+									return 0;
+								else
+									return style.width/2;
+							}
+						);
+
+				node.select("text")
+					.attr("text-anchor", "middle")
+					.attr("fill", "white")
+					.attr("stroke", "black")
+					.attr("stroke-width", "0.02em")
+					.attr("font-size", "22")
+					.attr("font-family", "sans-serif")
+					.attr("font-weight", "bold")
+					.text(function(d){return d.name;});
+
+				node.select("text")
+					.transition(transition)
+						.on("start", function(d)
+							{	
+								if (style.labeled)
+								{
+									this.style.visibility = "unset";
+								}
+							}
+						)
+						.on("end", function(d)
+							{
+								if (!style.labeled)
+								{
+									this.style.visibility = "hidden";
+								}
+							}
+						)
+						.attr("opacity",function(d)
+							{
+								return style.opacity;
+							}
+						);
+				
+
+
+				// Only run this code if centerOnNode is called
+				// (otherwise coordinates will not be calculated for nodeCoordinateInterpolatorGenerator)
+				// if (center === true) {
+				// 	node
+				// 		.transition(transition)
+				// 			.on("start", function(d)
+				// 				{	
+				// 					if (self.locals.style.get(this).visible)
+				// 					{
+				// 						this.style.visibility = "unset";
+				// 					}
+				// 				}
+				// 			)
+				// 			.on("end", function(d)
+				// 				{
+				// 					if (!self.locals.style.get(this).visible)
+				// 					{
+				// 						this.style.visibility = "hidden";
+				// 					}
+				// 				}
+				// 			)
+				// 			.attr("opacity",function(d)
+				// 				{
+				// 					return self.locals.style.get(this).opacity;
+				// 				}
+				// 			)
+				// 			.tween("coordinates", function(d)
+				// 				{
+				// 					return self.nodeCoordinateInterpolatorGenerator.bind(self)(d, this);
+				// 				}
+				// 			);
+				// }
+
 			}
 			
 		}
 	);
-
-	self.nodes
-		.select("text")
-			.attr("text-anchor", "middle")
-			.attr("fill", "white")
-			.attr("stroke", "black")
-			.attr("stroke-width", "0.02em")
-			.attr("font-size", "22")
-			.attr("font-family", "sans-serif")
-			.attr("font-weight", "bold")
-			.text(function(d){return d.name;});
-
-	var transform_node = d3.transform()
-		.translate(function(d)
-			{
-				return [d.x, d.y];
-			}
-		);
-		
-	var transform_rect = d3.transform()
-		.translate(function(d)
-			{
-				var width = this.width.animVal.value;
-				var height = this.height.animVal.value;
-				//console.log(width);
-				return [-width/2, -height/2];
-			}
-		);
-		
-	self.nodes.attr('transform', transform_node);
-	self.nodes.select('rect').attr('transform', transform_rect);
 	
 };
 
@@ -875,11 +953,6 @@ Tree.prototype.centerOnNode = function (node)
 					break;
 			}
 	});
-	//Make all of the animations!
-	var transition = d3.transition();
-
-	transition.duration(500);
-	transition.ease(d3.easeBackOut.overshoot(0.8));
 
 	self.simulation.stop();
 	
@@ -898,54 +971,11 @@ Tree.prototype.centerOnNode = function (node)
 					break;
 			}
 	});
-	
-	
-	//Set the animatable attributes for all of the nodes that we are about to animate
-	self.nodes.select("rect")
-		.transition(transition)
-			.attr("width", function(d)
-				{
-					return self.locals.style.get(this).width;
-				}
-			)
-			.attr("height", function(d)
-				{
-					return self.locals.style.get(this).height;
-				}
-			)
-			.attr("rx", function(d)
-				{
-					if (self.locals.style.get(this).level === -1)
-						return 0;
-					else
-						return self.locals.style.get(this).width/2;
-				}
-			);
-			
-	self.nodes.select("text")
-		.transition(transition)
-			.on("start", function(d)
-				{	
-					if (self.locals.style.get(this).labeled)
-					{
-						this.style.visibility = "unset";
-					}
-				}
-			)
-			.on("end", function(d)
-				{
-					if (!self.locals.style.get(this).labeled)
-					{
-						this.style.visibility = "hidden";
-					}
-				}
-			)
-			.attr("opacity",function(d)
-				{
-					return self.locals.style.get(this).opacity;
-				}
-			);
-			
+
+	var transition = d3.transition();
+				transition.duration(500);
+				transition.ease(d3.easeBackOut.overshoot(0.8));
+
 	self.nodes
 		.transition(transition)
 			.on("start", function(d)
@@ -974,8 +1004,7 @@ Tree.prototype.centerOnNode = function (node)
 					return self.nodeCoordinateInterpolatorGenerator.bind(self)(d, this);
 				}
 			);
-			
-			
+
 	self.simulation.stop();
 	
 	self.nodes_simulated = selections.nodes;
