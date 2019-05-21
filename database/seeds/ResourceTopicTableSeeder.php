@@ -24,7 +24,7 @@ class ResourceTopicTableSeeder extends Seeder
 	 * leafs and a negative weight will put resources closer to the root, instead.
 	 * For more info, see the docstring for the "scale" parameter of the wrand() function in app\Helpers\Helper.php
 	 */
-	const WEIGHT = 1.2;
+	const WEIGHT = 0.4;
 
 	/**
 	 * If WEIGHT is non-zero, resources are attached to topics according to a
@@ -40,7 +40,7 @@ class ResourceTopicTableSeeder extends Seeder
 	 * For more information on how depths of a topic are defined, see the
 	 * docstring of the TopicRepository's depths() function in app\Repositories\TopicRepository.php
 	 */
-	const DEPTH_METHOD = "average";
+	const DEPTH_METHOD = "max";
 
 	/**
 	 * Run the database seeds.

@@ -49,7 +49,7 @@ if (!function_exists('wrand'))
 	* effect of the weights. Negative scale values will flip your weights around their mean,
 	* inverting their effect.
 	* Note that the algorithm is faster when the the scale is between -1 and 1.
-	* For more information about how the scale affects your weights, see https://www.desmos.com/calculator/pt3h97veu3
+	* For more information about how the scale affects your weights, see https://www.desmos.com/calculator/f98qouj5ub
 	* 
 	* @param Illuminate\Support\Collection|array	$weighted_values	an array of (value, probability) key-value pairs
 	* @param double									$scale				a number (typically from 0 to 1) denoting how important the weights are
@@ -74,48 +74,28 @@ if (!function_exists('wrand'))
 			return $weighted_values->keys()->random();
 		}
 
-		// calculate the sum and avg of the weights
-		$total_sum = $weighted_values->sum();
-		$avg = $total_sum/count($weighted_values);
-
-		// transform the values when the scale is larger than 1 or smaller than -1
+		// transform the values
 		// uses an exponential model to exaggerate changes to the weights without making them less than 0
-		if (abs($scale) > 1)
-		{
-			$weighted_values = $weighted_values->map(
-				function ($weight, $value) use ($scale, $avg)
-				{
-					// apply the exponential transformation
-					// see the docstring for detailed explanation
-					$extreme = $weight + pow(abs($scale), $weight - $avg) - 1;
-					if ($scale > 1)
-					{
-						return $extreme;
-					}
-					return -$extreme + 2*$avg;
-				}
-			);
-			// important to recalculate the sum here!
-			$total_sum = $weighted_values->sum();
-		}
+		$weighted_values = $weighted_values->map(
+			function ($weight, $value) use ($scale)
+			{
+				// apply the exponential transformation
+				// see the docstring for detailed explanation
+				return pow($weight, $scale);
+			}
+		);
+
+		// calculate the sum here
+		$total_sum = $weighted_values->sum();
 
 		// now, run the algorithm to get the random key
-		// first, we choose a random number between 0 and $total_sum
-		$rand = mt_rand(0, $total_sum*1000000) / 1000000;
+		// first, we choose a random decimal between 0 and $total_sum
+		// retain precision by multiplying by a big number and then dividing
+		$rand = mt_rand(0, $total_sum*10000000000) / 10000000000;
 		// then, we gradually subtract the weights from that number until we pass 0
 		foreach ($weighted_values as $value => $weight)
 		{
-			// if the scale is between -1 and 1
-			if (abs($scale) <= 1)
-			{
-				// apply the scaling factor
-				$rand -= $avg + $scale*($weight - $avg);
-			}
-			else
-			{
-				// the scale has already been applied when we transformed the weights
-				$rand -= $weight;
-			}
+			$rand -= $weight;
 			// return the key that made us pass 0
 			if ($rand <= 0)
 			{
