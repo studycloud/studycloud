@@ -138,7 +138,7 @@ function Tree(type, frame_id, server)
 		}
 	];
 
-	// hide the contexxt menu after we click on a context menu item
+	//hide the context menu after we click on a context menu item
 	self.frame.on('click.menu_context', function(){self.menu_context.style('display', 'none');});
 	
 	self.nodes_simulated = {};
@@ -146,7 +146,7 @@ function Tree(type, frame_id, server)
 	
 	self.simulationInitialize();
 
-	// recenter the simulation every decisecond
+	//recenter the simulation 1/10 of second after it stops changing size. This prevents the updates from lagging out the browser
 	var timeout_resize;
 	d3.select(window).on("resize", function() 
 		{ 
@@ -165,9 +165,8 @@ function Tree(type, frame_id, server)
 
 	//Setup Local variables that we keep track of about nodes in our tree. This is necessary so that they stay persistent across data updates
 	self.locals = {};
-	self.locals.nodes = {};
-	self.locals.links = {};
 
+	// create d3 local objects, which will be useful when we want to set data on a DOM element later
 	// create d3 local objects, which will be useful when we want to set data on a DOM element later
 	self.locals.style = d3.local();
 	self.locals.coordinates = d3.local();
@@ -665,7 +664,7 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 	
 	var distance_final;
 	
-	switch(self.locals.nodes.level.get(this))
+    switch (self.locals.style.level.get(this))
 	{
 	case -1:
 		distance_final = 530;
@@ -701,8 +700,7 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 Tree.prototype.computeTreeAttributes = function(selections)
 {
 	var self = this;
-	var node_locals = self.locals.nodes;
-
+	
 	//Set the new level of each of the nodes in our tree
 	self.nodes
 		.attr("class", "node")
@@ -875,7 +873,7 @@ Tree.prototype.centerOnNode = function (node)
 	//Set the on click handlers
 	self.nodes.on("click", function(d)
 	{
-		switch (self.locals.nodes.level.get(this))
+		switch (self.locals.style.get(this).level)
 			{
 				case -1:
 				case 1:
