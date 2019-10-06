@@ -10,38 +10,12 @@ function Tree(type, frame_id, server)
 	
 	var self = this;
 	
-	self.debug = false;
-	
-	if (self.debug)
-	{
-		var data = {};
-		
-		var nodes_count = 10;
-		data.nodes = new Array(nodes_count);
-		
-		data.connections = [];
-		
-		// creates a tree with nodes_count nodes
-		for(i = 0; i < nodes_count; i++)
-		{	
-			// create a node
-			data.nodes[i] = {id: i.toString()};
-			// randomly assign two children the node we just created
-			// doesn't this create potential loops in the tree?
-			data.connections.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:i.toString()});
-			data.connections.push({target:Math.floor(Math.random() * nodes_count) , source: i, id:(i+nodes_count).toString()});
-		}
-
-	}
-	
 	//Create the various DOM element groups needed by the tree
 	self.frame = d3.select("#" + frame_id);
 	// get the dimensions of the frame: width, height, bottom, top, left, right, etc
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
-	
-	// is this code useful? there is no resizeFrame function anymore
-	self.frame.on("resize", self.resizeFrame);
-	
+
+
 	// create the svg tag that will hold the visualization
 	self.frame.svg = self.frame.append("svg");
 
@@ -145,19 +119,17 @@ function Tree(type, frame_id, server)
 	self.links_simulated = {};
 	
 	self.simulationInitialize();
-
+	
 	//recenter the simulation 1/10 of second after it stops changing size. This prevents the updates from lagging out the browser
 	var timeout_resize;
 	d3.select(window).on("resize", function() 
-		{ 
+		{
+			console.log("1");
 			clearTimeout(timeout_resize);
-			timeout_resize = setTimeout(function(){self.simulationRecenter();}, 100); 
+			timeout_resize = setTimeout(function(){console.log("2"); self.handleResize();}, 100); 
 		}
 	);
-	
-	
-	//if (self.debug) self.setData(data);
-	
+
 	// set the breadcrumb stack for use when we decide to implement it
 	self.breadcrumbStack = [0];
 
@@ -228,23 +200,6 @@ Tree.prototype.simulationRestart = function()
 	self.simulation.force("ForceLink").links(self.links_simulated.data());
 	
 	self.simulationReheat();
-};
-
-Tree.prototype.simulationRecenter = function(node)
-{
-	var self = this;
-
-	self.frame.boundary = self.frame.node().getBoundingClientRect();
-
-	//self.simulation
-		//.force("ForceCenterX", d3.forceX(self.frame.boundary.width / 2))
-		//.force("ForceCenterY", d3.forceY(self.frame.boundary.height / 2));
-
-	//self.simulationReheat();
-
-	var node_center = self.nodes.filter(function(d){ return d.level === 0; });
-
-	self.centerOnNode(node_center.node());
 };
 
 Tree.prototype.getNLevelIds = function(node_id, levels_num)
@@ -1053,7 +1008,7 @@ Tree.prototype.nodeMenuOpen = function(node, data, index)
 	var menu_items_new = list.selectAll('li')
 			.data(self.menu_context_items)
 			.enter()
-				.append('li')
+				.append('li');
 	
 	menu_items_new
 		.style('color', function(d)
@@ -1106,4 +1061,13 @@ Tree.prototype.nodeMenuOpen = function(node, data, index)
 		.style('display', 'block');
 
 	d3.event.preventDefault();
-}
+};
+
+Tree.prototype.handleResize = function()
+{
+	var self = this;
+
+	self.frame.boundary = self.frame.node().getBoundingClientRect();
+
+	self.simulationRestart();
+};
