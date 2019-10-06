@@ -73,18 +73,7 @@ window.onclick = function(event)
 function displayContainer(container) 
 {
 	// Display this container, undisplay all other containers. 
-	var containers = ["forget", "register", "resource"];
-	for(var i = 0; i < 3; i++) 
-	{
-		if (containers[i] == container)
-		{
-			document.getElementById(containers[i]+'-container').style.display = "block";
-		}
-		else
-		{
-			document.getElementById(containers[i]+'-container').style.display = "none";
-		}
-	}
+	document.getElementById(container+'-container').style.display = "block";
 
 }
 
