@@ -71,12 +71,12 @@ Route::patch('/classes/attach/{class?}',
 	}
 )->name('resources.attach');
 
-Route::get('admins/{userid}',
-	function($user_id)
+Route::get('admin',
+	function()
 	{
-		$user = User::findOrFail($user_id);
+		//$user = User::findOrFail($user_id);
 		// return $user;
-		return view('admins', compact('user'));
+		return view('admin');
 	}
 );
 

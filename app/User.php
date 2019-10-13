@@ -109,13 +109,13 @@ class User extends Authenticatable
 	}
 
 	// again, probs not relevant anymore
-	// /**
-	//  * returns all users as a collection of User objects
-	//  */
-	// public static function getAllAdmins()
-	// {
-	//     return AdminUserRole::getAllAdmins();
-	// }
+	/**
+	 * returns all users as a collection of User objects
+	 */
+	public static function getAllAdmins()
+	{
+	    return DB::table('roles')->get();
+	}
 
 	/**
 	 * wrapper function to map strings representing roles to their Role instance counterparts

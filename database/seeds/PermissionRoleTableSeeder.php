@@ -11,8 +11,8 @@ class PermissionRoleTableSeeder extends Seeder
 		'Dictator' => [],
 		'Moderator' => [],
 		'Organizer' => [],
-		'Account Manager' => [],
-		'Promoter' => []
+		//'Account Manager' => [],
+		//'Promoter' => []
 	];
 
 

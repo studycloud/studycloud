@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 class RolesTableSeeder extends Seeder
 {
 	// what are Study Cloud's roles?
-	private $roles = ['Dictator', 'Moderator', 'Organizer', 'Account Manager', 'Promoter'];
+	private $roles = ['Dictator', 'Moderator', 'Organizer'];
 	//note that implicit in this array are the role_id's (defined by the order of each role in the array)
 
     /**
