@@ -22,45 +22,6 @@
 // xmlhttp.open("GET", "json_demo.txt", true);
 // xmlhttp.send();
 
-/*
-Dummy Received Data, don't need to use now
-var received = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher", "use_name":"Quiz"},\
- "contents": \
- [\
- {"name": "Resource Content BROKENadfs;lj;", "type": "link", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"},\
- {"name": "Resource 222222", "type": "text", "content": "sadfdsflkjsfkljasklff", "created": "date", "updated": "date"}\
- ]}';
-var received2 = '{"meta": {"name": "Resource 1", "author_name": "Giselle Serate", "author_type": "teacher", "use_name":"Notes"}, "contents": [ {"name": "Resource Content BROKENadfs;lj;", "type": "HECK;ijldfskj;l", "content": "<a href=http://google.com>blahhhh</a>", "created": "date", "updated": "date"}]}';
-*/
-
-/*Dummy Data about the resource use (don't need to use this anymore)
-var resourceUseData = 
-[
-		{
-			"id": 1,
-			"name": "Class Notes"
-		},
-		{
-			"id": 2,
-			"name": "Notes"
-		},
-		{
-			"id": 3,
-			"name": "Flashcards"
-		},
-		{
-			"id": 4,
-			"name": "Summary"
-		},
-		{
-			"id": 5,
-			"name": "List of Key Terms"
-		},
-		{
-			"id": 6,
-			"name": "Reading Notes"
-		}
-];*/
 
 //use when we have more than 1 content
 var content_num = 0;
@@ -74,19 +35,27 @@ var pre_updated_content_num = content_num;
 var resource_id = 24;
 var temp_content_id = 24;
 
+/** 
+ * \brief create server object and get resource for resource viewer
+ * \details specified by resource_id (NOT IMPLEMENTED WITH TREE YET)
+ * 		handleError function: error
+ * 		handleSuccess function: displayResource
+ */
 function requestResource()
 {
-	//call the server to get the JSON for resource (specified by resource_id)
-	//use to display resource
 	var server = new Server();
 
 	server.getResource(resource_id, error, displayResource);
 }
 
+/** 
+ * \brief create server object and get resource for resource editor
+ * \details specified by resource_id (NOT IMPLEMENTED WITH TREE YET)
+ * 		handleError function: error
+ * 		handleSuccess function: resourceEditor
+ */
 function editResource()
 {
-	//call the server to get the JSON for resource (specified by resource_id)
-	//use to edit resource
 	var server = new Server();
 
 	server.getResource(resource_id, error, resourceEditor);
@@ -106,33 +75,52 @@ function createResourceSuccess(data)
 	console.log(data);
 }
 
-//Error callback function, callback 1
+/** 
+ * \brief error callback function for server object
+ * 
+ */
 function error(data)
 {
 	console.log(data);
 }
 
-// Callback function that server will give the data.
+/** 
+ * \brief display resources on resource viewer
+ * @param {*} received a response (needs to turn into a json)
+ */
 function displayResource(received)
 {
+	/*
+		received.json() gives us a Promise
+		.then(function(resource){
+			...
+		} is an anonymous function
+			resource is the json we want
+	*/
 	console.log(received);
-	var resource = received;
+	received.json().then(function(resource){
+		console.log(resource);
+		document.getElementById('resource-head').innerHTML = "<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1>\
+		<div>contributed by <div id='author-name'></div></div>";
 
-	//display the received data
-	document.getElementById('resource-head').innerHTML="<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1><div>contributed by <div id='author-name'></div></div>";
-	set_author(resource.meta.author_name, resource.meta.author_type);
-	for(var i=0;i<1;i++)
-	{
-		display_content(i, resource.contents[i]);
-	}
+		set_author(resource.meta.author_name, resource.meta.author_type);
+		for(var i = 0; i < resource.contents.length; i++)
+		{
+			display_content(i, resource.contents[i]);
+		}
+	});
 }
 
-// Set author and classes to format. 
+/** 
+ * \brief display author's name and type
+ * @param {*} name String, author's name
+ * @param {*} type String, author's type
+ */
 function set_author(name, type) 
 {
 	// Clear all classes on the author-name field. 
-	var cl=document.getElementById('author-name').classList;
-	for(var i=cl.length; i>0; i--) 
+	var cl = document.getElementById('author-name').classList;
+	for(var i = cl.length; i > 0; i--) 
 	{
 	    cl.remove(cl[0]);
 	}
@@ -140,7 +128,11 @@ function set_author(name, type)
 	document.getElementById('author-name').innerHTML=name;
 }
 
-// Display one of the content elements in the array.
+/** 
+ * @param {*} num content's index in the content array
+ * @param {*} element json for that content
+ * 
+ */
 function display_content(num, element)
 {
 	// Create a new module.
@@ -162,8 +154,8 @@ function display_content(num, element)
 
 function createResource()
 {
-	selectorCode = resourceUseSelection(resourceUseData); //selector code for resource use attachment
-	//create all the input to create resources
+	selectorCode = resourceUseSelection(resourceUseData); // selector code for resource use attachment
+	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML="<h1>Resource Editor</h1>"
 	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> \
 	<div class 'resource-creator> Resource Name: <br> \
@@ -199,48 +191,59 @@ function createNewResource(nodeId)
 	<p id = 'demo'> </p></div> ";
 }
 
-
+/** 
+ * @param {*} received a response (needs to turn into a json)
+ * \details load the corresponding resource in textfield 
+ * 				(resource specified by resource_id)
+ * 		the user has to be the author to edit
+ */
 function resourceEditor(received)
 {
 	/*
-	Allow the user to edit the resource created by himself
-	Display the resourceEditor and 
-	load the corresponding resourses (specified by resource_id)
+		received.json() gives us a Promise
+		.then(function(resource){
+			...
+		} is an anonymous function
+			resource is the json we want
 	*/
-	var resource = received;
-	
-	//load the resource into the editor
-	document.getElementById("meta-name").value = resource.meta.name;
+	received.json().then(function(resource){
+		document.getElementById("meta-name").value = resource.meta.name;
 
-	//load the resource use in the resource use drop down selector
-	//display the given resource use
-	$('div#select_style_text').html(resource.meta.use_name);
+		// TODO: not using drop down selector anymore, using icon
+		// load the resource use in the resource use drop down selector
+		// display the given resource use
+		$('div#select_style_text').html(resource.meta.use_name);
 
-	//make the selector's selected value match the given resource use id
-	for (i = 0; i < resourceUseData.length; i ++)
-	{
-		var u = resourceUseData[i];
-		if (u.name == resource.meta.use_name)
+		// make the selector's selected value match the given resource use id
+		for (i = 0; i < resourceUseData.length; i ++)
 		{
-			$('select[name="attach"]').val(u.id);
+			var u = resourceUseData[i];
+			if (u.name == resource.meta.use_name)
+			{
+				$('select[name="attach"]').val(u.id);
+			}
 		}
-	}
 
-	for (i=1; i < resource.contents.length; i++)
-	{
-		newContent();
-	}
+		// create a text area for each content
+		for (i=1; i < resource.contents.length; i++)
+		{
+			newContent();
+		}
 
-	loadContent(resource.contents);
+		loadContent(resource.contents);
+	});
 }
 
+/** 
+ * \brief Create a new entry area for a new content
+ */
 function newContent()
 {
-	//Create a new entry area for a new content
+	// an arrary of jsons, storing the entries
 	var storedContent = temporaryStoreContent(); 
 	
-	//use pre_updated_content_num so if user can decide to add new content but not submit it
-	//if user exit resource editor/creator, clear previous entries
+	// use pre_updated_content_num so user can decide to add new content but not submit it
+	// if user exit resource editor/creator, clear previous entries
 	pre_updated_content_num += 1;
 	document.getElementById('more-contents').innerHTML += "<div id='content-"+pre_updated_content_num+"'></div>";
 	document.getElementById('content-'+pre_updated_content_num).innerHTML += "<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
@@ -248,7 +251,7 @@ function newContent()
 	Content Type:  <select id = 'content-type"+pre_updated_content_num+"'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
 	Content: <br> <textarea rows = '5' id = 'content"+pre_updated_content_num+"'> </textarea> </div> </form>";
 
-	//load the stored content back to the content textboxes
+	// load the stored content back to the content textboxes
 	loadContent(storedContent);
 }
 
@@ -262,7 +265,7 @@ function submitContent()
 	Call the server to edit the resource
 	*/
 	var resource_name = document.getElementById("meta-name").value;
-	var resource_use = document.getElementById("resource-use").value;
+	var resource_use = parseInt(document.getElementById("resource-use").value);
 	var content_name_array = [];
 	var content_type_array = [];
 	var content_array = [];
@@ -294,7 +297,7 @@ function submitContent()
 		]
 	};
 	
-	for (i=1;i < (content_num+1); i++)
+	for (i = 1; i < (content_num+1); i++)
 	{
 		var content_array =
 		{
@@ -379,14 +382,14 @@ function submitNewContent(node_id_num)
 	document.getElementById('modules').innerHTML = " "; //clean the display box up
 }
 
+/** 
+ * \details receive an array of jsons
+ * 		used in:
+ * 			resource editor (initially loading resource)
+ *			new content button (loading the previously typed contents back to the textbox)
+ */
 function loadContent(contents)
 {
-	/*
-	Helper function to load the content back into the textbox
-	Used in:
-	resource editor (initially loading resource)
-	new content button (loading the previously typed resource back to the textbox)
-	*/
 	for (i=0; i < contents.length; i++)
 	{
 		document.getElementById("content-name"+i).value = contents[i]["name"];
@@ -404,13 +407,14 @@ function loadContent(contents)
 	}
 }
 
+/** 
+ * \details helper function return an array of jsons
+ * 		store previously typed contents
+ * 		used in:
+ * 			newContent() (store before create new textarea for new content)
+ */
 function temporaryStoreContent()
 {
-	/*
-	Helper function to temporarily store the content typed in the textbox into 
-	an array. 
-	Return this contents array to get put back to the textbox after a new content is created
-	*/
 	var contents = 
 	[
 		{
@@ -420,10 +424,10 @@ function temporaryStoreContent()
 		}
 	];
 
-	//use pre_updated_content_num here because...
-	//If the user has entries in a new content (but hasn't click submit)
-	//then he clicks on "New Content" again,
-	//using pre_updated_content_num will save his entries
+	// use pre_updated_content_num here because...
+	// If the user has entries in a new content (but hasn't click submit)
+	// then she clicks on "New Content" again,
+	// using pre_updated_content_num will save his entries
 	for (i=1;i < (pre_updated_content_num+1); i++)
 	{
 		var contentArray =
@@ -438,22 +442,22 @@ function temporaryStoreContent()
 	return contents;
 }
 
+/** 
+ * \details clear unsaved changes
+ * 		when the user close the resource editor/creator, 
+ * 		reset pre_updated_content_num
+ */
 function resetContentNum ()
 {
-	//when the user close the resource editor/creator
-	//reset preUpdatedContent Num
-	//clear unused changes
 	pre_updated_content_num = content_num;
 }
 
+/**
+ * \brief create the htmlCode to create the selector for resourceAttachment
+ * @param {*} resource_use an array with each resourceUse (resource ID, resource name)
+ */
 function resourceUseSelection (resource_use)
 {
-	/*
-	resourceUse: an array with each resourceUse (resource ID, resource name)
-
-	create the htmlCode to create the selector for resourceAttachment
-	*/
-
 	var html_code = "<select id = 'resource-use' name = 'attach' theme='google' width='400' style='' \
 		placeholder='Select the Use of Your Resource' data-search='true'> ";
 	
