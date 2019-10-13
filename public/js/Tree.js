@@ -570,15 +570,18 @@ Tree.prototype.drawNodes = function()
 							}
 						);
 
-				node.select("text")
-					.attr("text-anchor", "middle")
-					.attr("fill", "white")
-					.attr("stroke", "black")
-					.attr("stroke-width", "0.02em")
-					.attr("font-size", "22")
-					.attr("font-family", "sans-serif")
-					.attr("font-weight", "bold")
-					.text(function(d){return d.name;});
+				if(style.level <= 1) // leaves text hidden for level 2+ nodes
+				{
+					node.select("text")
+						.attr("text-anchor", "middle")
+						.attr("fill", "white")
+						.attr("stroke", "black")
+						.attr("stroke-width", "0.02em")
+						.attr("font-size", "22")
+						.attr("font-family", "sans-serif")
+						.attr("font-weight", "bold")
+						.text(function(d){return d.name;});
+				}
 
 				node.select("text")
 					.transition(transition)
