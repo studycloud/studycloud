@@ -1,0 +1,146 @@
+#admin_header {
+	background-color: #03A9F4;
+	padding: .5%;
+	/*border-bottom: 2px solid black;*/
+}
+#admin_title {
+	width: 82%;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+}
+#admin_user {
+	display: inline-block;
+    width: 17%;
+    text-align: center;
+    border-left: 1px solid black;
+}
+#admin_notes {
+	width: 98%;
+    background-color: #EDEDED;
+    padding: 1%;
+}
+#notes_ul {
+	list-style-type: none;
+    line-height: 107%;
+    margin-left: 2%;
+    padding-left: 0;
+    margin-top: .5%;
+    /*font-size: 1.75vw;*/
+}
+.li_change_color {
+	padding: 3px; /* don't make this a percentage value because that will mess things up when the screen resizes */
+	padding-right: 0;
+}
+.li_change_color:hover {
+	background-color: #bfbfbf;
+}
+.notes {
+	float: right;
+    border: none;
+    background-color: transparent;
+    font-weight: 600;
+    vertical-align: text-top;
+    width: 25px;
+    /*width:1.57%;*/
+    padding: 0px;
+    margin-left: 3px;
+    position: relative;
+    top: -3px;
+    padding-left: 2px;
+    overflow-y: hidden;
+}
+.notes:hover {
+	background-color: #9e9e9e;
+}
+#new_note {
+	margin-left: 2%;
+}
+#new_note_textarea {
+	width: 40%;
+    height: 10%;
+    max-width: 100%;
+    /*max-height: 10%;*/
+    margin-bottom: .5%;
+    margin-top: .5%;
+}
+.select_recipient:not(:first-child) {
+    margin-left: .25%;
+}
+#new_note_submit {
+	margin-top: .25%;
+    border: none;
+    font-size: 105%;
+    box-shadow: 0 0 5px .5px black;
+}
+#new_note_submit:hover{
+	background-color: #CCCCCC;
+}
+
+/*CSS for the content_nav*/
+#content_nav {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    /*background-color: #dddddd;*/
+}
+#content_nav_ul {
+    list-style-type: none;
+    margin:0;
+    padding: 0;
+    overflow: auto;
+    display: inline-block;
+}
+#content_nav_ul li {
+    float: left;
+}
+#content_nav_ul li a {
+    display: block;
+    text-decoration: none;
+    padding: 8px;
+    background-color: #dddddd;
+    font-size: 125%;
+}
+#content_nav_ul li a:hover {
+    background-color: #b5b5b5;
+}
+.add_background_to_actual_content {
+    background-image: url("images/loading.gif");
+}
+#admin_content_iframe {
+    width: 100%;
+    border: 0;
+    height: 100%; /* TODO: make the height work better? */
+}
+
+/*this is for the manage administrators page*/
+#manage_admins h1 {
+    text-align: center;
+}
+
+#manage_admins table {
+    width: 100%;
+    margin-bottom: 1px;
+}
+
+#manage_admins td {
+    text-align: center;
+}
+
+#manage_admins tr {
+    border: 1px solid black;
+    border-right: none;
+    border-left: none;
+}
+
+#manage_admins th {
+    padding: 10px;
+}
+
+#manage_admins .jobs_select label {
+    margin-right: 5px;
+}
+
+#manage_admins .edit_jobs_save:visited, .edit_job_save:link {
+    color: blue;
+}
