@@ -23,15 +23,15 @@
 // xmlhttp.send();
 
 
-//use when we have more than 1 content
+// use when we have more than 1 content
 var content_num = 0;
-//use this to fix problem with "add new content" but not submitting
-//having this will clear any unsaved changes
+// use this to fix problem with "add new content" but not submitting
+// having this will clear any unsaved changes
 var pre_updated_content_num = content_num;
 
-//TEMPORARY
-//use this to interact with Server
-//request resource and send resource JSON to server
+// TEMPORARY
+// use this to interact with Server
+// request resource and send resource JSON to server
 var resource_id = 24;
 var temp_content_id = 24;
 
@@ -61,16 +61,20 @@ function editResource()
 	server.getResource(resource_id, error, resourceEditor);
 }
 
+/** 
+ * \brief callback function after editting resource successfully
+ */
 function editResourceSuccess(data)
 {
-	//callback 2 function for editing resources
 	console.log("editted resource")
 	console.log(data);
 }
 
+/** 
+ * \brief callback function after creating resource successfully
+ */
 function createResourceSuccess(data)
 {
-	//callback 2 function for creating resourcess
 	console.log("created resource");
 	console.log(data);
 }
@@ -152,6 +156,11 @@ function display_content(num, element)
 	document.getElementById('module-'+num).innerHTML+="<div class='date'>Modified: "+element.modified+"</div>";
 }
 
+/** 
+ * \brief fill in html for resource editor
+ * \details gets called in loginmodal.js when the editor button gets clicked
+ * 			TODO: need to be implemented in the tree in the future
+ */
 function createResource()
 {
 	selectorCode = resourceUseSelection(resourceUseData); // selector code for resource use attachment
@@ -171,7 +180,12 @@ function createResource()
 	<p id = 'demo'> </p></div> ";
 
 }
-
+/** 
+ * \brief fill in html for resource creator
+ * \details gets called in loginmodal.js when the creator button gets clicked
+ * 			TODO: need to be implemented in the tree in the future
+ * @param {*} nodeId the nodeID of where the resource will be attached (actually not sure...)
+ */
 function createNewResource(nodeId)
 {
 	selectorCode = resourceUseSelection(resourceUseData); //selector code for resource use attachment
@@ -255,15 +269,14 @@ function newContent()
 	loadContent(storedContent);
 }
 
+/** 
+ * \brief Submit an editted resource
+ * \details gets triggered with the submit function is clicked in Resource Editor
+ *			Create a resource JSON (w/ resource id & content id)
+ *			Call the server to edit the resource
+*/
 function submitContent() 
 {
-	/*
-	Gets triggered with the submit function is clicked in Resource Editor
-	
-	Submit an editted resource
-	Create a resource JSON (w/ resource id & content id)
-	Call the server to edit the resource
-	*/
 	var resource_name = document.getElementById("meta-name").value;
 	var resource_use = parseInt(document.getElementById("resource-use").value);
 	var content_name_array = [];
@@ -320,14 +333,14 @@ function submitContent()
 	document.getElementById('modules').innerHTML = " "; //clean the display box up
 }
 
+/** 
+ * \brief Submit a new resource
+ * \details Gets triggered when the submit function is clicked in Resource Creator
+ *			Create a resource JSON (w/ resource id & content id)
+ *			Call the server to edit the resource
+*/
 function submitNewContent(node_id_num) 
 {
-	/* 
-	Gets triggered when the submit function is clicked in resource creator
-	Submit a new resource
-	
-	Create a resource JSON and call the server to add new resource
-	*/
 	var resource_name = document.getElementById("meta-name").value;
 	var resource_use = document.getElementById("resource-use").value;
 	var class_id = node_id_num.toString();
