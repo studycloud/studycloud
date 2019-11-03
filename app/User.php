@@ -5,9 +5,11 @@ namespace App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 class User extends Authenticatable
 {
+	use HasRolesAndAbilities;
 	use Notifiable;
 
 	/**
@@ -42,7 +44,9 @@ class User extends Authenticatable
 	 */
 	public function roles()
 	{
-		return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
+		//return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
+		return $this->getRoles();
+
 	}
 
 	/**
@@ -59,15 +63,17 @@ class User extends Authenticatable
 	 */
 	public function addRole($role)
 	{
-		$role = User::roleAsStringWrapper($role);
-		if ($this->hasRole($role))
-		{
-			return false;   
-		}
-		else
-		{
-			return $this->roles()->attach($role->id);
-		}
+
+		$this->assign('role');
+		// $role = User::roleAsStringWrapper($role);
+		// if ($this->hasRole($role))
+		// {
+		// 	return false;   
+		// }
+		// else
+		// {
+		// 	return $this->roles()->attach($role->id);
+		// }
 		
 	}
 
@@ -78,25 +84,17 @@ class User extends Authenticatable
 	public function deleteRole($role)
 	// an idea! --> allow deleteRole to accept an array of Roles
 	{
-		$role = User::roleAsStringWrapper($role);
-		if ($this->hasRole($role))
-		{
-			return $this->roles()->detach($role->id);
-		}
-		else
-		{
-			return false;
-		}
+		Bouncer::retract($role)->from($this);
+		// $role = User::roleAsStringWrapper($role);
+		// if ($this->hasRole($role))
+		// {
+		// 	return $this->roles()->detach($role->id);
+		// }
+		// else
+		// {
+		// 	return false;
+		// }
 	}
-
-    // I'm not sure if this is still relevant
-    // /**
-    //  * returns true if this user is an administrator and false otherwise
-    //  */
-    // public function isAdmin()
-    // {
-    //     return !($this->roles()->get()->isEmpty());
-    // }
 
 	/**
 	 * returns true if this user has the specified role and false otherwise
@@ -104,8 +102,9 @@ class User extends Authenticatable
 	 */
 	public function hasRole($role)
 	{
-		$role = User::roleAsStringWrapper($role);
-		return $this->roles()->get()->contains($role);
+		Bouncer::is($user)->a($role);
+		//$role = User::roleAsStringWrapper($role);
+		//return $this->roles()->get()->contains($role);
 	}
 
 	// again, probs not relevant anymore
@@ -114,7 +113,8 @@ class User extends Authenticatable
 	 */
 	public static function getAllAdmins()
 	{
-	    return DB::table('roles')->get();
+		User::whereIs('superadmin')->get();
+		//return DB::table('roles')->get();
 	}
 
 	/**
