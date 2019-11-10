@@ -229,6 +229,82 @@ Tree.prototype.getNLevelIds = function(node_id, levels_num)
 	return ids_retrieved;
 };
 
+Tree.prototype.getIDLevelMaps = function(node_id, levels_up_num, levels_down_num)
+{
+	var self = this;
+
+	var IDLevelMap = d3.map();
+	self.getIdLevelMapTraverseUp(IDLevelMap, node_id, levels_up_num);
+	self.getIdLevelMapTraverseDown(IDLevelMap, node_id, levels_down_num);
+	//Change this so that it adds children to the visiting map.
+
+	return IDLevelMap;
+};
+
+Tree.prototype.getIdLevelMapTraverseUp = function(IDLevelMap, node_id, levels_up_num, levels_traversed = 0)
+{
+	var self = this;
+
+	//return early, because we have already seen this node before
+	if (IDLevelMap.has(node_id))
+	{
+		return;
+	}
+	
+	//Add the node ID to our overall list, as well as our list for this particular level
+	IDLevelMap.set(node_id, levels_traversed);
+	
+	if (levels_up_num === 0)
+	{
+		//there are no more children to find
+		return;
+	}
+	
+	//We are searching for parents, so check if our current node is a child of any nodes, and traverse upwards
+	self.links.data().forEach(function (link)
+		{
+			if (link.target.id === node_id)
+			{
+				//We found a parent! 
+				//A parent is any node that has a link pointing towards our node
+				self.getIdLevelMapTraverseUp(IDLevelMap, link.source.id, levels_up_num - 1, levels_traversed - 1);
+			}
+		}
+	);
+};
+
+Tree.prototype.getIdLevelMapTraverseDown = function(IDLevelMap, node_id, levels_down_num, levels_traversed = 0)
+{
+	var self = this;
+
+	//return early, because we have already seen this node before
+	if (IDLevelMap.has(node_id))
+	{
+		return;
+	}
+	
+	//Add the node ID to our overall list, as well as our list for this particular level
+	IDLevelMap.set(node_id, levels_traversed);
+	
+	if (levels_down_num === 0)
+	{
+		//there are no more children to find
+		return;
+	}
+	
+	//We are searching for children, so check if our current node is a parent of any nodes, and traverse downwards
+	self.links.data().forEach(function (link)
+		{
+			if (link.source.id === node_id)
+			{
+				//We found a child!
+				//A child is any node that has a link that originates at our node
+				self.getIdLevelMapTraverseDown(IDLevelMap, link.target.id, levels_down_num - 1, levels_traversed + 1);
+			}
+		}
+	);
+};
+
 Tree.prototype.getNLevelIdsRecurse = function(ids_retrieved, node_id, levels_num)
 {
 	var self = this;
