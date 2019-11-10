@@ -82,3 +82,53 @@ h1 {
 h2 {
 
 }
+
+.use-list-scrolling-wrapper{
+	height: 40px;
+  	margin-bottom: 20px;
+  	width: 50%;
+ 	-webkit-overflow-scrolling: touch;
+  	&::-webkit-scrollbar {
+    	display: none;
+	}
+	
+	overflow-x: scroll;
+  	overflow-y: hidden;
+  	white-space: nowrap;
+  
+  	.use {
+    	display: inline-block;
+  	}
+}
+
+ul#menu {
+	padding: 0;
+	font-family: sans-serif;
+	height: 20px;
+
+	li {
+		display: inline-block;
+	}
+
+	li label {
+		background-color: #d3d3d3;
+		color: black;
+		padding: 5px 20px;
+		text-decoration: none;
+		transition: 0.2s;
+	}
+
+	li label:hover, li input:checked + label {
+		background-color: #808080;
+		transition: 0.3s;
+	}
+
+	li input:checked + label {
+		background-color:#ADD8E6;
+	}
+	
+	li input {
+		position: fixed;
+		left: 100%;
+	}
+}

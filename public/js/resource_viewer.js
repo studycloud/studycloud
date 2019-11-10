@@ -170,7 +170,7 @@ function createResource()
 	<div class 'resource-creator> Resource Name: <br> \
 	<input type = 'text' id = 'meta-name'> <br> \
 	Resource Use:  <br>" + selectorCode + "<br> \
-	<div class=resource-divider></div> <br> </div>\
+	<div class=resource-divider></div> <br>" + resourceUseSelector() + " </div>\
 	<div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
@@ -180,6 +180,7 @@ function createResource()
 	<p id = 'demo'> </p></div> ";
 
 }
+
 /** 
  * \brief fill in html for resource creator
  * \details gets called in loginmodal.js when the creator button gets clicked
@@ -484,3 +485,52 @@ function resourceUseSelection (resource_use)
 
 	return html_code;
 }
+
+/**
+ * \brief create htmlCode to create resource use selector
+ */
+function resourceUseSelector ()
+{
+	var html_code = "\
+	<div class='use-list-scrolling-wrapper'>\
+		<ul id='menu'>\
+			<div class='use'><li><input type='radio' name='resource-use' id='1'><label for='1'>Notes</label></li></div>\
+			<div class='use'><li><input type='radio' name='resource-use' id='2'><label for='2'>Use 2</label></li></div>\
+			<div class='use'><li><input type='radio' name='resource-use' id='3'><label for='3'>Use 3</label></li></div>\
+			<div class='use'><li><input type='radio' name='resource-use' 'id='4'><label for='4'>Use 4</label></li></div>\
+			<div class='use'><li><input type='radio' name='resource-use' id='5'><label for='5'>Use 5</label></li></div>\
+			<div class='use'><li><input type='radio' name='resource-use' id='6'><label for='6'>Use 6</label></li></div>\
+			<div class='use'><li><input type='radio' name='resource-use' id='7'><label for='7'>Use 7</label></li></div>\
+			<div class='use'><li><input type='radio' name='resource-use' id='8'><label for='8'>Use 8</label></li></div>\
+			<div class='use'><li><input type='radio' name='resource-use' id='9'><label for='9'>Use 9</label></li></div>\
+			<div class='use'><li><input type='radio' name='resource-use' id='10'><label for='10'>Use 10</label></li></div>\
+			<div class='use'><li><input type='radio' name='resource-use' id='11'><label for='11'>Use 11</label></li></div>\
+			<div class='use'><li><input type='radio' name='resource-use' id='12'><label for='12'>Use 12</label></li></div>\
+	  </ul>\
+	</div><br>";
+	  
+	return html_code;
+}
+// function resourceUseSelector ()
+// {
+// 	var html_code = "\
+// 	<div class='use-list-scrolling-wrapper'>\
+// 		<ul id='menu'>\
+// 			<div class='use'><li><input name='notes' id='1'><label for='1'>Notes</label></li></div>\
+// 			<div class='use'><li><input name='use2' id='2'><label for='2'>Use 1</label></li></div>\
+// 			<div class='use'><li><input name='use3' id='3'><label for='3'>Use 2</label></li></div>\
+// 			<div class='use'><li><input name='use4'id='4'><label for='4'>Use 3</label></li></div>\
+// 			<div class='use'><li><input name='use5' id='5'><label for='5'>Use 5</label></li></div>\
+// 			<div class='use'><li><input name='use6' id='6'><label for='6'>Use 6</label></li></div>\
+// 			<div class='use'><li><input name='use7' id='7'><label for='7'>Use 7</label></li></div>\
+// 			<div class='use'><li><input name='use8'id='8'><label for='8'>Use 8</label></li></div>\
+// 			<div class='use'><li><input name='notes' id='9'><label for='9'>Use 9</label></li></div>\
+// 			<div class='use'><li><input name='use2' id='10'><label for='10'>Use 10</label></li></div>\
+// 			<div class='use'><li><input name='use3' id='11'><label for='11'>Use 11</label></li></div>\
+// 			<div class='use'><li><input name='use4'id='12'><label for='12'>Use 12</label></li></div>\
+// 	  </ul>\
+// 	</div><br>";
+	  
+// 	return html_code;
+// }
+
