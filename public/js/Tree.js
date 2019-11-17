@@ -234,14 +234,16 @@ Tree.prototype.getIDLevelMaps = function(node_id, levels_up_num, levels_down_num
 	var self = this;
 
 	var IDLevelMap = d3.map();
-	self.getIdLevelMapTraverseUp(IDLevelMap, node_id, levels_up_num);
-	self.getIdLevelMapTraverseDown(IDLevelMap, node_id, levels_down_num);
+	self.getIDLevelMapTraverseUp(IDLevelMap, node_id, levels_up_num);
+	//Delete the zeroth node so that it traverses down
+	IDLevelMap.remove(node_id)
+	self.getIDLevelMapTraverseDown(IDLevelMap, node_id, levels_down_num);
 	//Change this so that it adds children to the visiting map.
 
 	return IDLevelMap;
 };
 
-Tree.prototype.getIdLevelMapTraverseUp = function(IDLevelMap, node_id, levels_up_num, levels_traversed = 0)
+Tree.prototype.getIDLevelMapTraverseUp = function(IDLevelMap, node_id, levels_up_num, levels_traversed = 0)
 {
 	var self = this;
 
@@ -267,13 +269,13 @@ Tree.prototype.getIdLevelMapTraverseUp = function(IDLevelMap, node_id, levels_up
 			{
 				//We found a parent! 
 				//A parent is any node that has a link pointing towards our node
-				self.getIdLevelMapTraverseUp(IDLevelMap, link.source.id, levels_up_num - 1, levels_traversed - 1);
+				self.getIDLevelMapTraverseUp(IDLevelMap, link.source.id, levels_up_num - 1, levels_traversed - 1);
 			}
 		}
 	);
 };
 
-Tree.prototype.getIdLevelMapTraverseDown = function(IDLevelMap, node_id, levels_down_num, levels_traversed = 0)
+Tree.prototype.getIDLevelMapTraverseDown = function(IDLevelMap, node_id, levels_down_num, levels_traversed = 0)
 {
 	var self = this;
 
@@ -299,7 +301,7 @@ Tree.prototype.getIdLevelMapTraverseDown = function(IDLevelMap, node_id, levels_
 			{
 				//We found a child!
 				//A child is any node that has a link that originates at our node
-				self.getIdLevelMapTraverseDown(IDLevelMap, link.target.id, levels_down_num - 1, levels_traversed + 1);
+				self.getIDLevelMapTraverseDown(IDLevelMap, link.target.id, levels_down_num - 1, levels_traversed + 1);
 			}
 		}
 	);
