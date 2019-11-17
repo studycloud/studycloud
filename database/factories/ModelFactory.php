@@ -91,6 +91,24 @@ $factory->define(App\Resource::class, function (Faker\Generator $faker)
 	];
 });
 
+// Notice Factory
+$factory->define(App\Notice::class, function (Faker $faker) {
+    return [
+        'author_id' => $faker->randomElement(
+			// get all user id's
+			// but also allow some of them to be null
+			array_merge(App\User::pluck('id')->toArray(), [null])
+		),
+		// need to add parent ID
+		'created-at' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
+		'difficulty' => $faker->boolean(25) ? $faker->numberBetween(1, 10) : null,
+		'priority' => $faker->boolean(25) ? $faker->numberBetween(1, 10) : null,
+		'deadline' => $faker->dateTimeThisMonth()->addHours($faker->numberBetween(1, 20))->format('Y-m-d H:i:s'),
+		'description' => $faker->text(),
+		'link' => $faker->text(),
+    ];
+});
+
 // Topic-Parent Factory
 // This model doesn't have a factory definition. All of it's seeding happens in the TopicParentTableSeeder.
 
