@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
+use Bouncer;
 
 class User extends Authenticatable
 {
@@ -113,23 +114,17 @@ class User extends Authenticatable
 	 */
 	public static function getAllAdmins()
 	{
-		User::whereIs('superadmin')->get();
+		return self::getRoles()->pluck('name')->map(function($role, $key)
+		{
+			return User::whereIs($role)->get();
+		});
+		//User::whereIs('superadmin')->get();
 		//return DB::table('roles')->get();
 	}
 
-	/**
-	 * wrapper function to map strings representing roles to their Role instance counterparts
-	 */
-	private static function roleAsStringWrapper($role){
-		if (is_string($role))
-		{
-			return Role::getRole($role);
-		}
-		elseif (is_a($role, get_class(new Role)))
-		{
-			return $role;
-		}
-		throw new \InvalidArgumentException("this function only accepts either a string representing a role or an instance of Role");
+	public static function getRoles()
+	{
+		return Bouncer::role()->all();
 	}
 
 	/**
