@@ -32,8 +32,8 @@ var pre_updated_content_num = content_num;
 // TEMPORARY
 // use this to interact with Server
 // request resource and send resource JSON to server
-var resource_id = 24;
-var temp_content_id = 24;
+var resource_id = 14;
+var temp_content_id = 14;
 
 /** 
  * \brief create server object and get resource for resource viewer
