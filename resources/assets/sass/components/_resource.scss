@@ -3,7 +3,7 @@
 @import "../helpers/color.scss";
 @import "../helpers/fonts.scss";
 //@import "https://fonts.googleapis.com/css?family=Poiret+One";
-// @import "buttons";
+//@import "buttons";
 
 
 $student-color: purple;
@@ -93,19 +93,18 @@ $off-wht: rgba(white,.4);
  }
 
 %button {
-	padding: 5px;
-    border: 0;
-    border-radius: 5px;
-    text-transform: $main-transform;
     font-family: $body-font;
 	display: inline-block;
-	margin: 1rem; 
-	padding: .938em 1.875em;
+	margin: 0rem; 
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-top: 5px;
+	padding: .5em .5em;
 	border: .094em solid;
 	border-radius: .625em;
 	box-shadow: 0 .375em .313em -.313em rgba(black,.8), inset 0 .063em $off-wht, inset 0 -.188em rgba(black,.15);
 	color: #FFF;
-	font: bold 1.8rem sans-serif;
+	font: bold 1rem sans-serif;
 	@include trans(0.2s ease-in-out); 
 	text: {
 		transform: uppercase;
@@ -116,37 +115,17 @@ $off-wht: rgba(white,.4);
 }
 
 #submit-button {
-	//@extend %button;
-	padding: 5px;
-    border: 0;
-    border-radius: 5px;
-    text-transform: $main-transform;
-    font-family: $body-font;
-	display: inline-block;
-	margin: 1rem; 
-	padding: .938em 1.875em;
-	border: .094em solid;
-	border-radius: .625em;
-	box-shadow: 0 .375em .313em -.313em rgba(black,.8), inset 0 .063em $off-wht, inset 0 -.188em rgba(black,.15);
-	color: #FFF;
-	font: bold 1.8rem sans-serif;
-	@include trans(0.2s ease-in-out); 
-	text: {
-		transform: uppercase;
-		decoration: none;
-		shadow: 0 .063em rgba(black,.3);
-	}
-  cursor:pointer;
+	@extend %button;
     background: rgba(black,.15);
 	color: $text-invert;
-	@include btn-theme($purple);
+	@include btn-theme($orange);
 }
 
 #new-content-button{
 	@extend %button;
     background: rgba(black,.15);
 	color: $text-invert;
-	@include btn-theme($purple);
+	@include btn-theme($orange);
 }
 
 .cancel-button {
