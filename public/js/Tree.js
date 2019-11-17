@@ -233,14 +233,16 @@ Tree.prototype.getIDLevelMaps = function(node_id, levels_up_num, levels_down_num
 {
 	var self = this;
 
-	var IDLevelMap = d3.map();
-	self.getIDLevelMapTraverseUp(IDLevelMap, node_id, levels_up_num);
-	//Delete the zeroth node so that it traverses down
-	IDLevelMap.remove(node_id)
-	self.getIDLevelMapTraverseDown(IDLevelMap, node_id, levels_down_num);
+	var ID_Level_Map = d3.map();
+	self.getIDLevelMapTraverseUp(ID_Level_Map, node_id, levels_up_num);
+
+	//Delete the temporary root node becuase it was added while traversing up 
+	//	and will cause the down traversal to terminate early.
+	ID_Level_Map.remove(node_id);
+	self.getIDLevelMapTraverseDown(ID_Level_Map, node_id, levels_down_num);
 	//Change this so that it adds children to the visiting map.
 
-	return IDLevelMap;
+	return ID_Level_Map;
 };
 
 Tree.prototype.getIDLevelMapTraverseUp = function(IDLevelMap, node_id, levels_up_num, levels_traversed = 0)
@@ -811,7 +813,7 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 
 };
 
-Tree.prototype.computeTreeAttributes = function(selections)
+Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 {
 	var self = this;
 	
@@ -823,115 +825,73 @@ Tree.prototype.computeTreeAttributes = function(selections)
 				var style = self.locals.style.get(this);
 				var coordinates = self.locals.coordinates.get(this);
 
-				style.level = 3;
-				style.visible = false;
-				style.opacity = 0;
-				style.labeled = false;
-				style.width = 10;
-				style.height = 10;
+				var level = ID_Level_Map.get(d.id);
 
-				coordinates.x =  0;
-				coordinates.y =  0;
-				coordinates.fx = null;
-				coordinates.fy = null;
-				coordinates.x_old = d.x;
-				coordinates.y_old = d.y;
-				coordinates.x_new = null;
-				coordinates.y_new = null;
+				switch(level)
+				{
+					case 0:
+						style.visible = true;
+						style.opacity = 1;
+						style.labeled = true;
+						style.width = 200;
+						style.height = style.width;
+						break;
+
+					case -1:
+						style.visible = true;
+						style.opacity = 1;
+						style.labeled = true;
+
+						var levels = ID_Level_Map.values();
+						var ancestor_count = 0;
+						for (i = 0; i < levels.length; i++)
+						{
+							if (levels[i] === -1)
+							{
+								ancestor_count++;
+							}
+						}
+
+						style.width = self.frame.boundary.width / ancestor_count;
+						style.height = 40;
+						break;
+
+					case 1:
+						style.visible = true;
+						style.opacity = 1;
+						style.labeled = true;
+						style.width = 140;
+						style.height = style.width;
+						break;
+
+					case 2:
+						style.visible = true;
+						style.opacity = 0.3;
+						style.labeled = false;
+						style.width = 20;
+						style.height = style.width;
+						break;
+
+					default:
+						style.visible = false;
+						style.opacity = 0;
+						style.labeled = false;
+						style.width = 0;
+						style.height = style.width;
+				}
 			}
 		);
-	
-	self.links.each(function(d){d.level = 3;});
-	
-	selections.parents.nodes
-		.classed("node-parent", true)
-		.each(function(d,i,nodes)
-			{
-				
-				var style = self.locals.style.get(this);
-				var coordinates = self.locals.coordinates.get(this);
-
-				style.level = -1;
-				style.visible = true;
-				style.opacity = 1;
-				style.labeled = true;
-				style.width = self.frame.boundary.width / nodes.length;
-				style.height = 40;
-
-				coordinates.x_new = style.width*i + style.width/2;
-				coordinates.y_new = style.height/2;
-			}
-		);
-	selections.parents.links.each(function(d){d.level = -1;});
-
-	selections.root.nodes
-		.classed("node-root", true)
-		.each(function(d)
-			{
-				var style = self.locals.style.get(this);
-				var coordinates = self.locals.coordinates.get(this);
-
-				style.level = 0;
-				style.visible = true;
-				style.opacity = 1;
-				style.labeled = true;
-				style.width = 200;
-				style.height = style.width;
-
-				coordinates.x_new = self.frame.boundary.width/2;
-				coordinates.y_new = self.frame.boundary.height/2;
-			}
-		);
-	
-	selections.children.nodes
-		.classed("node-child", true)
-		.each(function(d, i, nodes)
-			{
-				var style = self.locals.style.get(this);
-				var coordinates = self.locals.coordinates.get(this);
-
-				style.level = 1;
-				style.visible = true;
-				style.opacity = 1;
-				style.labeled = true;
-				style.width = 140;
-				style.height = style.width;
-
-				coordinates.x_new = null;
-				coordinates.y_new = null;
-			}
-		);
-	selections.children.links.each(function(d){d.level = 1;});
-
-	selections.grandchildren.nodes
-		.classed("node-grandchild", true)
-		.each(function(d)
-			{
-				var style = self.locals.style.get(this);
-				var coordinates = self.locals.coordinates.get(this);
-
-				style.level = 2;
-				style.visible = true;
-				style.opacity = 0.3;
-				style.labeled = false;
-				style.width = 20;
-				style.height = style.width;
-
-				coordinates.x_new = null;
-				coordinates.y_new = null;		
-			}
-		);
-	selections.grandchildren.links.each(function (d) { d.level = 2; });
 	
 	self.simulation.force("ForceLink").distance(function(d)
 		{
-			switch(d.level)
+			var level = ID_Level_Map.get(d.source.id);
+			switch(level)
 			{
 			case -1:
 				return 150;
-			case 1: 
+			case 0: 
 				return 200;
-			case 2: 
+			case 1: 
 				return 50;	
 			default:
 				return 280;
@@ -947,47 +907,19 @@ Tree.prototype.centerOnNode = function (node)
 	
 	var self = this;
 	
-	data_id = node.__data__.id;
-
-	var ids_ancestor = {}, ids_descendents = {}, ids_combined = {};
+	var root_node_ID = node.__data__.id;
 	
 	//Get ids for nodes one level up and 2 levels down
-	ids_ancestor = self.getNLevelIds(data_id, -1);
-	ids_descendents = self.getNLevelIds(data_id, 2);
+	var ID_Level_Map = self.getIDLevelMaps(root_node_ID, 1, 2);
 	
-	ids_combined.nodes = new Set(function*() { yield* ids_ancestor.nodes; yield* ids_descendents.nodes; }());
-	ids_combined.links = new Set(function*() { yield* ids_ancestor.links; yield* ids_descendents.links; }());
-	
-	var selections = 
-	{
-		parents: {},
-		root: {},
-		children:{},
-		grandchildren:{}
-	};
-	
-	selections.nodes = filterSelectionsByIDs(self.nodes, ids_combined.nodes, "data_id");
-	selections.links = filterSelectionsByIDs(self.links, ids_combined.links, "data_id");
-	
-	
-	selections.parents.nodes = filterSelectionsByIDs(self.nodes, ids_ancestor.nodes_separate[1], "data_id");
-	selections.parents.links = filterSelectionsByIDs(self.links, ids_ancestor.links_separate[1], "data_id");
-	
-	selections.root.nodes = filterSelectionsByIDs(self.nodes, ids_ancestor.nodes_separate[0], "data_id");
-	
-	selections.children.nodes = filterSelectionsByIDs(self.nodes, ids_descendents.nodes_separate[1], "data_id");
-	selections.children.links = filterSelectionsByIDs(self.links, ids_descendents.links_separate[1], "data_id");
-	
-	selections.grandchildren.nodes = filterSelectionsByIDs(self.nodes, ids_descendents.nodes_separate[2], "data_id");
-	selections.grandchildren.links = filterSelectionsByIDs(self.links, ids_descendents.links_separate[2], "data_id");
-	
-	
-	self.computeTreeAttributes(selections);
+	self.computeTreeAttributes(ID_Level_Map);
 
+	self.simulation.stop();
+	
 	//Set the on click handlers
 	self.nodes.on("click", function(d)
 	{
-		switch (self.locals.style.get(this).level)
+		switch (ID_Level_Map.get(d.id))
 			{
 				case -1:
 				case 1:
@@ -996,24 +928,6 @@ Tree.prototype.centerOnNode = function (node)
 					break;
 				default:
 					//self.nodeClicked(this);
-					break;
-			}
-	});
-
-	self.simulation.stop();
-	
-	//Set the on click handlers
-	self.nodes.on("click", function(d)
-	{
-		switch (self.locals.style.get(this).level)
-			{
-				case -1:
-				case 1:
-				case 2:
-					self.nodeClicked(this);
-					break;
-				default:
-					//self.nodeClicked(this)
 					break;
 			}
 	});
@@ -1053,8 +967,16 @@ Tree.prototype.centerOnNode = function (node)
 
 	self.simulation.stop();
 	
-	self.nodes_simulated = selections.nodes;
-	self.links_simulated = selections.links;
+	self.nodes_simulated = self.nodes.filter(function(d)
+		{
+			return (ID_Level_Map.get(d.id) !== undefined);
+		}	
+	);
+	self.links_simulated = self.links.filter(function(d)
+		{
+			return (ID_Level_Map.get(d.source.id) !== undefined);
+		}	
+	);
 
 	
 	self.simulationRestart();
