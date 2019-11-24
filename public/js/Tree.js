@@ -686,42 +686,6 @@ Tree.prototype.drawNodes = function()
 								return style.opacity;
 							}
 						);
-				
-
-
-				// Only run this code if centerOnNode is called
-				// (otherwise coordinates will not be calculated for nodeCoordinateInterpolatorGenerator)
-				// if (center === true) {
-				// 	node
-				// 		.transition(transition)
-				// 			.on("start", function(d)
-				// 				{	
-				// 					if (self.locals.style.get(this).visible)
-				// 					{
-				// 						this.style.visibility = "unset";
-				// 					}
-				// 				}
-				// 			)
-				// 			.on("end", function(d)
-				// 				{
-				// 					if (!self.locals.style.get(this).visible)
-				// 					{
-				// 						this.style.visibility = "hidden";
-				// 					}
-				// 				}
-				// 			)
-				// 			.attr("opacity",function(d)
-				// 				{
-				// 					return self.locals.style.get(this).opacity;
-				// 				}
-				// 			)
-				// 			.tween("coordinates", function(d)
-				// 				{
-				// 					return self.nodeCoordinateInterpolatorGenerator.bind(self)(d, this);
-				// 				}
-				// 			);
-				// }
-
 			}
 			
 		}
@@ -827,6 +791,9 @@ Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 
 				var level = ID_Level_Map.get(d.id);
 
+				//Label the node with the level computed in the ID_level_Map
+				style.level = level;
+				
 				switch(level)
 				{
 					case 0:
@@ -898,6 +865,15 @@ Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 			}
 		}
 	);
+
+	self.links.each(function(d)
+		{
+				var style = self.locals.style.get(this);
+				var level = ID_Level_Map.get(d.source.id);
+
+				//Label the node with the level computed in the ID_level_Map
+				style.level = level;
+		});
 	
 };
 
@@ -919,7 +895,10 @@ Tree.prototype.centerOnNode = function (node)
 	//Set the on click handlers
 	self.nodes.on("click", function(d)
 	{
-		switch (ID_Level_Map.get(d.id))
+
+		var style = self.locals.style.get(this);
+
+		switch (style.level)
 			{
 				case -1:
 				case 1:
@@ -969,12 +948,14 @@ Tree.prototype.centerOnNode = function (node)
 	
 	self.nodes_simulated = self.nodes.filter(function(d)
 		{
-			return (ID_Level_Map.get(d.id) !== undefined);
+			var style = self.locals.style.get(this);
+			return style.level !== undefined;
 		}	
 	);
 	self.links_simulated = self.links.filter(function(d)
 		{
-			return (ID_Level_Map.get(d.source.id) !== undefined);
+			var style = self.locals.style.get(this);
+			return style.level !== undefined;
 		}	
 	);
 
