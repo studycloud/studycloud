@@ -15,7 +15,16 @@ class CreateNoticesTable extends Migration
     {
         Schema::create('notices', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
+            $table->longText('description');
+            $table->string('link')->nullable(); //add 2nd arg if not long enough
+            $table->integer('author_id')->unsigned()->nullable();
+            $table->foreign('author_id')->references('id')->on('users');
+            $table->integer('parent_id')->unsigned()->nullable();
+            $table->foreign('parent_id')->references('id')->on('notices');
+            $table->tinyInteger('priority')->unsigned()->default(255);
+            //$table->tinyInteger('difficulty')->unsigned()->default(1);
+            $table->timestamp('deadline')->nullable();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

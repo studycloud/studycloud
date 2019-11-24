@@ -18,16 +18,6 @@ class NoticeController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -35,29 +25,33 @@ class NoticeController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        // first, validate the request
+		// note that the parent attribute can be 0,
+		// which would mean that we must attach the root as the parent
+		$validated = $request->validate([
+			'link' => 'string|required|max:255',
+			'parent' => [
+				'integer',
+				'nullable',
+				Rule::in(
+					Notice::pluck('id')->toArray()
+				)
+            ], 
+            'priority' => 'integer|max:255',
+            'deadline' => 'date|after:now|nullable',
+            'description' => 'string|required'
+		]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Notice  $notice
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Notice $notice)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Notice  $notice
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Notice $notice)
-    {
-        //
+		// create a new Academic_Class using mass assignment to add the 'name' attribute
+		$class = (new Academic_Class)->fill($validated);
+		$class->author_id = Auth::id();
+		// check that the parent attribute is not 0
+		// otherwise, don't set the parent attribute, since it will default to NULL
+		if ($validated['parent'])
+		{
+			$class->parent()->associate($validated['parent']);
+		}
+		$class->save();
     }
 
     /**

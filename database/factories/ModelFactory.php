@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -92,18 +94,22 @@ $factory->define(App\Resource::class, function (Faker\Generator $faker)
 });
 
 // Notice Factory
-$factory->define(App\Notice::class, function (Faker $faker) {
+$factory->define(App\Notice::class, function (Faker\Generator $faker) {
     return [
         'author_id' => $faker->randomElement(
 			// get all user id's
 			// but also allow some of them to be null
 			array_merge(App\User::pluck('id')->toArray(), [null])
 		),
-		// need to add parent ID
-		'created-at' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
-		'difficulty' => $faker->boolean(25) ? $faker->numberBetween(1, 10) : null,
-		'priority' => $faker->boolean(25) ? $faker->numberBetween(1, 10) : null,
-		'deadline' => $faker->dateTimeThisMonth()->addHours($faker->numberBetween(1, 20))->format('Y-m-d H:i:s'),
+		'parent_id' => $faker->randomElement(
+			// get all notice id's
+			// but also allow some of them to be null
+			array_merge(App\Notice::pluck('id')->toArray(), [null])
+		),
+		'created_at' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
+		//'difficulty' => $faker->boolean(25) ? $faker->numberBetween(1, 10) : null,
+		'priority' => $faker->numberBetween(1, 10),
+		'deadline' => Carbon::createFromTimestamp($faker->dateTimeThisMonth()->getTimestamp())->addHours($faker->numberBetween(1, 20))->format('Y-m-d H:i:s'),
 		'description' => $faker->text(),
 		'link' => $faker->text(),
     ];
