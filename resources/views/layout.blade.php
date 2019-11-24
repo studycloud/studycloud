@@ -39,6 +39,14 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     @endif
     <meta name="google-signin-client_id" content="213909112764-djmb30blchgj76rhfflngmls392fgm23.apps.googleusercontent.com"> <!-- include google client id for google sign in -->
+
+   <!-- TinyMCE for text box for resourceViewer-->
+   <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.9.2/tinymce.min.js' referrerpolicy="origin"></script>
+   <script type="text/javascript">
+      tinymce.init({
+      selector: '#textarea',
+      });
+  </script>
 </head>
 <body onload="Starter()">
     <div id="pageWidth">
@@ -540,6 +548,9 @@
     <!--button id="creator-btn">temporary resource creator button</button-->
     <button id="editor-btn">temporary resource editor button</button>
     <button id="resource-meta-btn">resource meta button</button>
+   <form method="post">
+      <textarea id="textarea" name="textarea">Enter text for resource viewer here</textarea>
+   </form>
 </body>
 <footer>
     <script src="/storage/Logo Tree.js"></script> <!-- TODO or here -->

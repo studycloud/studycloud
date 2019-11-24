@@ -174,7 +174,9 @@ function createResource()
 	<div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
-	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> <div id = 'more-contents'> </div>\
+	Content: <br> <form method='post'> \
+	<textarea id='textarea' name='textarea'>Enter text for resource viewer here</textarea> \
+ </form> </div> <div id = 'more-contents'> </div>\
 	<div> <button type = 'button' id = 'submit-button' onclick = 'submitContent()'> Submit </button> \
 	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
 	<p id = 'demo'> </p></div> ";
@@ -199,7 +201,9 @@ function createNewResource(nodeId)
 	<div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
-	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> <div id = 'more-contents'> </div>\
+	Content: <br>  <form method='post'> \
+	<textarea id='textarea' name='textarea'>Enter text for resource viewer here</textarea> \
+ </form> </div> <div id = 'more-contents'> </div>\
 	<div> <button type = 'button' id = 'submit-button' onclick = 'submitNewContent("+nodeId.substring(1)+")'> Submit </button> \
 	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
 	<p id = 'demo'> </p></div> ";
@@ -263,7 +267,9 @@ function newContent()
 	document.getElementById('content-'+pre_updated_content_num).innerHTML += "<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name"+pre_updated_content_num+"'> <br> \
 	Content Type:  <select id = 'content-type"+pre_updated_content_num+"'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
-	Content: <br> <textarea rows = '5' id = 'content"+pre_updated_content_num+"'> </textarea> </div> </form>";
+	Content: <br> <form method='post'> \
+	<textarea id='textarea"+pre_updated_content_num+"' name='textarea'>Enter text for resource viewer here</textarea> \
+ </form>";
 
 	// load the stored content back to the content textboxes
 	loadContent(storedContent);
