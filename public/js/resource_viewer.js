@@ -163,14 +163,13 @@ function display_content(num, element)
  */
 function createResource()
 {
-	selectorCode = resourceUseSelection(resourceUseData); // selector code for resource use attachment
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML="<h1>Resource Editor</h1>"
 	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> \
 	<div class 'resource-creator> Resource Name: <br> \
 	<input type = 'text' id = 'meta-name'> <br> \
-	Resource Use:  <br>" + selectorCode + "<br> \
-	<div class=resource-divider></div> <br>" + resourceUseSelector() + " </div>\
+	Resource Use:  <br>" + selectorCodeGenerator("resource-use") + "<br> \
+	<div class=resource-divider></div> <br>" + contentTypeSelector() + " </div>\
 	<div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
@@ -279,7 +278,7 @@ function newContent()
 function submitContent() 
 {
 	var resource_name = document.getElementById("meta-name").value;
-	var resource_use = parseInt(document.getElementById("resource-use").value);
+	var resource_use = findResourceUseId();
 	var content_name_array = [];
 	var content_type_array = [];
 	var content_array = [];
@@ -486,18 +485,33 @@ function resourceUseSelection (resource_use)
 	return html_code;
 }
 
+var useDictionary = new Object();
+useDictionary[1] = "Notes";
+useDictionary[2] = "Flashcard";
+useDictionary[3] = "Use 3";
+useDictionary[4] = "Use 4";
+useDictionary[5] = "Use 5";
+useDictionary[6] = "Use 6";
+useDictionary[7] = "Use 7";
+useDictionary[8] = "Use 8";
+useDictionary[9] = "Use 9";
+useDictionary[10] = "Use 10";
+useDictionary[11] = "Use 11";
+useDictionary[12] = "Use 12";
+
 /**
  * \brief create htmlCode to create resource use selector
+ * 
  */
 function resourceUseSelector ()
 {
 	var html_code = "\
 	<div class='use-list-scrolling-wrapper'>\
-		<ul id='menu'>\
+		<ul id='resource-use-selector'>\
 			<div class='use'><li><input type='radio' name='resource-use' id='1'><label for='1'>Notes</label></li></div>\
 			<div class='use'><li><input type='radio' name='resource-use' id='2'><label for='2'>Use 2</label></li></div>\
 			<div class='use'><li><input type='radio' name='resource-use' id='3'><label for='3'>Use 3</label></li></div>\
-			<div class='use'><li><input type='radio' name='resource-use' 'id='4'><label for='4'>Use 4</label></li></div>\
+			<div class='use'><li><input type='radio' name='resource-use' id='4'><label for='4'>Use 4</label></li></div>\
 			<div class='use'><li><input type='radio' name='resource-use' id='5'><label for='5'>Use 5</label></li></div>\
 			<div class='use'><li><input type='radio' name='resource-use' id='6'><label for='6'>Use 6</label></li></div>\
 			<div class='use'><li><input type='radio' name='resource-use' id='7'><label for='7'>Use 7</label></li></div>\
@@ -507,9 +521,79 @@ function resourceUseSelector ()
 			<div class='use'><li><input type='radio' name='resource-use' id='11'><label for='11'>Use 11</label></li></div>\
 			<div class='use'><li><input type='radio' name='resource-use' id='12'><label for='12'>Use 12</label></li></div>\
 	  </ul>\
-	</div><br>";
+	</div>";
 	  
 	return html_code;
+}
+
+/**
+ * \brief create htmlCode to create content type selector
+ * 
+ */
+function contentTypeSelector ()
+{
+	var html_code = "\
+	<div class='use-list-scrolling-wrapper'>\
+		<ul id='content-type-selector'>\
+			<div class='type'><li><input type='radio' name='content-type' id='t1'><label for='t1'>Text</label></li></div>\
+			<div class='type'><li><input type='radio' name='content-type' id='t2'><label for='t2'>Link</label></li></div>\
+			<div class='type'><li><input type='radio' name='content-type' id='t3'><label for='t3'>Type 3</label></li></div>\
+			<div class='type'><li><input type='radio' name='content-type' id='t4'><label for='t4'>Type 4</label></li></div>\
+			<div class='type'><li><input type='radio' name='content-type' id='t5'><label for='t5'>Type 5</label></li></div>\
+			<div class='type'><li><input type='radio' name='content-type' id='t6'><label for='t6'>Type 6</label></li></div>\
+			<div class='type'><li><input type='radio' name='content-type' id='t7'><label for='t7'>Type 7</label></li></div>\
+			<div class='type'><li><input type='radio' name='content-type' id='t8'><label for='t8'>Type 8</label></li></div>\
+			<div class='type'><li><input type='radio' name='content-type' id='t9'><label for='t9'>Type 9</label></li></div>\
+			<div class='type'><li><input type='radio' name='content-type' id='t10'><label for='t10'>Type 10</label></li></div>\
+			<div class='type'><li><input type='radio' name='content-type' id='t11'><label for='t11'>Type 11</label></li></div>\
+			<div class='type'><li><input type='radio' name='content-type' id='t12'><label for='t12'>Type 12</label></li></div>\
+	  </ul>\
+	</div>";
+	  
+	return html_code;
+}
+
+function selectorCodeGenerator(selectorFor) 
+{
+	var name = "default";
+	var inputClass = "default";
+	var ulId = "default-selector";
+	var inputId = "";
+	if (selectorFor == "resource-use") {
+		name = "resource-use";
+		inputClass = "use";
+		ulId = "resource-use-selector";
+		inputId = "";
+	}
+	else if (selectorFor == "content-type") {
+		name = "content-type";
+		ulId = "content-type-selector";
+	}
+
+	var html_code = "\
+	<div class='use-list-scrolling-wrapper'>\
+		<ul id='" + ulId +"'>";
+
+	for (var key in useDictionary) {
+		html_code += "<div class='" + inputClass + "'>\
+			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ key +"'>\
+				<label for='" + inputId +""+ key + "'>" + useDictionary[key] + "</label></li></div>";
+	}
+	
+	html_code +=  "</ul></div>";
+
+	return html_code;
+}
+
+function findResourceUseId() 
+{
+	var allResourceUse = document.getElementsByName('resource-use'); 
+
+	for(i = 0; i < allResourceUse.length; i++) { 
+		if(allResourceUse[i].checked) {
+			return allResourceUse[i].id;
+		}
+	} 
 }
 // function resourceUseSelector ()
 // {
