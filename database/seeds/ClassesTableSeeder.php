@@ -7,7 +7,7 @@ class ClassesTableSeeder extends Seeder
 	/**
 	 * The number of fake classes to make
 	 */
-	const NUM_CLASSES = 25;
+	const NUM_CLASSES = 15;
 
     /**
      * Run the database seeds.
