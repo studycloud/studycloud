@@ -418,6 +418,7 @@ Tree.prototype.updateDataNodes = function(selection, data)
 				.attr("data_id", function (d) { return d.id; })
 				.on("click", function(){self.nodeClicked(this);})
 				.on('contextmenu', function(d, i){self.nodeMenuOpen(this, d, i);});
+	
 	nodes.append("rect");
 	nodes.append("text");
 
@@ -500,12 +501,25 @@ Tree.prototype.updateDataLinks = function(selection, data)
 
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
 	
-	selection
+	var links = selection
 		.enter()
 			.append("g")
 				.attr("class", "link")
 				.attr("data_id", function(d){return d.id;})
-				.append('line');
+	
+	links.append("line");
+
+	links.each(function(d)
+		{
+			var style = 
+			{
+				level: undefined,
+				opacity: 0,
+				visible: false
+			};
+
+			self.locals.style.set(this, style);
+		});
 								
 	selection	
 		.exit()
@@ -782,6 +796,9 @@ Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 	var self = this;
 	
 	//Set the new level of each of the nodes in our tree
+
+	var ancestor_index = 0;
+
 	self.nodes
 		.attr("class", "node")
 		.each(function(d)
@@ -794,6 +811,11 @@ Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 				//Label the node with the level computed in the ID_level_Map
 				style.level = level;
 				
+				coordinates.fx = null;
+				coordinates.fy = null;
+				coordinates.x_old = d.x;
+				coordinates.y_old = d.y;
+
 				switch(level)
 				{
 					case 0:
@@ -802,6 +824,10 @@ Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 						style.labeled = true;
 						style.width = 200;
 						style.height = style.width;
+
+						coordinates.x_new = self.frame.boundary.width/2;
+						coordinates.y_new = self.frame.boundary.height/2;
+
 						break;
 
 					case -1:
@@ -821,6 +847,13 @@ Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 
 						style.width = self.frame.boundary.width / ancestor_count;
 						style.height = 40;
+
+
+						coordinates.x_new = style.width*ancestor_index + style.width/2;
+						coordinates.y_new = style.height/2;
+
+						ancestor_index++;
+
 						break;
 
 					case 1:
@@ -829,6 +862,10 @@ Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 						style.labeled = true;
 						style.width = 140;
 						style.height = style.width;
+
+						coordinates.x_new = null;
+						coordinates.y_new = null;
+
 						break;
 
 					case 2:
@@ -837,6 +874,10 @@ Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 						style.labeled = false;
 						style.width = 20;
 						style.height = style.width;
+
+						coordinates.x_new = null;
+						coordinates.y_new = null;
+						
 						break;
 
 					default:
@@ -845,6 +886,11 @@ Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 						style.labeled = false;
 						style.width = 0;
 						style.height = style.width;
+						
+						coordinates.x_new = null;
+						coordinates.y_new = null;
+
+						break;
 				}
 			}
 		);
