@@ -11,8 +11,8 @@
 		<header id="admin_header">
 			<h1 id="admin_title">Club Administration</h1>
 			<div id="admin_user">
-				<h3>{{Auth::user()->name()}}</h3>
-				{{implode(", ", Auth::user()->roles()->get()->pluck("name")->toArray()}}
+				<h3> DummyUser FullName</h3>
+				DummyRole1, DummyRole2
 			</div>
 		</header>
 		<div id="admin_notes">
