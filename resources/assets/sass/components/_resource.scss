@@ -92,6 +92,7 @@ $off-wht: rgba(white,.4);
 	@include btn-theme($orange);
  }
 
+// submit and new content button aligned right
 %button {
     font-family: $body-font;
 	display: inline-block;

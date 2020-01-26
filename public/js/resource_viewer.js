@@ -165,7 +165,9 @@ function createResource()
 {
 	selectorCode = resourceUseSelection(resourceUseData); // selector code for resource use attachment
 	// create all the input to create resources
-	document.getElementById('resource-head').innerHTML="<h1>Resource Editor</h1>"
+	document.getElementById('resource-head').innerHTML="\
+	<div id = 'resource-name' contenteditable=true> This text can be edited by the user. </div> \
+	<body onload='checkEdits()'>";
 	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> \
 	<div class 'resource-creator> Resource Name: <br> \
 	<input type = 'text' id = 'meta-name'> <br> \
@@ -178,8 +180,30 @@ function createResource()
 	<div> <button type = 'button' id = 'submit-button' onclick = 'submitContent()'> Submit </button> \
 	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
 	<p id = 'demo'> </p></div> ";
-
+	console.log(document.getElementById('resource-name').innerHTML);
 }
+function saveEdits()
+{
+	//get the editable element
+	var editElem = document.getElementById("resource-head");
+
+	//get the edited element content
+	var userVersion = editElem.innerHTML;
+
+	//save the content to local storage
+	localStorage.userEdits = userVersion;
+
+	//write a confirmation to the user
+	document.getElementById("update").innerHTML="Edits saved!";
+}
+
+function checkEdits()
+{
+	//find out if the user has previously saved edits
+	if(localStorage.userEdits!=null)
+	document.getElementById("resource-head").innerHTML = localStorage.userEdits;
+}
+
 /** 
  * \brief fill in html for resource creator
  * \details gets called in loginmodal.js when the creator button gets clicked
@@ -221,7 +245,7 @@ function resourceEditor(received)
 			resource is the json we want
 	*/
 	received.json().then(function(resource){
-		document.getElementById("meta-name").value = resource.meta.name;
+		document.getElementById("resource-name").innerHTML = resource.meta.name;
 
 		// TODO: not using drop down selector anymore, using icon
 		// load the resource use in the resource use drop down selector
@@ -277,12 +301,22 @@ function newContent()
 */
 function submitContent() 
 {
-	var resource_name = document.getElementById("meta-name").value;
+	var resource_name = document.getElementById("resource-name").innerHTML;
 	var resource_use = parseInt(document.getElementById("resource-use").value);
 	var content_name_array = [];
 	var content_type_array = [];
 	var content_array = [];
 	content_num = pre_updated_content_num;
+
+	//get the editable element
+	var editElem = document.getElementById("resource-head");
+	console.log(document.getElementById("resource-name").innerHTML);
+
+	//get the edited element content
+	var userVersion = editElem.innerHTML;
+
+	//save the content to local storage
+	localStorage.userEdits = userVersion;
 
 	for (i=0;i < (content_num+1); i++)
 	{
