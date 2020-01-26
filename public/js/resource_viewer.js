@@ -169,7 +169,7 @@ function createResource()
 	<div class 'resource-creator> Resource Name: <br> \
 	<input type = 'text' id = 'meta-name'> <br> \
 	Resource Use:  <br>" + selectorCodeGenerator("resource-use") + "<br> \
-	<div class=resource-divider></div> <br>" + contentTypeSelector() + " </div>\
+	<div class=resource-divider></div> <br>" + selectorCodeGenerator("content-type") + " </div>\
 	<div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
@@ -227,7 +227,7 @@ function resourceEditor(received)
 		// load the resource use in the resource use drop down selector
 		// display the given resource use
 		$('div#select_style_text').html(resource.meta.use_name);
-
+		
 		// make the selector's selected value match the given resource use id
 		for (i = 0; i < resourceUseData.length; i ++)
 		{
@@ -485,19 +485,36 @@ function resourceUseSelection (resource_use)
 	return html_code;
 }
 
-var useDictionary = new Object();
-useDictionary[1] = "Notes";
-useDictionary[2] = "Flashcard";
-useDictionary[3] = "Use 3";
-useDictionary[4] = "Use 4";
-useDictionary[5] = "Use 5";
-useDictionary[6] = "Use 6";
-useDictionary[7] = "Use 7";
-useDictionary[8] = "Use 8";
-useDictionary[9] = "Use 9";
-useDictionary[10] = "Use 10";
-useDictionary[11] = "Use 11";
-useDictionary[12] = "Use 12";
+// temporary dictionary to store all the resource uses
+// TODO: Optimize and link to data base later
+var resourceUseDictionary = new Object();
+resourceUseDictionary[1] = "Notes";
+resourceUseDictionary[2] = "Flashcard";
+resourceUseDictionary[3] = "Use 3";
+resourceUseDictionary[4] = "Use 4";
+resourceUseDictionary[5] = "Use 5";
+resourceUseDictionary[6] = "Use 6";
+resourceUseDictionary[7] = "Use 7";
+resourceUseDictionary[8] = "Use 8";
+resourceUseDictionary[9] = "Use 9";
+resourceUseDictionary[10] = "Use 10";
+resourceUseDictionary[11] = "Use 11";
+resourceUseDictionary[12] = "Use 12";
+
+// temporary dictionary to store all the content types
+var contentTypeDictionary = new Object();
+contentTypeDictionary[1] = "Text";
+contentTypeDictionary[2] = "Link";
+contentTypeDictionary[3] = "Type 3";
+contentTypeDictionary[4] = "Type 4";
+contentTypeDictionary[5] = "Type 5";
+contentTypeDictionary[6] = "Type 6";
+contentTypeDictionary[7] = "Type 7";
+contentTypeDictionary[8] = "Type 8";
+contentTypeDictionary[9] = "Type 9";
+contentTypeDictionary[10] = "Type 10";
+contentTypeDictionary[11] = "Type 11";
+contentTypeDictionary[12] = "Type 12";
 
 /**
  * \brief create htmlCode to create resource use selector
@@ -559,25 +576,30 @@ function selectorCodeGenerator(selectorFor)
 	var inputClass = "default";
 	var ulId = "default-selector";
 	var inputId = "";
+	var dictionary = new Object();
 	if (selectorFor == "resource-use") {
 		name = "resource-use";
 		inputClass = "use";
 		ulId = "resource-use-selector";
 		inputId = "";
+		dictionary = resourceUseDictionary;
 	}
 	else if (selectorFor == "content-type") {
 		name = "content-type";
+		inputClass = "type";
 		ulId = "content-type-selector";
+		var inputId = "t";
+		dictionary = contentTypeDictionary;
 	}
 
 	var html_code = "\
 	<div class='use-list-scrolling-wrapper'>\
 		<ul id='" + ulId +"'>";
 
-	for (var key in useDictionary) {
+	for (var key in dictionary) {
 		html_code += "<div class='" + inputClass + "'>\
 			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ key +"'>\
-				<label for='" + inputId +""+ key + "'>" + useDictionary[key] + "</label></li></div>";
+				<label for='" + inputId +""+ key + "'>" + dictionary[key] + "</label></li></div>";
 	}
 	
 	html_code +=  "</ul></div>";
