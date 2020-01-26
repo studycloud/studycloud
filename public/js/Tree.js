@@ -38,80 +38,7 @@ function Tree(type, frame_id, server)
 		.append('div')
 		.attr('class', 'menu_context');
 	
-	self.menu_context_items = 
-	[
-		{
-			title: 'Delete',
-			icon:  'delete',
-			color: 'red',
-			enabled: true,
-			action: function(node, d, i) 
-			{
-				console.log('Item #1 clicked!');
-			}
-		},
-		{
-			title: 'Edit',
-			icon:  'edit',
-			color: 'purple',
-			enabled: true,
-			action: function(node, d, i) 
-			{
-				console.log('Item #1 clicked!');
-			}
-		},
-		{
-			title: 'Add',
-			icon:  'add',
-			color: 'green',
-			enabled: true,
-			action: function(node, d, i) 
-			{
-				console.log('Item #1 clicked!');
-			}
-		},
-		{
-			title: 'Capture',
-			icon:   'playlist_add',
-			color: 'blue',
-			enabled: true,
-			action: function(node, d, i) 
-			{
-				console.log('Item #1 clicked!');
-			}
-		},
-		{
-			title: 'Move',
-			icon:   'open_with',
-			color: 'blue',
-			enabled: true,
-			action: function(node, d, i) 
-			{
-				console.log('Item #1 clicked!');
-			}
-		},
-		{
-			title: 'Attach',
-			icon:   'link',
-			color: 'orange',
-			enabled: true,
-			action: function(node, d, i) 
-			{
-				console.log('Item #1 clicked!');
-			}
-		},
-		{
-			title: 'Detach',
-			icon:   'link_off',
-			color: 'red',
-			enabled: true,
-			action: function(node, d, i) 
-			{
-				console.log('Item #1 clicked!');
-			}
-		}
-	];
-
+	
 	//hide the context menu after we click on a context menu item
 	self.frame.on('click.menu_context', function(){self.menu_context.style('display', 'none');});
 	
@@ -417,7 +344,7 @@ Tree.prototype.updateDataNodes = function(selection, data)
 				.attr("class", "node")
 				.attr("data_id", function (d) { return d.id; })
 				.on("click", function(){self.nodeClicked(this);})
-				.on('contextmenu', function(d, i){self.nodeMenuOpen(this, d, i);});
+				.on('contextmenu', function(d, i){self.menuContextNodeOpen(this, d, i);});
 	
 	nodes.append("rect");
 	nodes.append("text");
@@ -1025,48 +952,130 @@ Tree.prototype.nodeClicked = function(node)
 	self.centerOnNode(node);
 };
 
-Tree.prototype.nodeMenuOpen = function(node, data, index)
-{
-	
-	
+
+Tree.prototype.menuContextNodeOpen = function(node, data, index)
+{	
 	var self = this;
 
-	d3.selectAll('.menu_context').html('');
+	var menu_context_items = 
+	{
+		delete: 
+			{
+				title: 'Delete',
+				icon:  'delete',
+				color: 'red',
+				enabled: true
+			},
+		edit: 
+			{
+				title: 'Edit',
+				icon:  'edit',
+				color: 'purple',
+				enabled: true
+			},
+		add:
+			{
+				title: 'Add',
+				icon:  'add',
+				color: 'green',
+				enabled: true
+			},
+		capture:
+			{
+				title: 'Capture',
+				icon:   'playlist_add',
+				color: 'blue',
+				enabled: true
+			},
+		move:
+			{
+				title: 'Move',
+				icon:   'open_with',
+				color: 'blue',
+				enabled: true
+			},
+		attach:
+			{
+				title: 'Attach',
+				icon:   'link',
+				color: 'orange',
+				enabled: true
+			},
+		detach:
+			{
+				title: 'Detach',
+				icon:   'link_off',
+				color: 'red',
+				enabled: true
+			}
+	};
+
+
+//	if (self.nodes_captured.length === 0)
+	if (true)
+	{
+		menu_context_items.attach.enabled = false;
+		menu_context_items.detach.enabled = false;
+		menu_context_items.move.enabled = false;
+	}
+
+
+	//this is pseudocode for enabling editing depending on user and logged in status. 
+
+	/*
+	if (loggedin === false || d.author_id != loggedin_user_id)
+	{
+		menu_context_items.edit.enabled = false;
+	}
+	*/
+
+
+	menu_context = d3.selectAll('.menu_context').html('');
 	
-	var list = self.menu_context.append('ul');
+	var list = menu_context.append('ul');
 	
-	var menu_items_new = list.selectAll('li')
-			.data(self.menu_context_items)
+	var menu_items = list.selectAll('li')
+			.data(Object.values(menu_context_items))
 			.enter()
-				.append('li');
-	
-	menu_items_new
+				.append('li')
+				.classed('item', true);
+
+	menu_items
 		.style('color', function(d)
 			{
 				return d.color;
 			}
 		)
-		.style('display', function(d)
+		.attr('enabled', function(d)
 			{
-				return d.enabled ? "default" : "none";
+				return d.enabled;
 			}	
 		)
 		.on('click', function(d) 
 			{	
-				d.action(node, data, index);
-				self.menu_context.style('display', 'none');
+				d3.event.stopPropagation();
+
+				if (d.enabled)
+				{
+					menu_context.style('display', 'none');
+					console.log('Clicked context menu item ' + d.title);	
+				}
 			}
 		)
 		.on('touchstart', function(d) 
 			{	
-				setTimeout(function(){self.menu_context.style('display', 'none');}, 500);
-				d.action(node, data, index);
-				d3.event.preventDefault();
-				//alert("touchdown");
+				d3.event.stopPropagation();
+
+				if (d.enabled)
+				{
+					d3.event.preventDefault();
+					setTimeout(function(){self.menu_context.style('display', 'none');}, 500);
+					console.log('Clicked context menu item' + d.title);	
+				}
 			}
 		);
 	
-	menu_items_new
+	menu_items
 		.append('i')
 			.classed('material-icons', true)
 			.text(function(d) 
@@ -1074,15 +1083,14 @@ Tree.prototype.nodeMenuOpen = function(node, data, index)
 					return d.icon;
 				}
 			);
-	menu_items_new
+	menu_items
 		.append('span')
+		.classed('title', true)
 			.text(function(d) 
 				{
 					return d.title;
 				}
 			);
-			
-	
 					
 	// display context menu
 	self.menu_context
