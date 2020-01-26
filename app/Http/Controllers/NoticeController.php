@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Notice;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class NoticeController extends Controller
 {
@@ -42,16 +45,16 @@ class NoticeController extends Controller
             'description' => 'string|required'
 		]);
 
-		// create a new Academic_Class using mass assignment to add the 'name' attribute
-		$class = (new Academic_Class)->fill($validated);
-		$class->author_id = Auth::id();
+		// create a new Notice using mass assignment to add the 'name' attribute
+		$notice = (new Notice)->fill($validated);
+		$notice->author_id = Auth::id();
 		// check that the parent attribute is not 0
 		// otherwise, don't set the parent attribute, since it will default to NULL
 		if ($validated['parent'])
 		{
-			$class->parent()->associate($validated['parent']);
+			$notice->parent()->associate($validated['parent']);
 		}
-		$class->save();
+		$notice->save();
     }
 
     /**
@@ -61,10 +64,10 @@ class NoticeController extends Controller
      * @param  \App\Notice  $notice
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Notice $notice)
-    {
-        //
-    }
+    // public function update(Request $request, Notice $notice)
+    // {
+    //     //
+    // }
 
     /**
      * Remove the specified resource from storage.
