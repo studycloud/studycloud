@@ -160,6 +160,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        \Matchish\ScoutElasticSearch\ElasticSearchServiceProvider::class
 
         /*
          * Laravel\ somethings (added by Arya Massarat on 5/2/17 when upgrading laravel to 5.4 from 5.3)...
