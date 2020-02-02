@@ -1089,8 +1089,18 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 				if (d.enabled)
 				{
 					d3.event.preventDefault();
-					setTimeout(function(){self.menu_context.style('display', 'none');}, 500);
-					console.log('Clicked context menu item' + d.title);	
+					setTimeout(function()
+						{
+							self.menu_context.style('display', 'none');
+							if(d.action !== null)
+							{
+								d.action.bind(self)(node, data, index);
+							}
+						}, 
+						
+						500
+					);
+					console.log('Clicked context menu item' + d.title)
 				}
 			}
 		);
