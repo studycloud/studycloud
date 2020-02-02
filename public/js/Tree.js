@@ -69,12 +69,20 @@ function Tree(type, frame_id, server)
 	// create d3 local objects, which will be useful when we want to set data on a DOM element later
 	self.locals.style = d3.local();
 	self.locals.coordinates = d3.local();
+
+	self.user_active_id = parseInt(document.getElementById("meta_user_active_id").getAttribute('content'));
+	//console.log('Active user has ID: ' + self.user_active_id);
+
+	self.nodes_captured = self.frame.svg
+		.append("g")
+			.attr("class", "layer_nodes_captured")
+			.selectAll(".node_captured");
 }
 
 Tree.prototype.simulationInitialize = function()
 {
 	var self = this;
-	
+
 	// create a force simulation object
 	self.simulation = d3.forceSimulation();
 
@@ -594,13 +602,6 @@ Tree.prototype.drawNodes = function()
 				if(style.level <= 1) // leaves text hidden for level 2+ nodes
 				{
 					node.select("text")
-						.attr("text-anchor", "middle")
-						.attr("fill", "white")
-						.attr("stroke", "black")
-						.attr("stroke-width", "0.02em")
-						.attr("font-size", "22")
-						.attr("font-family", "sans-serif")
-						.attr("font-weight", "bold")
 						.text(function(d){return d.name;});
 				}
 
@@ -964,55 +965,61 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 				title: 'Delete',
 				icon:  'delete',
 				color: 'red',
-				enabled: true
+				enabled: true,
+				action: null
 			},
 		edit: 
 			{
 				title: 'Edit',
 				icon:  'edit',
 				color: 'purple',
-				enabled: true
+				enabled: true,
+				action: null
 			},
 		add:
 			{
 				title: 'Add',
 				icon:  'add',
 				color: 'green',
-				enabled: true
+				enabled: true,
+				action: null
 			},
 		capture:
 			{
 				title: 'Capture',
 				icon:   'playlist_add',
 				color: 'blue',
-				enabled: true
+				enabled: true,
+				action: self.nodeCapture
 			},
 		move:
 			{
 				title: 'Move',
 				icon:   'open_with',
 				color: 'blue',
-				enabled: true
+				enabled: true,
+				action: null
 			},
 		attach:
 			{
 				title: 'Attach',
 				icon:   'link',
 				color: 'orange',
-				enabled: true
+				enabled: true,
+				action: null
 			},
 		detach:
 			{
 				title: 'Detach',
 				icon:   'link_off',
 				color: 'red',
-				enabled: true
+				enabled: true,
+				action: null
 			}
 	};
 
 
-//	if (self.nodes_captured.length === 0)
-	if (true)
+	if (self.nodes_captured.data().length === 0)
 	{
 		menu_context_items.attach.enabled = false;
 		menu_context_items.detach.enabled = false;
@@ -1022,13 +1029,22 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 
 	//this is pseudocode for enabling editing depending on user and logged in status. 
 
-	/*
-	if (loggedin === false || d.author_id != loggedin_user_id)
+	if (data.author_id !== self.user_active_id)
 	{
 		menu_context_items.edit.enabled = false;
 	}
-	*/
+	
+	if (self.user_active_id === 0)
+	{
+		menu_context_items.add.enabled = false;
+		menu_context_items.attach.enabled = false;
+		menu_context_items.capture.enabled = false;
+		menu_context_items.delete.enabled = false;
+		menu_context_items.detach.enabled = false;
+		menu_context_items.edit.enabled = false;
+		menu_context_items.move.enabled = false;
 
+	}
 
 	menu_context = d3.selectAll('.menu_context').html('');
 	
@@ -1058,7 +1074,11 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 				if (d.enabled)
 				{
 					menu_context.style('display', 'none');
-					console.log('Clicked context menu item ' + d.title);	
+					console.log('Clicked context menu item ' + d.title);
+					if(d.action !== null)
+					{
+						d.action.bind(self)(node, data, index);
+					}
 				}
 			}
 		)
@@ -1108,4 +1128,69 @@ Tree.prototype.handleResize = function()
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
 
 	self.simulationRestart();
+};
+
+Tree.prototype.nodeCapture = function(node, data, index)
+{
+	var self = this;
+
+	var node_captured_data = self.nodes_captured.data();
+
+	node_captured_data.push(data);
+
+	var nodes_captured = self.nodes_captured.data(node_captured_data);
+		
+	nodes_captured_new = nodes_captured
+		.enter()
+			.append("g")
+				.attr("class", "node_captured")
+				.attr("data_id", function(d){return d.id;})
+				.attr("transform", d3.transform()
+					.translate(function(d, i)
+						{
+							console.log(d);
+							console.log(i);
+							return [self.frame.boundary.width - 80, 80 + i*150];
+						}
+					)
+				);
+	
+	nodes_captured_new
+		.append("rect")
+			.attr("width", 140)
+			.attr("height", 140)
+			.attr('transform', d3.transform()
+				.translate(function(d)
+					{
+						var width = this.width.animVal.value;
+						var height = this.height.animVal.value;
+						return [-width/2, -height/2];
+					}
+				)
+			);
+	
+	nodes_captured_new
+		.append("text")
+			.text(function(d){return d.name;});
+	
+	nodes_captured_new.each(function(d)
+		{
+			var random_number_generator = new Math.seedrandom(d.id);
+			d.color = d3.interpolateRainbow(random_number_generator());
+		}
+	);
+
+	nodes_captured_new.select("rect")
+			.attr("fill", function(d)
+			{
+				return d.color;
+			}
+		);
+
+	nodes_captured	
+		.exit()
+			.remove();
+
+	self.nodes_captured = self.frame.svg.selectAll(".node_captured");
+
 };

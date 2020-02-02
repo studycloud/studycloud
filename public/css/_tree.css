@@ -73,9 +73,19 @@ svg.tree
     color: grey !important;
 }
 
+.node text, .node_captured text {
+    dominant-baseline: central;
+    text-anchor: middle;
+    fill: white;
+    stroke: black;
+    stroke-width: 0.02em;
+    font-size: 16pt;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-anchor: middle;
+}
 
-
-.node text 
+.node_captured rect
 {
-	dominant-baseline: central;
+    rx: 20px;
 }
