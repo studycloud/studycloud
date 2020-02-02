@@ -167,7 +167,7 @@ function createResource()
 	document.getElementById('resource-head').innerHTML="<h1>Resource Editor</h1>"
 	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> \
 	<div class 'resource-creator> Resource Name: <br> \
-	<input type = 'text' id = 'meta-name'> <br> \
+	<div type = 'text' id = 'meta-name' contenteditable='true'> </div> <br> \
 	Resource Use:  <br>" + selectorCodeGenerator("resource-use") + "<br> \
 	<div class=resource-divider></div> <br>" + selectorCodeGenerator("content-type") + " </div>\
 	<div class = 'content-creator'> Resource Content Name: <br> \
@@ -177,7 +177,7 @@ function createResource()
 	<div> <button type = 'button' id = 'submit-button' onclick = 'submitContent()'> Submit </button> \
 	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
 	<p id = 'demo'> </p></div> ";
-
+	console.log(document.getElementById('meta-name').innerHTML);
 }
 
 /** 
@@ -188,13 +188,12 @@ function createResource()
  */
 function createNewResource(nodeId)
 {
-	selectorCode = resourceUseSelection(resourceUseData); //selector code for resource use attachment
 	//create all the input to create resources
 	document.getElementById('resource-head').innerHTML="<h1>Resource Creator</h1>"
 	document.getElementById('modules').innerHTML = "<div class=resource-divider></div>\
 	<div class = 'resource-creator'> Resource Name: <br> \
 	<input type = 'text' id = 'meta-name'> <br> \
-	Resource Use: <br>" + selectorCode + "<br> \
+	Resource Use: <br>" + selectorCodeGenerator("resource-use") + "<br> \
 	<div class=resource-divider></div> <br> </div> \
 	<div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
@@ -221,25 +220,15 @@ function resourceEditor(received)
 			resource is the json we want
 	*/
 	received.json().then(function(resource){
-		document.getElementById("meta-name").value = resource.meta.name;
+		// document.getElementById("meta-name").value = resource.meta.name;
+		document.getElementById("meta-name").innerHTML = resource.meta.name;
 
-		// TODO: not using drop down selector anymore, using icon
-		// load the resource use in the resource use drop down selector
-		// display the given resource use
-		$('div#select_style_text').html(resource.meta.use_name);
-		
-		// make the selector's selected value match the given resource use id
-		for (i = 0; i < resourceUseData.length; i ++)
-		{
-			var u = resourceUseData[i];
-			if (u.name == resource.meta.use_name)
-			{
-				$('select[name="attach"]').val(u.id);
-			}
-		}
+
+		var ulUse = document.getElementById("resource-use-selector");
+		loadSelectedUseOrType("resource-use-selector", resource.meta.use_name);
 
 		// create a text area for each content
-		for (i=1; i < resource.contents.length; i++)
+		for (i=1; i < resource.contents.length; ++i)
 		{
 			newContent();
 		}
@@ -277,7 +266,8 @@ function newContent()
 */
 function submitContent() 
 {
-	var resource_name = document.getElementById("meta-name").value;
+	var resource_name = document.getElementById("meta-name").innerHTML;
+	console.log(document.getElementById("meta-name").innerHTML);
 	var resource_use = findResourceUseId();
 	var content_name_array = [];
 	var content_type_array = [];
@@ -416,6 +406,8 @@ function loadContent(contents)
 			document.getElementById("content-type"+i).selectedIndex = 1;
 		}
 		
+		loadSelectedUseOrType("content-type-selector", contents[i]["type"]);
+		
 		document.getElementById("content"+i).value = contents[i]["content"];
 	}
 }
@@ -465,31 +457,12 @@ function resetContentNum ()
 	pre_updated_content_num = content_num;
 }
 
-/**
- * \brief create the htmlCode to create the selector for resourceAttachment
- * @param {*} resource_use an array with each resourceUse (resource ID, resource name)
- */
-function resourceUseSelection (resource_use)
-{
-	var html_code = "<select id = 'resource-use' name = 'attach' theme='google' width='400' style='' \
-		placeholder='Select the Use of Your Resource' data-search='true'> ";
-	
-	for (i = 0; i < resource_use.length; i ++)
-	{
-		var u = resource_use[i];
-		html_code += "<option value = '" + u.id + "'>" + u.name + "</option>";
-	}
-
-	html_code += "</select>";
-
-	return html_code;
-}
 
 // temporary dictionary to store all the resource uses
 // TODO: Optimize and link to data base later
 var resourceUseDictionary = new Object();
 resourceUseDictionary[1] = "Notes";
-resourceUseDictionary[2] = "Flashcard";
+resourceUseDictionary[2] = "Flashcards";
 resourceUseDictionary[3] = "Use 3";
 resourceUseDictionary[4] = "Use 4";
 resourceUseDictionary[5] = "Use 5";
@@ -502,6 +475,7 @@ resourceUseDictionary[11] = "Use 11";
 resourceUseDictionary[12] = "Use 12";
 
 // temporary dictionary to store all the content types
+// TODO: Optimize and link to data base later
 var contentTypeDictionary = new Object();
 contentTypeDictionary[1] = "Text";
 contentTypeDictionary[2] = "Link";
@@ -517,59 +491,13 @@ contentTypeDictionary[11] = "Type 11";
 contentTypeDictionary[12] = "Type 12";
 
 /**
- * \brief create htmlCode to create resource use selector
- * 
+ * Helper function for Creating Resource Use/Content Type Selector
+ * TODO: currently we are using a hard-coded dictionary listing all the use/resource
+ * 			need a better way to store
+ * \returns html code for use/type selector
+ * @param {*} selectorFor String, determines if it's selector for resource use or content type
+ * 							Either: "resource-use" or content-type"
  */
-function resourceUseSelector ()
-{
-	var html_code = "\
-	<div class='use-list-scrolling-wrapper'>\
-		<ul id='resource-use-selector'>\
-			<div class='use'><li><input type='radio' name='resource-use' id='1'><label for='1'>Notes</label></li></div>\
-			<div class='use'><li><input type='radio' name='resource-use' id='2'><label for='2'>Use 2</label></li></div>\
-			<div class='use'><li><input type='radio' name='resource-use' id='3'><label for='3'>Use 3</label></li></div>\
-			<div class='use'><li><input type='radio' name='resource-use' id='4'><label for='4'>Use 4</label></li></div>\
-			<div class='use'><li><input type='radio' name='resource-use' id='5'><label for='5'>Use 5</label></li></div>\
-			<div class='use'><li><input type='radio' name='resource-use' id='6'><label for='6'>Use 6</label></li></div>\
-			<div class='use'><li><input type='radio' name='resource-use' id='7'><label for='7'>Use 7</label></li></div>\
-			<div class='use'><li><input type='radio' name='resource-use' id='8'><label for='8'>Use 8</label></li></div>\
-			<div class='use'><li><input type='radio' name='resource-use' id='9'><label for='9'>Use 9</label></li></div>\
-			<div class='use'><li><input type='radio' name='resource-use' id='10'><label for='10'>Use 10</label></li></div>\
-			<div class='use'><li><input type='radio' name='resource-use' id='11'><label for='11'>Use 11</label></li></div>\
-			<div class='use'><li><input type='radio' name='resource-use' id='12'><label for='12'>Use 12</label></li></div>\
-	  </ul>\
-	</div>";
-	  
-	return html_code;
-}
-
-/**
- * \brief create htmlCode to create content type selector
- * 
- */
-function contentTypeSelector ()
-{
-	var html_code = "\
-	<div class='use-list-scrolling-wrapper'>\
-		<ul id='content-type-selector'>\
-			<div class='type'><li><input type='radio' name='content-type' id='t1'><label for='t1'>Text</label></li></div>\
-			<div class='type'><li><input type='radio' name='content-type' id='t2'><label for='t2'>Link</label></li></div>\
-			<div class='type'><li><input type='radio' name='content-type' id='t3'><label for='t3'>Type 3</label></li></div>\
-			<div class='type'><li><input type='radio' name='content-type' id='t4'><label for='t4'>Type 4</label></li></div>\
-			<div class='type'><li><input type='radio' name='content-type' id='t5'><label for='t5'>Type 5</label></li></div>\
-			<div class='type'><li><input type='radio' name='content-type' id='t6'><label for='t6'>Type 6</label></li></div>\
-			<div class='type'><li><input type='radio' name='content-type' id='t7'><label for='t7'>Type 7</label></li></div>\
-			<div class='type'><li><input type='radio' name='content-type' id='t8'><label for='t8'>Type 8</label></li></div>\
-			<div class='type'><li><input type='radio' name='content-type' id='t9'><label for='t9'>Type 9</label></li></div>\
-			<div class='type'><li><input type='radio' name='content-type' id='t10'><label for='t10'>Type 10</label></li></div>\
-			<div class='type'><li><input type='radio' name='content-type' id='t11'><label for='t11'>Type 11</label></li></div>\
-			<div class='type'><li><input type='radio' name='content-type' id='t12'><label for='t12'>Type 12</label></li></div>\
-	  </ul>\
-	</div>";
-	  
-	return html_code;
-}
-
 function selectorCodeGenerator(selectorFor) 
 {
 	var name = "default";
@@ -617,26 +545,29 @@ function findResourceUseId()
 		}
 	} 
 }
-// function resourceUseSelector ()
-// {
-// 	var html_code = "\
-// 	<div class='use-list-scrolling-wrapper'>\
-// 		<ul id='menu'>\
-// 			<div class='use'><li><input name='notes' id='1'><label for='1'>Notes</label></li></div>\
-// 			<div class='use'><li><input name='use2' id='2'><label for='2'>Use 1</label></li></div>\
-// 			<div class='use'><li><input name='use3' id='3'><label for='3'>Use 2</label></li></div>\
-// 			<div class='use'><li><input name='use4'id='4'><label for='4'>Use 3</label></li></div>\
-// 			<div class='use'><li><input name='use5' id='5'><label for='5'>Use 5</label></li></div>\
-// 			<div class='use'><li><input name='use6' id='6'><label for='6'>Use 6</label></li></div>\
-// 			<div class='use'><li><input name='use7' id='7'><label for='7'>Use 7</label></li></div>\
-// 			<div class='use'><li><input name='use8'id='8'><label for='8'>Use 8</label></li></div>\
-// 			<div class='use'><li><input name='notes' id='9'><label for='9'>Use 9</label></li></div>\
-// 			<div class='use'><li><input name='use2' id='10'><label for='10'>Use 10</label></li></div>\
-// 			<div class='use'><li><input name='use3' id='11'><label for='11'>Use 11</label></li></div>\
-// 			<div class='use'><li><input name='use4'id='12'><label for='12'>Use 12</label></li></div>\
-// 	  </ul>\
-// 	</div><br>";
-	  
-// 	return html_code;
-// }
 
+/**
+ * Helper function for Resource Use/Content Type Selector
+ * \brief 	For Resource Editor.
+ * 			Load/select the resource use or content type of the resource in Resource Editor
+ * 
+ * @param {*} ulId String, determines if we are loading for resource use or content type
+ * 			either: "resource-use-selector" or "content-type-selector"
+ * @param {*} selected String, the selected use/type of this resource (from the json we get)
+ */
+function loadSelectedUseOrType (ulId, selected)
+{
+	var ul = document.getElementById(ulId);
+	var listInsideUl = ul.getElementsByTagName("li");
+
+	for (var i = 0; i < listInsideUl.length; ++i) {
+		// get the name of the label
+		var name = listInsideUl[i].getElementsByTagName("label")[0].innerHTML;
+		
+		if (name.toLowerCase() == selected.toLowerCase()) {
+			// checked is true when this input is checked
+			// select this input
+			listInsideUl[i].getElementsByTagName("input")[0].checked = true;
+		}
+	}
+}
