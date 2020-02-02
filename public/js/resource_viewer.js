@@ -220,11 +220,10 @@ function resourceEditor(received)
 			resource is the json we want
 	*/
 	received.json().then(function(resource){
+		console.log(resource);
 		// document.getElementById("meta-name").value = resource.meta.name;
 		document.getElementById("meta-name").innerHTML = resource.meta.name;
-
-
-		var ulUse = document.getElementById("resource-use-selector");
+		
 		loadSelectedUseOrType("resource-use-selector", resource.meta.use_name);
 
 		// create a text area for each content
@@ -267,19 +266,9 @@ function newContent()
 function submitContent() 
 {
 	var resource_name = document.getElementById("meta-name").innerHTML;
-	console.log(document.getElementById("meta-name").innerHTML);
-	var resource_use = findResourceUseId();
-	var content_name_array = [];
-	var content_type_array = [];
-	var content_array = [];
-	content_num = pre_updated_content_num;
+	var resource_use = findUseOrType("resource-use-selector");
 
-	for (i=0;i < (content_num+1); i++)
-	{
-		content_name_array.push(document.getElementById("content-name"+i).value);
-		content_type_array.push(document.getElementById("content-type"+i).value);
-		content_array.push(document.getElementById("content"+i).value);
-	}
+	content_num = pre_updated_content_num;
 	
 	//store all the data in json
 	//NEED TO INCLUDE: resouce id, content id
@@ -294,18 +283,19 @@ function submitContent()
 			{
 				"id": temp_content_id,
 				"name": document.getElementById("content-name0").value,
-				"type": document.getElementById("content-type0").value,
+				"type": findUseOrType("content-type-selector").toLowerCase(),
 				"content": document.getElementById("content0").value
 			}
 		]
 	};
 	
+	// TODO: For more contents in future, type is not correct
 	for (i = 1; i < (content_num+1); i++)
 	{
 		var content_array =
 		{
 			"name": document.getElementById("content-name"+i).value,
-			"type": document.getElementById("content-type"+i).value,
+			"type": tempType,
 			"content": document.getElementById("content"+i).value
 		};
 		resource.contents.push(content_array);
@@ -397,15 +387,6 @@ function loadContent(contents)
 	{
 		document.getElementById("content-name"+i).value = contents[i]["name"];
 		
-		if (contents[i]["type"] == "text")
-		{
-			document.getElementById("content-type"+i).selectedIndex = 0;
-		}
-		else if (contents[i]["type"] == "link")
-		{
-			document.getElementById("content-type"+i).selectedIndex = 1;
-		}
-		
 		loadSelectedUseOrType("content-type-selector", contents[i]["type"]);
 		
 		document.getElementById("content"+i).value = contents[i]["content"];
@@ -461,9 +442,9 @@ function resetContentNum ()
 // temporary dictionary to store all the resource uses
 // TODO: Optimize and link to data base later
 var resourceUseDictionary = new Object();
-resourceUseDictionary[1] = "Notes";
-resourceUseDictionary[2] = "Flashcards";
-resourceUseDictionary[3] = "Use 3";
+resourceUseDictionary[1] = "Class Notes";
+resourceUseDictionary[2] = "Notes";
+resourceUseDictionary[3] = "Flashcards";
 resourceUseDictionary[4] = "Use 4";
 resourceUseDictionary[5] = "Use 5";
 resourceUseDictionary[6] = "Use 6";
@@ -525,9 +506,9 @@ function selectorCodeGenerator(selectorFor)
 		<ul id='" + ulId +"'>";
 
 	for (var key in dictionary) {
-		html_code += "<div class='" + inputClass + "'>\
+		html_code += "\
 			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ key +"'>\
-				<label for='" + inputId +""+ key + "'>" + dictionary[key] + "</label></li></div>";
+				<label for='" + inputId +""+ key + "'>" + dictionary[key] + "</label></li>";
 	}
 	
 	html_code +=  "</ul></div>";
@@ -535,15 +516,30 @@ function selectorCodeGenerator(selectorFor)
 	return html_code;
 }
 
-function findResourceUseId() 
+/**
+ * Helper function for Submitting an edited resource
+ * \brief 	Find the resource use id (int) or 
+ * 				 the content type name (string)
+ * 
+ * @param {*} ulId String, determines if we finding resource use or content type
+ * 			either: "resource-use-selector" or "content-type-selector"
+ */
+function findUseOrType(ulId) 
 {
-	var allResourceUse = document.getElementsByName('resource-use'); 
+	var ul = document.getElementById(ulId);
+	var listInsideUl = ul.getElementsByTagName("li");
 
-	for(i = 0; i < allResourceUse.length; i++) { 
-		if(allResourceUse[i].checked) {
-			return allResourceUse[i].id;
+	for (var ele of listInsideUl) {
+		if (ele.getElementsByTagName("input")[0].checked == true) {
+			if (ulId == "resource-use-selector") {
+				return parseInt(ele.getElementsByTagName("input")[0].id);
+			} 
+			else if (ulId == "content-type-selector") {
+				console.log(ele.getElementsByTagName("label")[0].innerHTML);
+				return ele.getElementsByTagName("label")[0].innerHTML;
+			}
 		}
-	} 
+	}
 }
 
 /**
@@ -559,15 +555,13 @@ function loadSelectedUseOrType (ulId, selected)
 {
 	var ul = document.getElementById(ulId);
 	var listInsideUl = ul.getElementsByTagName("li");
-
-	for (var i = 0; i < listInsideUl.length; ++i) {
+	for (var ele of listInsideUl) {
 		// get the name of the label
-		var name = listInsideUl[i].getElementsByTagName("label")[0].innerHTML;
-		
+		var name = ele.getElementsByTagName("label")[0].innerHTML;
 		if (name.toLowerCase() == selected.toLowerCase()) {
 			// checked is true when this input is checked
 			// select this input
-			listInsideUl[i].getElementsByTagName("input")[0].checked = true;
+			ele.getElementsByTagName("input")[0].checked = true;
 		}
 	}
 }
