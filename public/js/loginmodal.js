@@ -50,7 +50,7 @@ $(document).ready(function()
 });
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) 
+window.onmousedown = function(event) 
 {
     if (event.target == document.getElementById('my-modal')) 
     {
@@ -58,15 +58,10 @@ window.onclick = function(event)
 		document.getElementById('resource-head').innerHTML = " ";
 		document.getElementById('modules').innerHTML = " "; //clean the display box up
 		resetContentNum();
-		/*
-		var x = document.getElementsByClassName("module");
-		for (var i; i<x.length; i++){
-			x[i].innerHTML=" ";
-		}*/
 		
-		//location.reload();
-    }
+	}
 }
+
 
 // Display only the container specified.
 function displayContainer(container) 
