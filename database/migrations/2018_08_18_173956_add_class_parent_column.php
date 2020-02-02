@@ -27,7 +27,7 @@ class AddClassParentColumn extends Migration
 	public function down()
 	{
 		Schema::table('classes', function (Blueprint $table) {
-			$table->dropForeign('classes_parent_id_foreign');
+			$table->dropForeign('classes_parent_id_foreign'); // this code might not work in laravel 5.7+
 			$table->dropColumn('parent_id');
 		});
 	}

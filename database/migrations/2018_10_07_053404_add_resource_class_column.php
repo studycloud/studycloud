@@ -27,7 +27,7 @@ class AddResourceClassColumn extends Migration
 	public function down()
 	{
 		Schema::table('resources', function (Blueprint $table) {
-			$table->dropForeign('resources_class_id_foreign');
+			$table->dropForeign('resources_class_id_foreign'); // this code might not work in laravel 5.7+
 			$table->dropColumn('class_id');
 		});
 	}

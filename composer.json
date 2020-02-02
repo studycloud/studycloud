@@ -1,23 +1,27 @@
 {
     "name": "laravel/laravel",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=7.0.0",
+        "php": "^7.2",
         "laravel/envoy": "^1.4",
-        "laravel/framework": "5.5.*",
+        "laravel/framework": "^6.2",
+        "laravel/helpers": "^1.1",
         "laravel/scout": "^7.2",
-        "laravel/socialite": "^3.2.0",
-        "laravel/tinker": "^1.0"
+        "laravel/socialite": "^4.0",
+        "laravel/tinker": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.0",
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~6.0",
+        "phpunit/phpunit": "^7.5",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*"
     },
@@ -45,12 +49,10 @@
             "php artisan key:generate"
         ],
         "post-install-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postInstall"
         ],
         "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
         ]
     },
     "config": {

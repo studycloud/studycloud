@@ -257,6 +257,7 @@ class ClassController extends Controller
 		{
 			$id = $id === 0 ? null : $id;
 			// attach all the children
+			// as of laravel 6, this may not prevent against mass assignment anymore! (see https://laravel.com/docs/6.x/upgrade#eloquent)
 			Academic_Class::whereIn('id', $validated['children'])->update(['parent_id' => $id]);
 		}
 	}

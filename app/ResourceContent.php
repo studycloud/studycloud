@@ -8,6 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class ResourceContent extends Model
 {
 	/**
+	 * The table associated with the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'resource_contents';
+
+	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
