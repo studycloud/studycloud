@@ -29,6 +29,11 @@
     <link href="{{ asset('js/selectStyleSrc/selectstyle.css') }}" rel="stylesheet">
     <script src="//code.jquery.com/jquery.min.js"></script>
     <script src="{{ asset('js/selectStyleSrc/selectstyle.js') }}"></script>
+   <!-- get the content_types -->
+    <script>
+      var resource_types = @json( App\ResourceContent::getPossibleTypes() );
+      console.log(resource_types);
+   </script>
 
     @stack('scripts')
 

@@ -20,7 +20,7 @@ $(document).ready(function()
 	{
 		document.getElementById('my-modal').style.display = "block";
 		displayContainer("resource");
-		createResource();
+		resourceEditorHTML();
 		editResource();
 		$('select[name="attach"]').selectstyle({
 			width  : 400,
