@@ -25,8 +25,18 @@ $off-wht: rgba(white,.4);
 }
 
 #resource-name {
-	font-size: 50px;
-	font-weight: bold;
+	font-size: 25px;
+    font-weight: bold;
+    -moz-appearance: textfield-multiline;
+    -webkit-appearance: textarea;
+    border: 1px solid gray;
+    /* font: medium -moz-fixed; */
+    /* font: -webkit-small-control; */
+    height: 28px;
+    overflow: auto;
+    padding: 2px;
+    resize: both;
+    width: 500px;
 }
 
 #author-name {
