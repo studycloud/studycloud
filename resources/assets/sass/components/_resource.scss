@@ -7,7 +7,7 @@
 $student-color: purple;
 $teacher-color: green;
 
-#resource-container { // For now. 
+.resource-container { // For now. 
 	// background: $content-bg-color;
 	// max-width: 800px;
 }
@@ -104,7 +104,7 @@ $wrapper-height: 100px;
 
 ul#resource-use-selector, ul#content-type-selector{
 	padding-top: 5%;
-	font-family: sans-serif;
+	font-family: $main-font;
 	height: 20px;
 
 	li {

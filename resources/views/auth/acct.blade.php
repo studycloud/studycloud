@@ -24,7 +24,7 @@
 		<form action="{{ route('logout') }}" method="POST">
 			{{ csrf_field() }}
 			<input type="hidden" name="auth_id" id="auth_id" value="{{ Auth::user()->id }}">
-			<input type="submit" id="log-in-button" value="Log Out">
+			<input type="submit" id="log-in-button" value="log out">
 		</form>
 	</li>
 @endif

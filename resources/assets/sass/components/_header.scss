@@ -141,7 +141,7 @@
 		    padding: 0.3em;
 		    #log-in-button {
 				background-color: $login-button-color;
-
+				font-weight: bold;
 				&:hover, &:focus {
 					background-color: $login-button-hover-color;
 					cursor: pointer;
@@ -211,7 +211,7 @@
 		border-radius: 0.1em;
 		resize: none;
 		font-size: 18px;
-		font-family: inherit;
+		font-family: $body-font;
 		margin-bottom: 2%;
 	}
 
