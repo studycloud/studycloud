@@ -9,7 +9,7 @@ use App\Repositories\ClassRepository;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ClassesHttpTest extends TestCase
+class NoticesHttpTest extends TestCase
 {
 	/**
 	 * Test that CRUD routes for a Resource work correctly. Assumes you've already seeded the users table.
@@ -40,7 +40,8 @@ class ClassesHttpTest extends TestCase
 		);
 		$new_notice = Notice::latest()->first();
 		// check: do we have a new notice?
-		dd($response);
+		//dd($response);
+		dd($new_notice);
 		$response->assertSuccessful();
 		
 		$this->assertEquals(Notice::count()-1, $notice_count);
