@@ -171,10 +171,10 @@ function resourceEditorHTML()
 	<div class 'resource-creator> Resource Name: <br> \
 	<div type = 'text' id = 'meta-name' contenteditable='true'> </div> <br> \
 	Resource Use:  <br>" + selectorCodeGenerator("resource-use") + "<br> \
-	<div class=resource-divider></div> <br>" + selectorCodeGenerator("content-type") + " </div>\
+	<div class=resource-divider> </div>\
 	<div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
-	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
+	Content Type: <br>" + selectorCodeGenerator("content-type") + "<br>\
 	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> <div id = 'more-contents'> </div>\
 	<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedContent()'> Submit </button> \
 	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \

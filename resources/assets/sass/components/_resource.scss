@@ -83,11 +83,11 @@ h2 {
 
 }
 
+$wrapper-height: 100px;
 // style the resource use selector
 .use-list-scrolling-wrapper{
-	height: 40px;
-  	margin-bottom: 2px;
-  	width: 35%;
+	height: $wrapper-height;
+  	width: 60%;
  	-webkit-overflow-scrolling: touch;
   	&::-webkit-scrollbar {
     	display: none;
@@ -103,29 +103,31 @@ h2 {
 }
 
 ul#resource-use-selector, ul#content-type-selector{
-	padding: 0;
+	padding-top: 5%;
 	font-family: sans-serif;
 	height: 20px;
 
 	li {
 		display: inline-block;
 	}
-
+	// #d3d3d3
+	// #808080
+	// #ADD8E6
 	li label {
-		background-color: #d3d3d3;
+		background-color: #dadada;
 		color: black;
-		padding: 5px 20px;
+		padding: 20px 30px;
 		text-decoration: none;
 		transition: 0.2s;
 	}
 
 	li label:hover, li input:checked + label {
-		background-color: #808080;
+		background-color: #6D7993;
 		transition: 0.3s;
 	}
 
 	li input:checked + label {
-		background-color:#ADD8E6;
+		background-color:rgb(119, 156, 241);
 	}
 
 	li input {
