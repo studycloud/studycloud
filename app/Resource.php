@@ -6,10 +6,16 @@ use App\User;
 use App\Topic;
 use App\ResourceUse;
 use App\Academic_Class;
+use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
 
 class Resource extends Model
 {
+	/**
+	 * Use Laravel Scout's trait to make this model searchable
+	 */
+	use Searchable;
+
 	/**
 	 * The attributes that are mass assignable.
 	 *
