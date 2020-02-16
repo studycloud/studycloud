@@ -4,11 +4,11 @@ var content_num = 0;
 // having this will clear any unsaved changes
 var pre_updated_content_num = content_num;
 
-// TEMPORARY
-// use this to interact with Server
-// request resource and send resource JSON to server
-var resource_id = 24;
-var temp_content_id = 24;
+// placeholder for actual resource and content id
+// gets loaded in resource.blade.php
+// when a resource is shown on url: /resources/{resource_id}
+var resource_id = 0;
+var temp_content_id = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -22,7 +22,7 @@ var temp_content_id = 24;
  * 		handleError function: error
  * 		handleSuccess function: displayResource
  */
-function requestResource()
+function viewResource()
 {
 	var server = new Server();
 

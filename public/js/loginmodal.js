@@ -22,19 +22,13 @@ $(document).ready(function()
 		displayContainer("resource");
 		resourceEditorHTML();
 		editResource();
-		$('select[name="attach"]').selectstyle({
-			width  : 400,
-			height : 300,
-			theme  : 'light',
-			onchange : function(val){}
-		});
 	});
 
 	$("#resource-meta-btn").click(function(event)
 	{
 		document.getElementById('my-modal').style.display = "block";
 		displayContainer("resource");
-		requestResource();
+		viewResource();
 	});
 
 	// When the user clicks on <span> (x), close the modal

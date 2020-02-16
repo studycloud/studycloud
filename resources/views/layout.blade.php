@@ -12,8 +12,10 @@
 	<script type="text/javascript" src="{{ asset('js/header.js') }}"></script> <!-- javascript for header but mostly for login drop down -->
 	<script type="text/javascript" src="{{ asset('js/loginmodal.js') }}"></script> <!-- javascript for forgetting your login -->
 	<!-- Need to decide where to put this later (prevents it from getting loaded everytime) -->
+   <!-- Used in resource_view.js -->
 	<script type="text/javascript">
-	resourceUseData = @json( App\ResourceUse::select('id', 'name')->get() );
+      resourceUseData = @json( App\ResourceUse::select('id', 'name')->get() );
+      contentTypeData = @json( App\ResourceContent::getPossibleTypes() );
 	</script>
 	<script type="text/javascript" src="{{ asset('js/resource_viewer.js') }}"></script> <!-- aw heck -->
 	<!-- Tree scripts -->
@@ -29,11 +31,6 @@
     <link href="{{ asset('js/selectStyleSrc/selectstyle.css') }}" rel="stylesheet">
     <script src="//code.jquery.com/jquery.min.js"></script>
     <script src="{{ asset('js/selectStyleSrc/selectstyle.js') }}"></script>
-   <!-- get the content_types -->
-    <script>
-      var resource_types = @json( App\ResourceContent::getPossibleTypes() );
-      console.log(resource_types);
-   </script>
 
     @stack('scripts')
 
@@ -521,30 +518,6 @@
         </header>
         @yield('content')
     </div>
-
-    <!-- The Modal -->
-    <div id="my-modal" class="modal">
-
-        <!-- Modal content -->
-        <div class="modal-content">
-            <span id="close-modal"><i class="fas fa-times"></i></span>
-
-            <!-- Container for resource. -->
-            <div id="resource-container">
-                <div class="resource-background">
-                    <div id="resource-head"></div>
-                    <div id="modules"> <!-- This is where you put the modules. -->
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!--button id="creator-btn">temporary resource creator button</button-->
-    <button id="editor-btn">temporary resource editor button</button>
-    <button id="resource-meta-btn">resource meta button</button>
 </body>
 <footer>
     <script src="/storage/Logo Tree.js"></script> <!-- TODO or here -->
