@@ -51,7 +51,6 @@ function Tree(type, frame_id, server)
 	var timeout_resize;
 	d3.select(window).on("resize", function() 
 		{
-			console.log("1");
 			clearTimeout(timeout_resize);
 			timeout_resize = setTimeout(function(){console.log("2"); self.handleResize();}, 100); 
 		}
@@ -1140,53 +1139,38 @@ Tree.prototype.handleResize = function()
 	self.simulationRestart();
 };
 
-Tree.prototype.nodeCapture = function(node, data, index)
+Tree.prototype.captureBarRender = function(node_captured_data)
 {
 	var self = this;
 
-	var node_captured_data = self.nodes_captured.data();
-
-	node_captured_data.push(data);
-
 	var nodes_captured = self.nodes_captured.data(node_captured_data);
 	
+	var captured_count = node_captured_data.length;
 	
+	var captured_padding_hor = 10;
+	var captured_padding_vert = 10;
+	var captured_width = 140;
+	var captured_height = Math.min(self.frame.boundary.height/captured_count - captured_padding_vert, captured_width);
+		
+	var remove_radius = 15;
+	var remove_padding = 10;
+	var remove_x = (captured_width / 2) - remove_radius - remove_padding;
+	var remove_y = -((captured_height / 2) - remove_radius - remove_padding);
+	var remove_cross_padding = remove_radius / 3;
+	
+
+	//Enter
 	nodes_captured_new = nodes_captured
 		.enter()
 			.append("g")
 				.attr("class", "node_captured")
-				.attr("data_id", function(d){return d.id;})
-				.attr("transform", d3.transform()
-					.translate(function(d, i)
-						{
-							console.log(d);
-							console.log(i);
-							return [self.frame.boundary.width - 80, 80 + i*150];
-						}
-					)
-				);
-	
-	var width = 140;
-	var height = width;
-				
-	nodes_captured_new
-		.append("rect")
-			.attr("width", width)
-			.attr("height", height)
-			.attr('transform', d3.transform()
-				.translate(function(d)
-					{
-						var width = this.width.animVal.value;
-						var height = this.height.animVal.value;
-						return [-width/2, -height/2];
-					}
-				)
-			);
+				.attr("data_id", function(d){return d.id;});
 
-	
 	nodes_captured_new
-		.append("text")
-			.text(function(d){return d.name;});
+		.append("rect");
+
+	nodes_captured_new
+		.append("text");
 	
 	nodes_captured_new.each(function(d)
 		{
@@ -1201,48 +1185,32 @@ Tree.prototype.nodeCapture = function(node, data, index)
 				return d.color;
 			}
 		);
-	
-	var remove_radius = 15;
-	var remove_padding = 10;
-	var remove_x = (width / 2) - remove_radius - remove_padding;
-	var remove_y = -((height / 2) - remove_radius - remove_padding);
-	var remove_cross_padding = remove_radius / 3;
-	
-	remove_button = nodes_captured_new
+
+	var button_remove = nodes_captured_new
 		.append("g")
-			.classed("button_remove", true);
-
-	remove_button
+			.classed("button_remove", true)
+			.on("click", function(d, i){self.nodeUncapture(this, d, i)})
+		
+	button_remove
 		.append("circle")
-			.attr("cx", remove_x)
-			.attr("cy", remove_y)
 			.attr("r", remove_radius);
-	
-	remove_button_cross = remove_button.append("g");
+		
+	var button_remove_cross = button_remove.append("g");
 
-	remove_button_cross.append("line")
-		.attr("x1", remove_x - remove_radius + remove_cross_padding)
-		.attr("y1", remove_y)
-		.attr("x2", remove_x + remove_radius - remove_cross_padding)
-		.attr("y2", remove_y);
+	button_remove_cross.append("line")
+		.attr("x1", - remove_radius + remove_cross_padding)
+		.attr("y1", 0)
+		.attr("x2", remove_radius - remove_cross_padding)
+		.attr("y2", 0);
 
-	remove_button_cross.append("line")
-		.attr("x1", remove_x)
-		.attr("y1", remove_y - remove_radius + remove_cross_padding)
-		.attr("x2", remove_x)
-		.attr("y2", remove_y + remove_radius - remove_cross_padding);
+	button_remove_cross.append("line")
+		.attr("x1", 0)
+		.attr("y1", - remove_radius + remove_cross_padding)
+		.attr("x2", 0)
+		.attr("y2", remove_radius - remove_cross_padding);
 
 	// Make '+' to 'x'
-	remove_button_cross.attr("transform", "rotate (45," + remove_x + "," + remove_y + ")");
-
-
-//------------Close Button Attempt--------------------------------------------------
-	// var x_button = new d3CloseButton();
-	// x_button.size(30).isCircle(true).borderStrokeWidth(1).crossStrokeWidth(1);
-	// x_button.size(30).isCircle(true).x(45).y(-45);
-
-	// nodes_captured_new.call(x_button);
-//----------------------------------------------------------------------------------
+	button_remove_cross.attr("transform", d3.transform().rotate(45));
 
 
 	nodes_captured	
@@ -1251,153 +1219,61 @@ Tree.prototype.nodeCapture = function(node, data, index)
 
 	self.nodes_captured = self.frame.svg.selectAll(".node_captured");
 
+	self.nodes_captured
+		.attr("transform", d3.transform()
+			.translate(function(d, i)
+				{
+					return [self.frame.boundary.width - captured_width/2 - captured_padding_hor, captured_height/2 + captured_padding_vert  + i*(captured_height + captured_padding_vert)];
+				}
+			)
+		);
+
+	self.nodes_captured
+		.select("rect")
+			.attr("width", captured_width)
+			.attr("height", captured_height)
+			.attr('transform', d3.transform()
+				.translate(function(d)
+					{
+						var width = this.width.animVal.value;
+						var height = this.height.animVal.value;
+						return [-width/2, -height/2];
+					}
+				)
+			);
+
+	self.nodes_captured
+		.select("text")
+			.text(function(d){return d.name;});
+
+	button_remove = 
+		self.nodes_captured
+			.select(".button_remove")
+				.attr("transform", d3.transform().translate(remove_x, remove_y));
 };
 
 
 
+Tree.prototype.nodeCapture = function(node, data, index)
+{
+	var self = this;
 
-function d3CloseButton () {
+	var node_captured_data = self.nodes_captured.data();
 
-    var size = 20,
-        x = 0,
-        y = 0,
-        rx = 0,
-        ry = 0,
-        isCircle = false,
-        isBorderShown = false,
-        borderStrokeWidth = 1.5,
-        crossStrokeWidth = 1.5,
-        g,
-        event;
+	node_captured_data.push(data);
 
-    function button (selection) {
+	self.captureBarRender(node_captured_data);
+};
 
-        //Styling for the border of the button
-        var buttonStyle = {
-                "fill-opacity": 0,
-                "stroke-width": borderStrokeWidth,
-                "stroke": (isBorderShown)? "none" : "black" },
-        //for the cross
-            crossStyle = {
-                "stroke-width": crossStrokeWidth,
-                "stroke": "black"
-            },
-            r = size / 2,
-            ofs = size / 6,
-            cross;
+Tree.prototype.nodeUncapture = function(node, data, index)
+{
+	var self = this;
 
-        g = selection.append("g").on("click", event);
-        cross = g.append("g");
+	d3.select(node.parentNode).remove();
 
-        if (isCircle) {
-            g.append("circle")
-                .attr("cx", x)
-                .attr("cy", y)
-                .attr("r", r)
-                .style(buttonStyle);
+	self.nodes_captured = self.frame.svg.selectAll(".node_captured");
 
-            cross.append("line")
-                .attr("x1", x - r + ofs)
-                .attr("y1", y)
-                .attr("x2", x + r - ofs)
-                .attr("y2", y);
+	var node_captured_data = self.nodes_captured.data();
 
-            cross.append("line")
-                .attr("x1", x)
-                .attr("y1", y - r + ofs)
-                .attr("x2", x)
-                .attr("y2", y + r - ofs);
-
-            // Make '+' to 'x'
-            cross.attr("transform", "rotate (45," + x + "," + y + ")");
-
-        } else {
-            g.append("rect")
-                .attr("x", x)
-                .attr("y", y)
-                .attr("rx", rx)
-                .attr("ry", ry)
-                .attr("width", size)
-                .attr("height", size)
-                .style(buttonStyle);
-
-            cross.append("line")
-                .attr("x1", x + ofs)
-                .attr("y1", y + ofs)
-                .attr("x2", (x + size) - ofs)
-                .attr("y2", (y + size) - ofs);
-
-            cross.append("line")
-                .attr("x1", (x + size) - ofs)
-                .attr("y1", y + ofs)
-                .attr("x2", x + ofs)
-                .attr("y2", (y + size) - ofs);
-        }
-
-        cross.style(crossStyle)
-
-    }
-
-    button.x = function (val) {
-        x = val;
-        return button;
-    }
-
-    button.y = function (val) {
-        y = val;
-        return button;
-    }
-
-    button.size = function (val) {
-        size = val;
-        return button;
-    }
-
-    button.rx = function (val) {
-        rx = val;
-        return button;
-    }
-
-    button.ry = function (val) {
-        ry = val;
-        return button;
-    }
-
-    button.borderStrokeWidth = function (val) {
-        borderStrokeWidth = val;
-        return button;
-    }
-
-    button.crossStrokeWidth = function (val) {
-        crossStrokeWidth = val;
-        return button;
-    }
-
-    //If true, the border of the button becomes a circle instead of a rectangle
-    button.isCircle = function (val) {
-        isCircle = val;
-        return button;
-    }
-
-    button.isBorderShown = function (val) {
-        isBorderShown = val;
-        return button;
-    }
-
-    button.clickEvent = function (val) {
-        event = val;
-        return button;
-    }
-
-    //Remove the whole button if one already exists
-    button.remove = function () {
-        if (g) {
-            g.remove();
-            g = undefined;
-        }
-
-        return button;
-    }
-
-    return button;
+	self.captureBarRender(node_captured_data);
 };
