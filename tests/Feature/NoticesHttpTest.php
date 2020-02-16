@@ -48,12 +48,11 @@ class NoticesHttpTest extends TestCase
 		// check: is the description what we expect?
 		$this->assertEquals($notice->description, $new_notice->description);
 
-		// // delete the notice we created
-		// $response = $this->actingAs($user)->delete('/notices/'.($new_notice->id));
-		// // is the notice gone?
-		// $response->assertSuccessful();
-		//dd(Notice::count());
-		//$this->assertEquals(Notice::count(), $notice_count);
+		// delete the notice we created
+		$response = $this->actingAs($user)->delete('/notices/'.($new_notice->id));
+		// is the notice gone?
+		$response->assertSuccessful();
+		$this->assertEquals(Notice::count(), $notice_count);
 
 	// 	// attach this class to the root class
 	// 	// and attach some children to this class

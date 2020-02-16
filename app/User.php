@@ -41,13 +41,19 @@ class User extends Authenticatable
 	}
 
 	/**
-	 * returns the roles of this user. make sure to call get on the result!
+	 * returns true if the user is an admin
 	 */
-	public function roles()
+	public function isAdmin() 
 	{
-		//return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
-		return $this->getRoles();
+		return !($this->getRoles()->isEmpty());
+	}
 
+	/**
+	 * return a collection of the names of the different roles the user is assigned
+	 */
+	public function getRoles()
+	{
+		return $this->roles->pluck('name');
 	}
 
 	/**
@@ -122,7 +128,7 @@ class User extends Authenticatable
 		//return DB::table('roles')->get();
 	}
 
-	public static function getRoles()
+	public static function getAllRoles()
 	{
 		return Bouncer::role()->all();
 	}
