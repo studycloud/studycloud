@@ -22,7 +22,7 @@ class Resource extends Model
 	 * @var array
 	 */
 	protected $fillable = ['name', 'use_id'];
-	
+
 	/**
 	 * define the one-to-many relationship between a resource and its contents
 	 * @return \Illuminate\Database\Eloquent\Relations\HasMany the relationship accessor
@@ -71,5 +71,44 @@ class Resource extends Model
 	public function class()
 	{
 		return $this->belongsTo(Academic_Class::class, 'class_id');
+	}
+
+	/**
+	 * Is this resource viewable by the public?
+	 * @return boolean
+	 */
+	public function status()
+	{
+		return boolval($this->status);
+	}
+
+	/**
+	 * Get the indexable data array for the model.
+	 * @return array
+	 */
+	public function toSearchableArray()
+	{
+		$resource = collect();
+		$resource['name'] = $this->name;
+		$resource['author'] = $this->author->name();
+		$resource['use'] = $this->use->name;
+		$resource['class'] = $this->class->name;
+		$resource['contents'] = $this->contents->map(
+			function($content)
+			{
+				$new_content = collect($content);
+				return $new_content->only(['name', 'type', 'content']);
+			}
+		)->toArray();
+		return $resource->toArray();
+	}
+
+	/**
+	 * Should this resource be searchable?
+	 * @return boolean
+	 */
+	public function shouldBeSearchable()
+	{
+		return $this->status();
 	}
 }
