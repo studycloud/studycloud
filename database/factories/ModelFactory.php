@@ -106,10 +106,10 @@ $factory->define(App\Notice::class, function (Faker\Generator $faker) {
 			// but also allow some of them to be null
 			array_merge(App\Notice::pluck('id')->toArray(), [null])
 		),
-		'created_at' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
+		'created_at' => $faker->dateTimeBetween('now')->format('Y-m-d H:i:s'),
 		//'difficulty' => $faker->boolean(25) ? $faker->numberBetween(1, 10) : null,
 		'priority' => $faker->numberBetween(1, 10),
-		'deadline' => Carbon::createFromTimestamp($faker->dateTimeThisMonth()->getTimestamp())->addHours($faker->numberBetween(1, 20))->format('Y-m-d H:i:s'),
+		'deadline' => Carbon::createFromTimestamp($faker->dateTimeBetween('now', '+1 month')->getTimestamp())->addHours($faker->numberBetween(1, 20))->format('Y-m-d H:i:s'),
 		'description' => $faker->text(),
 		'link' => $faker->text(),
     ];

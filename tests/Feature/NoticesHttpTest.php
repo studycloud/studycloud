@@ -24,6 +24,7 @@ class NoticesHttpTest extends TestCase
 		$notice = factory(Notice::class)->make([
 			'author_id' => User::inRandomOrder()->take(1)->get()->first()['id']
 		]);
+		//echo $notice;
 		$user = User::find($notice->author_id);
 
 		// make a request to create a new notice
@@ -41,24 +42,18 @@ class NoticesHttpTest extends TestCase
 		$new_notice = Notice::latest()->first();
 		// check: do we have a new notice?
 		//dd($response);
-		dd($new_notice);
 		$response->assertSuccessful();
 		
 		$this->assertEquals(Notice::count()-1, $notice_count);
 		// check: is the description what we expect?
 		$this->assertEquals($notice->description, $new_notice->description);
-	}
-	// 	// edit the created class
-	// 	$new_name = "Test Class";
-	// 	$response = $this->actingAs($user)->patch('/classes/'.($new_class->id),
-	// 		[
-	// 			'name' => $new_name
-	// 		]
-	// 	);
-	// 	$new_class = Academic_Class::latest()->first();
-	// 	// check: was the edit successful?
-	// 	$response->assertSuccessful();
-	// 	$this->assertEquals($new_name, $new_class->name);
+
+		// // delete the notice we created
+		// $response = $this->actingAs($user)->delete('/notices/'.($new_notice->id));
+		// // is the notice gone?
+		// $response->assertSuccessful();
+		//dd(Notice::count());
+		//$this->assertEquals(Notice::count(), $notice_count);
 
 	// 	// attach this class to the root class
 	// 	// and attach some children to this class
@@ -96,11 +91,7 @@ class NoticesHttpTest extends TestCase
 	// 	);
 	// 	$this->assertEmpty($new_class->children()->get());
 
-	// 	// delete the class we created
-	// 	$response = $this->actingAs($user)->delete('/classes/'.($new_class->id));
-	// 	// is the class gone?
-	// 	$response->assertSuccessful();
-	// 	$this->assertEquals(Academic_Class::count(), $class_count);
-	// }
+
+	}
 }
 

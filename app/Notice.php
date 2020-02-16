@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notice extends Model
 {
+    /**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+    //need to validate parent_id
+    protected $fillable = ['description', 'link', 'priority', 'deadline', 'parent_id'];
+    
     public $timestamps = false;
     public static function boot() 
     {
