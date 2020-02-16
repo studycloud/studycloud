@@ -89,3 +89,13 @@ svg.tree
 {
     rx: 20px;
 }
+
+.button_remove circle {
+  fill-opacity: 0.3;
+  fill: white;
+}
+
+.button_remove line {
+  stroke-width: 2;
+  stroke: black;
+}

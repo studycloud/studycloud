@@ -1165,12 +1165,14 @@ Tree.prototype.nodeCapture = function(node, data, index)
 						}
 					)
 				);
-				
+	
+	var width = 140;
+	var height = width;
 				
 	nodes_captured_new
 		.append("rect")
-			.attr("width", 140)
-			.attr("height", 140)
+			.attr("width", width)
+			.attr("height", height)
 			.attr('transform', d3.transform()
 				.translate(function(d)
 					{
@@ -1199,12 +1201,47 @@ Tree.prototype.nodeCapture = function(node, data, index)
 				return d.color;
 			}
 		);
+	
+	var remove_radius = 15;
+	var remove_padding = 10;
+	var remove_x = (width / 2) - remove_radius - remove_padding;
+	var remove_y = -((height / 2) - remove_radius - remove_padding);
+	var remove_cross_padding = remove_radius / 3;
+	
+	remove_button = nodes_captured_new
+		.append("g")
+			.classed("button_remove", true);
+
+	remove_button
+		.append("circle")
+			.attr("cx", remove_x)
+			.attr("cy", remove_y)
+			.attr("r", remove_radius);
+	
+	remove_button_cross = remove_button.append("g");
+
+	remove_button_cross.append("line")
+		.attr("x1", remove_x - remove_radius + remove_cross_padding)
+		.attr("y1", remove_y)
+		.attr("x2", remove_x + remove_radius - remove_cross_padding)
+		.attr("y2", remove_y);
+
+	remove_button_cross.append("line")
+		.attr("x1", remove_x)
+		.attr("y1", remove_y - remove_radius + remove_cross_padding)
+		.attr("x2", remove_x)
+		.attr("y2", remove_y + remove_radius - remove_cross_padding);
+
+	// Make '+' to 'x'
+	remove_button_cross.attr("transform", "rotate (45," + remove_x + "," + remove_y + ")");
+
 
 //------------Close Button Attempt--------------------------------------------------
-	//var x_button = new d3CloseButton();
-	//x_button.size(30).isCircle(true).borderStrokeWidth(3).crossStrokeWidth(5);
+	// var x_button = new d3CloseButton();
+	// x_button.size(30).isCircle(true).borderStrokeWidth(1).crossStrokeWidth(1);
+	// x_button.size(30).isCircle(true).x(45).y(-45);
 
-	//node_captured_new.enter().call(x_button);
+	// nodes_captured_new.call(x_button);
 //----------------------------------------------------------------------------------
 
 
