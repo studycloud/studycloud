@@ -10,6 +10,13 @@ var pre_updated_content_num = content_num;
 var resource_id = 0;
 var temp_content_id = 0;
 
+/** TODO:
+ * 1) When it's a link, it will be like http://127.0.0.1:8000/resources/www.google.com
+ * 		see resource 23
+ * 2) What to do with the page when an invalid id is given?
+ * 3) How to display tree in the back?
+ */
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Functions to get resource from server
@@ -454,43 +461,11 @@ function resetContentNum ()
 	pre_updated_content_num = content_num;
 }
 
-
-// temporary dictionary to store all the resource uses
-// TODO: Optimize and link to data base later
-var resourceUseDictionary = new Object();
-resourceUseDictionary[1] = "Class Notes";
-resourceUseDictionary[2] = "Notes";
-resourceUseDictionary[3] = "Flashcards";
-resourceUseDictionary[4] = "Use 4";
-resourceUseDictionary[5] = "Use 5";
-resourceUseDictionary[6] = "Use 6";
-resourceUseDictionary[7] = "Use 7";
-resourceUseDictionary[8] = "Use 8";
-resourceUseDictionary[9] = "Use 9";
-resourceUseDictionary[10] = "Use 10";
-resourceUseDictionary[11] = "Use 11";
-resourceUseDictionary[12] = "Use 12";
-
-// temporary dictionary to store all the content types
-// TODO: Optimize and link to data base later
-var contentTypeDictionary = new Object();
-contentTypeDictionary[1] = "Text";
-contentTypeDictionary[2] = "Link";
-contentTypeDictionary[3] = "Type 3";
-contentTypeDictionary[4] = "Type 4";
-contentTypeDictionary[5] = "Type 5";
-contentTypeDictionary[6] = "Type 6";
-contentTypeDictionary[7] = "Type 7";
-contentTypeDictionary[8] = "Type 8";
-contentTypeDictionary[9] = "Type 9";
-contentTypeDictionary[10] = "Type 10";
-contentTypeDictionary[11] = "Type 11";
-contentTypeDictionary[12] = "Type 12";
-
 /**
  * Helper function for Creating Resource Use/Content Type Selector
- * TODO: currently we are using a hard-coded dictionary listing all the use/resource
- * 			need a better way to store
+ * \details uses two arrays: resourceUseData and contentTypeData
+ * 			which are loaded in resource.blade.php
+ * 			when a specific resource is displayed (specified by url: /resources/{resource_id}/edit)
  * \returns html code for use/type selector
  * @param {*} selectorFor String, determines if it's selector for resource use or content type
  * 							Either: "resource-use" or content-type"
@@ -498,33 +473,54 @@ contentTypeDictionary[12] = "Type 12";
 function selectorCodeGenerator(selectorFor) 
 {
 	var name = "default";
-	var inputClass = "default";
-	var ulId = "default-selector";
+	var ulId = "default-selector";  
 	var inputId = "";
-	var dictionary = new Object();
+
+	// html code for selector
+	var html_code = "<div class='use-list-scrolling-wrapper'>";
+
 	if (selectorFor == "resource-use") {
+		// set up relevant variables for resource-use selector
 		name = "resource-use";
 		inputClass = "use";
 		ulId = "resource-use-selector";
 		inputId = "";
-		dictionary = resourceUseDictionary;
+
+		html_code += "<ul id='" + ulId +"'>";
+
+		/** resourceUseData (an array)
+		 * 		where all the content types are stored in resourceUseData (an array)
+		 * 		loaded in resource.blade.php
+		 * 		format:
+		 * 			 [	{"id":1,"name":"Class Notes"},
+		 * 				{"id":3,"name":"Flashcards"},
+		 * 				{"id":2,"name":"Notes"}	]
+		 */
+		for (var i = 0; i < resourceUseData.length; ++i) {
+			html_code += "\
+			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ resourceUseData[i].id +"'>\
+				<label for='" + inputId +""+ resourceUseData[i].id + "'>" + resourceUseData[i].name + "</label></li>";
+		}
 	}
 	else if (selectorFor == "content-type") {
 		name = "content-type";
 		inputClass = "type";
 		ulId = "content-type-selector";
 		var inputId = "t";
-		dictionary = contentTypeDictionary;
-	}
+		dictionary = contentTypeData;
+		html_code += "<ul id='" + ulId +"'>";
 
-	var html_code = "\
-	<div class='use-list-scrolling-wrapper'>\
-		<ul id='" + ulId +"'>";
-
-	for (var key in dictionary) {
-		html_code += "\
-			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ key +"'>\
-				<label for='" + inputId +""+ key + "'>" + dictionary[key] + "</label></li>";
+		/** contentTypeData (an array)
+		 * 		where all the content types are stored in contentTypeData (an array)
+		 * 		loaded in resource.blade.php
+		 * 		format:
+		 * 			["type1", "type2", "type3"]
+		 */
+		for (var i = 0; i < dictionary.length; ++i) {
+			html_code += "\
+			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ i +"'>\
+				<label for='" + inputId +""+ i + "'>" + contentTypeData[i] + "</label></li>";
+		}
 	}
 	
 	html_code +=  "</ul></div>";
