@@ -1,38 +1,27 @@
-// Data format I get:
-// {"resource": {"name": "Resource 1",
-// 			"author_name": "Giselle Serate",
-// 			"author_type": "student"},
-//  "content": [ {"name": "Resource Content 1",
-//  			 "type": "link",
-//  			 "content": "<url>",
-//  			 "created_at": "date",
-//  			 "updated_at": "date"}
-//  		  ]
-// }
-
-// From https://www.w3schools.com/js/js_json_parse.asp
-
-// var xmlhttp = new XMLHttpRequest();
-// xmlhttp.onreadystatechange = function() {
-//     if (this.readyState == 4 && this.status == 200) {
-//         var myObj = JSON.parse(this.responseText);
-//         document.getElementById("demo").innerHTML = myObj.name;
-//     }
-// };
-// xmlhttp.open("GET", "json_demo.txt", true);
-// xmlhttp.send();
-
 // use when we have more than 1 content
 var content_num = 0;
 // use this to fix problem with "add new content" but not submitting
 // having this will clear any unsaved changes
 var pre_updated_content_num = content_num;
 
-// TEMPORARY
-// use this to interact with Server
-// request resource and send resource JSON to server
-var resource_id = 1;
-var temp_content_id = 1;
+// placeholder for actual resource and content id
+// gets loaded in resource.blade.php
+// when a resource is shown on url: /resources/{resource_id}
+var resource_id = 0;
+var temp_content_id = 0;
+
+/** TODO:
+ * 1) When it's a link, it will be like http://127.0.0.1:8000/resources/www.google.com
+ * 		see resource 23
+ * 2) What to do with the page when an invalid id is given?
+ * 3) How to display tree in the back?
+ */
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	Functions to get resource from server
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * \brief create server object and get resource for resource viewer
@@ -40,8 +29,9 @@ var temp_content_id = 1;
  * 		handleError function: error
  * 		handleSuccess function: displayResource
  */
-function requestResource() {
-  var server = new Server();
+function viewResource()
+{
+	var server = new Server();
 
   server.getResource(resource_id, error, displayResource);
 }
@@ -55,10 +45,18 @@ function requestResource() {
 function editResource() {
   var server = new Server();
 
-  server.getResource(resource_id, error, resourceEditor);
+	server.getResource(resource_id, error, fillInResourceForEditor);
 }
 
-/**
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	Callback functions
+//		- Edit/createResourceSuccessfully
+//		- Error
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+/** 
  * \brief callback function after editting resource successfully
  */
 function editResourceSuccess(data) {
@@ -82,7 +80,13 @@ function error(data) {
   console.log(data);
 }
 
-/**
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	Resource Viewer functions
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+/** 
  * \brief display resources on resource viewer
  * @param {*} received a response (needs to turn into a json)
  */
@@ -94,13 +98,10 @@ function displayResource(received) {
 		} is an anonymous function
 			resource is the json we want
 	*/
-  console.log(received);
-  received.json().then(function(resource) {
-    console.log(resource);
-    document.getElementById("resource-head").innerHTML =
-      "<div><h1 id = 'resource-name'>" +
-      resource.meta.name +
-      "</h1>\
+
+	received.json().then(function(resource){
+		console.log(resource);
+		document.getElementById('resource-head').innerHTML = "<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1>\
 		<div>contributed by <div id='author-name'></div></div>";
 
     set_author(resource.meta.author_name, resource.meta.author_type);
@@ -130,225 +131,180 @@ function set_author(name, type) {
  * @param {*} element json for that content
  *
  */
-function display_content(num, element) {
-  // Create a new module.
-  document.getElementById("modules").innerHTML +=
-    "<div class=module id='module-" + num + "'></div>";
-  if (element.type == "link") {
-    document.getElementById("module-" + num).innerHTML +=
-      "<div><a href=" + element.content + ">" + element.name + "</a></div>";
-  } // Apparently by MVP things are HTML text. Check this.
-  else {
-    document.getElementById("module-" + num).innerHTML +=
-      "<div class=resource-divider></div><h2>" +
-      element.name +
-      "</h2><div>" +
-      element.content +
-      "</div>";
-  }
-  // Add other types as you will.
+function display_content(num, element)
+{
+	// Create a new module.
+	document.getElementById('modules').innerHTML+="<div class=module id='module-"+num+"'></div>";
 
-  // Display dates.
-  document.getElementById("module-" + num).innerHTML +=
-    "<div class='date'>Created: " + element.created + "</div>";
-  document.getElementById("module-" + num).innerHTML +=
-    "<div class='date'>Modified: " + element.modified + "</div>";
+	// TODO: very inefficient way to decide how contents are displayed
+	if(element.type=="link")
+	{
+		document.getElementById('module-'+num).innerHTML+="<div><a href="+element.content+">"+element.name+"</a></div>";
+	}
+	else // Apparently by MVP things are HTML text. Check this. 
+	{
+		document.getElementById('module-'+num).innerHTML+="<div class=resource-divider></div><h2>"+element.name+"</h2><div>"+element.content+"</div>";
+	}
+	// Add other types as you will. 
+
+	// Display dates. 
+	document.getElementById('module-'+num).innerHTML+="<div class='date'>Created: "+element.created+"</div>";
+	document.getElementById('module-'+num).innerHTML+="<div class='date'>Modified: "+element.modified+"</div>";
 }
 
-/**
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	Resource Editor functions
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+/** 
  * \brief fill in html for resource editor
  * \details gets called in loginmodal.js when the editor button gets clicked
  * 			TODO: need to be implemented in the tree in the future
  */
-function createResource() {
-  selectorCode = resourceUseSelection(resourceUseData); // selector code for resource use attachment
-  // create all the input to create resources
-  document.getElementById("resource-head").innerHTML =
-    "<h1>Resource Editor</h1>";
-  document.getElementById("modules").innerHTML =
-    "<div class=resource-divider></div> \
+function resourceEditorHTML()
+{
+	// create all the input to create resources
+	document.getElementById('resource-head').innerHTML="<h1>Resource Editor</h1>"
+	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> \
 	<div class 'resource-creator> Resource Name: <br> \
-	<input type = 'text' id = 'meta-name'> <br> \
-	Resource Use:  <br>" +
-    selectorCode +
-    "<br> \
-	<div class=resource-divider></div> <br> </div>\
+	<div type = 'text' id = 'meta-name' contenteditable='true'> </div> <br> \
+	Resource Use:  <br>" + selectorCodeGenerator("resource-use") + "<br> \
+	<div class=resource-divider> </div>\
 	<div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
-	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
-	Content: <br> <form method='post'> \
-	<textarea class='textarea' name='textarea'>Enter text for resource viewer here</textarea> \
- </form> </div> <div id = 'more-contents'> </div>\
-	<div> <button type = 'button' id = 'submit-button' onclick = 'submitContent()'> Submit </button> \
+	Content Type: <br>" + selectorCodeGenerator("content-type") + "<br>\
+	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> <div id = 'more-contents'> </div>\
+	<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedContent()'> Submit </button> \
 	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
 	<p id = 'demo'> </p></div> ";
-}
-/**
- * \brief fill in html for resource creator
- * \details gets called in loginmodal.js when the creator button gets clicked
- * 			TODO: need to be implemented in the tree in the future
- * @param {*} nodeId the nodeID of where the resource will be attached (actually not sure...)
- */
-function createNewResource(nodeId) {
-  selectorCode = resourceUseSelection(resourceUseData); //selector code for resource use attachment
-  //create all the input to create resources
-  document.getElementById("resource-head").innerHTML =
-    "<h1>Resource Creator</h1>";
-  document.getElementById("modules").innerHTML =
-    "<div class=resource-divider></div>\
-	<div class = 'resource-creator'> Resource Name: <br> \
-	<input type = 'text' id = 'meta-name'> <br> \
-	Resource Use: <br>" +
-    selectorCode +
-    "<br> \
-	<div class=resource-divider></div> <br> </div> \
-	<div class = 'content-creator'> Resource Content Name: <br> \
-	<input type = 'text' id = 'content-name0'> <br> \
-	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
-	Content: <br>  <form method='post'> \
-	<textarea class='textarea' name='textarea'>Enter text for resource viewer here</textarea> \
- </form> </div> <div id = 'more-contents'> </div>\
-	<div> <button type = 'button' id = 'submit-button' onclick = 'submitNewContent(" +
-    nodeId.substring(1) +
-    ")'> Submit </button> \
-	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
-	<p id = 'demo'> </p></div> ";
+	console.log(document.getElementById('meta-name').innerHTML);
 }
 
-/**
+/** 
  * @param {*} received a response (needs to turn into a json)
  * \details load the corresponding resource in textfield
  * 				(resource specified by resource_id)
  * 		the user has to be the author to edit
  */
-function resourceEditor(received) {
-  /*
+function fillInResourceForEditor(received)
+{
+	/*
 		received.json() gives us a Promise
 		.then(function(resource){
 			...
 		} is an anonymous function
 			resource is the json we want
 	*/
-  received.json().then(function(resource) {
-    document.getElementById("meta-name").value = resource.meta.name;
+	received.json().then(function(resource){
+		console.log(resource);
+		// document.getElementById("meta-name").value = resource.meta.name;
+		document.getElementById("meta-name").innerHTML = resource.meta.name;
+		
+		loadSelectedUseOrType("resource-use-selector", resource.meta.use_name);
 
-    // TODO: not using drop down selector anymore, using icon
-    // load the resource use in the resource use drop down selector
-    // display the given resource use
-    $("div#select_style_text").html(resource.meta.use_name);
+		// create a text area for each content
+		for (i=1; i < resource.contents.length; ++i)
+		{
+			newContent();
+		}
 
-    // make the selector's selected value match the given resource use id
-    for (i = 0; i < resourceUseData.length; i++) {
-      var u = resourceUseData[i];
-      if (u.name == resource.meta.use_name) {
-        $('select[name="attach"]').val(u.id);
-      }
-    }
-
-    // create a text area for each content
-    for (i = 1; i < resource.contents.length; i++) {
-      newContent();
-    }
-
-    loadContent(resource.contents);
-  });
+		loadContent(resource.contents);
+	});
 }
 
-/**
- * \brief Create a new entry area for a new content
- */
-function newContent() {
-  // an arrary of jsons, storing the entries
-  var storedContent = temporaryStoreContent();
-
-  // use pre_updated_content_num so user can decide to add new content but not submit it
-  // if user exit resource editor/creator, clear previous entries
-  pre_updated_content_num += 1;
-  document.getElementById("more-contents").innerHTML +=
-    "<div id='content-" + pre_updated_content_num + "'></div>";
-  document.getElementById("content-" + pre_updated_content_num).innerHTML +=
-    "<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
-	<input type = 'text' id = 'content-name" +
-    pre_updated_content_num +
-    "'> <br> \
-	Content Type:  <select id = 'content-type" +
-    pre_updated_content_num +
-    "'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
-	Content: <br> <form method='post'> \
-	<textarea class='textarea" +
-    pre_updated_content_num +
-    "' name='textarea'>Enter text for resource viewer here</textarea> \
- </form>";
-
-  // load the stored content back to the content textboxes
-  loadContent(storedContent);
-}
-
-/**
+/** 
  * \brief Submit an editted resource
  * \details gets triggered with the submit function is clicked in Resource Editor
  *			Create a resource JSON (w/ resource id & content id)
  *			Call the server to edit the resource
- */
-function submitContent() {
-  tinymce.get("tinymce").save();
-  var resource_name = document.getElementById("meta-name").value;
-  var resource_use = parseInt(document.getElementById("resource-use").value);
-  var content_name_array = [];
-  var content_type_array = [];
-  var content_array = [];
-  content_num = pre_updated_content_num;
+*/
+function submitEditedContent() 
+{
+	tinymce.get("tinymce").save();
+  var resource_name = document.getElementById("meta-name").innerHTML;
+	var resource_use = findUseOrType("resource-use-selector");
 
-  for (i = 0; i < content_num + 1; i++) {
-    content_name_array.push(document.getElementById("content-name" + i).value);
-    content_type_array.push(document.getElementById("content-type" + i).value);
-    content_array.push(document.getElementById("tinymce").value);
-    // content_array.push(document.getElementById("content" + i).value);
-  }
+	content_num = pre_updated_content_num;
+	
+	// store all the data in json
+	// NEED TO INCLUDE: resouce id, content id
+	// TODO: can't create additional content (this content doesn't have id)
+	var resource =  
+	{
+		"id": resource_id,
+		"name":resource_name,
+		"use_id": resource_use,
+		"contents":
+		[
+			{
+				"id": temp_content_id,
+				"name": document.getElementById("content-name0").value,
+				"type": findUseOrType("content-type-selector").toLowerCase(),
+				"content": document.getElementById("tinymce").value
+			}
+		]
+	};
+	
+	// TODO: For more contents in future, type is not correct
+	for (i = 1; i < (content_num+1); i++)
+	{
+		var content_array =
+		{
+			"name": document.getElementById("content-name"+i).value,
+			"type": tempType,
+			"content": document.getElementById("content"+i).value
+		};
+		resource.contents.push(content_array);
+	}
 
-  //store all the data in json
-  //NEED TO INCLUDE: resouce id, content id
-  //PROBLEM: can't create additional content (this content doesn't have id)
-  var resource = {
-    id: resource_id,
-    name: resource_name,
-    use_id: resource_use,
-    contents: [
-      {
-        id: temp_content_id,
-        name: document.getElementById("content-name0").value,
-        type: document.getElementById("content-type0").value,
-        content: document.getElementById("tinymce").value
-        // content: document.getElementById("content0").value
-      }
-    ]
-  };
+	console.log(resource);
 
-  for (i = 1; i < content_num + 1; i++) {
-    var content_array = {
-      name: document.getElementById("content-name" + i).value,
-      type: document.getElementById("content-type" + i).value,
-      content: document.getElementById("content" + i).value
-    };
-    resource.contents.push(content_array);
-  }
+	// call the server to edit the resource
+	var server = new Server();
+	server.editResource(resource_id, resource, error, editResourceSuccess);
 
-  console.log(resource);
-
-  //call the server to edit the resource
-  var server = new Server();
-  server.editResource(resource_id, resource, error, editResourceSuccess);
-
-  //close the content editor
-  document.getElementById("my-modal").style.display = "none";
-  document.getElementById("resource-head").innerHTML = " ";
-  document.getElementById("modules").innerHTML = " "; //clean the display box up
-
+	// close the content editor
+	document.getElementById('my-modal').style.display = "none";
+	document.getElementById('resource-head').innerHTML = " ";
+	document.getElementById('modules').innerHTML = " "; //clean the display box up
+  
   // remove instance of tinymce
   tinymce.remove();
 }
 
-/**
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	Resource Creator functions
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+/** 
+ * \brief fill in html for resource creator
+ * \details gets called in loginmodal.js when the creator button gets clicked
+ * 			TODO: need to be implemented in the tree in the future
+ * @param {*} nodeId the nodeID of where the resource will be attached (actually not sure...)
+ */
+function resourceCreatorHTML(nodeId)
+{
+	//create all the input to create resources
+	document.getElementById('resource-head').innerHTML="<h1>Resource Creator</h1>"
+	document.getElementById('modules').innerHTML = "<div class=resource-divider></div>\
+	<div class = 'resource-creator'> Resource Name: <br> \
+	<input type = 'text' id = 'meta-name'> <br> \
+	Resource Use: <br>" + selectorCodeGenerator("resource-use") + "<br> \
+	<div class=resource-divider></div> <br> </div> \
+	<div class = 'content-creator'> Resource Content Name: <br> \
+	<input type = 'text' id = 'content-name0'> <br> \
+	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
+	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> <div id = 'more-contents'> </div>\
+	<div> <button type = 'button' id = 'submit-button' onclick = 'submitNewContent("+nodeId.substring(1)+")'> Submit </button> \
+	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
+	<p id = 'demo'> </p></div> ";
+}
+
+/** 
  * \brief Submit a new resource
  * \details Gets triggered when the submit function is clicked in Resource Creator
  *			Create a resource JSON (w/ resource id & content id)
@@ -404,26 +360,54 @@ function submitNewContent(node_id_num) {
   document.getElementById("modules").innerHTML = " "; //clean the display box up
 }
 
-/**
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Helper functions
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+/** 
+ * \brief Create a new entry area for a new content
+ * \TODO Currently not in use
+ */
+function newContent()
+{
+	// an arrary of jsons, storing the entries
+	var storedContent = temporaryStoreContent(); 
+	
+	// use pre_updated_content_num so user can decide to add new content but not submit it
+	// if user exit resource editor/creator, clear previous entries
+	pre_updated_content_num += 1;
+	document.getElementById('more-contents').innerHTML += "<div id='content-"+pre_updated_content_num+"'></div>";
+	document.getElementById('content-'+pre_updated_content_num).innerHTML += "<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
+	<input type = 'text' id = 'content-name"+pre_updated_content_num+"'> <br> \
+	Content Type:  <select id = 'content-type"+pre_updated_content_num+"'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
+	Content: <br> <textarea rows = '5' id = 'content"+pre_updated_content_num+"'> </textarea> </div> </form>";
+
+	// load the stored content back to the content textboxes
+	loadContent(storedContent);
+}
+
+/** 
  * \details receive an array of jsons
  * 		used in:
  * 			resource editor (initially loading resource)
  *			new content button (loading the previously typed contents back to the textbox)
  */
-function loadContent(contents) {
-  for (i = 0; i < contents.length; i++) {
-    document.getElementById("content-name" + i).value = contents[i]["name"];
-
-    if (contents[i]["type"] == "text") {
-      document.getElementById("content-type" + i).selectedIndex = 0;
-    } else if (contents[i]["type"] == "link") {
-      document.getElementById("content-type" + i).selectedIndex = 1;
-    }
-
+function loadContent(contents)
+{
+	for (i=0; i < contents.length; i++)
+	{
+		document.getElementById("content-name"+i).value = contents[i]["name"];
+		
+		loadSelectedUseOrType("content-type-selector", contents[i]["type"]);
+    
+    // TODO: this will be problematic once we have multiple contents
     document.getElementById("tinymce").value = contents[i]["content"];
     addTinyMCE();
     tinymce.get("tinymce").load();
-  }
+	}
 }
 
 /**
@@ -467,20 +451,118 @@ function resetContentNum() {
 }
 
 /**
- * \brief create the htmlCode to create the selector for resourceAttachment
- * @param {*} resource_use an array with each resourceUse (resource ID, resource name)
+ * Helper function for Creating Resource Use/Content Type Selector
+ * \details uses two arrays: resourceUseData and contentTypeData
+ * 			which are loaded in resource.blade.php
+ * 			when a specific resource is displayed (specified by url: /resources/{resource_id}/edit)
+ * \returns html code for use/type selector
+ * @param {*} selectorFor String, determines if it's selector for resource use or content type
+ * 							Either: "resource-use" or content-type"
  */
-function resourceUseSelection(resource_use) {
-  var html_code =
-    "<select id = 'resource-use' name = 'attach' theme='google' width='400' style='' \
-		placeholder='Select the Use of Your Resource' data-search='true'> ";
+function selectorCodeGenerator(selectorFor) 
+{
+	var name = "default";
+	var ulId = "default-selector";  
+	var inputId = "";
 
-  for (i = 0; i < resource_use.length; i++) {
-    var u = resource_use[i];
-    html_code += "<option value = '" + u.id + "'>" + u.name + "</option>";
-  }
+	// html code for selector
+	var html_code = "<div class='use-list-scrolling-wrapper'>";
 
-  html_code += "</select>";
+	if (selectorFor == "resource-use") {
+		// set up relevant variables for resource-use selector
+		name = "resource-use";
+		inputClass = "use";
+		ulId = "resource-use-selector";
+		inputId = "";
+
+		html_code += "<ul id='" + ulId +"'>";
+
+		/** resourceUseData (an array)
+		 * 		where all the content types are stored in resourceUseData (an array)
+		 * 		loaded in resource.blade.php
+		 * 		format:
+		 * 			 [	{"id":1,"name":"Class Notes"},
+		 * 				{"id":3,"name":"Flashcards"},
+		 * 				{"id":2,"name":"Notes"}	]
+		 */
+		for (var i = 0; i < resourceUseData.length; ++i) {
+			html_code += "\
+			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ resourceUseData[i].id +"'>\
+				<label for='" + inputId +""+ resourceUseData[i].id + "'>" + resourceUseData[i].name + "</label></li>";
+		}
+	}
+	else if (selectorFor == "content-type") {
+		name = "content-type";
+		inputClass = "type";
+		ulId = "content-type-selector";
+		var inputId = "t";
+		dictionary = contentTypeData;
+		html_code += "<ul id='" + ulId +"'>";
+
+		/** contentTypeData (an array)
+		 * 		where all the content types are stored in contentTypeData (an array)
+		 * 		loaded in resource.blade.php
+		 * 		format:
+		 * 			["type1", "type2", "type3"]
+		 */
+		for (var i = 0; i < dictionary.length; ++i) {
+			html_code += "\
+			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ i +"'>\
+				<label for='" + inputId +""+ i + "'>" + contentTypeData[i] + "</label></li>";
+		}
+	}
+	
+	html_code +=  "</ul></div>";
 
   return html_code;
+}
+
+/**
+ * Helper function for Submitting an edited resource
+ * \brief 	Find the resource use id (int) or 
+ * 				 the content type name (string)
+ * 
+ * @param {*} ulId String, determines if we finding resource use or content type
+ * 			either: "resource-use-selector" or "content-type-selector"
+ */
+function findUseOrType(ulId) 
+{
+	var ul = document.getElementById(ulId);
+	var listInsideUl = ul.getElementsByTagName("li");
+
+	for (var ele of listInsideUl) {
+		if (ele.getElementsByTagName("input")[0].checked == true) {
+			if (ulId == "resource-use-selector") {
+				return parseInt(ele.getElementsByTagName("input")[0].id);
+			} 
+			else if (ulId == "content-type-selector") {
+				console.log(ele.getElementsByTagName("label")[0].innerHTML);
+				return ele.getElementsByTagName("label")[0].innerHTML;
+			}
+		}
+	}
+}
+
+/**
+ * Helper function for Resource Use/Content Type Selector
+ * \brief 	For Resource Editor.
+ * 			Load/select the resource use or content type of the resource in Resource Editor
+ * 
+ * @param {*} ulId String, determines if we are loading for resource use or content type
+ * 			either: "resource-use-selector" or "content-type-selector"
+ * @param {*} selected String, the selected use/type of this resource (from the json we get)
+ */
+function loadSelectedUseOrType (ulId, selected)
+{
+	var ul = document.getElementById(ulId);
+	var listInsideUl = ul.getElementsByTagName("li");
+	for (var ele of listInsideUl) {
+		// get the name of the label
+		var name = ele.getElementsByTagName("label")[0].innerHTML;
+		if (name.toLowerCase() == selected.toLowerCase()) {
+			// checked is true when this input is checked
+			// select this input
+			ele.getElementsByTagName("input")[0].checked = true;
+		}
+	}
 }

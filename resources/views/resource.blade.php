@@ -8,7 +8,19 @@
 @endpush
 
 @push('scripts')
-<script type="text/javascript" src="{{ asset('js/resource_viewer.js') }}"></script>
+<script type="text/javascript">
+	// load necessary data
+	var resourceUseData = @json( App\ResourceUse::select('id', 'name')->get() );
+	var contentTypeData = @json( App\ResourceContent::getPossibleTypes() );
+	var resource_id = {{ $resource -> id}};
+	// for now, content_id == resource_id because each resource only has 1 id
+	// TODO: what to do when we have multiple contents? (not MVP)
+	// TODO: how to get content id?
+	var temp_content_id = resource_id;
+	// if the url is: resources/{resource_id}/edit
+	// isEditor is true, else it's false
+	var isEditor = {{ $edit ? 'true' : 'false' }};
+</script>
 @endpush
 
 <!-- When you inject this as a component into a parent, remove next two lines because it's gonna go into the component that embeds this. -->
@@ -16,18 +28,38 @@
 
 @section('content')
 
-<div class="temp-container"> <!-- My container. Remove when you embed. (BUT DO I WANT THAT THOUGH :O)-->
-	<div class="resource-background">
-		<h1 id="resource-name">
-			Resource Name
-		</h1>
-		<div>
-			contributed by <div id="author-name">Author Name</div>
-
-		</div>
-		<div id="modules"> <!-- This is where you put the modules. -->
+<!-- The Modal -->
+<div id="my-modal" class="modal">
+	<!-- Modal content -->
+	<div class="modal-content">
+		<span id="close-modal"><i class="fas fa-times"></i></span>
+		<!-- Container for resource. -->
+		<div id="resource-container">
+			<div class="resource-background">
+				<div id="resource-head"></div>
+				<div id="modules"> <!-- This is where you put the modules. -->
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
-
+<!--button id="creator-btn">temporary resource creator button</button-->
+<button id="editor-btn">temporary resource editor button</button>
+<button id="resource-meta-btn">resource meta button</button>
 @stop
+
+@push('scripts')
+<script type="text/javascript">
+	// load the resource viewer or resource editor once the page is ready
+	$(document).ready(function(){ 
+		document.getElementById('my-modal').style.display = "block";
+		displayContainer("resource");
+		if (isEditor) {
+			resourceEditorHTML();
+			editResource();
+		} else {
+			viewResource();
+		}
+	});
+</script>
+@endpush

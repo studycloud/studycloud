@@ -21,14 +21,15 @@
     "laravel-elixir-vue-2": "^0.3.0",
     "laravel-mix": "^1.5.1",
     "lodash": "^4.17.4",
-    "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6",
     "vue": "^2.5.2",
-    "webpack": "^3.8.1"
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
     "gulp": "^3.9.1",
     "marked": "^0.3.9",
+    "node-sass": "^4.13.1",
     "self-update": "0.0.1"
   }
 }

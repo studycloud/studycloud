@@ -28,11 +28,31 @@ $(document).ready(function() {
     });
   });
 
-  $("#resource-meta-btn").click(function(event) {
-    document.getElementById("my-modal").style.display = "block";
-    displayContainer("resource");
-    requestResource();
-  });
+	// When the user clicks on the create button, also open the modal but with the resource viewer
+	$("#editor-btn").click(function(event)
+	{
+		document.getElementById('my-modal').style.display = "block";
+		displayContainer("resource");
+		resourceEditorHTML();
+		editResource();
+	});
+
+	$("#resource-meta-btn").click(function(event)
+	{
+		document.getElementById('my-modal').style.display = "block";
+		displayContainer("resource");
+		viewResource();
+	});
+
+	// When the user clicks on <span> (x), close the modal
+	$("#close-modal").click(function(event) 
+	{
+		document.getElementById('my-modal').style.display = "none";
+		document.getElementById('resource-head').innerHTML = " ";
+		document.getElementById('modules').innerHTML = " "; //clean the display box up
+		resetContentNum();
+		//location.reload();
+	});
 
   // When the user clicks on <span> (x), close the modal
   $("#close-modal").click(function(event) {
