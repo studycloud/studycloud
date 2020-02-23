@@ -30,6 +30,9 @@
     <script src="//code.jquery.com/jquery.min.js"></script>
     <script src="{{ asset('js/selectStyleSrc/selectstyle.js') }}"></script>
 
+  <!-- JS for the search box -->
+  <script src="{{ asset('js/search.js') }}"></script>
+
     @stack('scripts')
 
     <meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
@@ -504,7 +507,7 @@
                     <li><a href="{{ route('about') }}">About</a></li>
                     <li id="search">
                         <form action="" method="get" id="search-form">
-                            <input type="text" name="search-text" id="search-text" placeholder="search">
+                            <input type="text" name="q" id="search-text" placeholder="search for a resource" autocomplete="off">
                         </form>
                     </li>
                     <!--Component for login/logout.-->
