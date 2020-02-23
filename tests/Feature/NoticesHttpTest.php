@@ -18,7 +18,7 @@ class NoticesHttpTest extends TestCase
 	 */
 	public function testAllRoutes()
 	{
-		// how many Noticees do we have?
+		// how many Notices do we have?
 		$notice_count = Notice::count();
 		// make a new notice but don't add it to database yet
 		$notice = factory(Notice::class)->make([
