@@ -41,6 +41,9 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     @endif
     <meta name="google-signin-client_id" content="213909112764-djmb30blchgj76rhfflngmls392fgm23.apps.googleusercontent.com"> <!-- include google client id for google sign in -->
+
+   <!-- TinyMCE -->
+   <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.9.2/tinymce.min.js' referrerpolicy="origin"></script>
 </head>
 <body onload="Starter()">
     <div id="pageWidth">

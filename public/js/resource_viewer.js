@@ -23,7 +23,7 @@ var temp_content_id = 0;
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-/** 
+/**
  * \brief create server object and get resource for resource viewer
  * \details specified by resource_id (NOT IMPLEMENTED WITH TREE YET)
  * 		handleError function: error
@@ -33,18 +33,17 @@ function viewResource()
 {
 	var server = new Server();
 
-	server.getResource(resource_id, error, displayResource);
+  server.getResource(resource_id, error, displayResource);
 }
 
-/** 
+/**
  * \brief create server object and get resource for resource editor
  * \details specified by resource_id (NOT IMPLEMENTED WITH TREE YET)
  * 		handleError function: error
  * 		handleSuccess function: resourceEditor
  */
-function editResource()
-{
-	var server = new Server();
+function editResource() {
+  var server = new Server();
 
 	server.getResource(resource_id, error, fillInResourceForEditor);
 }
@@ -60,28 +59,25 @@ function editResource()
 /** 
  * \brief callback function after editting resource successfully
  */
-function editResourceSuccess(data)
-{
-	console.log("editted resource")
-	console.log(data);
+function editResourceSuccess(data) {
+  console.log("editted resource");
+  console.log(data);
 }
 
-/** 
+/**
  * \brief callback function after creating resource successfully
  */
-function createResourceSuccess(data)
-{
-	console.log("created resource");
-	console.log(data);
+function createResourceSuccess(data) {
+  console.log("created resource");
+  console.log(data);
 }
 
-/** 
+/**
  * \brief error callback function for server object
- * 
+ *
  */
-function error(data)
-{
-	console.log(data);
+function error(data) {
+  console.log(data);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,49 +90,46 @@ function error(data)
  * \brief display resources on resource viewer
  * @param {*} received a response (needs to turn into a json)
  */
-function displayResource(received)
-{
-	/*
+function displayResource(received) {
+  /*
 		received.json() gives us a Promise
 		.then(function(resource){
 			...
 		} is an anonymous function
 			resource is the json we want
 	*/
+
 	received.json().then(function(resource){
 		console.log(resource);
 		document.getElementById('resource-head').innerHTML = "<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1>\
 		<div>contributed by <div id='author-name'></div></div>";
 
-		set_author(resource.meta.author_name, resource.meta.author_type);
-		for(var i = 0; i < resource.contents.length; i++)
-		{
-			display_content(i, resource.contents[i]);
-		}
-	});
+    set_author(resource.meta.author_name, resource.meta.author_type);
+    for (var i = 0; i < resource.contents.length; i++) {
+      display_content(i, resource.contents[i]);
+    }
+  });
 }
 
-/** 
+/**
  * \brief display author's name and type
  * @param {*} name String, author's name
  * @param {*} type String, author's type
  */
-function set_author(name, type) 
-{
-	// Clear all classes on the author-name field. 
-	var cl = document.getElementById('author-name').classList;
-	for(var i = cl.length; i > 0; i--) 
-	{
-	    cl.remove(cl[0]);
-	}
-	document.getElementById('author-name').classList.add(type);
-	document.getElementById('author-name').innerHTML=name;
+function set_author(name, type) {
+  // Clear all classes on the author-name field.
+  var cl = document.getElementById("author-name").classList;
+  for (var i = cl.length; i > 0; i--) {
+    cl.remove(cl[0]);
+  }
+  document.getElementById("author-name").classList.add(type);
+  document.getElementById("author-name").innerHTML = name;
 }
 
-/** 
+/**
  * @param {*} num content's index in the content array
  * @param {*} element json for that content
- * 
+ *
  */
 function display_content(num, element)
 {
@@ -189,10 +182,9 @@ function resourceEditorHTML()
 	console.log(document.getElementById('meta-name').innerHTML);
 }
 
-
 /** 
  * @param {*} received a response (needs to turn into a json)
- * \details load the corresponding resource in textfield 
+ * \details load the corresponding resource in textfield
  * 				(resource specified by resource_id)
  * 		the user has to be the author to edit
  */
@@ -230,7 +222,8 @@ function fillInResourceForEditor(received)
 */
 function submitEditedContent() 
 {
-	var resource_name = document.getElementById("meta-name").innerHTML;
+	tinymce.get("tinymce").save();
+  var resource_name = document.getElementById("meta-name").innerHTML;
 	var resource_use = findUseOrType("resource-use-selector");
 
 	content_num = pre_updated_content_num;
@@ -249,7 +242,7 @@ function submitEditedContent()
 				"id": temp_content_id,
 				"name": document.getElementById("content-name0").value,
 				"type": findUseOrType("content-type-selector").toLowerCase(),
-				"content": document.getElementById("content0").value
+				"content": document.getElementById("tinymce").value
 			}
 		]
 	};
@@ -276,6 +269,9 @@ function submitEditedContent()
 	document.getElementById('my-modal').style.display = "none";
 	document.getElementById('resource-head').innerHTML = " ";
 	document.getElementById('modules').innerHTML = " "; //clean the display box up
+  
+  // remove instance of tinymce
+  tinymce.remove();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -313,62 +309,57 @@ function resourceCreatorHTML(nodeId)
  * \details Gets triggered when the submit function is clicked in Resource Creator
  *			Create a resource JSON (w/ resource id & content id)
  *			Call the server to edit the resource
-*/
-function submitNewContent(node_id_num) 
-{
-	var resource_name = document.getElementById("meta-name").value;
-	var resource_use = document.getElementById("resource-use").value;
-	var class_id = node_id_num.toString();
-	var content_name_array = [];
-	var content_type_array = [];
-	var content_array = [];
+ */
+function submitNewContent(node_id_num) {
+  var resource_name = document.getElementById("meta-name").value;
+  var resource_use = document.getElementById("resource-use").value;
+  var class_id = node_id_num.toString();
+  var content_name_array = [];
+  var content_type_array = [];
+  var content_array = [];
 
-	for (i=0;i < (content_num+1); i++)
-	{
-		content_name_array.push(document.getElementById("content-name"+i).value);
-		content_type_array.push(document.getElementById("content-type"+i).value);
-		content_array.push(document.getElementById("content"+i).value);
-	}
-	
-	//store all the data in json
-	//PROBLEM: can only create 1 content for 1 resource
-	var resource =  
-	{
-		"name":resource_name,
-		"use_id": resource_use,
-		"class_id": class_id,
-		"contents":
-		[
-			{
-				"name": document.getElementById("content-name0").value,
-				"type": document.getElementById("content-type0").value,
-				"content": document.getElementById("content0").value
-			}
-		]
-	};
-	
-	for (i=1;i < (content_num+1); i++)
-	{
-		var content_array =
-		{
-			"name": document.getElementById("content-name"+i).value,
-			"type": document.getElementById("content-type"+i).value,
-			"content": document.getElementById("content"+i).value
-		};
-		resource.contents.push(content_array);
-	}
+  for (i = 0; i < content_num + 1; i++) {
+    content_name_array.push(document.getElementById("content-name" + i).value);
+    content_type_array.push(document.getElementById("content-type" + i).value);
+    content_array.push(document.getElementById("content" + i).value);
+  }
 
-	console.log(resource);
-	
-	//call the server to add resource
-	var server = new Server();	
-	server.addResource(resource, error, createResourceSuccess);
-	
-	//close the content creator
-	document.getElementById('my-modal').style.display = "none";
-	document.getElementById('resource-head').innerHTML = " ";
-	document.getElementById('modules').innerHTML = " "; //clean the display box up
+  //store all the data in json
+  //PROBLEM: can only create 1 content for 1 resource
+  var resource = {
+    name: resource_name,
+    use_id: resource_use,
+    class_id: class_id,
+    contents: [
+      {
+        name: document.getElementById("content-name0").value,
+        type: document.getElementById("content-type0").value,
+        content: document.getElementById("content0").value
+      }
+    ]
+  };
+
+  for (i = 1; i < content_num + 1; i++) {
+    var content_array = {
+      name: document.getElementById("content-name" + i).value,
+      type: document.getElementById("content-type" + i).value,
+      content: document.getElementById("content" + i).value
+    };
+    resource.contents.push(content_array);
+  }
+
+  console.log(resource);
+
+  //call the server to add resource
+  var server = new Server();
+  server.addResource(resource, error, createResourceSuccess);
+
+  //close the content creator
+  document.getElementById("my-modal").style.display = "none";
+  document.getElementById("resource-head").innerHTML = " ";
+  document.getElementById("modules").innerHTML = " "; //clean the display box up
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -411,54 +402,52 @@ function loadContent(contents)
 		document.getElementById("content-name"+i).value = contents[i]["name"];
 		
 		loadSelectedUseOrType("content-type-selector", contents[i]["type"]);
-		
-		document.getElementById("content"+i).value = contents[i]["content"];
+    
+    // TODO: this will be problematic once we have multiple contents
+    document.getElementById("tinymce").value = contents[i]["content"];
+    addTinyMCE();
+    tinymce.get("tinymce").load();
 	}
 }
 
-/** 
+/**
  * \details helper function return an array of jsons
  * 		store previously typed contents
  * 		used in:
  * 			newContent() (store before create new textarea for new content)
  */
-function temporaryStoreContent()
-{
-	var contents = 
-	[
-		{
-			"name": document.getElementById("content-name0").value,
-			"type": document.getElementById("content-type0").value,
-			"content": document.getElementById("content0").value
-		}
-	];
+function temporaryStoreContent() {
+  var contents = [
+    {
+      name: document.getElementById("content-name0").value,
+      type: document.getElementById("content-type0").value,
+      content: document.getElementById("content0").value
+    }
+  ];
 
-	// use pre_updated_content_num here because...
-	// If the user has entries in a new content (but hasn't click submit)
-	// then she clicks on "New Content" again,
-	// using pre_updated_content_num will save his entries
-	for (i=1;i < (pre_updated_content_num+1); i++)
-	{
-		var contentArray =
-		{
-			"name": document.getElementById("content-name"+i).value,
-			"type": document.getElementById("content-type"+i).value,
-			"content": document.getElementById("content"+i).value
-		};
-		contents.push(contentArray);
-	}
+  // use pre_updated_content_num here because...
+  // If the user has entries in a new content (but hasn't click submit)
+  // then she clicks on "New Content" again,
+  // using pre_updated_content_num will save his entries
+  for (i = 1; i < pre_updated_content_num + 1; i++) {
+    var contentArray = {
+      name: document.getElementById("content-name" + i).value,
+      type: document.getElementById("content-type" + i).value,
+      content: document.getElementById("content" + i).value
+    };
+    contents.push(contentArray);
+  }
 
-	return contents;
+  return contents;
 }
 
-/** 
+/**
  * \details clear unsaved changes
- * 		when the user close the resource editor/creator, 
+ * 		when the user close the resource editor/creator,
  * 		reset pre_updated_content_num
  */
-function resetContentNum ()
-{
-	pre_updated_content_num = content_num;
+function resetContentNum() {
+  pre_updated_content_num = content_num;
 }
 
 /**
@@ -525,7 +514,7 @@ function selectorCodeGenerator(selectorFor)
 	
 	html_code +=  "</ul></div>";
 
-	return html_code;
+  return html_code;
 }
 
 /**
