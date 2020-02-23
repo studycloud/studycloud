@@ -86,7 +86,7 @@ class Resource extends Model
 	 * Get the indexable data array for the model.
 	 * @return array
 	 */
-	public function toSearchableArray()
+	public function toSearchableArray($toArray=true)
 	{
 		$resource = collect();
 		$resource['name'] = $this->name;
@@ -99,8 +99,17 @@ class Resource extends Model
 				$new_content = collect($content);
 				return $new_content->only(['name', 'type', 'content']);
 			}
-		)->toArray();
-		return $resource->toArray();
+		);
+		// if we must return the collection as an array:
+		if ($toArray)
+		{
+			$resource['contents'] = $resource['contents']->toArray();
+			return $resource->toArray();
+		}
+		else
+		{
+			return $resource;
+		}
 	}
 
 	/**
