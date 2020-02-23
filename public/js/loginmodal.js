@@ -66,22 +66,17 @@ $(document).ready(function() {
 });
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == document.getElementById("my-modal")) {
-    document.getElementById("my-modal").style.display = "none";
-    document.getElementById("resource-head").innerHTML = " ";
-    document.getElementById("modules").innerHTML = " "; //clean the display box up
-    resetContentNum();
-    tinymce.remove();
-    /*
-		var x = document.getElementsByClassName("module");
-		for (var i; i<x.length; i++){
-			x[i].innerHTML=" ";
-		}*/
-
-    //location.reload();
-  }
-};
+window.onmousedown = function(event) 
+{
+    if (event.target == document.getElementById('my-modal')) 
+    {
+		document.getElementById('my-modal').style.display = "none";
+		document.getElementById('resource-head').innerHTML = " ";
+		document.getElementById('modules').innerHTML = " "; //clean the display box up
+		resetContentNum();
+		
+	}
+}
 
 // Display only the container specified.
 function displayContainer(container) {

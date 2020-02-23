@@ -2,14 +2,21 @@
 
 @import "../helpers/color.scss";
 @import "../helpers/fonts.scss";
+//@import "https://fonts.googleapis.com/css?family=Poiret+One";
+//@import "buttons";
 
 
 $student-color: purple;
 $teacher-color: green;
+$purple: #9A68C7;
+$blue: #3BA9E4;
+$green: #75B343;
+$orange: #FF6A42;
+$off-wht: rgba(white,.4);
 
-.resource-container { // For now. 
-	// background: $content-bg-color;
-	// max-width: 800px;
+#resource-container { // For now. 
+	background: $content-bg-color;
+	max-width: 800px;
 }
 
 .resource-background {
@@ -18,8 +25,18 @@ $teacher-color: green;
 }
 
 #resource-name {
-	font-size: 50px;
-	font-weight: bold;
+	font-size: 25px;
+    font-weight: bold;
+    -moz-appearance: textfield-multiline;
+    -webkit-appearance: textarea;
+    border: 1px solid gray;
+    /* font: medium -moz-fixed; */
+    /* font: -webkit-small-control; */
+    height: 28px;
+    overflow: auto;
+    padding: 2px;
+    resize: both;
+    width: 500px;
 }
 
 #author-name {
@@ -53,24 +70,81 @@ $teacher-color: green;
 	background-color: black;
 }
 
+@mixin btn-theme($btn-color) {
+	border-color: darken($btn-color, 20%);
+	background-color: $btn-color;
+	&:hover {
+   background-color: darken($btn-color, 6%);
+   box-shadow: 0 .125em $off-wht, inset 0 .063em $off-wht, inset 0 -.188em lighten($btn-color, 2%);
+	}
+	&:active {
+   box-shadow: 0 .063em $off-wht, inset 0 0 1.094em darken($btn-color, 40%), inset 0 .063em darken($btn-color, 20%),inset 0 -0.188em darken($btn-color, 20%); 
+	}
+ }
+
+ @mixin trans($val...) {
+	-webkit-transition: $val;
+	-moz-transition: $val; 
+	-o-transition: $val; 
+	transition: $val; 
+ }
+
+ .purple {
+	@include btn-theme($purple);
+ }
+ .blue {
+	@include btn-theme($blue);
+ }
+ .green {
+	@include btn-theme($green);
+ }
+ .orange {
+	@include btn-theme($orange);
+ }
+
+// submit and new content button aligned right
 %button {
-	padding: 10px;
-    border: 0;
-    border-radius: 5px;
-    text-transform: $main-transform;
     font-family: $body-font;
+	display: inline-block;
+	margin: 0rem; 
+	margin-left: auto;
+	margin-right: 5px;
+	margin-top: 5px;
+	padding: .5em .5em;
+	border: .094em solid;
+	border-radius: .625em;
+	box-shadow: 0 .375em .313em -.313em rgba(black,.8), inset 0 .063em $off-wht, inset 0 -.188em rgba(black,.15);
+	color: #FFF;
+	display: flex;
+	font: bold 1rem sans-serif;
+	@include trans(0.2s ease-in-out); 
+	text: {
+		transform: uppercase;
+		decoration: none;
+		shadow: 0 .063em rgba(black,.3);
+	}
+  cursor:pointer;
 }
 
-.submit-button {
+#submit-button {
 	@extend %button;
-    background: $action-yes;
-    color: $text-invert;
+    background: rgba(black,.15);
+	color: $text-invert;
+	@include btn-theme($orange);
+}
+
+#new-content-button{
+	@extend %button;
+    background: rgba(black,.15);
+	color: $text-invert;
+	@include btn-theme($orange);
 }
 
 .cancel-button {
 	@extend %button;
     background: $action-meh;
-    color: $text-default;
+	color: $text-default;
+	@include btn-theme($orange)
 }
 
 // TODO Maybe these stylings should be global? I don't know. 

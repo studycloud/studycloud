@@ -166,20 +166,44 @@ function display_content(num, element)
 function resourceEditorHTML()
 {
 	// create all the input to create resources
-	document.getElementById('resource-head').innerHTML="<h1>Resource Editor</h1>"
+	document.getElementById('resource-head').innerHTML="\
+	<div id = 'resource-name' contenteditable=true> This text can be edited by the user. </div> \
+	<body onload='checkEdits()'>";
 	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> \
 	<div class 'resource-creator> Resource Name: <br> \
-	<div type = 'text' id = 'meta-name' contenteditable='true'> </div> <br> \
+
+	<input type = 'text' id = 'meta-name'> <br> \
 	Resource Use:  <br>" + selectorCodeGenerator("resource-use") + "<br> \
-	<div class=resource-divider> </div>\
+	<div class=resource-divider></div> <br> </div>\
 	<div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type: <br>" + selectorCodeGenerator("content-type") + "<br>\
 	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> <div id = 'more-contents'> </div>\
-	<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedContent()'> Submit </button> \
+	<div> <button type = 'button' id = 'submit-button' onclick = 'submitContent()'> Submit </button> \
 	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
 	<p id = 'demo'> </p></div> ";
-	console.log(document.getElementById('meta-name').innerHTML);
+}
+
+function saveEdits()
+{
+	//get the editable element
+	var editElem = document.getElementById("resource-head");
+
+	//get the edited element content
+	var userVersion = editElem.innerHTML;
+
+	//save the content to local storage
+	localStorage.userEdits = userVersion;
+
+	//write a confirmation to the user
+	document.getElementById("update").innerHTML="Edits saved!";
+}
+
+function checkEdits()
+{
+	//find out if the user has previously saved edits
+	if(localStorage.userEdits!=null)
+	document.getElementById("resource-head").innerHTML = localStorage.userEdits;
 }
 
 /** 
@@ -227,6 +251,16 @@ function submitEditedContent()
 	var resource_use = findUseOrType("resource-use-selector");
 
 	content_num = pre_updated_content_num;
+  
+  //get the editable element
+	var editElem = document.getElementById("resource-head");
+	console.log(document.getElementById("resource-name").innerHTML);
+  
+  //get the edited element content
+	var userVersion = editElem.innerHTML;
+
+	//save the content to local storage
+	localStorage.userEdits = userVersion;
 	
 	// store all the data in json
 	// NEED TO INCLUDE: resouce id, content id

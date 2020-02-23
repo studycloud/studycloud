@@ -1,4 +1,9 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);.resource-background {
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);#resource-container {
+  background: rgba(133, 133, 133, 0.3);
+  max-width: 800px;
+}
+
+.resource-background {
   padding: 20px;
 }
 
@@ -37,23 +42,149 @@
   background-color: black;
 }
 
-.submit-button,
-.cancel-button {
-  padding: 10px;
-  border: 0;
-  border-radius: 5px;
-  text-transform: lowercase;
-  font-family: "Open Sans", sans-serif;
+.purple {
+  border-color: #673693;
+  background-color: #9A68C7;
 }
 
-.submit-button {
-  background: #3fc53f;
+.purple:hover {
+  background-color: #8b52bf;
+  -webkit-box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #9f6fca;
+          box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #9f6fca;
+}
+
+.purple:active {
+  -webkit-box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #331b48, inset 0 0.063em #673693, inset 0 -0.188em #673693;
+          box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #331b48, inset 0 0.063em #673693, inset 0 -0.188em #673693;
+}
+
+.blue {
+  border-color: #1672a3;
+  background-color: #3BA9E4;
+}
+
+.blue:hover {
+  background-color: #209de0;
+  -webkit-box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #44ade5;
+          box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #44ade5;
+}
+
+.blue:active {
+  -webkit-box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #0a3349, inset 0 0.063em #1672a3, inset 0 -0.188em #1672a3;
+          box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #0a3349, inset 0 0.063em #1672a3, inset 0 -0.188em #1672a3;
+}
+
+.green {
+  border-color: #446927;
+  background-color: #75B343;
+}
+
+.green:hover {
+  background-color: #669d3b;
+  -webkit-box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #7aba46;
+          box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #7aba46;
+}
+
+.green:active {
+  -webkit-box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #141f0b, inset 0 0.063em #446927, inset 0 -0.188em #446927;
+          box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #141f0b, inset 0 0.063em #446927, inset 0 -0.188em #446927;
+}
+
+.orange {
+  border-color: #db2e00;
+  background-color: #FF6A42;
+}
+
+.orange:hover {
+  background-color: #ff5223;
+  -webkit-box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #ff724c;
+          box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #ff724c;
+}
+
+.orange:active {
+  -webkit-box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #751900, inset 0 0.063em #db2e00, inset 0 -0.188em #db2e00;
+          box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #751900, inset 0 0.063em #db2e00, inset 0 -0.188em #db2e00;
+}
+
+#submit-button,
+#new-content-button,
+.cancel-button {
+  font-family: "Open Sans", sans-serif;
+  display: inline-block;
+  margin: 0rem;
+  margin-left: auto;
+  margin-right: 5px;
+  margin-top: 5px;
+  padding: .5em .5em;
+  border: .094em solid;
+  border-radius: .625em;
+  -webkit-box-shadow: 0 0.375em 0.313em -0.313em rgba(0, 0, 0, 0.8), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em rgba(0, 0, 0, 0.15);
+          box-shadow: 0 0.375em 0.313em -0.313em rgba(0, 0, 0, 0.8), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em rgba(0, 0, 0, 0.15);
+  color: #FFF;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  font: bold 1rem sans-serif;
+  -webkit-transition: 0.2s ease-in-out;
+  transition: 0.2s ease-in-out;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-shadow: 0 0.063em rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+#submit-button {
+  background: rgba(0, 0, 0, 0.15);
   color: white;
+  border-color: #db2e00;
+  background-color: #FF6A42;
+}
+
+#submit-button:hover {
+  background-color: #ff5223;
+  -webkit-box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #ff724c;
+          box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #ff724c;
+}
+
+#submit-button:active {
+  -webkit-box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #751900, inset 0 0.063em #db2e00, inset 0 -0.188em #db2e00;
+          box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #751900, inset 0 0.063em #db2e00, inset 0 -0.188em #db2e00;
+}
+
+#new-content-button {
+  background: rgba(0, 0, 0, 0.15);
+  color: white;
+  border-color: #db2e00;
+  background-color: #FF6A42;
+}
+
+#new-content-button:hover {
+  background-color: #ff5223;
+  -webkit-box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #ff724c;
+          box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #ff724c;
+}
+
+#new-content-button:active {
+  -webkit-box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #751900, inset 0 0.063em #db2e00, inset 0 -0.188em #db2e00;
+          box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #751900, inset 0 0.063em #db2e00, inset 0 -0.188em #db2e00;
 }
 
 .cancel-button {
   background: #cbcbcb;
   color: black;
+  border-color: #db2e00;
+  background-color: #FF6A42;
+}
+
+.cancel-button:hover {
+  background-color: #ff5223;
+  -webkit-box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #ff724c;
+          box-shadow: 0 0.125em rgba(255, 255, 255, 0.4), inset 0 0.063em rgba(255, 255, 255, 0.4), inset 0 -0.188em #ff724c;
+}
+
+.cancel-button:active {
+  -webkit-box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #751900, inset 0 0.063em #db2e00, inset 0 -0.188em #db2e00;
+          box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #751900, inset 0 0.063em #db2e00, inset 0 -0.188em #db2e00;
 }
 
 h1 {
