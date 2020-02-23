@@ -18,7 +18,7 @@ $(document).ready(function() {
     displayContainer("resource");
     createResource();
     $(".textarea").attr("id", "tinymce");
-    addTinyMCE();
+    // addTinyMCE();
     editResource();
     $('select[name="attach"]').selectstyle({
       width: 400,
@@ -86,6 +86,7 @@ function openResourceCreator(nodeId) {
 function addTinyMCE() {
   // Initialize TinyMCE
   tinymce.init({
-    selector: "#tinymce"
+    selector: "#tinymce",
+    menubar: false // disable menubar (file, edit, etc.)
   });
 }

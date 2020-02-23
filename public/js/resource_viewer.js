@@ -291,6 +291,7 @@ function newContent() {
  *			Call the server to edit the resource
  */
 function submitContent() {
+  tinymce.get("tinymce").save();
   var resource_name = document.getElementById("meta-name").value;
   var resource_use = parseInt(document.getElementById("resource-use").value);
   var content_name_array = [];
@@ -301,7 +302,8 @@ function submitContent() {
   for (i = 0; i < content_num + 1; i++) {
     content_name_array.push(document.getElementById("content-name" + i).value);
     content_type_array.push(document.getElementById("content-type" + i).value);
-    content_array.push(document.getElementById("content" + i).value);
+    content_array.push(document.getElementById("tinymce").value);
+    // content_array.push(document.getElementById("content" + i).value);
   }
 
   //store all the data in json
@@ -316,7 +318,8 @@ function submitContent() {
         id: temp_content_id,
         name: document.getElementById("content-name0").value,
         type: document.getElementById("content-type0").value,
-        content: document.getElementById("content0").value
+        content: document.getElementById("tinymce").value
+        // content: document.getElementById("content0").value
       }
     ]
   };
@@ -340,6 +343,9 @@ function submitContent() {
   document.getElementById("my-modal").style.display = "none";
   document.getElementById("resource-head").innerHTML = " ";
   document.getElementById("modules").innerHTML = " "; //clean the display box up
+
+  // remove instance of tinymce
+  tinymce.remove();
 }
 
 /**
@@ -415,6 +421,8 @@ function loadContent(contents) {
     }
 
     document.getElementById("tinymce").value = contents[i]["content"];
+    addTinyMCE();
+    tinymce.get("tinymce").load();
   }
 }
 
