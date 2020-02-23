@@ -15,7 +15,7 @@ $orange: #FF6A42;
 $off-wht: rgba(white,.4);
 
 #resource-container { // For now. 
-	background: $content-bg-color;
+	// background: $content-bg-color;
 	max-width: 800px;
 }
 
@@ -157,7 +157,7 @@ h2 {
 
 }
 
-$wrapper-height: 100px;
+$wrapper-height: 60px;
 // style the resource use selector
 .use-list-scrolling-wrapper{
 	height: $wrapper-height;

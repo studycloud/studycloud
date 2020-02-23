@@ -170,16 +170,13 @@ function resourceEditorHTML()
 	<div id = 'resource-name' contenteditable=true> This text can be edited by the user. </div> \
 	<body onload='checkEdits()'>";
 	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> \
-	<div class 'resource-creator> Resource Name: <br> \
-
-	<input type = 'text' id = 'meta-name'> <br> \
 	Resource Use:  <br>" + selectorCodeGenerator("resource-use") + "<br> \
 	<div class=resource-divider></div> <br> </div>\
 	<div class = 'content-creator'> Resource Content Name: <br> \
 	<input type = 'text' id = 'content-name0'> <br> \
 	Content Type: <br>" + selectorCodeGenerator("content-type") + "<br>\
-	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> <div id = 'more-contents'> </div>\
-	<div> <button type = 'button' id = 'submit-button' onclick = 'submitContent()'> Submit </button> \
+	Content: <br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
+	<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedContent()'> Submit </button> \
 	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
 	<p id = 'demo'> </p></div> ";
 }
@@ -224,7 +221,7 @@ function fillInResourceForEditor(received)
 	received.json().then(function(resource){
 		console.log(resource);
 		// document.getElementById("meta-name").value = resource.meta.name;
-		document.getElementById("meta-name").innerHTML = resource.meta.name;
+		document.getElementById("resource-name").innerHTML = resource.meta.name;
 		
 		loadSelectedUseOrType("resource-use-selector", resource.meta.use_name);
 
@@ -247,16 +244,16 @@ function fillInResourceForEditor(received)
 function submitEditedContent() 
 {
 	tinymce.get("tinymce").save();
-  var resource_name = document.getElementById("meta-name").innerHTML;
+  	var resource_name = document.getElementById("resource-name").innerHTML;
 	var resource_use = findUseOrType("resource-use-selector");
 
 	content_num = pre_updated_content_num;
   
-  //get the editable element
+  	//get the editable element
 	var editElem = document.getElementById("resource-head");
 	console.log(document.getElementById("resource-name").innerHTML);
   
-  //get the edited element content
+  	//get the edited element content
 	var userVersion = editElem.innerHTML;
 
 	//save the content to local storage
