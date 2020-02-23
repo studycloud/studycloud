@@ -20,21 +20,15 @@ $(document).ready(function()
 	{
 		document.getElementById('my-modal').style.display = "block";
 		displayContainer("resource");
-		createResource();
+		resourceEditorHTML();
 		editResource();
-		$('select[name="attach"]').selectstyle({
-			width  : 400,
-			height : 300,
-			theme  : 'light',
-			onchange : function(val){}
-		});
 	});
 
 	$("#resource-meta-btn").click(function(event)
 	{
 		document.getElementById('my-modal').style.display = "block";
 		displayContainer("resource");
-		requestResource();
+		viewResource();
 	});
 
 	// When the user clicks on <span> (x), close the modal
@@ -74,19 +68,4 @@ function displayContainer(container)
 	// Display this container, undisplay all other containers. 
 	document.getElementById(container+'-container').style.display = "block";
 
-}
-
-// When the user clicks on the create button, also open the modal but with the resource viewer
-function openResourceCreator (nodeId)
-{
-	document.getElementById('my-modal').style.display = "block";
-	displayContainer("resource");
-	createNewResource(nodeId);
-	$('select[name="attach').selectstyle({
-		width  : 400,
-		height : 300,
-		theme  : 'light',
-		onchange : function(val){}
-	});
-	
 }
