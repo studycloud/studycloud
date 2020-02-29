@@ -13,19 +13,13 @@ $(document).ready(function() {
 
   // When the user clicks on the create button, also open the modal but with the resource viewer
   $("#editor-btn").click(function(event) {
-    var editor = document.getElementsByClassName("textarea");
+    // var editor = document.getElementsByClassName("textarea");
     document.getElementById("my-modal").style.display = "block";
     displayContainer("resource");
-    createResource();
+    resourceEditorHTML();
     $(".textarea").attr("id", "tinymce");
     // addTinyMCE();
     editResource();
-    $('select[name="attach"]').selectstyle({
-      width: 400,
-      height: 300,
-      theme: "light",
-      onchange: function(val) {}
-    });
   });
 
 	// When the user clicks on the create button, also open the modal but with the resource viewer

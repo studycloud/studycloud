@@ -28,8 +28,9 @@ $off-wht: rgba(white,.4);
 	font-size: 25px;
     font-weight: bold;
     -moz-appearance: textfield-multiline;
-    -webkit-appearance: textarea;
-    border: 1px solid gray;
+	-webkit-appearance: textarea;
+	// TODO: Do we need the border? Will it look more natural without the border?
+    // border: 1px solid gray; 
     /* font: medium -moz-fixed; */
     /* font: -webkit-small-control; */
     height: 28px;

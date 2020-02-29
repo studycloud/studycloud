@@ -139,7 +139,11 @@ function display_content(num, element)
 	// TODO: very inefficient way to decide how contents are displayed
 	if(element.type=="link")
 	{
-		document.getElementById('module-'+num).innerHTML+="<div><a href="+element.content+">"+element.name+"</a></div>";
+		// tinyMCE tends to wrap content in <p> </p> which will affect the link
+		// TODO: better way to do this?
+		var display_link = element.content.replace(/<p>/g, '');
+		display_link = display_link.replace("</p>", '');
+		document.getElementById('module-'+num).innerHTML+="<div><a href="+display_link+">"+element.name+"</a></div>";
 	}
 	else // Apparently by MVP things are HTML text. Check this. 
 	{
