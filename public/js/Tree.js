@@ -40,7 +40,7 @@ function Tree(type, frame_id, server)
 	
 	
 	//hide the context menu after we click on a context menu item
-	self.frame.on('click.menu_context', function(){self.menu_context.style('display', 'none');});
+	self.frame.on('click.menu_context', function(){self.menu_context.style('visibility', 'hidden');});
 	
 	self.nodes_simulated = {};
 	self.links_simulated = {};
@@ -76,6 +76,8 @@ function Tree(type, frame_id, server)
 		.append("g")
 			.attr("class", "layer_nodes_captured")
 			.selectAll(".node_captured");
+
+	self.menuContextNodeCreate();
 }
 
 Tree.prototype.simulationInitialize = function()
@@ -348,7 +350,7 @@ Tree.prototype.updateDataNodes = function(selection, data)
 	var nodes = selection
 		.enter()
 			.append("g")
-				.attr("class", "node")
+				.classed("node", true)
 				.attr("data_id", function (d) { return d.id; })
 				.on("click", function(){self.nodeClicked(this);})
 				.on('contextmenu', function(d, i){self.menuContextNodeOpen(this, d, i);});
@@ -398,7 +400,7 @@ Tree.prototype.updateDataNodes = function(selection, data)
 	
 	selection
 		.exit()
-			.attr("class", "node-deleted")
+			.classed("node-deleted", true)
 			.transition()
 				.duration(1000)
 				.style("opacity", "0")
@@ -438,7 +440,7 @@ Tree.prototype.updateDataLinks = function(selection, data)
 	var links = selection
 		.enter()
 			.append("g")
-				.attr("class", "link")
+				.classed("link", true)
 				.attr("data_id", function(d){return d.id;})
 	
 	links.append("line");
@@ -464,7 +466,7 @@ Tree.prototype.updateDataLinks = function(selection, data)
 	
 	selection	
 		.exit()
-			.attr("class", "link-deleted")
+			.classed("link-deleted", true)
 			.transition()
 				.duration(1000)
 				.style("opacity", "0")
@@ -727,7 +729,6 @@ Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 	var ancestor_index = 0;
 
 	self.nodes
-		.attr("class", "node")
 		.each(function(d)
 			{
 				var style = self.locals.style.get(this);
@@ -953,11 +954,11 @@ Tree.prototype.nodeClicked = function(node)
 };
 
 
-Tree.prototype.menuContextNodeOpen = function(node, data, index)
-{	
+Tree.prototype.menuContextNodeCreate = function(node, data, index)
+{
 	var self = this;
 
-	var menu_context_items = 
+	self.menu_context_node_items = 
 	{
 		delete: 
 			{
@@ -1017,40 +1018,12 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 			}
 	};
 
+	var menu_context = d3.select(".menu_context");
 
-	if (self.nodes_captured.data().length === 0)
-	{
-		menu_context_items.attach.enabled = false;
-		menu_context_items.detach.enabled = false;
-		menu_context_items.move.enabled = false;
-	}
-
-
-	//this is pseudocode for enabling editing depending on user and logged in status. 
-
-	if (data.author_id !== self.user_active_id)
-	{
-		menu_context_items.edit.enabled = false;
-	}
-	
-	if (self.user_active_id === 0)
-	{
-		menu_context_items.add.enabled = false;
-		menu_context_items.attach.enabled = false;
-		menu_context_items.capture.enabled = false;
-		menu_context_items.delete.enabled = false;
-		menu_context_items.detach.enabled = false;
-		menu_context_items.edit.enabled = false;
-		menu_context_items.move.enabled = false;
-
-	}
-
-	menu_context = d3.selectAll('.menu_context').html('');
-	
 	var list = menu_context.append('ul');
-	
-	var menu_items = list.selectAll('li')
-			.data(Object.values(menu_context_items))
+
+	menu_items = list.selectAll('li')
+			.data(Object.values(self.menu_context_node_items))
 			.enter()
 				.append('li')
 				.classed('item', true);
@@ -1072,7 +1045,7 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 
 				if (d.enabled)
 				{
-					menu_context.style('display', 'none');
+					menu_context.style('visibility', 'hidden');
 					console.log('Clicked context menu item ' + d.title);
 					if(d.action !== null)
 					{
@@ -1090,7 +1063,7 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 					d3.event.preventDefault();
 					setTimeout(function()
 						{
-							self.menu_context.style('display', 'none');
+							self.menu_context.style('visibility', 'hidden');
 							if(d.action !== null)
 							{
 								d.action.bind(self)(node, data, index);
@@ -1120,12 +1093,76 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 					return d.title;
 				}
 			);
+};
+
+Tree.prototype.menuContextNodeOpen = function(node, data, index)
+{	
+	var self = this;
+
+	var menu_context_items = self.menu_context_node_items;
+
+	if (self.nodes_captured.data().length === 0)
+	{
+		menu_context_items.attach.enabled = false;
+		menu_context_items.detach.enabled = false;
+		menu_context_items.move.enabled = false;
+	}
+
+
+	//this is pseudocode for enabling editing depending on user and logged in status. 
+
+	if (data.author_id !== self.user_active_id)
+	{
+		menu_context_items.edit.enabled = false;
+	}
+	
+	if (self.user_active_id === 0)
+	{
+		menu_context_items.add.enabled = false;
+		menu_context_items.attach.enabled = false;
+		menu_context_items.capture.enabled = false;
+		menu_context_items.delete.enabled = false;
+		menu_context_items.detach.enabled = false;
+		menu_context_items.edit.enabled = false;
+		menu_context_items.move.enabled = false;
+
+	}
+
+	menu_context_items.capture.enabled = this.frame.select(".node_captured[data_id =" + data.id +"]").empty() 
+		&& menu_context_items.capture.enabled
+		&& this.frame.selectAll(".node_captured").data().length < 8;
+	
+	var menu_context = d3.select(".menu_context");
+
+	menu_context
+			.selectAll('li')
+				.data(Object.values(menu_context_items));
 					
 	// display context menu
+
+	// Check if we have enough space to render the menu
+	var menu_height = menu_context.node().clientHeight;
+
+	var page_height = window.innerHeight;
+
+	if (page_height - d3.event.pageY + window.scrollY < menu_height)
+	{
+		console.log(menu_height);
+		console.log(d3.event.pageY);
+		menu_coordinate_y = d3.event.pageY - menu_height + 2;
+	}
+	else
+	{
+		menu_coordinate_y = d3.event.pageY - 2;
+	}
+
+	var menu_coordinate_x =  (d3.event.pageX - 2);
+
+
 	self.menu_context
-		.style('left', (d3.event.pageX - 2) + 'px')
-		.style('top', (d3.event.pageY - 2) + 'px')
-		.style('display', 'block');
+		.style('left', menu_coordinate_x + 'px')
+		.style('top', menu_coordinate_y + 'px')
+		.style('visibility', 'visible');
 
 	d3.event.preventDefault();
 };
@@ -1260,7 +1297,14 @@ Tree.prototype.nodeCapture = function(node, data, index)
 
 	var node_captured_data = self.nodes_captured.data();
 
-	node_captured_data.push(data);
+	d3.select(node).classed("captured", true);
+
+	var node_found_not = this.frame.select(".node_captured[data_id =" + data.id +"]").empty();
+
+	if (node_found_not)
+	{
+		node_captured_data.push(data);
+	}
 
 	self.captureBarRender(node_captured_data);
 };
@@ -1269,6 +1313,7 @@ Tree.prototype.nodeUncapture = function(node, data, index)
 {
 	var self = this;
 
+	this.frame.select(".node[data_id =" + data.id +"]").classed("captured", false);
 	d3.select(node.parentNode).remove();
 
 	self.nodes_captured = self.frame.svg.selectAll(".node_captured");

@@ -28,7 +28,8 @@ svg.tree
 .menu_context 
 {
 	position: absolute;
-	display: none;
+	display: block;
+    visibility: hidden;
 	background-color: #f2f2f2;
 	border-radius: 10px;
 
@@ -83,6 +84,13 @@ svg.tree
     font-family: sans-serif;
     font-weight: bold;
     text-anchor: middle;
+}
+
+.node.captured rect 
+{
+    stroke: #686868;
+    stroke-width: 0.3em;
+    stroke-dasharray: 1.4em;
 }
 
 .node_captured rect
