@@ -25,7 +25,7 @@ class Permission extends Model
 	 * corresponding instance as a permission or null if it
 	 * does not exist
 	 */
-	public static function getPermission(\string $permission)
+	public static function getPermission(string $permission)
 	{
 		if (!is_string($role))
 		{
