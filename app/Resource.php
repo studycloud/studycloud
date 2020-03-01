@@ -7,6 +7,7 @@ use App\Topic;
 use App\ResourceUse;
 use App\Academic_Class;
 use Laravel\Scout\Searchable;
+use App\Repositories\ClassRepository;
 use Illuminate\Database\Eloquent\Model;
 
 class Resource extends Model
@@ -84,15 +85,25 @@ class Resource extends Model
 
 	/**
 	 * Get the indexable data array for the model.
-	 * @return array
+	 *
+	 * @param	$to_array		whether to return the results as an array (default) or collection
+	 * @param	$get_classes	whether to retrieve all ancestors of this resource's class (default) or not
+	 * @return	array|Collection
 	 */
-	public function toSearchableArray($toArray=true)
+	public function toSearchableArray($to_array=true, $get_classes=true)
 	{
 		$resource = collect();
 		$resource['name'] = $this->name;
 		$resource['author'] = $this->author->name();
 		$resource['use'] = $this->use->name;
-		$resource['class'] = $this->class->name;
+		if ($get_classes)
+		{
+			$resource['classes'] = (new ClassRepository)->ancestors($this->class)->pluck('name', 'id')->prepend($this->class->name, $this->class->id);
+		}
+		else
+		{
+			$resource['classes'] = collect([$this->class->id => $this->class->name]);
+		}
 		$resource['contents'] = $this->contents->map(
 			function($content)
 			{
@@ -101,8 +112,9 @@ class Resource extends Model
 			}
 		);
 		// if we must return the collection as an array:
-		if ($toArray)
+		if ($to_array)
 		{
+			$resource['classes'] = $resource['classes']->values()->toArray();
 			$resource['contents'] = $resource['contents']->toArray();
 			return $resource->toArray();
 		}

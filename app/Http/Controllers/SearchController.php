@@ -38,7 +38,13 @@ class SearchController extends Controller
 		// execute the query and get the converted results
 		$result = Resource::search($query)->get()->map(
 			function($resource) {
-				return $resource->toSearchableArray(false);
+				// get the default resource data
+				$result = $resource->toSearchableArray(false);
+				// attach the id, created_at, and updated_at dates
+				$result->put('id', $resource->id);
+				$result->put('created_at', $resource->created_at);
+				$result->put('updated_at', $resource->updated_at);
+				return $result;
 			}
 		);
 
@@ -49,7 +55,7 @@ class SearchController extends Controller
 		}
 		else
 		{
-			return view('search', ['result' => $result]);
+			return view('search', ['search_query' => $query, 'results' => $result]);
 		}
 	}
 }

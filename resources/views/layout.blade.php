@@ -30,8 +30,7 @@
     <script src="//code.jquery.com/jquery.min.js"></script>
     <script src="{{ asset('js/selectStyleSrc/selectstyle.js') }}"></script>
 
-  <!-- JS and CSS for the search box -->
-  <script src="{{ asset('js/search.js') }}"></script>
+  <!-- CSS for the search box -->
   <link rel="stylesheet" type="text/css" href="{{ asset('css/search.css') }}">
 
     @stack('scripts')
@@ -508,7 +507,7 @@
                     <li><a href="{{ route('about') }}">About</a></li>
                     <li id="search">
                         <form action="{{ route('search.index') }}" method="get" id="search-form">
-                            <input type="text" name="q" id="search-text" placeholder="search for a resource" autocomplete="off">
+                            <input type="text" name="q" id="search-text" placeholder="search for a resource" autocomplete="off" value='{{ request()->is('search') ? $search_query : '' }}'>
                         </form>
                     </li>
                     <!--Component for login/logout.-->
@@ -547,5 +546,6 @@
 </body>
 <footer>
     <script src="/storage/Logo Tree.js"></script> <!-- TODO or here -->
+    <script src="{{ asset('js/search.js') }}"></script> <!-- JS for the search box -->
 </footer>
 </html>
