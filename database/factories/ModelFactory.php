@@ -139,3 +139,16 @@ $factory->define(App\RoleUser::class, function (Faker\Generator $faker)
 		}
 	];
 });
+
+// ResourceUse Factory
+$factory->define(App\ResourceUse::class, function (Faker\Generator $faker)
+{
+	return [
+		'name' => ucwords(
+			$faker->words($nb = 3, $asText = true)
+		),
+		'author_id' => $faker->randomElement(
+			App\User::pluck('id')->toArray()
+		)
+	];
+});
