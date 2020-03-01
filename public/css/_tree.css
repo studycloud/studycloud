@@ -35,7 +35,7 @@ svg.tree
 
 	font-family: Arial, sans-serif;
 	font-size: 16px;
-	border: 1px solid #d4d4d4;
+	border: none;
 
 	z-index:1200;
 }
