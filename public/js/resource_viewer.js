@@ -171,40 +171,20 @@ function resourceEditorHTML()
 {
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML="\
-	<div id = 'resource-name' contenteditable=true> This text can be edited by the user. </div> \
-	<body onload='checkEdits()'>";
-	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> \
-	Resource Use:  <br>" + selectorCodeGenerator("resource-use") + "<br> \
-	<div class=resource-divider></div> <br> </div>\
-	<div class = 'content-creator'> Resource Content Name: <br> \
-	<input type = 'text' id = 'content-name0'> <br> \
-	Content Type: <br>" + selectorCodeGenerator("content-type") + "<br>\
-	Content: <br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
-	<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedContent()'> Submit </button> \
-	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
-	<p id = 'demo'> </p></div> ";
-}
-
-function saveEdits()
-{
-	//get the editable element
-	var editElem = document.getElementById("resource-head");
-
-	//get the edited element content
-	var userVersion = editElem.innerHTML;
-
-	//save the content to local storage
-	localStorage.userEdits = userVersion;
-
-	//write a confirmation to the user
-	document.getElementById("update").innerHTML="Edits saved!";
-}
-
-function checkEdits()
-{
-	//find out if the user has previously saved edits
-	if(localStorage.userEdits!=null)
-	document.getElementById("resource-head").innerHTML = localStorage.userEdits;
+	<div id = 'resource-name' contenteditable=true> Resource Name </div>";
+	document.getElementById('modules').innerHTML = "\
+	<div class=resource-modal-label> Resource Use:</div>\
+	<br>" + selectorCodeGenerator("resource-use") + "<br>\
+	<div class=resource-divider></div>\
+	<div class = 'content-creator'>\
+	<div class=resource-modal-label>Resource Content Name:</div><br>\
+	<div class=content-name id ='content-name0' contenteditable=true> Content Name </div> <br>\
+	<div class=resource-modal-label> Content Type: </div>\
+	<br>" + selectorCodeGenerator("content-type") + "<br>\
+	<div class=resource-modal-label>Content:</div>\
+	<br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
+	<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedContent()'> Submit </button>\
+	<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
 }
 
 /** 
@@ -252,16 +232,6 @@ function submitEditedContent()
 	var resource_use = findUseOrType("resource-use-selector");
 
 	content_num = pre_updated_content_num;
-  
-  	//get the editable element
-	var editElem = document.getElementById("resource-head");
-	console.log(document.getElementById("resource-name").innerHTML);
-  
-  	//get the edited element content
-	var userVersion = editElem.innerHTML;
-
-	//save the content to local storage
-	localStorage.userEdits = userVersion;
 	
 	// store all the data in json
 	// NEED TO INCLUDE: resouce id, content id
@@ -275,7 +245,7 @@ function submitEditedContent()
 		[
 			{
 				"id": temp_content_id,
-				"name": document.getElementById("content-name0").value,
+				"name": document.getElementById("content-name0").innerHTML,
 				"type": findUseOrType("content-type-selector").toLowerCase(),
 				"content": document.getElementById("tinymce").value
 			}
@@ -287,7 +257,7 @@ function submitEditedContent()
 	{
 		var content_array =
 		{
-			"name": document.getElementById("content-name"+i).value,
+			"name": document.getElementById("content-name"+i).innerHTML,
 			"type": tempType,
 			"content": document.getElementById("content"+i).value
 		};
@@ -443,14 +413,14 @@ function loadContent(contents)
 {
 	for (i=0; i < contents.length; i++)
 	{
+		document.getElementById("content-name"+i).innerHTML = contents[i]["name"];
 		document.getElementById("content-name"+i).value = contents[i]["name"];
-		
 		loadSelectedUseOrType("content-type-selector", contents[i]["type"]);
-    
-    // TODO: this will be problematic once we have multiple contents
-    document.getElementById("tinymce").value = contents[i]["content"];
-    addTinyMCE();
-    tinymce.get("tinymce").load();
+
+		// TODO: this will be problematic once we have multiple contents
+		document.getElementById("tinymce").value = contents[i]["content"];
+		addTinyMCE();
+		tinymce.get("tinymce").load();
 	}
 }
 
