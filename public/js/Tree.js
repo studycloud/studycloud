@@ -1033,13 +1033,8 @@ Tree.prototype.menuContextNodeCreate = function(node, data, index)
 			{
 				return d.color;
 			}
-		)
-		.attr('enabled', function(d)
-			{
-				return d.enabled;
-			}	
-		)
-	
+		);
+
 	menu_items
 		.append('i')
 			.classed('material-icons', true)
@@ -1062,7 +1057,16 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 {	
 	var self = this;
 
+
 	var menu_context_items = self.menu_context_node_items;
+
+	menu_context_items.add.enabled = true;
+	menu_context_items.attach.enabled = true;
+	menu_context_items.capture.enabled = true;
+	menu_context_items.delete.enabled = true;
+	menu_context_items.detach.enabled = true;
+	menu_context_items.edit.enabled = true;
+	menu_context_items.move.enabled = true;
 
 	if (self.nodes_captured.data().length === 0)
 	{
@@ -1133,11 +1137,15 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 						
 									500
 								);
-								console.log('Clicked context menu item' + d.title)
+								console.log('Clicked context menu item' + d.title);
 							}
 						}
+					)
+					.attr('enabled', function(d)
+						{
+							return d.enabled;
+						}	
 					);
-	// display context menu
 
 	// Check if we have enough space to render the menu
 	var menu_height = menu_context.node().clientHeight;
