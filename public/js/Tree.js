@@ -1039,43 +1039,6 @@ Tree.prototype.menuContextNodeCreate = function(node, data, index)
 				return d.enabled;
 			}	
 		)
-		.on('click', function(d) 
-			{	
-				d3.event.stopPropagation();
-
-				if (d.enabled)
-				{
-					menu_context.style('visibility', 'hidden');
-					console.log('Clicked context menu item ' + d.title);
-					if(d.action !== null)
-					{
-						d.action.bind(self)(node, data, index);
-					}
-				}
-			}
-		)
-		.on('touchstart', function(d) 
-			{	
-				d3.event.stopPropagation();
-
-				if (d.enabled)
-				{
-					d3.event.preventDefault();
-					setTimeout(function()
-						{
-							self.menu_context.style('visibility', 'hidden');
-							if(d.action !== null)
-							{
-								d.action.bind(self)(node, data, index);
-							}
-						}, 
-						
-						500
-					);
-					console.log('Clicked context menu item' + d.title)
-				}
-			}
-		);
 	
 	menu_items
 		.append('i')
@@ -1136,8 +1099,44 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 
 	menu_context
 			.selectAll('li')
-				.data(Object.values(menu_context_items));
-					
+				.data(Object.values(menu_context_items))
+				.on('click', function(d) 
+						{	
+							d3.event.stopPropagation();
+
+							if (d.enabled)
+							{
+								menu_context.style('visibility', 'hidden');
+								console.log('Clicked context menu item ' + d.title);
+								if(d.action !== null)
+								{
+									d.action.bind(self)(node, data, index);
+								}
+							}
+						}
+					)
+					.on('touchstart', function(d) 
+						{	
+							d3.event.stopPropagation();
+
+							if (d.enabled)
+							{
+								d3.event.preventDefault();
+								setTimeout(function()
+									{
+										self.menu_context.style('visibility', 'hidden');
+										if(d.action !== null)
+										{
+											d.action.bind(self)(node, data, index);
+										}
+									}, 
+						
+									500
+								);
+								console.log('Clicked context menu item' + d.title)
+							}
+						}
+					);
 	// display context menu
 
 	// Check if we have enough space to render the menu
