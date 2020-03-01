@@ -141,8 +141,7 @@ function display_content(num, element)
 	{
 		// tinyMCE tends to wrap content in <p> </p> which will affect the link
 		// TODO: better way to do this?
-		var display_link = element.content.replace(/<p>/g, '');
-		display_link = display_link.replace("</p>", '');
+		var display_link = element.content.replace( /(<([^>]+)>)/ig, '');
 		document.getElementById('module-'+num).innerHTML+="<div><a href="+display_link+">"+element.name+"</a></div>";
 	}
 	else // Apparently by MVP things are HTML text. Check this. 
