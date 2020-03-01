@@ -395,7 +395,16 @@ function submitNewContent(node_id_num) {
   document.getElementById("modules").innerHTML = " "; //clean the display box up
 }
 
-
+/** 
+ * \brief Initialize TinyMCE
+ */
+function addTinyMCE() {
+	tinymce.init({
+		selector: "#tinymce",
+		menubar: false // disable menubar (file, edit, etc.)
+	});
+}
+  
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Helper functions

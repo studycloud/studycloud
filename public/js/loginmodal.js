@@ -18,7 +18,6 @@ $(document).ready(function() {
     displayContainer("resource");
     resourceEditorHTML();
     $(".textarea").attr("id", "tinymce");
-    // addTinyMCE();
     editResource();
   });
 
@@ -44,19 +43,9 @@ $(document).ready(function() {
 		document.getElementById('my-modal').style.display = "none";
 		document.getElementById('resource-head').innerHTML = " ";
 		document.getElementById('modules').innerHTML = " "; //clean the display box up
-		resetContentNum();
-		//location.reload();
-	});
-
-  // When the user clicks on <span> (x), close the modal
-  $("#close-modal").click(function(event) {
-    document.getElementById("my-modal").style.display = "none";
-    document.getElementById("resource-head").innerHTML = " ";
-    document.getElementById("modules").innerHTML = " "; //clean the display box up
     resetContentNum();
-    //location.reload();
     tinymce.remove();
-  });
+	});
 });
 
 // When the user clicks anywhere outside of the modal, close it
@@ -68,7 +57,7 @@ window.onmousedown = function(event)
 		document.getElementById('resource-head').innerHTML = " ";
 		document.getElementById('modules').innerHTML = " "; //clean the display box up
 		resetContentNum();
-		
+		tinymce.remove();
 	}
 }
 
@@ -88,14 +77,5 @@ function openResourceCreator(nodeId) {
     height: 300,
     theme: "light",
     onchange: function(val) {}
-  });
-}
-
-// Add TinyMCE
-function addTinyMCE() {
-  // Initialize TinyMCE
-  tinymce.init({
-    selector: "#tinymce",
-    menubar: false // disable menubar (file, edit, etc.)
   });
 }
