@@ -98,10 +98,13 @@ function displayResource(received) {
 		} is an anonymous function
 			resource is the json we want
 	*/
+	
+	document.getElementById('edit-icon').style.display = "block";
 
 	received.json().then(function(resource){
 		console.log(resource);
-		document.getElementById('resource-head').innerHTML = "<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1>\
+		document.getElementById('resource-head').innerHTML = "\
+		<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1>\
 		<div>contributed by <div id='author-name'></div></div>";
 
     set_author(resource.meta.author_name, resource.meta.author_type);
@@ -140,9 +143,8 @@ function display_content(num, element)
 	if(element.type=="link")
 	{
 		// tinyMCE tends to wrap content in <p> </p> which will affect the link
-		// TODO: better way to do this?
-		var display_link = element.content.replace(/<p>/g, '');
-		display_link = display_link.replace("</p>", '');
+
+		var display_link = element.content.replace( /(<([^>]+)>)/ig, '');
 		document.getElementById('module-'+num).innerHTML+="<div><a href="+display_link+">"+element.name+"</a></div>";
 	}
 	else // Apparently by MVP things are HTML text. Check this. 

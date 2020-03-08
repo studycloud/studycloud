@@ -20,11 +20,11 @@
   -webkit-appearance: textarea;
   /* font: medium -moz-fixed; */
   /* font: -webkit-small-control; */
-  height: 50px;
+  max-height: 100px;
   overflow: auto;
   padding: 2px;
   resize: both;
-  width: 500px;
+  max-width: 500px;
 }
 
 .content-name {
@@ -69,6 +69,20 @@
   margin-bottom: 15px;
   height: 2px;
   background-color: #8a8a8a;
+}
+
+#open-resource-editor {
+  color: #aaa;
+  float: left;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+#open-resource-editor:hover,
+#open-resource-editor:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .purple {

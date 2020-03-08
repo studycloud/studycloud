@@ -39,11 +39,11 @@ $off-wht: rgba(white,.4);
     // border: 1px solid gray; 
     /* font: medium -moz-fixed; */
     /* font: -webkit-small-control; */
-    height: 50px;
+    max-height: 100px;
     overflow: auto;
     padding: 2px;
     resize: both;
-    width: 500px;
+    max-width: 500px;
 }
 
 .content-name {
@@ -92,6 +92,22 @@ $off-wht: rgba(white,.4);
 	height: 2px;
 	background-color: #8a8a8a;
 }
+
+// button in resource viewer to open resource editor
+#open-resource-editor{
+	color: $text-light;
+    float: left;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#open-resource-editor:hover,
+#open-resource-editor:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 
 @mixin btn-theme($btn-color) {
 	border-color: darken($btn-color, 20%);

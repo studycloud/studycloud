@@ -40,7 +40,8 @@ $(document).ready(function() {
 	// When the user clicks on <span> (x), close the modal
 	$("#close-modal").click(function(event) 
 	{
-		document.getElementById('my-modal').style.display = "none";
+    document.getElementById('my-modal').style.display = "none";
+    document.getElementById('edit-icon').style.display = "none";
 		document.getElementById('resource-head').innerHTML = " ";
 		document.getElementById('modules').innerHTML = " "; //clean the display box up
     resetContentNum();
@@ -53,11 +54,12 @@ window.onmousedown = function(event)
 {
     if (event.target == document.getElementById('my-modal')) 
     {
-		document.getElementById('my-modal').style.display = "none";
-		document.getElementById('resource-head').innerHTML = " ";
-		document.getElementById('modules').innerHTML = " "; //clean the display box up
-		resetContentNum();
-		tinymce.remove();
+      document.getElementById('my-modal').style.display = "none";
+      document.getElementById('edit-icon').style.display = "none";
+      document.getElementById('resource-head').innerHTML = " ";
+      document.getElementById('modules').innerHTML = " "; //clean the display box up
+      resetContentNum();
+      tinymce.remove();
 	}
 }
 

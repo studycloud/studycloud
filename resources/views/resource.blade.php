@@ -33,6 +33,7 @@
 	<!-- Modal content -->
 	<div class="modal-content">
 		<span id="close-modal"><i class="fas fa-times"></i></span>
+		<span id="open-resource-editor"><i id="edit-icon" display="none" class='fas fa-edit'></i></span>
 		<!-- Container for resource. -->
 		<div id="resource-container">
 			<div class="resource-background">
@@ -53,13 +54,35 @@
 	// load the resource viewer or resource editor once the page is ready
 	$(document).ready(function(){ 
 		document.getElementById('my-modal').style.display = "block";
+		document.getElementById('edit-icon').style.display = "none";
 		displayContainer("resource");
+
 		if (isEditor) {
 			resourceEditorHTML();
 			editResource();
 		} else {
 			viewResource();
 		}
-	});
+
+		// When the user clicks on edit icon in resource viewer 
+		$("#open-resource-editor").click(function(event) 
+		{
+			// clear what is displayed in resource viewer
+			document.getElementById('edit-icon').style.display = "none";
+			document.getElementById('modules').innerHTML = " "; //clean the display box up
+			document.getElementById('resource-head').innerHTML = " ";
+
+			// change the url from /resources/{resource_id} to 
+			// /resources/{resource_id}/edit
+			history.pushState({},'','edit');
+
+			// display the resource editor
+			document.getElementById('my-modal').style.display = "block";
+			isEditor = true;
+			displayContainer("resource");
+			resourceEditorHTML();
+			editResource();
+		});
+		});
 </script>
 @endpush
