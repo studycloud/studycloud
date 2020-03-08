@@ -496,24 +496,23 @@ Tree.prototype.updateDataNLevels = function(node_id, levels_num_children, levels
 
 	console.log("Updating data for N Levels with:", data);
 
-	var ids_updated;
 
 	//Get Sets() of Ids to update the data for
-	ids_updated.children = self.getNLevelIds(node_id, levels_num_children);
-	ids_updated.parents = self.getNLevelIds(node_id, levels_num_parents);
+	children = self.getNLevelIds(node_id, levels_num_children); 
+	parents = self.getNLevelIds(node_id, levels_num_parents);
 
 	
 	//combine children and parent sets
 	var ids_updated_combined;
 	
-	ids_updated_combined.nodes = new Set(function*() { yield* ids_updated.children.nodes; yield* ids_updated.parents.nodes; }());
-	ids_updated_combined.links = new Set(function*() { yield* ids_updated.children.links; yield* ids_updated.parents.links; }());
+	nodes = new Set(function*() { yield* children.nodes; yield* parents.nodes; }());
+	links = new Set(function*() { yield* children.links; yield* parents.links; }());
 	
 	//Convert those ID Set()s into D3 selections
 	var selection_updated = {};
 	
-	selection_updated.nodes = filterSelectionsByIDs(self.nodes, ids_updated_combined.nodes, "data_id");
-	selection_updated.links = filterSelectionsByIDs(self.links, ids_updated_combined.links, "data_id");
+	selection_updated.nodes = filterSelectionsByIDs(self.nodes, nodes, "data_id");
+	selection_updated.links = filterSelectionsByIDs(self.links, links, "data_id");
 	
 	self.updateDataNodes(selection_updated.nodes, data.nodes);
 	self.updateDataLinks(selection_updated.links, data.connections);
@@ -949,7 +948,8 @@ Tree.prototype.BreadcrumbStackUpdate = function(id)
 Tree.prototype.nodeClicked = function(node)
 {
 	var self = this;
-	//self.server.getData(data_id, 1, 2, self.updateDataNLevels.bind(self), function (){});
+	var data_id = node.data_id;
+	//self.server.getData(data_id, 1, 2, function (){}, self.updateDataNLevels.bind(self));
 	self.centerOnNode(node);
 };
 

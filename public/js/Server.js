@@ -135,7 +135,7 @@ Server.prototype.getData = function(node, levels_up, levels_down, handleError, h
     		return self.handleError(url, error, handleError);
     	}
     	else {			
-    		return self.handleSuccess(node,data,handleSuccess);
+    		return self.handleSuccess(node,data,handleSuccess, levels_up, levels_down);
 		}	
     });
 };
@@ -173,7 +173,7 @@ Server.prototype.handleError = function(url, error, treeHandleError)
 };
 
 
-Server.prototype.handleSuccess = function(node, data, treeHandleSuccess)
+Server.prototype.handleSuccess = function(node, data, treeHandleSuccess, levels_up, levels_down)
 {	
 	var self = this;
 
@@ -187,7 +187,7 @@ Server.prototype.handleSuccess = function(node, data, treeHandleSuccess)
 		}
 	);
 	
-	return treeHandleSuccess(node, data);
+	return treeHandleSuccess(node, levels_up, levels_down, data);
 };
 
 Server.prototype.getTopicJSON = function(id, handleError, handleSuccess)
