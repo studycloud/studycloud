@@ -41,7 +41,7 @@ class ResourceUsePolicy
      */
     public function create(User $user)
     {
-        return true;
+        // return true;
         if (Auth::check()) {
             // The user is logged in...
             return true;
