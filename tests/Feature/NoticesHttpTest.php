@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\User;
-use Tests\TestCase;
 use App\Notice;
+use Tests\TestCase;
 use App\Repositories\ClassRepository;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -41,7 +41,7 @@ class NoticesHttpTest extends TestCase
 		);
 		$new_notice = Notice::latest()->first();
 		// check: do we have a new notice?
-		//dd($response);
+		// dd($response->exception);
 		$response->assertSuccessful();
 		
 		$this->assertEquals(Notice::count()-1, $notice_count);
@@ -51,6 +51,7 @@ class NoticesHttpTest extends TestCase
 		// delete the notice we created
 		$response = $this->actingAs($user)->delete('/notices/'.($new_notice->id));
 		// is the notice gone?
+		// dd($response->exception);
 		$response->assertSuccessful();
 		$this->assertEquals(Notice::count(), $notice_count);
 

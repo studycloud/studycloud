@@ -7,6 +7,7 @@ use App\Academic_Class;
 use App\Notice;
 use Illuminate\Http\Request;
 use App\Http\Middleware\CheckStatus;
+use App\Http\Middleware\CheckAdminStatus;
 use App\Http\Resources\ClassResource;
 use App\Http\Resources\TopicResource;
 use App\Http\Resources\ResourceResource;

@@ -3,13 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Notice;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Middleware\CheckAdminStatus;
 
 class NoticeController extends Controller
 {
+    function __construct()
+	{
+		// verify that the user is signed in for all methods
+		$this->middleware('auth');
+		// check that the user is an admin before letting them access notices
+		$this->middleware(CheckAdminStatus::class);
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -77,31 +87,7 @@ class NoticeController extends Controller
      */
     public function destroy(Notice $notice)
     {
-        // check that the author of this notice is not null
-		// a null author indicates that the notice is not editable by the average user
-		// TODO: convert this check to an auth rule
-		// Validator::make($notice->toArray(),
-        //     [
-        //         'author_id' => 'required'
-        //     ],
-        //     [
-        //         'author_id.required' => "This notice was created by the administrators. You cannot edit it."
-        //     ]
-        // )->validate();
-
-        // TODO: make custom validation logic for the stuff below?
-        // before deleting the notice, make sure it doesn't have any noticees attached underneath it
-        // also make sure it doesn't have any resources attached to it
-        // Validator::make([
-        //     'children_count' => $notice->children()->count(),
-        // ], [
-        //     'children_count' => 'integer|max:0'
-        // ], [
-        //     'children_count.max' => 'You cannot delete a notice that has children.'
-        // ])->validate();
-        // actually delete the notice
-
-        //$this->authorize('delete', $notice);
+        // $this->authorize('delete', $notice);
 		//delete the notice's child notices if they exist
 		$notice->children->each(
 			function ($child)
