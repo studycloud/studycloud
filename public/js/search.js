@@ -18,11 +18,19 @@ function updateUrlParameter(uri, key, value) {
 }
 
 function update_search_results(results) {
+	results_html = "";
 	if (results.length <= 0)
 	{
-		results = "Your search found no results.";
+		results_html += "Your search found no results.";
 	}
-	$('#search-results').html(results);
+	else
+	{
+		for (resource of results_html)
+		{
+			results_html += search_result_html(resource);
+		}
+	}
+	$('#search-results').html(results_html);
 }
 
 $('#search-form').submit(
@@ -33,7 +41,6 @@ $('#search-form').submit(
 			query = $(this).children(['#search-text'])[0].value;
 			// now, make an asynchronous call to retrieve the query results from the server
 			$.get('/data/search', {'q':query}, function(results){
-				console.log(results);
 				update_search_results(results);
 				// lastly, update the url with the new results
 				history.replaceState(null, '', updateUrlParameter(window.location.href, 'q', query));

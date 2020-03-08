@@ -42,8 +42,8 @@ class SearchController extends Controller
 				$result = $resource->toSearchableArray(false);
 				// attach the id, created_at, and updated_at dates
 				$result->put('id', $resource->id);
-				$result->put('created_at', $resource->created_at);
-				$result->put('updated_at', $resource->updated_at);
+				$result->put('created_at', $resource->created_at->format('M j, Y g:i A'));
+				$result->put('updated_at', $resource->updated_at->format('M j, Y g:i A'));
 				return $result;
 			}
 		);
