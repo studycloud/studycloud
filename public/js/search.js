@@ -21,14 +21,13 @@ function update_search_results(results) {
 	results_html = "";
 	if (results.length <= 0)
 	{
-		results_html += "Your search found no results.";
+		results_html += "<div style='padding: 0.7em'>Your search found no results.</div>";
 	}
 	else
 	{
-		for (resource of results_html)
-		{
+		results.forEach(function(resource){
 			results_html += search_result_html(resource);
-		}
+		});
 	}
 	$('#search-results').html(results_html);
 }
@@ -37,6 +36,8 @@ $('#search-form').submit(
 	function(event) {
 		if ($('#search-results').length > 0)
 		{
+			// make sure the user sees a loading message, if only for a second
+			$('#search-results').html("<div style='padding:0.7em'>Loading search results...</div>");
 			// first, retrieve the query that the user typed
 			query = $(this).children(['#search-text'])[0].value;
 			// now, make an asynchronous call to retrieve the query results from the server
