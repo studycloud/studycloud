@@ -13,6 +13,13 @@ class SearchController extends Controller
 	 */
 	protected $return_JSON;
 
+	/**
+	 * Whether to interpret all queries literally by escaping reserved characters.
+	 * Setting this value to true will disable fancy searching.
+	 * @var bool
+	 */
+	protected $literal_queries = false;
+
 	public function __construct(Request $request)
 	{
 		// check whether this controller should return a view or a JSON response
@@ -33,7 +40,16 @@ class SearchController extends Controller
 		]);
 
 		// now, retrieve the query
-		$query = !array_key_exists('q', $validated) || is_null($validated['q']) ? '' : $validated['q'];
+		$query_unescaped = !array_key_exists('q', $validated) || is_null($validated['q']) ? '' : $validated['q'];
+
+		if ($this->literal_queries)
+		{
+			$query = $this->escape_elastic_search_reserved_chars($query_unescaped);
+		}
+		else
+		{
+			$query = $query_unescaped;
+		}
 
 		// execute the query and get the converted results
 		$result = Resource::search($query)->get()->map(
@@ -55,7 +71,20 @@ class SearchController extends Controller
 		}
 		else
 		{
-			return view('search', ['search_query' => $query, 'results' => $result]);
+			return view('search', ['search_query' => $query, 'search_query_unescaped' => $query_unescaped, 'results' => $result]);
 		}
+	}
+
+	/**
+	 * See https://stackoverflow.com/a/33846134
+	 * Elasticsearch has a number of reserved characters that can be escaped for more intuitive searches
+	 */
+	private function escape_elastic_search_reserved_chars($string) {
+		$regex = "/[\\+\\-\\=\\&\\|\\!\\(\\)\\{\\}\\[\\]\\^\\\"\\~\\*\\<\\>\\?\\:\\\\\\/]/";
+		$string = preg_replace_callback ($regex,
+			function ($matches) {
+				return "\\" . $matches[0];
+			}, $string);
+		return $string;
 	}
 }
