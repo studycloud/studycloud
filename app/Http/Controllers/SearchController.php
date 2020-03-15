@@ -20,6 +20,29 @@ class SearchController extends Controller
 	 */
 	protected $literal_queries = false;
 
+	/**
+	 * At most how many hits should we return?
+	 * @var integer
+	 */
+	protected $number_of_hits = 20;
+
+	/**
+	 * A list of all available fields and their contributions to the overall search score.
+	 * A field's weight will default to 0 if not specified, so specify all of them!
+	 * Set this variable to a falsey value to assign all fields the same weight of 1.
+	 * @var array
+	 */
+	protected $field_weights = [
+		"name" => 2,
+		"author" => 1,
+		"use" => 0.5,
+		"classes" => 0.5,
+		"contents.name" => 2,
+		"contents.type" => 0.25,
+		"contents.content" => 1
+	];
+
+
 	public function __construct(Request $request)
 	{
 		// check whether this controller should return a view or a JSON response
@@ -52,7 +75,25 @@ class SearchController extends Controller
 		}
 
 		// execute the query and get the converted results
-		$result = Resource::search($query)->get()->map(
+		$result = Resource::search($query,
+			function($client, $body) {
+				// set the number of desired hits
+				$body->setSize($this->number_of_hits);
+				// weight each field accordingly
+				if ($this->field_weights)
+				{
+					$body->getQueries()->setParameters(['type' => 'most_fields', 'fields' => array_map(
+							function($k, $v){
+								return "$k^$v";
+							},
+							array_keys($this->field_weights),
+							array_values($this->field_weights)
+						)
+					]);
+				}
+				return $client->search(['index' => (new Resource)->searchableAs(), 'body' => $body->toArray()]);
+			}
+		)->get()->map(
 			function($resource) {
 				// get the default resource data
 				$result = $resource->toSearchableArray(false);

@@ -69,6 +69,7 @@
 							<li>You can use the AND and OR operators.</li>
 							<li>You can group search terms using parantheses. For example, the query "author:(Ebert OR Koss)" will search for resources created by either Ebert or Koss.</li>
 							<li>You can use tildes ~ to perform fuzzy searches. For example, the query "Ebret~" will match "Ebert".</li>
+							<li>You can weight some terms as more important. For example, the query "Ebret^2 Koss" will make finding resources with "Ebret" twice as important as finding resources with "Koss".</li>
 							<li>You can use backslashes \\ and quotations \" to force terms to be interpreted literally.</li>
 						</ol>
 					`;
