@@ -21,7 +21,7 @@ function update_search_results(results) {
 	results_html = "";
 	if (results.length <= 0)
 	{
-		results_html += "<div style='padding: 0.7em'>Your search found no results.</div>";
+		results_html += search_message_html("Your search found no results.", true);
 	}
 	else
 	{
@@ -37,16 +37,68 @@ $('#search-form').submit(
 		if ($('#search-results').length > 0)
 		{
 			// make sure the user sees a loading message, if only for a second
-			$('#search-results').html("<div style='padding:0.7em'>Loading search results...</div>");
+			// note that this also appears in the blade when the page is first loaded
+			$('#search-results').html(search_message_html("Loading search results..."));
 			// first, retrieve the query that the user typed
 			query = $(this).children(['#search-text'])[0].value;
 			// now, make an asynchronous call to retrieve the query results from the server
-			$.get('/data/search', {'q':query}, function(results){
-				update_search_results(results);
-				// lastly, update the url with the new results
-				history.replaceState(null, '', updateUrlParameter(window.location.href, 'q', query));
+			$.ajax('/data/search', {
+				'data': {
+					'q': query
+				},
+				"timeout": 10000,
+				"success": function(results){
+					update_search_results(results);
+					// lastly, update the url with the new results
+					history.replaceState(null, '', updateUrlParameter(window.location.href, 'q', query));
+				}, "error": function(error, error_type) {
+					recommend = false;
+					if (error_type == "error")
+					{
+						console.log(error);
+						if (error.status == 500)
+						{
+							// try {
+							// 	// we have an elasticsearch error
+							// 	error = JSON.parse(error.responseJSON.message);
+							// 	if (error.status == 400)
+							// 	{
+							// 		message = "";
+							// 		error.error.root_cause.forEach(function(cause)
+							// 		{
+							// 			message += `Search Error: ${cause.reason}<br>`;
+							// 		});
+							// 	}
+							// 	else
+							// 	{
+							// 		message = `Search Error: ${error.reason}`;
+							// 	}
+							// }
+							// catch
+							// {
+							// 	// we have some other weird error
+							// 	message = `Search Error: ${error.responseJSON.message}`;
+							// }
+							message = "There was an error when executing your query.";
+							recommend = true;
+						}
+						else
+						{
+							message = `Error: ${error.message}`;
+						}
+					}
+					else if (error_type == "timeout")
+					{
+						message = "Request timed out. Check your internet connection.";
+					}
+					else
+					{
+						message = "Unhandled error. Check your query."
+						recommend = true;
+					}
+					$('#search-results').html(search_message_html(message, recommend));
+				}
 			});
-			// TODO: handle errors when loading the results
 			// return false to prevent the form submission and stop propogation of the event
 			return false;
 		}

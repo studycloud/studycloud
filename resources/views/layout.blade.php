@@ -507,7 +507,7 @@
                     <li><a href="{{ route('about') }}">About</a></li>
                     <li id="search">
                         <form action="{{ route('search.index') }}" method="get" id="search-form">
-                            <input type="text" name="q" id="search-text" placeholder="search for a resource" autocomplete="off" value='{{ request()->is('search') ? $search_query : '' }}'>
+                            <input type="text" name="q" id="search-text" placeholder="search for a resource" autocomplete="off" value='{{ request()->is('search') ? $search_query_unescaped : '' }}'>
                         </form>
                     </li>
                     <!--Component for login/logout.-->
