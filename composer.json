@@ -16,7 +16,7 @@
         "laravel/socialite": "^4.0",
         "laravel/tinker": "^2.0",
         "matchish/laravel-scout-elasticsearch": "^3.0",
-        "silber/bouncer": "v1.0.0-rc.6"
+        "silber/bouncer": "v1.0.0-rc.8"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.0",
