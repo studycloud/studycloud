@@ -32,6 +32,16 @@ function openResourceEditor(resource_id_in) {
 	editResource();
 }
 
+function openResourceViewer(resource_id_in) {
+	document.getElementById('my-modal').style.display = "block";
+	document.getElementById('edit-icon').style.display = "none";
+	displayContainer("resource");
+
+	resource_id = resource_id_in;
+
+	viewResource();
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -45,14 +55,7 @@ function openResourceEditor(resource_id_in) {
  * 		handleError function: error
  * 		handleSuccess function: displayResource
  */
-function viewResource(resource_id_in)
-{
-	document.getElementById('my-modal').style.display = "block";
-	document.getElementById('edit-icon').style.display = "none";
-	displayContainer("resource");
-
-	resource_id = resource_id_in;
-
+function viewResource() {
 	var server = new Server();
 
   	server.getResource(resource_id, error, displayResource);
@@ -62,7 +65,7 @@ function viewResource(resource_id_in)
  * \brief create server object and get resource for resource editor
  * \details specified by resource_id (NOT IMPLEMENTED WITH TREE YET)
  * 		handleError function: error
- * 		handleSuccess function: resourceEditor
+ * 		handleSuccess function: res1`ourceEditor
  */
 function editResource() {
   var server = new Server();

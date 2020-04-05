@@ -11,31 +11,38 @@ $(document).ready(function() {
     displayContainer("forget");
   });
 
-  // When the user clicks on the create button, also open the modal but with the resource viewer
-  $("#editor-btn").click(function(event) {
-    // var editor = document.getElementsByClassName("textarea");
-    document.getElementById("my-modal").style.display = "block";
-    displayContainer("resource");
-    resourceEditorHTML();
-    $(".textarea").attr("id", "tinymce");
-    editResource();
-  });
-
 	// When the user clicks on the create button, also open the modal but with the resource viewer
 	$("#editor-btn").click(function(event)
 	{
-		document.getElementById('my-modal').style.display = "block";
-		displayContainer("resource");
-		resourceEditorHTML();
-		editResource();
+    var temp_resource_id = 23;
+		openResourceEditor(temp_resource_id);
 	});
 
 	$("#resource-meta-btn").click(function(event)
 	{
-		document.getElementById('my-modal').style.display = "block";
-		displayContainer("resource");
-		viewResource();
-	});
+    var temp_resource_id = 23;
+		openResourceViewer(temp_resource_id);
+  });
+
+  $("#resource-creator-btn").click(function(event)
+  {
+
+  });
+  
+  // When the user clicks on edit icon in resource viewer 
+  $("#open-resource-editor").click(function(event) 
+  {
+    // clear what is displayed in resource viewer
+    document.getElementById('edit-icon').style.display = "none";
+    document.getElementById('modules').innerHTML = " "; //clean the display box up
+    document.getElementById('resource-head').innerHTML = " ";
+
+    // change the url from /resources/{resource_id} to 
+    // /resources/{resource_id}/edit
+    history.pushState({},'','edit');
+
+    openResourceEditor(temp_resource_id);
+  });
 
 	// When the user clicks on <span> (x), close the modal
 	$("#close-modal").click(function(event) 

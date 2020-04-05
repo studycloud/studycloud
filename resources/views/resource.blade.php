@@ -43,47 +43,23 @@
 			</div>
 		</div>
 	</div>
-</div>1
+</div>
 <!--button id="creator-btn">temporary resource creator button</button-->
 <button id="editor-btn">temporary resource editor button</button>
 <button id="resource-meta-btn">resource meta button</button>
+<button id="resource-creator-btn">resource creator button</button>
 @stop
 
 @push('scripts')
 <script type="text/javascript">
 	// load the resource viewer or resource editor once the page is ready
 	$(document).ready(function(){ 
-		// document.getElementById('my-modal').style.display = "block";
-		// document.getElementById('edit-icon').style.display = "none";
-		// displayContainer("resource");
-
 		if (isEditor) {
-			// resourceEditorHTML();
-			// editResource();
 			openResourceEditor(temp_resource_id);
 		} else {
-			viewResource();
+			openResourceViewer(temp_resource_id);
 		}
 
-		// When the user clicks on edit icon in resource viewer 
-		$("#open-resource-editor").click(function(event) 
-		{
-			// clear what is displayed in resource viewer
-			document.getElementById('edit-icon').style.display = "none";
-			document.getElementById('modules').innerHTML = " "; //clean the display box up
-			document.getElementById('resource-head').innerHTML = " ";
-
-			// change the url from /resources/{resource_id} to 
-			// /resources/{resource_id}/edit
-			history.pushState({},'','edit');
-
-			// display the resource editor
-			document.getElementById('my-modal').style.display = "block";
-			isEditor = true;
-			displayContainer("resource");
-			
-
-		});
 		});
 </script>
 @endpush
