@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -91,54 +93,33 @@ $factory->define(App\Resource::class, function (Faker\Generator $faker)
 	];
 });
 
+// Notice Factory
+$factory->define(App\Notice::class, function (Faker\Generator $faker) {
+    return [
+        'author_id' => $faker->randomElement(
+			// get all user id's
+			// but also allow some of them to be null
+			array_merge(App\User::pluck('id')->toArray(), [null])
+		),
+		'parent_id' => $faker->randomElement(
+			// get all notice id's
+			// but also allow some of them to be null
+			array_merge(App\Notice::pluck('id')->toArray(), [null])
+		),
+		'created_at' => $faker->dateTimeBetween('now')->format('Y-m-d H:i:s'),
+		//'difficulty' => $faker->boolean(25) ? $faker->numberBetween(1, 10) : null,
+		'priority' => $faker->numberBetween(1, 10),
+		'deadline' => Carbon::createFromTimestamp($faker->dateTimeBetween('now', '+1 month')->getTimestamp())->addHours($faker->numberBetween(1, 20))->format('Y-m-d H:i:s'),
+		'description' => $faker->text(),
+		'link' => $faker->text(),
+    ];
+});
+
 // Topic-Parent Factory
 // This model doesn't have a factory definition. All of it's seeding happens in the TopicParentTableSeeder.
 
 // Resource-Topic Factory
 // This model doesn't have a factory definition. All of it's seeding happens in the ResourceTopicTableSeeder.
-
-// Role-User Factory
-$factory->define(App\RoleUser::class, function (Faker\Generator $faker)
-{
-	return [
-		'user_id' => 0, // this will get overridden by the RoleUserTableSeeder
-		'role_id' => function(array $curr_RoleUser)
-		{
-			// Disclaimer: the code below is super hacky and quite weird, but they seem to work. If anybody can come up with a better way of doing this, please change it.
-			// Until then, I'll walk you through the madness that is written here.
-			
-			// Update: I actually found a way to change it. Use classes.
-
-			// First, we declare two global variables so that their values may persist after each call to the function (unless explicity changed!) because PHP's variable scope rules say that these variables don't exist outside our function.
-			global $old_user_id, $hacky_faker;
-			// Now we can check whether the old user_id (from the previous call) is not equal to the current user_id of the RoleUser we are creating right now.
-			// Note that the current user_id will actually get its value from the RoleUserTableSeeder (the 0 value will be overridden).
-			// Essentially, this control structure defines code that should only run if we've switched users in the RoleUserTableSeeder.
-			if ($old_user_id != $curr_RoleUser['user_id'])
-			{
-				// Create an entirely new faker generator instance; we won't rely on the one they feed to our closure, so that we can have more control over the one we're using.
-				// You'll see why we have to do this later when we attempt to use the unique() provider.
-				$hacky_faker = new Faker\Generator;
-				// Add the base provider class.
-				// Otherwise, we won't be able to call the randomElement formatter later.
-				$hacky_faker->addProvider(new Faker\Provider\Base($hacky_faker));
-			}
-			// Now we can update the old user_id to the current user_id for the next time this function is called.
-			$old_user_id = $curr_RoleUser['user_id'];
-			// Here is where the magic happens!
-			// We can use the randomElement formatter to pick a random role_id from the list that is available.
-			// We can call the unique() provider before randomElement so that we are gauranteed to pick a different role_id each time.
-			$role_id = $hacky_faker->unique()->randomElement(
-				App\Role::pluck('id')->toArray()
-			);
-			// Note that the unique() provider keeps a record of which role_id's have been called. This record will persist for multiple calls to the same faker generator instance.
-			// Laravel apparently uses the same faker generator instance each time factory() is called for a model class. Unfortunately, this also means that unique()'s record will persist for the different user_id's for which we try to create roles. In other words, unique() will apply to all the roles that are generated for all the users instead of only the roles for each user.
-			// The ideal solution would be some way to reset the record that is kept by unique() directly before we switch to generating roles for a new user. The unique() provider is supposed to do that if we pass $reset=true as a parameter to it, but this didn't actually work for me when I tried it. (It was a huge headache.)
-			// To get around this, we recreate the faker generator instance for each user (see the code in the if statement above), effectively starting with a completely new slate and a completely new unique() provider that persists until we decide to create roles for a new user.
-			return $role_id;
-		}
-	];
-});
 
 // ResourceUse Factory
 $factory->define(App\ResourceUse::class, function (Faker\Generator $faker)

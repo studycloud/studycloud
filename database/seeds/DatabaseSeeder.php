@@ -29,6 +29,8 @@ class DatabaseSeeder extends Seeder
 			$this->call('ResourceClassTableSeeder');
 			$this->call('ResourceTopicTableSeeder');
 			$this->call('RoleUserTableSeeder');
+			$this->call('NoticesTableSeeder');
+			$this->call('NoticeParentTableSeeder');
 		}
 	}
 
@@ -42,8 +44,8 @@ class DatabaseSeeder extends Seeder
 		| don't have corresponding factories.
 		*/
 		$this->call('ResourceUsesTableSeeder');
-		$this->call('RolesTableSeeder');
-		$this->call('PermissionsTableSeeder');
+		//$this->call('RolesTableSeeder');
+		//$this->call('PermissionsTableSeeder');
 		$this->call('PermissionRoleTableSeeder');
 	}
 }
