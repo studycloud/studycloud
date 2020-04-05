@@ -5,9 +5,12 @@ namespace App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
+use Bouncer;
 
 class User extends Authenticatable
 {
+	use HasRolesAndAbilities;
 	use Notifiable;
 
 	/**
@@ -38,11 +41,19 @@ class User extends Authenticatable
 	}
 
 	/**
-	 * returns the roles of this user. make sure to call get on the result!
+	 * returns true if the user is an admin
 	 */
-	public function roles()
+	public function isAdmin() 
 	{
-		return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
+		return !($this->getRoles()->isEmpty());
+	}
+
+	/**
+	 * return a collection of the names of the different roles the user is assigned
+	 */
+	public function getRoles()
+	{
+		return $this->roles->pluck('name');
 	}
 
 	/**
@@ -59,15 +70,17 @@ class User extends Authenticatable
 	 */
 	public function addRole($role)
 	{
-		$role = User::roleAsStringWrapper($role);
-		if ($this->hasRole($role))
-		{
-			return false;   
-		}
-		else
-		{
-			return $this->roles()->attach($role->id);
-		}
+
+		$this->assign('role');
+		// $role = User::roleAsStringWrapper($role);
+		// if ($this->hasRole($role))
+		// {
+		// 	return false;   
+		// }
+		// else
+		// {
+		// 	return $this->roles()->attach($role->id);
+		// }
 		
 	}
 
@@ -78,25 +91,17 @@ class User extends Authenticatable
 	public function deleteRole($role)
 	// an idea! --> allow deleteRole to accept an array of Roles
 	{
-		$role = User::roleAsStringWrapper($role);
-		if ($this->hasRole($role))
-		{
-			return $this->roles()->detach($role->id);
-		}
-		else
-		{
-			return false;
-		}
+		Bouncer::retract($role)->from($this);
+		// $role = User::roleAsStringWrapper($role);
+		// if ($this->hasRole($role))
+		// {
+		// 	return $this->roles()->detach($role->id);
+		// }
+		// else
+		// {
+		// 	return false;
+		// }
 	}
-
-    // I'm not sure if this is still relevant
-    // /**
-    //  * returns true if this user is an administrator and false otherwise
-    //  */
-    // public function isAdmin()
-    // {
-    //     return !($this->roles()->get()->isEmpty());
-    // }
 
 	/**
 	 * returns true if this user has the specified role and false otherwise
@@ -104,8 +109,9 @@ class User extends Authenticatable
 	 */
 	public function hasRole($role)
 	{
-		$role = User::roleAsStringWrapper($role);
-		return $this->roles()->get()->contains($role);
+		Bouncer::is($user)->a($role);
+		//$role = User::roleAsStringWrapper($role);
+		//return $this->roles()->get()->contains($role);
 	}
 
 	// again, probs not relevant anymore
@@ -114,22 +120,17 @@ class User extends Authenticatable
 	 */
 	public static function getAllAdmins()
 	{
-	    return DB::table('roles')->get();
+		return self::getRoles()->pluck('name')->map(function($role, $key)
+		{
+			return User::whereIs($role)->get();
+		});
+		//User::whereIs('superadmin')->get();
+		//return DB::table('roles')->get();
 	}
 
-	/**
-	 * wrapper function to map strings representing roles to their Role instance counterparts
-	 */
-	private static function roleAsStringWrapper($role){
-		if (is_string($role))
-		{
-			return Role::getRole($role);
-		}
-		elseif (is_a($role, get_class(new Role)))
-		{
-			return $role;
-		}
-		throw new \InvalidArgumentException("this function only accepts either a string representing a role or an instance of Role");
+	public static function getAllRoles()
+	{
+		return Bouncer::role()->all();
 	}
 
 	/**
