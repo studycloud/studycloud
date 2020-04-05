@@ -11,15 +11,31 @@ var resource_id = 0;
 var temp_content_id = 0;
 
 /** TODO:
- * 1) When it's a link, it will be like http://127.0.0.1:8000/resources/www.google.com
- * 		see resource 23
- * 2) What to do with the page when an invalid id is given?
- * 3) How to display tree in the back?
+ * 1) What to do with the page when an invalid id is given?
+ * 2) How to display tree in the back?
  */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//	Functions to get resource from server
+//	Wrapper functions for the tree
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+function openResourceEditor(resource_id_in) {
+	document.getElementById('my-modal').style.display = "block";
+	document.getElementById('edit-icon').style.display = "none";
+	displayContainer("resource");
+
+	resource_id = resource_id_in;
+
+	resourceEditorHTML();
+	editResource();
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	Functions to get resource from server 
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -29,11 +45,17 @@ var temp_content_id = 0;
  * 		handleError function: error
  * 		handleSuccess function: displayResource
  */
-function viewResource()
+function viewResource(resource_id_in)
 {
+	document.getElementById('my-modal').style.display = "block";
+	document.getElementById('edit-icon').style.display = "none";
+	displayContainer("resource");
+
+	resource_id = resource_id_in;
+
 	var server = new Server();
 
-  server.getResource(resource_id, error, displayResource);
+  	server.getResource(resource_id, error, displayResource);
 }
 
 /**
