@@ -16,13 +16,17 @@ class RoleUserTableSeeder extends Seeder
         	function($curr_user)
         	{
                 // how many roles are in the roles table?
-                $num_total_roles = App\Role::all()->count();
+                //$num_total_roles = App\Role::all()->count();
+                $total_roles = \Silber\Bouncer\Database\Role::all();
                 // how many roles do we want the current user to have?
-        		$curr_num_roles = rand(0, $num_total_roles);
+        		$roles = $total_roles->random(rand(0, $total_roles->count()));
                 // let's use a factory to generate roles for each user
                 // note that we must inject the user_id via an argument to the create() method
-                factory('App\RoleUser', $curr_num_roles)
-                    ->create( ['user_id' => $curr_user->id] );
+                //factory('App\RoleUser', $curr_num_roles)
+                  //  ->create( ['user_id' => $curr_user->id] );
+                foreach($roles as $role) {
+                    $curr_user->assign($role);
+                }
         	}
         );
     }

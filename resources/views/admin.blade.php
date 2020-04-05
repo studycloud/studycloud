@@ -12,7 +12,9 @@
 			<h1 id="admin_title">Club Administration</h1>
 			<div id="admin_user">
 				<h3>{{Auth::user()->name()}}</h3>
-				{{implode(", ", Auth::user()->roles()->get()->pluck("name")->toArray()}}
+				<span style="font-size: 13px;">
+				{{implode(", ", Auth::user()->roles()->pluck('title')->toArray())}}
+				</span>
 			</div>
 		</header>
 		<div id="admin_notes">
