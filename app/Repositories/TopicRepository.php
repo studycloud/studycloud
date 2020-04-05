@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Topic;
 use App\Helpers\NestedArrays;
+use Illuminate\Support\Collection;
 
 class TopicRepository
 {
@@ -176,6 +177,78 @@ class TopicRepository
 	}
 
 	/**
+	 * retrieve the depths of each topic in $connections
+	 * The depths of a topic are defined as the lengths of the shortest paths
+	 * between each of the topic's parents and the root of the tree. Thus,
+	 * each topic will have n depths (where n is the number of parents of the topic).
+	 * @param  Collection	$connections	the connections from topics for which we want depths, as a Collection of topic/parent Collections; the topics without a parent are those at depth of $depth+1
+	 * @param  int			$depth			the depth of the root of this subtree
+	 * @return Collection	$depths			a collection of depths where the keys are the IDs of the topics and the values are an array containing all their depths
+	 */
+	public static function depths(Collection $connections, $depth=0)
+	{
+		// get the topics that are directly underneath the root of this subtree
+		$top_topics = $connections->pluck('parent_id')->unique()->diff($connections->pluck('topic_id'))->values();
+		// add connections for the top_topics to $connections
+		$connections = $top_topics->map(
+			function($topic)
+			{
+				return collect(['topic_id'=>$topic, 'parent_id'=>null]);
+			}
+		)->merge($connections->toBase());
+		// group connections by topic and get a collection to work with in our algorithm
+		$working = $connections->groupBy('topic_id')->map->count()->map(
+			function ($parent_count, $topic)
+			{
+				return collect([
+					'topic_id'=>$topic,
+					'parents'=>$parent_count,
+					'depths'=>collect([]),
+					'complete'=>false,
+					'saw'=>false
+				]);
+			}
+		)->keyBy('topic_id');
+		// initialize $level for use within the while loop
+		$level = collect([null]);
+		// while we haven't finished finding the depths of all the topics
+		while ($working->whereStrict('complete', true)->count() != $working->count())
+		{
+			$depth += 1;
+			// iterate down the tree, each time working with all topics at this level of the tree
+			// and retrieving all topics at the next level
+			// (ie a depth-first search)
+			$level = $level->map(
+				function($parent) use ($connections, $working, $depth)
+				{
+					// get all children of the current parent topic
+					$children = $connections->whereStrict('parent_id', $parent)->pluck('topic_id');
+					// if we haven't looked for the children of $parent before (or it is the root, which doesn't have a parent)
+					if (!$working->has($parent) || !$working[$parent]['saw'])
+					{
+						// record that we've seen the children of this parent now
+						$working->has($parent) && $working[$parent]['saw'] = true;
+						// foreach of the children...
+						foreach ($children as $child)
+						{
+							// record the current depth
+							$working[$child]['depths']->push($depth);
+							// if we've found all of the depths, mark it as complete
+							if (count($working[$child]['depths']) == $working[$child]['parents'])
+							{
+								$working[$child]['complete'] = true;
+							}
+						}
+					}
+					return $children;
+				}
+			)->flatten();
+		}
+		// return simple array from the working collection
+		return $working->pluck('depths', 'topic_id');
+	}
+
+	/**
 	 * print the descendants of $topic as an ascii tree
 	 * @param  Topic|int  $topic the topic whose descendants we'd like to print
 	 */
@@ -205,10 +278,22 @@ class TopicRepository
 
 	/**
 	 * convenience function for printing both ancestors and descendants of $topic as an ascii tree
-	 * @param  Topic|int  $topic the topic whose ancestors and descendants we'd like to print
+	 * @param  Topic|int|null  $topic the topic whose ancestors and descendants we'd like to print
 	 */
-	public static function asciiTree($topic)
+	public static function asciiTree($topic=null)
 	{
+		// handle null or 0 as the $topic
+		if (!$topic)
+		{
+			self::getTopLevelTopics()->pluck('id')->each(
+				function($topic)
+				{
+					echo self::printAsciiDescendants($topic);
+				}
+			);
+			return;
+		}
+
 		if (is_int($topic))
 		{
 			$topic = Topic::find($topic);

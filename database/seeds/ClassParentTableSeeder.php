@@ -18,7 +18,9 @@ class ClassParentTableSeeder extends Seeder
 
 	/**
 	 * How many levels should the first level of the tree have?
-	 * For this to work, make sure self::NUM_MAX_CLASSES is large enough that classes won't be left over after run() is run. Any left over classes are assigned to the root.
+	 * For this to work, make sure self::NUM_MAX_CLASSES is large
+	 * enough that classes won't be left over after run() is run,
+	 * since any left over classes are assigned to the root.
 	 * Otherwise, use null if this number should be unrestricted.
 	 */
 	const RESTRICT_FIRST_LEVEL = null;
@@ -39,7 +41,7 @@ class ClassParentTableSeeder extends Seeder
 	{
 		$this->classes = Academic_Class::all();
 		// assign children to the root of the tree (and to subtrees when we recur)
-		$this->assignChildren(null, 1, $num_classes_level = self::RESTRICT_FIRST_LEVEL);
+		$this->assignChildren(null, 1, $num_classes_level = self::RESTRICT_FIRST_LEVEL, true);
 	}
 
 	/**
@@ -48,16 +50,17 @@ class ClassParentTableSeeder extends Seeder
 	 * @param	int					$num_classes_level_min	the min number of classes that can occur at this level of the tree; only used when $num_classes_level is null
 	 * @param	int|null			$num_classes_level 		the number of classes to use at this level of tree or null if unconstrained
 	 */
-	private function assignChildren($parent = null, $num_classes_level_min = 1, $num_classes_level = null)
+	private function assignChildren($parent = null, $num_classes_level_min = 1, $num_classes_level = null, $root=false)
 	{
 		// how many classes should be at this level of the tree?
 		// keep choosing a random number until the choice isn't 1
+		$num_max_classes = min(self::NUM_MAX_CLASSES, $this->classes->count());
 		while (
 			is_null($num_classes_level) ||
-			($num_classes_level == 1 && self::NUM_MAX_CLASSES != 1)
+			(!$root && ($num_classes_level == 1 && $num_max_classes != 1))
 		)
 		{
-			$num_classes_level = rand( $num_classes_level_min, min(self::NUM_MAX_CLASSES, $this->classes->count()) );
+			$num_classes_level = rand($num_classes_level_min, $num_max_classes);
 		}
 		$children = collect();
 		// choose children to add to this parent
@@ -65,7 +68,7 @@ class ClassParentTableSeeder extends Seeder
 		{
 			$child = $this->chooseClass();
 			if (!is_null($child))
-			{				
+			{
 				$children->push($child);
 			}
 			$num_classes_level--;
@@ -74,7 +77,15 @@ class ClassParentTableSeeder extends Seeder
 		foreach ($children as $child)
 		{
 			// recursive call!
-			$this->assignChildren($child, 0);
+			if ($root)
+			{
+				// assure that the root has at least one child
+				$this->assignChildren($child, 1);
+			}
+			else
+			{
+				$this->assignChildren($child, 0);
+			}
 		}
 		// add these children to this parent
 		// don't add them if we are at the root of the tree

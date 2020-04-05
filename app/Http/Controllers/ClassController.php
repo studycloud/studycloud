@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
 // use Validator;
+
 use App\Academic_Class;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;

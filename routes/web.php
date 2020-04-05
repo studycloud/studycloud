@@ -4,12 +4,15 @@ use App\User;
 use App\Topic;
 use App\Resource;
 use App\Academic_Class;
+use App\Notice;
 use Illuminate\Http\Request;
 use App\Http\Middleware\CheckStatus;
+use App\Http\Middleware\CheckAdminStatus;
 use App\Http\Resources\ClassResource;
 use App\Http\Resources\TopicResource;
 use App\Http\Resources\ResourceResource;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\NoticeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,12 +74,12 @@ Route::patch('/classes/attach/{class?}',
 	}
 )->name('resources.attach');
 
-Route::get('admins/{userid}',
-	function($user_id)
+Route::get('admin',
+	function()
 	{
-		$user = User::findOrFail($user_id);
+		//$user = User::findOrFail($user_id);
 		// return $user;
-		return view('admins', compact('user'));
+		return view('admin');
 	}
 );
 
@@ -93,3 +96,11 @@ else
 // you can enable other providers by adding them in the routes' regex constraints
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider')->where('provider', '^(google)$')->name('login.oauth');
 Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback')->where('provider', '^(google)$');
+
+Route::resource('notices', 'NoticeController', ['only' => [
+	'index', 'store', 'destroy'
+]]);
+
+Route::resource('resource_uses', 'ResourceUseController', ['only' => [
+	'index', 'store', 'destroy'
+]]);
