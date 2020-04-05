@@ -1,15 +1,15 @@
 
-.node {
+#svg5045.node {
     fill: #ccc;
     stroke: #fff;
     stroke-width: 2px;
 }
 
-.link {
+#svg5045.link {
     stroke: #777;
     stroke-width: 2px;
 }
 
 #svg5045 {
-	overflow:visible;
+    overflow: visible;
 }
