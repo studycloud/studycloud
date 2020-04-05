@@ -32,8 +32,14 @@
 
     @stack('scripts')
 
-    <meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
-    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- include csrf_token in all pages, so it can be accessed by js -->
+	<meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->
+	<meta name="csrf-token" content="{{ csrf_token() }}"> <!-- include csrf_token in all pages, so it can be accessed by js -->
+	@auth
+	<meta id="meta_user_active_id" name="user_active_id" content="{{Auth::user()->id}}">
+	@endauth
+	@guest
+	<meta id="meta_user_active_id" name="user_active_id" content="0">
+	@endguest
 
     @if (!Auth::check())
     <script src="https://apis.google.com/js/platform.js" async defer></script>

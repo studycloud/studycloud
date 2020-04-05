@@ -120,3 +120,16 @@ $factory->define(App\Notice::class, function (Faker\Generator $faker) {
 
 // Resource-Topic Factory
 // This model doesn't have a factory definition. All of it's seeding happens in the ResourceTopicTableSeeder.
+
+// ResourceUse Factory
+$factory->define(App\ResourceUse::class, function (Faker\Generator $faker)
+{
+	return [
+		'name' => ucwords(
+			$faker->words($nb = 3, $asText = true)
+		),
+		'author_id' => $faker->randomElement(
+			App\User::pluck('id')->toArray()
+		)
+	];
+});

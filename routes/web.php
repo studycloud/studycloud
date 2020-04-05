@@ -100,3 +100,7 @@ Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCall
 Route::resource('notices', 'NoticeController', ['only' => [
 	'index', 'store', 'destroy'
 ]]);
+
+Route::resource('resource_uses', 'ResourceUseController', ['only' => [
+	'index', 'store', 'destroy'
+]]);

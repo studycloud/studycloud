@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Academic_Class;
 use App\Helpers\NestedArrays;
 use App\Helpers\NodesAndConnections;
+use Illuminate\Database\Eloquent\Collection;
 
 class ClassRepository 
 {
@@ -245,7 +246,62 @@ class ClassRepository
 			return is_array($ancestor_class_id) ? $ancestors : count($ancestors) == 1;
 		}
 	}
-	
+
+	/**
+	 * retrieve the depths of each class in $classes
+	 * @param  Collection	$classes		the classes for which we want depths, as a Collection of Models
+	 * @param  int			$start_depth	the depth of the root of this subtree
+	 * @return array		$depths			an array of depths where the keys are the IDs of the classes and the values are the depths
+	 */
+	public static function depths(Collection $classes, $start_depth=0)
+	{
+		$depths = [];
+		// get a collection where the keys are the class IDs and the values are their parent_id's
+		$classes = $classes->pluck('parent_id', 'id');
+		// get the classes that are underneath the root of this subtree
+		$top_classes = $classes->diff($classes->keys())->keys()->toArray();
+		$classes = $classes->toArray();
+
+		// big picture: pick classes that have the lowest parent_id and then iterate down the tree
+		// keep doing that until we run out of classes
+		foreach ($top_classes as $top_class)
+		{
+			// get depths for all clases under $top_class
+			$depth = self::depth($classes, $top_class, $start_depth);
+			// remove classes that we already have depths for; speeds up computation time
+			$classes = array_diff_key($classes, $depth);
+			// append depths to depths we currently have
+			$depths = $depths + $depth;
+		}
+		return $depths;
+	}
+
+	/**
+	 * get the depths of the classes in $classes under $root, given that it has depth $depth
+	 * @param  array	$classes	an array with class IDs as the keys and their parent_ids as the values
+	 * @param  int		$root		the class ID of the root
+	 * @param  int		$depth		the depth of the root
+	 * @return array	$depths		an array with class IDs as the keys and their depths as the values
+	 */
+	private static function depth($classes, $root, $depth=0)
+	{
+		// get the classes with root as their parent
+		$curr_classes = array_keys($classes, $root, true);
+		// get an array with $curr_classes as the keys and $depth as the child
+		$depths = array_fill_keys($curr_classes, $depth);
+		// get the depths of the classes underneath each of the classes in $curr_classes
+		foreach ($curr_classes as $new_root)
+		{
+			$children = self::depth($classes, $new_root, $depth+1);
+			$depths = $depths + $children;
+		}
+		return $depths;
+	}
+
+	/**
+	 * print the descendants of $class as an ascii tree
+	 * @param  Class|int  $class the class whose descendants we'd like to print
+	 */
 	public static function printAsciiDescendants($class)
 	{
 		if (is_int($class))
@@ -255,7 +311,11 @@ class ClassRepository
 
 		echo NestedArrays::convertToAscii(NestedArrays::classDescendants($class));
 	}
-	
+
+	/**
+	 * print the ancestors of $class as an ascii tree
+	 * @param  Class|int  $class the class whose ancestors we'd like to print
+	 */
 	public static function printAsciiAncestors($class)
 	{
 		if (is_int($class))
@@ -265,9 +325,25 @@ class ClassRepository
 
 		echo NestedArrays::convertToAscii(NestedArrays::classAncestors($class));
 	}
-	
-	public static function asciiTree($class)
+
+	/**
+	 * convenience function for printing both ancestors and descendants of $class as an ascii tree
+	 * @param  Academic_Class|int|null  $clsss the clsss whose ancestors and descendants we'd like to print
+	 */
+	public static function asciiTree($class=null)
 	{
+		// handle null or 0 as the $class
+		if (!$class)
+		{
+			self::getTopLevelClasses()->pluck('id')->each(
+				function($class)
+				{
+					echo self::printAsciiDescendants($class);
+				}
+			);
+			return;
+		}
+
 		if (is_int($class))
 		{
 			$class = Academic_Class::find($class);
