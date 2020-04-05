@@ -21,6 +21,10 @@ var temp_content_id = 0;
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Wrapper function to open up the resource editor
+ * @param {*} resource_id_in int, resource id for the resource
+ */
 function openResourceEditor(resource_id_in) {
 	document.getElementById('my-modal').style.display = "block";
 	document.getElementById('edit-icon').style.display = "none";
@@ -32,6 +36,10 @@ function openResourceEditor(resource_id_in) {
 	editResource();
 }
 
+/**
+ * Wrapper function to open up the resource viewer
+ * @param {*} resource_id_in int, resource id for the resource
+ */
 function openResourceViewer(resource_id_in) {
 	document.getElementById('my-modal').style.display = "block";
 	document.getElementById('edit-icon').style.display = "none";
@@ -40,6 +48,19 @@ function openResourceViewer(resource_id_in) {
 	resource_id = resource_id_in;
 
 	viewResource();
+}
+
+/**
+ * NOT WORKING, NOT TESTED 
+ * @param {*} node_id_in Forgot what exactly is this... Probably the node where this resource
+ * 							will branch off?
+ */
+function openResourceCreator(node_id_in) {
+	document.getElementById('my-modal').style.display = "block";
+	document.getElementById('edit-icon').style.display = "none";
+	displayContainer("resource");
+
+	resourceCreatorHTML(node_id_in);
 }
 
 

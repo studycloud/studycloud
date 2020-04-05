@@ -26,7 +26,7 @@ $(document).ready(function() {
 
   $("#resource-creator-btn").click(function(event)
   {
-
+    openResourceEditor(25);
   });
   
   // When the user clicks on edit icon in resource viewer 

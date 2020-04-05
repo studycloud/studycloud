@@ -16,7 +16,7 @@
 	// for now, content_id == resource_id because each resource only has 1 id
 	// TODO: what to do when we have multiple contents? (not MVP)
 	// TODO: how to get content id?
-	var temp_content_id = resource_id;
+	var temp_content_id = temp_resource_id;
 	// if the url is: resources/{resource_id}/edit
 	// isEditor is true, else it's false
 	var isEditor = {{ $edit ? 'true' : 'false' }};
