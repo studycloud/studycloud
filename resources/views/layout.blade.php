@@ -25,13 +25,8 @@
 	<script src="{{ asset('js/Permissions.js') }}"></script>
 	<script src="{{ asset('js/D3HelperFunction.js') }}"></script>
 	<script src="{{ asset('js/d3-transform.js') }}"></script>
-	<script src="{{ asset('js/Tree.js') }}"></script>
-
-    <!-- jQuery and selectionstyle plugins in for class attachement-->
-    <link href="{{ asset('js/selectStyleSrc/selectstyle.css') }}" rel="stylesheet">
-    <script src="//code.jquery.com/jquery.min.js"></script>
-    <script src="{{ asset('js/selectStyleSrc/selectstyle.js') }}"></script>
-
+   <script src="{{ asset('js/Tree.js') }}"></script>
+   
     @stack('scripts')
 
     <meta name="viewport" content="width=device-width"> <!-- apparently this is for fixing issues in Chrome's device emulator -->

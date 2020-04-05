@@ -11,15 +11,62 @@ var resource_id = 0;
 var temp_content_id = 0;
 
 /** TODO:
- * 1) When it's a link, it will be like http://127.0.0.1:8000/resources/www.google.com
- * 		see resource 23
- * 2) What to do with the page when an invalid id is given?
- * 3) How to display tree in the back?
+ * 1) What to do with the page when an invalid id is given?
+ * 2) How to display tree in the back?
  */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//	Functions to get resource from server
+//	Wrapper functions for the tree
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Wrapper function to open up the resource editor
+ * @param {*} resource_id_in int, resource id for the resource
+ */
+function openResourceEditor(resource_id_in) {
+	document.getElementById('my-modal').style.display = "block";
+	document.getElementById('edit-icon').style.display = "none";
+	displayContainer("resource");
+
+	resource_id = resource_id_in;
+
+	resourceEditorHTML();
+	editResource();
+}
+
+/**
+ * Wrapper function to open up the resource viewer
+ * @param {*} resource_id_in int, resource id for the resource
+ */
+function openResourceViewer(resource_id_in) {
+	document.getElementById('my-modal').style.display = "block";
+	document.getElementById('edit-icon').style.display = "none";
+	displayContainer("resource");
+
+	resource_id = resource_id_in;
+
+	viewResource();
+}
+
+/**
+ * NOT WORKING, NOT TESTED 
+ * @param {*} node_id_in Forgot what exactly is this... Probably the node where this resource
+ * 							will branch off?
+ */
+function openResourceCreator(node_id_in) {
+	document.getElementById('my-modal').style.display = "block";
+	document.getElementById('edit-icon').style.display = "none";
+	displayContainer("resource");
+
+	resourceCreatorHTML(node_id_in);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	Functions to get resource from server 
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -29,18 +76,17 @@ var temp_content_id = 0;
  * 		handleError function: error
  * 		handleSuccess function: displayResource
  */
-function viewResource()
-{
+function viewResource() {
 	var server = new Server();
 
-  server.getResource(resource_id, error, displayResource);
+  	server.getResource(resource_id, error, displayResource);
 }
 
 /**
  * \brief create server object and get resource for resource editor
  * \details specified by resource_id (NOT IMPLEMENTED WITH TREE YET)
  * 		handleError function: error
- * 		handleSuccess function: resourceEditor
+ * 		handleSuccess function: res1`ourceEditor
  */
 function editResource() {
   var server = new Server();
@@ -98,10 +144,13 @@ function displayResource(received) {
 		} is an anonymous function
 			resource is the json we want
 	*/
+	
+	document.getElementById('edit-icon').style.display = "block";
 
 	received.json().then(function(resource){
 		console.log(resource);
-		document.getElementById('resource-head').innerHTML = "<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1>\
+		document.getElementById('resource-head').innerHTML = "\
+		<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1>\
 		<div>contributed by <div id='author-name'></div></div>";
 
     set_author(resource.meta.author_name, resource.meta.author_type);
@@ -140,7 +189,7 @@ function display_content(num, element)
 	if(element.type=="link")
 	{
 		// tinyMCE tends to wrap content in <p> </p> which will affect the link
-		// TODO: better way to do this?
+
 		var display_link = element.content.replace( /(<([^>]+)>)/ig, '');
 		document.getElementById('module-'+num).innerHTML+="<div><a href="+display_link+">"+element.name+"</a></div>";
 	}
@@ -170,40 +219,20 @@ function resourceEditorHTML()
 {
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML="\
-	<div id = 'resource-name' contenteditable=true> This text can be edited by the user. </div> \
-	<body onload='checkEdits()'>";
-	document.getElementById('modules').innerHTML = "<div class=resource-divider></div> \
-	Resource Use:  <br>" + selectorCodeGenerator("resource-use") + "<br> \
-	<div class=resource-divider></div> <br> </div>\
-	<div class = 'content-creator'> Resource Content Name: <br> \
-	<input type = 'text' id = 'content-name0'> <br> \
-	Content Type: <br>" + selectorCodeGenerator("content-type") + "<br>\
-	Content: <br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
-	<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedContent()'> Submit </button> \
-	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
-	<p id = 'demo'> </p></div> ";
-}
-
-function saveEdits()
-{
-	//get the editable element
-	var editElem = document.getElementById("resource-head");
-
-	//get the edited element content
-	var userVersion = editElem.innerHTML;
-
-	//save the content to local storage
-	localStorage.userEdits = userVersion;
-
-	//write a confirmation to the user
-	document.getElementById("update").innerHTML="Edits saved!";
-}
-
-function checkEdits()
-{
-	//find out if the user has previously saved edits
-	if(localStorage.userEdits!=null)
-	document.getElementById("resource-head").innerHTML = localStorage.userEdits;
+	<div id = 'resource-name' contenteditable=true> Resource Name </div>";
+	document.getElementById('modules').innerHTML = "\
+	<div class=resource-modal-label> Resource Use:</div>\
+	<br>" + selectorCodeGenerator("resource-use") + "<br>\
+	<div class=resource-divider></div>\
+	<div class = 'content-creator'>\
+	<div class=resource-modal-label>Resource Content Name:</div><br>\
+	<div class=content-name id ='content-name0' contenteditable=true> Content Name </div> <br>\
+	<div class=resource-modal-label> Content Type: </div>\
+	<br>" + selectorCodeGenerator("content-type") + "<br>\
+	<div class=resource-modal-label>Content:</div>\
+	<br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
+	<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedContent()'> Submit </button>\
+	<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
 }
 
 /** 
@@ -251,16 +280,6 @@ function submitEditedContent()
 	var resource_use = findUseOrType("resource-use-selector");
 
 	content_num = pre_updated_content_num;
-  
-  	//get the editable element
-	var editElem = document.getElementById("resource-head");
-	console.log(document.getElementById("resource-name").innerHTML);
-  
-  	//get the edited element content
-	var userVersion = editElem.innerHTML;
-
-	//save the content to local storage
-	localStorage.userEdits = userVersion;
 	
 	// store all the data in json
 	// NEED TO INCLUDE: resouce id, content id
@@ -274,7 +293,7 @@ function submitEditedContent()
 		[
 			{
 				"id": temp_content_id,
-				"name": document.getElementById("content-name0").value,
+				"name": document.getElementById("content-name0").innerHTML,
 				"type": findUseOrType("content-type-selector").toLowerCase(),
 				"content": document.getElementById("tinymce").value
 			}
@@ -286,7 +305,7 @@ function submitEditedContent()
 	{
 		var content_array =
 		{
-			"name": document.getElementById("content-name"+i).value,
+			"name": document.getElementById("content-name"+i).innerHTML,
 			"type": tempType,
 			"content": document.getElementById("content"+i).value
 		};
@@ -442,14 +461,14 @@ function loadContent(contents)
 {
 	for (i=0; i < contents.length; i++)
 	{
+		document.getElementById("content-name"+i).innerHTML = contents[i]["name"];
 		document.getElementById("content-name"+i).value = contents[i]["name"];
-		
 		loadSelectedUseOrType("content-type-selector", contents[i]["type"]);
-    
-    // TODO: this will be problematic once we have multiple contents
-    document.getElementById("tinymce").value = contents[i]["content"];
-    addTinyMCE();
-    tinymce.get("tinymce").load();
+
+		// TODO: this will be problematic once we have multiple contents
+		document.getElementById("tinymce").value = contents[i]["content"];
+		addTinyMCE();
+		tinymce.get("tinymce").load();
 	}
 }
 

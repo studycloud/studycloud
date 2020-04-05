@@ -12,11 +12,11 @@
 	// load necessary data
 	var resourceUseData = @json( App\ResourceUse::select('id', 'name')->get() );
 	var contentTypeData = @json( App\ResourceContent::getPossibleTypes() );
-	var resource_id = {{ $resource -> id}};
+	var temp_resource_id = {{ $resource -> id}};
 	// for now, content_id == resource_id because each resource only has 1 id
 	// TODO: what to do when we have multiple contents? (not MVP)
 	// TODO: how to get content id?
-	var temp_content_id = resource_id;
+	var temp_content_id = temp_resource_id;
 	// if the url is: resources/{resource_id}/edit
 	// isEditor is true, else it's false
 	var isEditor = {{ $edit ? 'true' : 'false' }};
@@ -33,6 +33,7 @@
 	<!-- Modal content -->
 	<div class="modal-content">
 		<span id="close-modal"><i class="fas fa-times"></i></span>
+		<span id="open-resource-editor"><i id="edit-icon" display="none" class='fas fa-edit'></i></span>
 		<!-- Container for resource. -->
 		<div id="resource-container">
 			<div class="resource-background">
@@ -46,20 +47,19 @@
 <!--button id="creator-btn">temporary resource creator button</button-->
 <button id="editor-btn">temporary resource editor button</button>
 <button id="resource-meta-btn">resource meta button</button>
+<button id="resource-creator-btn">resource creator button</button>
 @stop
 
 @push('scripts')
 <script type="text/javascript">
 	// load the resource viewer or resource editor once the page is ready
 	$(document).ready(function(){ 
-		document.getElementById('my-modal').style.display = "block";
-		displayContainer("resource");
 		if (isEditor) {
-			resourceEditorHTML();
-			editResource();
+			openResourceEditor(temp_resource_id);
 		} else {
-			viewResource();
+			openResourceViewer(temp_resource_id);
 		}
-	});
+
+		});
 </script>
 @endpush
