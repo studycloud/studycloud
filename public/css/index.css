@@ -259,7 +259,7 @@ table {
 #nameplate a svg {
   width: 140px;
   height: 140px;
-  z-index: 1000;
+  z-index: 1;
 }
 
 .navbar {
@@ -368,6 +368,7 @@ table {
 
 .navbar ul #log-in #log-in-button {
   background-color: #0044b3;
+  font-weight: bold;
 }
 
 .navbar ul #log-in #log-in-button:hover,
@@ -438,7 +439,7 @@ table {
   border-radius: 0.1em;
   resize: none;
   font-size: 18px;
-  font-family: inherit;
+  font-family: "Open Sans", sans-serif;
   margin-bottom: 2%;
 }
 
@@ -508,7 +509,7 @@ table {
   /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  max-width: 900px;
   /* Could be more or less, depending on screen size */
 }
 

@@ -2,14 +2,22 @@
 
 @import "../helpers/color.scss";
 @import "../helpers/fonts.scss";
+//@import "https://fonts.googleapis.com/css?family=Poiret+One";
+//@import "buttons";
 
 
 $student-color: purple;
 $teacher-color: green;
+$purple: #9A68C7;
+$blue: #3BA9E4;
+$green: #75B343;
+$orange: #FF6A42;
+$off-wht: rgba(white,.4);
 
 #resource-container { // For now. 
 	// background: $content-bg-color;
-	// max-width: 800px;
+	max-width: 800px;
+	margin: 0 auto;
 }
 
 .resource-background {
@@ -17,9 +25,41 @@ $teacher-color: green;
 	padding: 20px; 	// External spacing.
 }
 
+.resource-modal-label{
+	color: #4a4a54;
+	font-size:18px;
+}
 #resource-name {
-	font-size: 50px;
+	font-size: 40px;
 	font-weight: bold;
+	margin-bottom:15px;
+    -moz-appearance: textfield-multiline;
+	-webkit-appearance: textarea;
+	// TODO: Do we need the border? Will it look more natural without the border?
+    // border: 1px solid gray; 
+    /* font: medium -moz-fixed; */
+    /* font: -webkit-small-control; */
+    max-height: 100px;
+    overflow: auto;
+    padding: 2px;
+    resize: both;
+    max-width: 500px;
+}
+
+.content-name {
+	font-size: 25px;
+    font-weight: bold;
+    -moz-appearance: textfield-multiline;
+	-webkit-appearance: textarea;
+	// TODO: Do we need the border? Will it look more natural without the border?
+    // border: 1px solid gray; 
+    /* font: medium -moz-fixed; */
+    /* font: -webkit-small-control; */
+    height: 28px;
+    overflow: auto;
+    padding: 2px;
+    resize: both;
+    width: 500px;
 }
 
 #author-name {
@@ -48,29 +88,102 @@ $teacher-color: green;
 
 .resource-divider{
 	margin-top: 5px;
-	margin-bottom: 5px;
+	margin-bottom: 15px;
 	height: 2px;
-	background-color: black;
+	background-color: #8a8a8a;
 }
 
+// button in resource viewer to open resource editor
+#open-resource-editor{
+	color: $text-light;
+    float: left;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#open-resource-editor:hover,
+#open-resource-editor:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+@mixin btn-theme($btn-color) {
+	border-color: darken($btn-color, 20%);
+	background-color: $btn-color;
+	&:hover {
+   background-color: darken($btn-color, 6%);
+   box-shadow: 0 .125em $off-wht, inset 0 .063em $off-wht, inset 0 -.188em lighten($btn-color, 2%);
+	}
+	&:active {
+   box-shadow: 0 .063em $off-wht, inset 0 0 1.094em darken($btn-color, 40%), inset 0 .063em darken($btn-color, 20%),inset 0 -0.188em darken($btn-color, 20%); 
+	}
+ }
+
+ @mixin trans($val...) {
+	-webkit-transition: $val;
+	-moz-transition: $val; 
+	-o-transition: $val; 
+	transition: $val; 
+ }
+
+ .purple {
+	@include btn-theme($purple);
+ }
+ .blue {
+	@include btn-theme($blue);
+ }
+ .green {
+	@include btn-theme($green);
+ }
+ .orange {
+	@include btn-theme($orange);
+ }
+
+// submit and new content button aligned right
 %button {
-	padding: 10px;
-    border: 0;
-    border-radius: 5px;
-    text-transform: $main-transform;
     font-family: $body-font;
+	display: inline-block;
+	margin: 0rem; 
+	margin-left: auto;
+	margin-right: 5px;
+	margin-top: 5px;
+	padding: .5em .5em;
+	border: .094em solid;
+	border-radius: .625em;
+	box-shadow: 0 .375em .313em -.313em rgba(black,.8), inset 0 .063em $off-wht, inset 0 -.188em rgba(black,.15);
+	color: #FFF;
+	display: flex;
+	font: bold 1rem sans-serif;
+	@include trans(0.2s ease-in-out); 
+	text: {
+		transform: uppercase;
+		decoration: none;
+		shadow: 0 .063em rgba(black,.3);
+	}
+  cursor:pointer;
 }
 
-.submit-button {
+#submit-button {
 	@extend %button;
-    background: $action-yes;
-    color: $text-invert;
+    background: rgba(black,.15);
+	color: $text-invert;
+	@include btn-theme(#50529e);
 }
 
-.cancel-button {
+#new-content-button{
 	@extend %button;
-    background: $action-meh;
-    color: $text-default;
+    background: rgba(black,.15);
+	color: $text-invert;
+	@include btn-theme(#50529e);
+}
+
+#cancel-button {
+	@extend %button;
+    background: rgba(black,.15);
+	color: $text-invert;
+	@include btn-theme(#50529e)
 }
 
 // TODO Maybe these stylings should be global? I don't know. 
@@ -81,4 +194,55 @@ h1 {
 
 h2 {
 
+}
+
+$wrapper-height: 60px;
+// style the resource use selector
+.use-list-scrolling-wrapper{
+	height: $wrapper-height;
+  	width: 60%;
+ 	-webkit-overflow-scrolling: touch;
+  	&::-webkit-scrollbar {
+    	display: none;
+	}
+
+	overflow-x: scroll;
+  	overflow-y: hidden;
+  	white-space: nowrap;
+
+  	.use, .type{
+    	display: inline-block;
+	}
+}
+
+ul#resource-use-selector, ul#content-type-selector{
+	padding-top: 5%;
+	font-family: $main-font;
+	height: 20px;
+
+	li {
+		display: inline-block;
+	}
+
+	li label {
+		background-color: #dadada;
+		color: black;
+		padding: 20px 30px;
+		text-decoration: none;
+		transition: 0.2s;
+	}
+
+	li label:hover, li input:checked + label {
+		background-color: #6D7993;
+		transition: 0.3s;
+	}
+
+	li input:checked + label {
+		background-color:rgb(119, 156, 241);
+	}
+
+	li input {
+		position: fixed;
+		left: 100%;
+	}
 }
