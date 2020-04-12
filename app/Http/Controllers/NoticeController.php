@@ -27,7 +27,10 @@ class NoticeController extends Controller
      */
     public function index()
     {
-        //
+        $notices = Notice::all();
+        return $notices->map(function($notice, $notice_id) {
+            return view('notice', ['author' => $notice->author()->get()])->render();
+        })->implode("");
     }
 
     /**
