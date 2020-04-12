@@ -8,7 +8,23 @@
 @section('content')
 
 <div id="main">
-	<div id="topic-tree">
+	<div id="topic-tree"></div>
+</div>
+
+<!-- resource modals --> 
+<!-- put here if we only want the modals to appear where the tree appears -->
+<div id="my-modal" class="modal">
+	<div class="modal-content">
+		<span id="close-modal"><i class="fas fa-times"></i></span>
+		<span id="open-resource-editor"><i id="edit-icon" display="none" class='fas fa-edit'></i></span>
+		<!-- Container for resource. -->
+		<div id="resource-container">
+			<div class="resource-background">
+				<div id="resource-head"></div>
+				<div id="modules"> <!-- This is where you put the modules. -->
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 

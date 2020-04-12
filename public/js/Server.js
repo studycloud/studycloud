@@ -451,6 +451,7 @@ Server.prototype.addClass = function(content, handleError, handleSuccess)
 	});
 }
 
+
 Server.prototype.getClassesJSON = function(class_id, handleError, handleSuccess)
 {	
 	var self = this;		
@@ -483,6 +484,53 @@ Server.prototype.getClassesJSON = function(class_id, handleError, handleSuccess)
 	});
 };
 
+/**
+ * \brief return an array of all the resource uses (id + name)
+ * @param handleError callback function to handle the error
+ * @param handleSuccess callback function to return the resource use array
+ */
+Server.prototype.getResourceUseJSON = function(handleError, handleSuccess)
+{	
+	var self = this;		
+	url = "/resource_uses";	
+	const csrfToken = self.getCookie("XSRF-TOKEN");
+	fetch(url, {
+		method: 'get',			
+		headers: {	
+			'X-XSRF-TOKEN': csrfToken,
+			'X-Requested-With': "XMLHttpRequest",
+			"Content-type": "application/json; charset=UTF-8"
+		}
+	}).then(function(data){		
+		console.log("it has to get to then?");
+		console.log(data);
+		
+		if (data.ok)
+		{
+			let resultData = data.json();
+
+			resultData.then((result) => {
+				return handleSuccess(result);
+			});
+		
+		}
+		else
+		{
+			if(data.status === 422)
+			{
+				errorJSON = data.text().then(function(errorJSON){return errorJSON});
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: errorJSON};
+			}
+			else{
+				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};		
+			}
+			console.log("error?");			
+			handleError(responseData);
+		}	
+	}).catch(function(error){		
+		return handleError(error);
+	});
+};
 
 Server.prototype.updateClass = function(class_id, content, handleError, handleSuccess)
 {

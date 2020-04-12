@@ -14,19 +14,42 @@ $(document).ready(function() {
 	// When the user clicks on the create button, also open the modal but with the resource viewer
 	$("#editor-btn").click(function(event)
 	{
-    var temp_resource_id = 23;
+    var temp_resource_id = 2;
 		openResourceEditor(temp_resource_id);
 	});
 
 	$("#resource-meta-btn").click(function(event)
 	{
-    var temp_resource_id = 23;
+    var temp_resource_id = 2;
 		openResourceViewer(temp_resource_id);
   });
 
   $("#resource-creator-btn").click(function(event)
   {
-    openResourceEditor(25);
+    openResourceEditor(2);
+  });
+
+  $('#test-resource-uses').click(function(event)
+  {
+    let tempServer = new Server();
+
+    console.log("Created the temp server");
+
+    let successCallback = (data) => {
+      console.log("sucess!");
+      console.log(data);
+      // data.then((result) => {
+      //   console.log("show me the result!");
+      //   console.log(result);
+      // })
+    };
+
+    let errorCallback = (error) => {
+      console.log("warning");
+      console.log(error);
+    };
+
+    tempServer.getResourceUseJSON(errorCallback, successCallback);
   });
   
   // When the user clicks on edit icon in resource viewer 

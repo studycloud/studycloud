@@ -16,7 +16,7 @@ class ResourceUseController extends Controller
      */
     public function index()
     {
-        return view('resource_uses');
+        return ResourceUse::select('id', 'name')->get();
     }
 
     /**
