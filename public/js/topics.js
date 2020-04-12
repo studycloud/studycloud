@@ -1,5 +1,5 @@
-server = new Server();
-tree_topics = new Tree("topic", "topic-tree", server);
+// server = new Server();
+tree_topics = tree;
 
 var data =
 {

@@ -44,7 +44,7 @@ class ClassController extends Controller
 	public function index()
 	{
 		// currently this view doesn't exist, but maybe it should?
-		// return view('classes');
+		return view('tree', ['type' => 'class');
 	}
 
 	/**
