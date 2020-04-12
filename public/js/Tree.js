@@ -1,4 +1,4 @@
-function Tree(type, frame_id, server)
+function Tree(type, frame_id, server, node_id = "t0", action = "open")
 {		
 	//Creates a tree visualization with a type of <type> inside the DOM element <frame_id>
 	
@@ -78,6 +78,29 @@ function Tree(type, frame_id, server)
 			.selectAll(".node_captured");
 
 	self.menuContextNodeCreate();
+
+
+	if(action !== "open" && node_id.charAt(0) !== 'r')
+	{
+		throw "Tree constructor attempting to edit/add non-resource node " + node_id;
+	}
+
+	if(action === "open")
+	{
+		self.centerAndOpen(node_id);
+	}
+	else if(action === "edit")
+	{
+		self.centerAndEdit(node_id);
+	}
+	else if(action === "add")
+	{
+		self.centerAndAdd(node_id);
+	}
+	else
+	{
+		throw "Invalid action passed to tree constructor: " + action;
+	}
 }
 
 Tree.prototype.simulationInitialize = function()
@@ -974,7 +997,7 @@ Tree.prototype.menuContextNodeCreate = function(node, data, index)
 				icon:  'edit',
 				color: 'purple',
 				enabled: true,
-				action: null
+				action: self.ContextCenterAndEdit
 			},
 		add:
 			{
@@ -982,7 +1005,7 @@ Tree.prototype.menuContextNodeCreate = function(node, data, index)
 				icon:  'add',
 				color: 'green',
 				enabled: true,
-				action: null
+				action: self.ContextCenterAndAdd
 			},
 		capture:
 			{
@@ -1080,6 +1103,12 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 
 	if (data.author_id !== self.user_active_id)
 	{
+		menu_context_items.edit.enabled = false;
+	}
+
+	if(data.id.charAt(0) !== 'r')
+	{
+		menu_context_items.add.enabled = false;
 		menu_context_items.edit.enabled = false;
 	}
 	
@@ -1328,4 +1357,46 @@ Tree.prototype.nodeUncapture = function(node, data, index)
 	var node_captured_data = self.nodes_captured.data();
 
 	self.captureBarRender(node_captured_data);
+};
+
+Tree.prototype.centerAndAdd = function(node_id)
+{
+	var self = this;
+};
+
+Tree.prototype.centerAndEdit = function(node_id)
+{
+	var self = this;
+};
+
+Tree.prototype.centerAndOpen = function(node_id)
+{
+	var self = this;
+};
+
+//wrapper for centerAndAdd to be called from context menu
+Tree.prototype.ContextCenterAndAdd = function(node, data, index)
+{
+	var self = this;
+
+	var node_id = data.id;
+	self.centerAndAdd(node_id);
+};
+
+//wrapper for centerAndEdit to be called from context menu
+Tree.prototype.ContextCenterAndEdit = function(node, data, index)
+{
+	var self = this;
+
+	var node_id = data.id;
+	self.centerAndEdit(node_id);
+};
+
+//wrapper for centerAndOpen to be called from context menu
+Tree.prototype.ContextCenterAndOpen = function(node, data, index)
+{
+	var self = this;
+
+	var node_id = data.id;
+	self.centerAndOpen(node_id);
 };
