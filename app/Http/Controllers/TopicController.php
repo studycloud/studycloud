@@ -21,7 +21,7 @@ class TopicController extends Controller
 	 */
 	public function index()
 	{
-		return view('topics');
+		return view('tree', ['type'=>'topic']);
 	}
 
 	/**
@@ -62,7 +62,7 @@ class TopicController extends Controller
 	public function show(Topic $topic)
 	{
 		// let the js handle parsing the URL to determine which topic to retrieve
-		return view('topics');
+		return view('tree', ['type'=>'tree']);
 	}
 
 	/**
