@@ -165,6 +165,7 @@ Tree.prototype.getNLevelIds = function(node_id, levels_num)
 	return ids_retrieved;
 };
 
+
 Tree.prototype.getIDLevelMaps = function(node_id, levels_up_num, levels_down_num)
 {
 	var self = this;
@@ -347,7 +348,7 @@ Tree.prototype.updateDataNodes = function(selection, data)
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
 
 	// add visual components for each node
-	var nodes = selection
+	var nodes_enter = selection
 		.enter()
 			.append("g")
 				.classed("node", true)
@@ -355,10 +356,10 @@ Tree.prototype.updateDataNodes = function(selection, data)
 				.on("click", function(){self.nodeClicked(this);})
 				.on('contextmenu', function(d, i){self.menuContextNodeOpen(this, d, i);});
 	
-	nodes.append("rect");
-	nodes.append("text");
+	nodes_enter.append("rect");
+	nodes_enter.append("text");
 
-	nodes.each(function(d)
+	nodes_enter.each(function(d)
 		{
 			// generate our fill color based on the node id
 			var random_number_generator = new Math.seedrandom(d.id);
@@ -395,18 +396,18 @@ Tree.prototype.updateDataNodes = function(selection, data)
 	
 	// animate removal of the old nodes
 	
-	var transform = d3.transform()
+	var transform_delete = d3.transform()
 		.scale(0);
 	
 	selection
 		.exit()
 			.classed("node-deleted", true)
-			.transition()
-				.duration(1000)
-				.style("opacity", "0")
-				.attr("transform", transform)
-				.remove();
-
+			.remove();
+			//.transition()
+			//	.duration(1000)
+			//	.style("opacity", "0")
+			//	.attr("transform", transform_delete)
+			//	.remove();
 
 	self.nodes = self.frame.select(".layer_nodes").selectAll(".node");
 	
@@ -437,15 +438,15 @@ Tree.prototype.updateDataLinks = function(selection, data)
 
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
 	
-	var links = selection
+	var links_enter = selection
 		.enter()
 			.append("g")
 				.classed("link", true)
 				.attr("data_id", function(d){return d.id;})
 	
-	links.append("line");
+	links_enter.append("line");
 
-	links.each(function(d)
+	links_enter.each(function(d)
 		{
 			var style = 
 			{
@@ -467,10 +468,11 @@ Tree.prototype.updateDataLinks = function(selection, data)
 	selection	
 		.exit()
 			.classed("link-deleted", true)
-			.transition()
-				.duration(1000)
-				.style("opacity", "0")
-				.remove();
+			.remove();
+			//.transition()
+			//	.duration(1000)
+			//	.style("opacity", "0")
+			//	.remove();
 
 				
 	self.links = self.frame.select(".layer_links").selectAll(".link");
@@ -489,36 +491,42 @@ Tree.prototype.setData = function(data)
 	//self.simulationRestart();
 };
 
-Tree.prototype.updateDataNLevels = function(node_id, levels_num_children, levels_num_parents, data)
+Tree.prototype.updateDataNLevels = function(node_id, levels_up_num, levels_down_num, data)
 {	
 
 	var self = this;
 
 	console.log("Updating data for N Levels with:", data);
 
-	var ids_updated;
+	var nodes_updated_map;
 
 	//Get Sets() of Ids to update the data for
-	ids_updated.children = self.getNLevelIds(node_id, levels_num_children);
-	ids_updated.parents = self.getNLevelIds(node_id, levels_num_parents);
+	nodes_updated_map = self.getIDLevelMaps(node_id, levels_up_num, levels_down_num);
 
-	
-	//combine children and parent sets
-	var ids_updated_combined;
-	
-	ids_updated_combined.nodes = new Set(function*() { yield* ids_updated.children.nodes; yield* ids_updated.parents.nodes; }());
-	ids_updated_combined.links = new Set(function*() { yield* ids_updated.children.links; yield* ids_updated.parents.links; }());
-	
-	//Convert those ID Set()s into D3 selections
-	var selection_updated = {};
-	
-	selection_updated.nodes = filterSelectionsByIDs(self.nodes, ids_updated_combined.nodes, "data_id");
-	selection_updated.links = filterSelectionsByIDs(self.links, ids_updated_combined.links, "data_id");
-	
-	self.updateDataNodes(selection_updated.nodes, data.nodes);
-	self.updateDataLinks(selection_updated.links, data.connections);
+	console.log(nodes_updated_map);
+	console.log(data);
 
-	self.simulationRestart();
+	var nodes_updated_selection = self.nodes.filter(function(d){return nodes_updated_map.has(d.id)});
+	var links_updated_selection = self.links.filter(function(d)
+		{
+			//console.log(nodes_updated_map.get(d.source.id) < levels_down_num);
+			if (nodes_updated_map.has(d.source.id) && nodes_updated_map.get(d.source.id) < levels_down_num)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	);
+
+	console.log(links_updated_selection);
+
+	self.updateDataNodes(nodes_updated_selection, data.nodes);
+	self.updateDataLinks(links_updated_selection, data.connections);
+
+	//self.simulationRestart();
 };
 
 
@@ -851,21 +859,22 @@ Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 	
 };
 
-Tree.prototype.centerOnNode = function (node)
+
+Tree.prototype.centerOnNode = function(node)
 {
-	//This function centers the tree visualization on a node.
+	//This function centers the tree visualization on a node. It takes the DOM element of the node to center on.
 	
 	var self = this;
 	
-	var root_node_ID = node.__data__.id;
+	var center_node_ID = node.__data__.id;
 	
 	//Get ids for nodes one level up and 2 levels down
-	var ID_Level_Map = self.getIDLevelMaps(root_node_ID, 1, 2);
-	
-	self.computeTreeAttributes(ID_Level_Map);
+	var ID_Level_Map = self.getIDLevelMaps(center_node_ID, 1, 2);
 
 	self.simulation.stop();
 	
+	self.computeTreeAttributes(ID_Level_Map);
+
 	//Set the on click handlers
 	self.nodes.on("click", function(d)
 	{
@@ -949,8 +958,51 @@ Tree.prototype.BreadcrumbStackUpdate = function(id)
 Tree.prototype.nodeClicked = function(node)
 {
 	var self = this;
-	//self.server.getData(data_id, 1, 2, self.updateDataNLevels.bind(self), function (){});
-	self.centerOnNode(node);
+
+	var node_ID = node.__data__.id;
+	
+	if (node_ID[0] === "t")
+	{
+		//This isn't a resource, so it's either a class or topic.
+
+		//Ask the server for data on up and coming nodes:
+
+		//Create a bound callback that accepts just the returned data;
+
+		var callback_success = function(data_promise)
+		{
+			data_promise.then(function(data)
+			{
+				console.log("Got data from server with:")
+				console.log(node_ID);
+				console.log(data);
+
+				var connections = data.connections;
+				var IDNodeMap = d3.map(data.nodes, function (d) { return d.id; });
+
+				connections.forEach(function (connection)
+					{
+						connection.source = IDNodeMap.get(connection.source);
+						connection.target = IDNodeMap.get(connection.target);
+					}
+				);
+
+				self.updateDataNLevels(node_ID, 1, 2, data);
+						
+				//Center on the node we clicked on
+				self.centerOnNode(node);
+			})
+		}
+		var callback_error = function(error){console.log(error)};
+
+		self.server.getTree(node_ID[1], 1, 2, callback_error, callback_success);
+
+	}
+	else
+	{
+		//TODO: call the resource viewer on this node.
+	}
+
 };
 
 
