@@ -496,21 +496,22 @@ Tree.prototype.updateDataNLevels = function(node_id, levels_up_num, levels_down_
 
 	var self = this;
 
-	console.log("Updating data for N Levels with:", data);
+	console.log("Updating data for N Levels with:", node_id, levels_up_num, levels_down_num, data);
+
 
 	var nodes_updated_map;
 
 	//Get Sets() of Ids to update the data for
 	nodes_updated_map = self.getIDLevelMaps(node_id, levels_up_num, levels_down_num);
 
-	console.log(nodes_updated_map);
-	console.log(data);
+	console.log("map:", nodes_updated_map);
+	console.log("data:", data);
 
 	var nodes_updated_selection = self.nodes.filter(function(d){return nodes_updated_map.has(d.id)});
 	var links_updated_selection = self.links.filter(function(d)
 		{
 			//console.log(nodes_updated_map.get(d.source.id) < levels_down_num);
-			if (nodes_updated_map.has(d.source.id) && nodes_updated_map.get(d.source.id) < levels_down_num)
+			if (nodes_updated_map.has(d.source.id) && nodes_updated_map.has(d.target.id))
 			{
 				return true;
 			}
@@ -973,9 +974,7 @@ Tree.prototype.nodeClicked = function(node)
 		{
 			data_promise.then(function(data)
 			{
-				console.log("Got data from server with:")
-				console.log(node_ID);
-				console.log(data);
+				console.log("Got data from server with:", node_ID, data);
 
 				var connections = data.connections;
 				var IDNodeMap = d3.map(data.nodes, function (d) { return d.id; });
@@ -995,11 +994,12 @@ Tree.prototype.nodeClicked = function(node)
 		}
 		var callback_error = function(error){console.log(error)};
 
-		self.server.getTree(node_ID[1], 1, 2, callback_error, callback_success);
+		self.server.getTree(node_ID.slice(1), 1, 2, callback_error, callback_success);
 
 	}
 	else
 	{
+		alert("Clicked resource: " + node.__data__.name);
 		//TODO: call the resource viewer on this node.
 	}
 
