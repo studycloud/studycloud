@@ -61,7 +61,7 @@ class ResourceController extends Controller
 	{
 		$this->authorize('create', Resource::class);
 		// load the appropriate view here
-		return view('tree', ['type' => 'class', 'node' => null, 'action' => 'create']);
+		return view('tree', ['type' => 'class', 'node' => null, 'action' => 'add']);
 	}
 
 	/**
@@ -123,7 +123,7 @@ class ResourceController extends Controller
 	public function show(Resource $resource)
 	{
 		// $this->authorize('view', $resource);
-		return view('tree', ['type' => 'class', 'node' => $resource->id, 'action' => 'show']);
+		return view('tree', ['type' => 'class', 'node' => $resource->id, 'action' => 'open']);
 	}
 
 	/**
