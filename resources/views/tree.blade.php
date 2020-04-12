@@ -16,9 +16,9 @@
 	@if(isset($action) && !is_null($action))
 		{{-- it's either create or edit or show --}}
 		@if(isset($node) && is_null($node))
-			tree = new Tree("{{ $type }}", "topic-tree", new Server(), 0, "{{ $action }}");
+			tree = new Tree("{{ $type }}", "topic-tree", new Server(), "r0", "{{ $action }}");
 		@else
-			tree = new Tree("{{ $type }}", "topic-tree", new Server(), {{ $node }}, "{{ $action }}");
+			tree = new Tree("{{ $type }}", "topic-tree", new Server(), "r{{ $node }}", "{{ $action }}");
 		@endif
 	@else
 		tree = new Tree("{{ $type }}", "topic-tree", new Server());
