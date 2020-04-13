@@ -108,3 +108,20 @@ $('#search-form').submit(
 		}
 	}
 );
+
+$("#search-results").on('click', '.result>.extra>a',
+	function(event)
+	{
+		if ($(this).text() == "More")
+		{
+			$(this).text("Less");
+		}
+		else
+		{
+			$(this).text("More");
+		}
+		// alert($(this).parents('.result').children('a').data('resultid'));
+
+		return false;
+	}
+);

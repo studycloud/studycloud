@@ -53,26 +53,42 @@
 	overflow: hidden;
 }*/
 
-#search-results>.result>.miniNav {
+#search-results>.result>.extra {
+    display: flex;
+    justify-content: space-between;
 	padding-left: .45em;
 	padding-right: .45em;
 	padding-top: .1em;
 	padding-bottom: .2em;
+	color: black;
 }
 
-#search-results>.result>.miniNav>a {
+#search-results>.result>.extra>.miniNav>a {
 	color: black;
 	text-decoration: none;
 }
 
-#search-results>.result>.miniNav>a:hover {
+#search-results>.result>.extra>.miniNav>a:hover {
 	text-decoration: none;
 	color: blue;
 }
 
-#search-results>.result>.miniNav>a:visited #search-results>.result>.miniNav>a:link {
+#search-results>.result>.extra>.miniNav>a:visited {
 	color: black;
 	text-decoration: none;
+}
+
+#search-results>.result>.extra>a, #search-results>.result>.extra>a:visited, #search-results>.result>.extra>a:link {
+	color: blue;
+	/*text-decoration: none;*/
+}
+
+#search-results>.result>.more {
+	/*display: none;*/
+	padding-left: .45em;
+	padding-right: .45em;
+	padding-top: .1em;
+	padding-bottom: .2em;
 }
 
 #search-results>#search_error_message {

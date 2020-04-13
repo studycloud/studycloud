@@ -41,14 +41,16 @@
 								<span title="The recommended use of this resource">${resource.use}</span> &vert; <span title="The author of this resource">${resource.author}</span>
 							</div>
 						</a>
-						<div class="miniNav">
-							${Object.keys(resource.classes).map(
-								function(class_id)
-								{
-									return `
-										<a href="${"{{ route('classes.show', ['class' => ':id']) }}".replace("/:id", "/"+class_id)}" data-classid="${class_id}">${resource.classes[class_id]}</a>
-									`;
-							}).join(' &gt; ')}
+						<div class="extra">
+							<div class="miniNav">
+								${Object.keys(resource.classes).map(
+									function(class_id)
+									{
+										return `
+											<a href="${"{{ route('classes.show', ['class' => ':id']) }}".replace("/:id", "/"+class_id)}" data-classid="${class_id}">${resource.classes[class_id]}</a>
+										`;
+								}).join(' &gt; ')}
+							</div>
 						</div>
 					</div>
 				`;
