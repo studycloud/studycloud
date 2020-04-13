@@ -37,9 +37,9 @@ class SearchController extends Controller
 		"author" => 1,
 		"use" => 0.5,
 		"classes" => 0.5,
-		"contents.name" => 2,
+		"contents.name" => 1.5,
 		"contents.type" => 0.25,
-		"contents.content" => 1
+		"contents.content" => 0.75
 	];
 
 
@@ -76,13 +76,17 @@ class SearchController extends Controller
 
 		// execute the query and get the converted results
 		$result = Resource::search($query,
+			// $client is \ElasticSearch\Client object from the elasticsearch/elasticsearch package
+			// and $body is ONGR\ElasticsearchDSL\Search from the ongr/elasticsearch-dsl package
 			function($client, $body) {
 				// set the number of desired hits
 				$body->setSize($this->number_of_hits);
 				// weight each field accordingly
 				if ($this->field_weights)
 				{
-					$body->getQueries()->setParameters(['type' => 'most_fields', 'fields' => array_map(
+					$body->getQueries()->getQueries()[
+						array_key_first($body->getQueries()->getQueries())
+					]->setParameters(['fields' => array_map(
 							function($k, $v){
 								return "$k^$v";
 							},
@@ -91,6 +95,7 @@ class SearchController extends Controller
 						)
 					]);
 				}
+				// dd($client->search(['index' => (new Resource)->searchableAs(), 'body' => $body->toArray(), 'explain'=>true]));
 				return $client->search(['index' => (new Resource)->searchableAs(), 'body' => $body->toArray()]);
 			}
 		)->get()->map(
