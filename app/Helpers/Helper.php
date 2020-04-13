@@ -104,3 +104,14 @@ if (!function_exists('wrand'))
 		}
 	}
 }
+
+if (!function_exists('tinker'))
+{
+	/**
+	 * Call this function inside your tests to have tinker get activated
+	 */
+	function tinker()
+	{
+		eval(\Psy\sh());
+	}
+}
