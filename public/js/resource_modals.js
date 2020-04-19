@@ -6,7 +6,12 @@ var pre_updated_content_num = content_num;
 
 /**
  * TODO: 
- * 1. Fix resource creator
+ * 1. Merge???
+ * 2. Ask Max does the resource creator takes the node id?
+ * 3. Problem that might not be a problem in the future? 
+ * 	http://127.0.0.1:8000/resources/2/edit/edit
+ *  in login modal, now it will just append edit to the current url
+ * 	Hopefully in the future, it will redirect to the right url after we submit the content?
  * 
  */
 
@@ -35,12 +40,13 @@ function openResourceEditor(resource_id) {
 			console.log("Open resource editor error");
 			console.log(error);
 		},
+		// creating an anonymous function so we can pass in the resource_id
+		// as well as receiving the data from the server
 		(resource_data) => {
 			fillInResourceForEditor(resource_data, resource_id);
 		}
 	);
 }
-
 
 /**
  * Wrapper function to open up the resource viewer
@@ -57,6 +63,8 @@ function openResourceViewer(resource_id) {
 			console.log("Resourcer viewer error");
 			console.log(error);
 		}, 
+		// creating an anonymous function so we can pass in the resource_id
+		// as well as receiving the data from the server
 		(resource_data) => {
 			displayResource(resource_data, resource_id);
 		}
@@ -80,6 +88,8 @@ function openResourceCreator(node_id_in) {
 			console.log("Get resource use error");
 			console.log(error);
 		}, 
+		// creating an anonymous function so we can pass in the node_id
+		// as well as receiving the data from the server
 		(resourceUseData) => {
 			resourceCreatorHTML(resourceUseData, node_id_in);
 		}
@@ -197,7 +207,7 @@ function resourceEditorHTML(resourceUseData)
 		<br>" + selectorCodeGenerator("content-type") + "<br>\
 		<div class=resource-modal-label>Content:</div>\
 		<br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
-		<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedContent()'> Submit </button>\
+		<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedResource()'> Submit </button>\
 		<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
 }
 
@@ -240,7 +250,7 @@ function fillInResourceForEditor(received, resource_id)
  *			Create a resource JSON (w/ resource id & content id)
  *			Call the server to edit the resource
 */
-function submitEditedContent() 
+function submitEditedResource() 
 {
 	tinymce.get("tinymce").save();
 	var resource_name = document.getElementById("resource-name").innerHTML;
@@ -401,6 +411,12 @@ function submitNewResource(node_id_num) {
 	// remove instance of tinymce
 	tinymce.remove();
 }
+  
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Helper functions
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** 
  * \brief Initialize TinyMCE
@@ -410,34 +426,6 @@ function addTinyMCE() {
 		selector: "#tinymce",
 		menubar: false // disable menubar (file, edit, etc.)
 	});
-}
-  
-/////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Helper functions
-//
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/** 
- * \brief Create a new entry area for a new content
- * \TODO Currently not in use
- */
-function newContent()
-{
-	// an arrary of jsons, storing the entries
-	var storedContent = temporaryStoreContent(); 
-	
-	// use pre_updated_content_num so user can decide to add new content but not submit it
-	// if user exit resource editor/creator, clear previous entries
-	pre_updated_content_num += 1;
-	document.getElementById('more-contents').innerHTML += "<div id='content-"+pre_updated_content_num+"'></div>";
-	document.getElementById('content-'+pre_updated_content_num).innerHTML += "<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
-	<input type = 'text' id = 'content-name"+pre_updated_content_num+"'> <br> \
-	Content Type:  <select id = 'content-type"+pre_updated_content_num+"'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
-	Content: <br> <textarea rows = '5' id = 'content"+pre_updated_content_num+"'> </textarea> </div> </form>";
-
-	// load the stored content back to the content textboxes
-	loadContent(storedContent);
 }
 
 /** 
@@ -459,46 +447,6 @@ function loadContent(contents)
 		addTinyMCE();
 		tinymce.get("tinymce").load();
 	}
-}
-
-/**
- * \details helper function return an array of jsons
- * 		store previously typed contents
- * 		used in:
- * 			newContent() (store before create new textarea for new content)
- */
-function temporaryStoreContent() {
-  var contents = [
-    {
-      name: document.getElementById("content-name0").value,
-      type: document.getElementById("content-type0").value,
-      content: document.getElementById("content0").value
-    }
-  ];
-
-  // use pre_updated_content_num here because...
-  // If the user has entries in a new content (but hasn't click submit)
-  // then she clicks on "New Content" again,
-  // using pre_updated_content_num will save his entries
-  for (i = 1; i < pre_updated_content_num + 1; i++) {
-    var contentArray = {
-      name: document.getElementById("content-name" + i).value,
-      type: document.getElementById("content-type" + i).value,
-      content: document.getElementById("content" + i).value
-    };
-    contents.push(contentArray);
-  }
-
-  return contents;
-}
-
-/**
- * \details clear unsaved changes
- * 		when the user close the resource editor/creator,
- * 		reset pre_updated_content_num
- */
-function resetContentNum() {
-  pre_updated_content_num = content_num;
 }
 
 /**
@@ -569,6 +517,30 @@ function selectorCodeGenerator(selectorFor, data)
 }
 
 /**
+ * Helper function for Resource Use/Content Type Selector
+ * \brief 	For Resource Editor.
+ * 			Load/select the resource use or content type of the resource in Resource Editor
+ * 
+ * @param {*} ulId String, determines if we are loading for resource use or content type
+ * 			either: "resource-use-selector" or "content-type-selector"
+ * @param {*} selected String, the selected use/type of this resource (from the json we get)
+ */
+function loadSelectedUseOrType (ulId, selected)
+{
+	var ul = document.getElementById(ulId);
+	var listInsideUl = ul.getElementsByTagName("li");
+	for (var ele of listInsideUl) {
+		// get the name of the label
+		var name = ele.getElementsByTagName("label")[0].innerHTML;
+		if (name.toLowerCase() == selected.toLowerCase()) {
+			// checked is true when this input is checked
+			// select this input
+			ele.getElementsByTagName("input")[0].checked = true;
+		}
+	}
+}
+
+/**
  * Helper function for Submitting an edited resource
  * \brief 	Find the resource use id (int) or 
  * 				 the content type name (string)
@@ -594,26 +566,72 @@ function findUseOrType(ulId)
 	}
 }
 
-/**
- * Helper function for Resource Use/Content Type Selector
- * \brief 	For Resource Editor.
- * 			Load/select the resource use or content type of the resource in Resource Editor
- * 
- * @param {*} ulId String, determines if we are loading for resource use or content type
- * 			either: "resource-use-selector" or "content-type-selector"
- * @param {*} selected String, the selected use/type of this resource (from the json we get)
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Helper functions for resources with more than one content
+// Warning: Currently not in use
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+/** 
+ * \brief Create a new entry area for a new content
+ * \warning Currently not in use
  */
-function loadSelectedUseOrType (ulId, selected)
+function newContent()
 {
-	var ul = document.getElementById(ulId);
-	var listInsideUl = ul.getElementsByTagName("li");
-	for (var ele of listInsideUl) {
-		// get the name of the label
-		var name = ele.getElementsByTagName("label")[0].innerHTML;
-		if (name.toLowerCase() == selected.toLowerCase()) {
-			// checked is true when this input is checked
-			// select this input
-			ele.getElementsByTagName("input")[0].checked = true;
-		}
-	}
+	// an arrary of jsons, storing the entries
+	var storedContent = temporaryStoreContent(); 
+	
+	// use pre_updated_content_num so user can decide to add new content but not submit it
+	// if user exit resource editor/creator, clear previous entries
+	pre_updated_content_num += 1;
+	document.getElementById('more-contents').innerHTML += "<div id='content-"+pre_updated_content_num+"'></div>";
+	document.getElementById('content-'+pre_updated_content_num).innerHTML += "<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
+	<input type = 'text' id = 'content-name"+pre_updated_content_num+"'> <br> \
+	Content Type:  <select id = 'content-type"+pre_updated_content_num+"'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
+	Content: <br> <textarea rows = '5' id = 'content"+pre_updated_content_num+"'> </textarea> </div> </form>";
+
+	// load the stored content back to the content textboxes
+	loadContent(storedContent);
 }
+
+/**
+ * \details clear unsaved changes
+ * 		when the user close the resource editor/creator,
+ * 		reset pre_updated_content_num
+ */
+function resetContentNum() {
+	pre_updated_content_num = content_num;
+}
+
+/**
+ * \details helper function return an array of jsons
+ * 		store previously typed contents
+ * 		used in:
+ * 			newContent() (store before create new textarea for new content)
+ * \warning not in use right now
+ */
+function temporaryStoreContent() {
+	var contents = [
+	  {
+		name: document.getElementById("content-name0").value,
+		type: document.getElementById("content-type0").value,
+		content: document.getElementById("content0").value
+	  }
+	];
+  
+	// use pre_updated_content_num here because...
+	// If the user has entries in a new content (but hasn't click submit)
+	// then she clicks on "New Content" again,
+	// using pre_updated_content_num will save his entries
+	for (i = 1; i < pre_updated_content_num + 1; i++) {
+	  var contentArray = {
+		name: document.getElementById("content-name" + i).value,
+		type: document.getElementById("content-type" + i).value,
+		content: document.getElementById("content" + i).value
+	  };
+	  contents.push(contentArray);
+	}
+  
+	return contents;
+  }
