@@ -11,22 +11,25 @@ $(document).ready(function() {
     displayContainer("forget");
   });
 
-	// When the user clicks on the create button, also open the modal but with the resource viewer
+	// TODO: delete the button and this, testing only
 	$("#editor-btn").click(function(event)
 	{
     var temp_resource_id = 2;
 		openResourceEditor(temp_resource_id);
 	});
 
+  // TODO: delete the button and this, testing only
 	$("#resource-meta-btn").click(function(event)
 	{
     var temp_resource_id = 2;
 		openResourceViewer(temp_resource_id);
   });
 
+  // TODO: delete the button and this, testing only
   $("#resource-creator-btn").click(function(event)
   {
-    openResourceEditor(2);
+    var temp_node_id = 10;
+    openResourceCreator(temp_node_id);
   });
 
   $('#test-resource-uses').click(function(event)
