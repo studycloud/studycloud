@@ -501,10 +501,7 @@ Server.prototype.getResourceUseJSON = function(handleError, handleSuccess)
 			'X-Requested-With': "XMLHttpRequest",
 			"Content-type": "application/json; charset=UTF-8"
 		}
-	}).then(function(data){		
-		console.log("it has to get to then?");
-		console.log(data);
-		
+	}).then(function(data){				
 		if (data.ok)
 		{
 			let resultData = data.json();

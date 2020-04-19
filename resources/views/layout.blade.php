@@ -524,11 +524,6 @@
     </div>
 </body>
 
-<button id="editor-btn">temporary resource editor button</button>
-<button id="resource-meta-btn">resource meta button</button>
-<button id="resource-creator-btn">resource creator button</button>
-<button id="test-resource-uses">Test Get Resource Use</button>
-
 <footer>
     <script src="/storage/Logo Tree.js"></script> <!-- TODO or here -->
 </footer>

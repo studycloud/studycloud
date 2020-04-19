@@ -7,8 +7,8 @@ var pre_updated_content_num = content_num;
 // placeholder for actual resource and content id
 // gets loaded in resource.blade.php
 // when a resource is shown on url: /resources/{resource_id}
-var resource_id = 0;
-var temp_content_id = 0;
+// var resource_id = 0;
+// var temp_content_id = 0;
 
 /** TODO:
  * 1) What to do with the page when an invalid id is given?
@@ -17,37 +17,45 @@ var temp_content_id = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//	Wrapper functions for the tree
-//
+//	Wrapper functions for integrating with the tree
+// 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Wrapper function to open up the resource editor
- * @param {*} resource_id_in int, resource id for the resource
+ * @param {*} resource_id int, resource id for the resource
  */
-function openResourceEditor(resource_id_in) {
+function openResourceEditor(resource_id) {
 	document.getElementById('my-modal').style.display = "block";
 	document.getElementById('edit-icon').style.display = "none";
 	displayContainer("resource");
 
-	resource_id = resource_id_in;
+	// TODO: delete this...
+	// resource_id = resource_id_in;
 
-	resourceEditorHTML();
-	editResource();
+	var server = new Server();
+	server.getResourceUseJSON(error, resourceEditorHTML);
+	server.getResource(resource_id, error, (data) => {
+		fillInResourceForEditor(data, resource_id);
+	});
+	storeResourceId(resource_id);
 }
+
 
 /**
  * Wrapper function to open up the resource viewer
- * @param {*} resource_id_in int, resource id for the resource
+ * @param {*} resource_id int, resource id for the resource
  */
-function openResourceViewer(resource_id_in) {
+function openResourceViewer(resource_id) {
 	document.getElementById('my-modal').style.display = "block";
 	document.getElementById('edit-icon').style.display = "none";
 	displayContainer("resource");
 
-	resource_id = resource_id_in;
+	// // TODO: delete this...
+	// resource_id = resource_id_in;
 
-	viewResource();
+	var server = new Server();
+  	server.getResource(resource_id, error, displayResource);
 }
 
 /**
@@ -76,7 +84,7 @@ function openResourceCreator(node_id_in) {
  * 		handleError function: error
  * 		handleSuccess function: displayResource
  */
-function viewResource() {
+function viewResource(resource_id) {
 	var server = new Server();
 
   	server.getResource(resource_id, error, displayResource);
@@ -89,7 +97,7 @@ function viewResource() {
  * 		handleSuccess function: res1`ourceEditor
  */
 function editResource() {
-  var server = new Server();
+  	var server = new Server();
 
 	server.getResource(resource_id, error, fillInResourceForEditor);
 }
@@ -166,13 +174,13 @@ function displayResource(received) {
  * @param {*} type String, author's type
  */
 function set_author(name, type) {
-  // Clear all classes on the author-name field.
-  var cl = document.getElementById("author-name").classList;
-  for (var i = cl.length; i > 0; i--) {
-    cl.remove(cl[0]);
-  }
-  document.getElementById("author-name").classList.add(type);
-  document.getElementById("author-name").innerHTML = name;
+	// Clear all classes on the author-name field.
+	var cl = document.getElementById("author-name").classList;
+	for (var i = cl.length; i > 0; i--) {
+	cl.remove(cl[0]);
+	}
+	document.getElementById("author-name").classList.add(type);
+	document.getElementById("author-name").innerHTML = name;
 }
 
 /**
@@ -189,9 +197,11 @@ function display_content(num, element)
 	if(element.type=="link")
 	{
 		// tinyMCE tends to wrap content in <p> </p> which will affect the link
-
 		var display_link = element.content.replace( /(<([^>]+)>)/ig, '');
-		document.getElementById('module-'+num).innerHTML+="<div><a href="+display_link+">"+element.name+"</a></div>";
+		if (!display_link.includes("https://")){
+			display_link = "https://" + display_link;
+		}
+		document.getElementById('module-'+num).innerHTML+="<div><a href="+display_link+" target='_blank'>"+element.name+"</a></div>";
 	}
 	else // Apparently by MVP things are HTML text. Check this. 
 	{
@@ -215,14 +225,15 @@ function display_content(num, element)
  * \details gets called in loginmodal.js when the editor button gets clicked
  * 			TODO: need to be implemented in the tree in the future
  */
-function resourceEditorHTML()
+function resourceEditorHTML(resourceUseData)
 {
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML="\
+	<div id = 'resource-id' style='visibility: hidden'> </div>\
 	<div id = 'resource-name' contenteditable=true> Resource Name </div>";
 	document.getElementById('modules').innerHTML = "\
 	<div class=resource-modal-label> Resource Use:</div>\
-	<br>" + selectorCodeGenerator("resource-use") + "<br>\
+	<br>" + selectorCodeGenerator("resource-use", resourceUseData) + "<br>\
 	<div class=resource-divider></div>\
 	<div class = 'content-creator'>\
 	<div class=resource-modal-label>Resource Content Name:</div><br>\
@@ -241,7 +252,7 @@ function resourceEditorHTML()
  * 				(resource specified by resource_id)
  * 		the user has to be the author to edit
  */
-function fillInResourceForEditor(received)
+function fillInResourceForEditor(received, resource_id)
 {
 	/*
 		received.json() gives us a Promise
@@ -252,9 +263,10 @@ function fillInResourceForEditor(received)
 	*/
 	received.json().then(function(resource){
 		console.log(resource);
-		// document.getElementById("meta-name").value = resource.meta.name;
+
+		document.getElementById("resource-id").innerHTML = resource_id;
 		document.getElementById("resource-name").innerHTML = resource.meta.name;
-		
+			
 		loadSelectedUseOrType("resource-use-selector", resource.meta.use_name);
 
 		// create a text area for each content
@@ -276,10 +288,14 @@ function fillInResourceForEditor(received)
 function submitEditedContent() 
 {
 	tinymce.get("tinymce").save();
-  	var resource_name = document.getElementById("resource-name").innerHTML;
+	var resource_name = document.getElementById("resource-name").innerHTML;
+	var resource_id = document.getElementById("resource-id").innerHTML;
 	var resource_use = findUseOrType("resource-use-selector");
+	// TODO: Right now, assume that each resource only has 1 content
+	// 	so content_id is the same as resource_id
+	var content_id = resource_id;
 
-	content_num = pre_updated_content_num;
+	// content_num = pre_updated_content_num;
 	
 	// store all the data in json
 	// NEED TO INCLUDE: resouce id, content id
@@ -292,7 +308,7 @@ function submitEditedContent()
 		"contents":
 		[
 			{
-				"id": temp_content_id,
+				"id": content_id,
 				"name": document.getElementById("content-name0").innerHTML,
 				"type": findUseOrType("content-type-selector").toLowerCase(),
 				"content": document.getElementById("tinymce").value
@@ -301,16 +317,16 @@ function submitEditedContent()
 	};
 	
 	// TODO: For more contents in future, type is not correct
-	for (i = 1; i < (content_num+1); i++)
-	{
-		var content_array =
-		{
-			"name": document.getElementById("content-name"+i).innerHTML,
-			"type": tempType,
-			"content": document.getElementById("content"+i).value
-		};
-		resource.contents.push(content_array);
-	}
+	// for (i = 1; i < (content_num+1); i++)
+	// {
+	// 	var content_array =
+	// 	{
+	// 		"name": document.getElementById("content-name"+i).innerHTML,
+	// 		"type": tempType,
+	// 		"content": document.getElementById("content"+i).value
+	// 	};
+	// 	resource.contents.push(content_array);
+	// }
 
 	console.log(resource);
 
@@ -323,8 +339,8 @@ function submitEditedContent()
 	document.getElementById('resource-head').innerHTML = " ";
 	document.getElementById('modules').innerHTML = " "; //clean the display box up
   
-  // remove instance of tinymce
-  tinymce.remove();
+	// remove instance of tinymce
+	tinymce.remove();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -521,7 +537,7 @@ function resetContentNum() {
  * @param {*} selectorFor String, determines if it's selector for resource use or content type
  * 							Either: "resource-use" or content-type"
  */
-function selectorCodeGenerator(selectorFor) 
+function selectorCodeGenerator(selectorFor, data) 
 {
 	var name = "default";
 	var ulId = "default-selector";  
@@ -547,10 +563,10 @@ function selectorCodeGenerator(selectorFor)
 		 * 				{"id":3,"name":"Flashcards"},
 		 * 				{"id":2,"name":"Notes"}	]
 		 */
-		for (var i = 0; i < resourceUseData.length; ++i) {
+		for (var i = 0; i < data.length; ++i) {
 			html_code += "\
-			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ resourceUseData[i].id +"'>\
-				<label for='" + inputId +""+ resourceUseData[i].id + "'>" + resourceUseData[i].name + "</label></li>";
+			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ data[i].id +"'>\
+				<label for='" + inputId +""+ data[i].id + "'>" + data[i].name + "</label></li>";
 		}
 	}
 	else if (selectorFor == "content-type") {

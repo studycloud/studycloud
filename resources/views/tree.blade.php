@@ -2,6 +2,13 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('css/_tree.css') }}">
 @endpush
 
+@push('scripts')
+<script type="text/javascript">
+	// only way to get content type from the database
+	// make contentTypeData a global variable
+	var contentTypeData = @json( App\ResourceContent::getPossibleTypes() );	
+</script>
+@endpush
 
 @extends('layout')
 
@@ -27,6 +34,11 @@
 		</div>
 	</div>
 </div>
+
+<button id="editor-btn">temporary resource editor button</button>
+<button id="resource-meta-btn">resource meta button</button>
+<button id="resource-creator-btn">resource creator button</button>
+<button id="test-resource-uses">Test Get Resource Use</button>
 
 <script>
 	@if(isset($action) && !is_null($action))
