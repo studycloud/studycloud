@@ -64,7 +64,7 @@ $(document).ready(function() {
 
     // change the url from /resources/{resource_id} to 
     // /resources/{resource_id}/edit
-    history.pushState({},'','edit');
+    history.pushState({},'',window.location.href+'/edit');
 
     openResourceEditor(temp_resource_id);
   });

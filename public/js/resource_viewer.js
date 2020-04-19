@@ -36,7 +36,6 @@ function openResourceEditor(resource_id) {
 	server.getResource(resource_id, error, (resource_data) => {
 		fillInResourceForEditor(resource_data, resource_id);
 	});
-	storeResourceId(resource_id);
 }
 
 
