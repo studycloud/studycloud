@@ -9,9 +9,11 @@ use App\Academic_Class;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\ClassRepository;
 use App\Rules\ValidClassParentAttachment;
 use Illuminate\Support\Facades\Validator;
 use App\Rules\ValidClassChildrenAttachment;
+use App\TreeAPIs\HyperscheduleAPI as TreeAPI;
 
 class ClassController extends Controller
 {
@@ -28,12 +30,20 @@ class ClassController extends Controller
 	 *	PATCH		/classes/attach/{id}	classes.attach	alter either the parent or children of this class
 	 */
 
-	function __construct()
+	/**
+     * The course API instance. This is used for importing course data from an outside source.
+     */
+    protected $tree_api;
+
+
+	function __construct(TreeAPI $tree_api)
 	{
 		// verify that the user is signed in for all methods except index, show, and json
 		$this->middleware('auth', ['except' => ['index', 'show']]);
 
 		// TODO: add CheckStatus middleware?
+
+		$this->tree_api = $tree_api;
 	}
 
 	/**
@@ -261,5 +271,16 @@ class ClassController extends Controller
 			// attach all the children
 			Academic_Class::whereIn('id', $validated['children'])->update(['parent_id' => $id]);
 		}
+	}
+
+	/**
+	 * Import course data from the school's API
+	 * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function import(Request $request)
+	{
+		return $this->tree_api->update();
 	}
 }
