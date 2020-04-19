@@ -47,6 +47,10 @@ class Notice extends Model
 	 */
     public function author()
 	{
-		return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withDefault(function ($user) {
+            //echo 'hello';
+            $user->fname = 'Study';
+            $user->lname = 'Cloud';
+        });
 	}
 }
