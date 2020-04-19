@@ -31,29 +31,6 @@ $(document).ready(function() {
     var temp_node_id = 10;
     openResourceCreator(temp_node_id);
   });
-
-  $('#test-resource-uses').click(function(event)
-  {
-    let tempServer = new Server();
-
-    console.log("Created the temp server");
-
-    let successCallback = (data) => {
-      console.log("sucess!");
-      console.log(data);
-      // data.then((result) => {
-      //   console.log("show me the result!");
-      //   console.log(result);
-      // })
-    };
-
-    let errorCallback = (error) => {
-      console.log("warning");
-      console.log(error);
-    };
-
-    tempServer.getResourceUseJSON(errorCallback, successCallback);
-  });
   
   // When the user clicks on edit icon in resource viewer 
   $("#open-resource-editor").click(function(event) 
@@ -102,17 +79,4 @@ window.onmousedown = function(event)
 function displayContainer(container) {
   // Display this container, undisplay all other containers.
   document.getElementById(container + "-container").style.display = "block";
-}
-
-// When the user clicks on the create button, also open the modal but with the resource viewer
-function openResourceCreator(nodeId) {
-  document.getElementById("my-modal").style.display = "block";
-  displayContainer("resource");
-  createNewResource(nodeId);
-  $('select[name="attach').selectstyle({
-    width: 400,
-    height: 300,
-    theme: "light",
-    onchange: function(val) {}
-  });
 }

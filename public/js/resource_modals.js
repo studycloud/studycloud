@@ -25,12 +25,20 @@ function openResourceEditor(resource_id) {
 	document.getElementById('edit-icon').style.display = "none";
 	displayContainer("resource");
 
-
 	var server = new Server();
-	server.getResourceUseJSON(error, resourceEditorHTML);
-	server.getResource(resource_id, error, (resource_data) => {
-		fillInResourceForEditor(resource_data, resource_id);
-	});
+	server.getResourceUseJSON((error) => {
+			console.log("Get resource use error");
+			console.log(error);
+		}, resourceEditorHTML);
+	server.getResource(resource_id, 
+		(error) => {
+			console.log("Open resource editor error");
+			console.log(error);
+		},
+		(resource_data) => {
+			fillInResourceForEditor(resource_data, resource_id);
+		}
+	);
 }
 
 
@@ -44,13 +52,13 @@ function openResourceViewer(resource_id) {
 	displayContainer("resource");
 
 	var server = new Server();
-	  server.getResource(resource_id, 
+	server.getResource(resource_id, 
 		(error) => {
 			console.log("Resourcer viewer error");
 			console.log(error);
 		}, 
 		(resource_data) => {
-		  displayResource(resource_data, resource_id);
+			displayResource(resource_data, resource_id);
 		}
 	);
 }
@@ -65,7 +73,17 @@ function openResourceCreator(node_id_in) {
 	document.getElementById('edit-icon').style.display = "none";
 	displayContainer("resource");
 
-	resourceCreatorHTML(node_id_in);
+	var server = new Server();
+	// use the same template as resource editor
+	server.getResourceUseJSON(
+		(error) => {
+			console.log("Get resource use error");
+			console.log(error);
+		}, 
+		(resourceUseData) => {
+			resourceCreatorHTML(resourceUseData, node_id_in);
+		}
+	);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -302,22 +320,26 @@ function submitEditedContent()
  * 			TODO: need to be implemented in the tree in the future
  * @param {*} nodeId the nodeID of where the resource will be attached (actually not sure...)
  */
-function resourceCreatorHTML(nodeId)
+function resourceCreatorHTML(resourceUseData, nodeId)
 {
-	//create all the input to create resources
-	document.getElementById('resource-head').innerHTML="<h1>Resource Creator</h1>"
-	document.getElementById('modules').innerHTML = "<div class=resource-divider></div>\
-	<div class = 'resource-creator'> Resource Name: <br> \
-	<input type = 'text' id = 'meta-name'> <br> \
-	Resource Use: <br>" + selectorCodeGenerator("resource-use") + "<br> \
-	<div class=resource-divider></div> <br> </div> \
-	<div class = 'content-creator'> Resource Content Name: <br> \
-	<input type = 'text' id = 'content-name0'> <br> \
-	Content Type:  <select id = 'content-type0'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
-	Content: <br> <textarea rows = '5' id = 'content0'> </textarea> </div> <div id = 'more-contents'> </div>\
-	<div> <button type = 'button' id = 'submit-button' onclick = 'submitNewContent("+nodeId.substring(1)+")'> Submit </button> \
-	<button type = 'button' id = 'new-content-button' onclick = 'newContent()'> New Content </button> \
-	<p id = 'demo'> </p></div> ";
+	// create all the input to create resources
+	document.getElementById('resource-head').innerHTML="\
+		<div id = 'resource-name' contenteditable=true> Resource Name </div>";
+	document.getElementById('modules').innerHTML = "\
+		<div class=resource-modal-label> Resource Use:</div>\
+		<br>" + selectorCodeGenerator("resource-use", resourceUseData) + "<br>\
+		<div class=resource-divider></div>\
+		<div class = 'content-creator'>\
+		<div class=resource-modal-label>Resource Content Name:</div><br>\
+		<div class=content-name id ='content-name0' contenteditable=true> Content Name </div> <br>\
+		<div class=resource-modal-label> Content Type: </div>\
+		<br>" + selectorCodeGenerator("content-type") + "<br>\
+		<div class=resource-modal-label>Content:</div>\
+		<br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
+		<div> <button type = 'button' id = 'submit-button' onclick = 'submitNewResource("+nodeId+")'> Submit </button>\
+		<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
+
+	addTinyMCE();
 }
 
 /** 
@@ -326,62 +348,58 @@ function resourceCreatorHTML(nodeId)
  *			Create a resource JSON (w/ resource id & content id)
  *			Call the server to edit the resource
  */
-function submitNewContent(node_id_num) {
-  var resource_name = document.getElementById("meta-name").value;
-  var resource_use = document.getElementById("resource-use").value;
-  var class_id = node_id_num.toString();
-  var content_name_array = [];
-  var content_type_array = [];
-  var content_array = [];
+function submitNewResource(node_id_num) {
+	tinymce.get("tinymce").save();
+	var resource_name = document.getElementById("resource-name").innerHTML;
+	var resource_use = findUseOrType("resource-use-selector");
+	var class_id = node_id_num.toString();
 
-  for (i = 0; i < content_num + 1; i++) {
-    content_name_array.push(document.getElementById("content-name" + i).value);
-    content_type_array.push(document.getElementById("content-type" + i).value);
-    content_array.push(document.getElementById("content" + i).value);
-  }
+	//store all the data in json
+	//PROBLEM: can only create 1 content for 1 resource
+	var resource = {
+		name: resource_name,
+		use_id: resource_use,
+		class_id: class_id,
+		contents: [
+			{
+				name: document.getElementById("content-name0").innerHTML,
+				type: findUseOrType("content-type-selector").toLowerCase(),
+				content: document.getElementById("tinymce").value,
+			}
+		]
+	};
 
-  //store all the data in json
-  //PROBLEM: can only create 1 content for 1 resource
-  var resource = {
-    name: resource_name,
-    use_id: resource_use,
-    class_id: class_id,
-    contents: [
-      {
-        name: document.getElementById("content-name0").value,
-        type: document.getElementById("content-type0").value,
-        content: document.getElementById("content0").value
-      }
-    ]
-  };
+	// TODO: For when a resource have multiple contents, not MVP
+	// for (i = 1; i < content_num + 1; i++) {
+	// 	var content_array = {
+	// 		name: document.getElementById("content-name" + i).value,
+	// 		type: document.getElementById("content-type" + i).value,
+	// 		content: document.getElementById("content" + i).value
+	// 	};
+	// 	resource.contents.push(content_array);
+	// }
 
-  for (i = 1; i < content_num + 1; i++) {
-    var content_array = {
-      name: document.getElementById("content-name" + i).value,
-      type: document.getElementById("content-type" + i).value,
-      content: document.getElementById("content" + i).value
-    };
-    resource.contents.push(content_array);
-  }
+	console.log(resource);
 
-  console.log(resource);
-
-  //call the server to add resource
-  var server = new Server();
-  server.addResource(resource, 
-	(error) => {
-		console.log("Create resource - error");
-		console.log(error);
-	}, 
-	(data) => {
-		console.log("Create resource - success");
-		console.log(data);
+	//call the server to add resource
+	var server = new Server();
+	server.addResource(resource, 
+		(error) => {
+			console.log("Create resource - error");
+			console.log(error);
+		}, 
+		(data) => {
+			console.log("Create resource - success");
+			console.log(data);
 	});
 
-  //close the content creator
-  document.getElementById("my-modal").style.display = "none";
-  document.getElementById("resource-head").innerHTML = " ";
-  document.getElementById("modules").innerHTML = " "; //clean the display box up
+	//close the content creator
+	document.getElementById("my-modal").style.display = "none";
+	document.getElementById("resource-head").innerHTML = " ";
+	document.getElementById("modules").innerHTML = " "; //clean the display box up
+
+	// remove instance of tinymce
+	tinymce.remove();
 }
 
 /** 
