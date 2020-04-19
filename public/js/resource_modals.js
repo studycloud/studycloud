@@ -4,15 +4,10 @@ var content_num = 0;
 // having this will clear any unsaved changes
 var pre_updated_content_num = content_num;
 
-// placeholder for actual resource and content id
-// gets loaded in resource.blade.php
-// when a resource is shown on url: /resources/{resource_id}
-// var resource_id = 0;
-// var temp_content_id = 0;
-
-/** TODO:
- * 1) What to do with the page when an invalid id is given?
- * 2) How to display tree in the back?
+/**
+ * TODO: 
+ * 1. Fix resource creator
+ * 
  */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,69 +66,6 @@ function openResourceCreator(node_id_in) {
 	displayContainer("resource");
 
 	resourceCreatorHTML(node_id_in);
-}
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Functions to get resource from server 
-//
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * \brief create server object and get resource for resource viewer
- * \details specified by resource_id (NOT IMPLEMENTED WITH TREE YET)
- * 		handleError function: error
- * 		handleSuccess function: displayResource
- */
-function viewResource(resource_id) {
-	var server = new Server();
-
-  	server.getResource(resource_id, error, displayResource);
-}
-
-/**
- * \brief create server object and get resource for resource editor
- * \details specified by resource_id (NOT IMPLEMENTED WITH TREE YET)
- * 		handleError function: error
- * 		handleSuccess function: res1`ourceEditor
- */
-function editResource() {
-  	var server = new Server();
-
-	server.getResource(resource_id, error, fillInResourceForEditor);
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Callback functions
-//		- Edit/createResourceSuccessfully
-//		- Error
-//
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/** 
- * \brief callback function after editting resource successfully
- */
-function editResourceSuccess(data) {
-  console.log("editted resource");
-  console.log(data);
-}
-
-/**
- * \brief callback function after creating resource successfully
- */
-function createResourceSuccess(data) {
-  console.log("created resource");
-  console.log(data);
-}
-
-/**
- * \brief error callback function for server object
- *
- */
-function error(data) {
-  console.log(data);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -337,7 +269,17 @@ function submitEditedContent()
 
 	// call the server to edit the resource
 	var server = new Server();
-	server.editResource(resource_id, resource, error, editResourceSuccess);
+
+	server.editResource(resource_id, resource, 
+		(error) => {
+			console.log("Edit resource - error");
+			console.log(error);
+		}, 
+		(data) => {
+			console.log("Edit resource - success");
+			console.log(data);
+		}
+	);
 
 	// close the content editor
 	document.getElementById('my-modal').style.display = "none";
@@ -426,7 +368,15 @@ function submitNewContent(node_id_num) {
 
   //call the server to add resource
   var server = new Server();
-  server.addResource(resource, error, createResourceSuccess);
+  server.addResource(resource, 
+	(error) => {
+		console.log("Create resource - error");
+		console.log(error);
+	}, 
+	(data) => {
+		console.log("Create resource - success");
+		console.log(data);
+	});
 
   //close the content creator
   document.getElementById("my-modal").style.display = "none";
