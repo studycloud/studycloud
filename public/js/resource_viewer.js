@@ -30,13 +30,11 @@ function openResourceEditor(resource_id) {
 	document.getElementById('edit-icon').style.display = "none";
 	displayContainer("resource");
 
-	// TODO: delete this...
-	// resource_id = resource_id_in;
 
 	var server = new Server();
 	server.getResourceUseJSON(error, resourceEditorHTML);
-	server.getResource(resource_id, error, (data) => {
-		fillInResourceForEditor(data, resource_id);
+	server.getResource(resource_id, error, (resource_data) => {
+		fillInResourceForEditor(resource_data, resource_id);
 	});
 	storeResourceId(resource_id);
 }
@@ -51,11 +49,16 @@ function openResourceViewer(resource_id) {
 	document.getElementById('edit-icon').style.display = "none";
 	displayContainer("resource");
 
-	// // TODO: delete this...
-	// resource_id = resource_id_in;
-
 	var server = new Server();
-  	server.getResource(resource_id, error, displayResource);
+	  server.getResource(resource_id, 
+		(error) => {
+			console.log("Resourcer viewer error");
+			console.log(error);
+		}, 
+		(resource_data) => {
+		  displayResource(resource_data, resource_id);
+		}
+	);
 }
 
 /**
@@ -144,7 +147,7 @@ function error(data) {
  * \brief display resources on resource viewer
  * @param {*} received a response (needs to turn into a json)
  */
-function displayResource(received) {
+function displayResource(received, resource_id) {
   /*
 		received.json() gives us a Promise
 		.then(function(resource){
@@ -158,13 +161,16 @@ function displayResource(received) {
 	received.json().then(function(resource){
 		console.log(resource);
 		document.getElementById('resource-head').innerHTML = "\
-		<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1>\
-		<div>contributed by <div id='author-name'></div></div>";
+			<div id = 'resource-id' style='visibility: hidden'> </div>\
+			<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1>\
+			<div>contributed by <div id='author-name'></div></div>";
+		
+		document.getElementById("resource-id").innerHTML = resource_id;
 
-    set_author(resource.meta.author_name, resource.meta.author_type);
-    for (var i = 0; i < resource.contents.length; i++) {
-      display_content(i, resource.contents[i]);
-    }
+		set_author(resource.meta.author_name, resource.meta.author_type);
+		for (var i = 0; i < resource.contents.length; i++) {
+		display_content(i, resource.contents[i]);
+		}
   });
 }
 
@@ -229,21 +235,21 @@ function resourceEditorHTML(resourceUseData)
 {
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML="\
-	<div id = 'resource-id' style='visibility: hidden'> </div>\
-	<div id = 'resource-name' contenteditable=true> Resource Name </div>";
+		<div id = 'resource-id' style='visibility: hidden'> </div>\
+		<div id = 'resource-name' contenteditable=true> Resource Name </div>";
 	document.getElementById('modules').innerHTML = "\
-	<div class=resource-modal-label> Resource Use:</div>\
-	<br>" + selectorCodeGenerator("resource-use", resourceUseData) + "<br>\
-	<div class=resource-divider></div>\
-	<div class = 'content-creator'>\
-	<div class=resource-modal-label>Resource Content Name:</div><br>\
-	<div class=content-name id ='content-name0' contenteditable=true> Content Name </div> <br>\
-	<div class=resource-modal-label> Content Type: </div>\
-	<br>" + selectorCodeGenerator("content-type") + "<br>\
-	<div class=resource-modal-label>Content:</div>\
-	<br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
-	<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedContent()'> Submit </button>\
-	<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
+		<div class=resource-modal-label> Resource Use:</div>\
+		<br>" + selectorCodeGenerator("resource-use", resourceUseData) + "<br>\
+		<div class=resource-divider></div>\
+		<div class = 'content-creator'>\
+		<div class=resource-modal-label>Resource Content Name:</div><br>\
+		<div class=content-name id ='content-name0' contenteditable=true> Content Name </div> <br>\
+		<div class=resource-modal-label> Content Type: </div>\
+		<br>" + selectorCodeGenerator("content-type") + "<br>\
+		<div class=resource-modal-label>Content:</div>\
+		<br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
+		<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedContent()'> Submit </button>\
+		<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
 }
 
 /** 

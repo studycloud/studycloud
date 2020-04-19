@@ -55,6 +55,8 @@ $(document).ready(function() {
   // When the user clicks on edit icon in resource viewer 
   $("#open-resource-editor").click(function(event) 
   {
+    // get the resource id
+    var temp_resource_id = document.getElementById('resource-id').innerHTML;
     // clear what is displayed in resource viewer
     document.getElementById('edit-icon').style.display = "none";
     document.getElementById('modules').innerHTML = " "; //clean the display box up
