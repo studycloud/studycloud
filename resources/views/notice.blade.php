@@ -10,5 +10,5 @@
     <span title='<?php echo 'DummyNote Date' ?>'
             onclick='javascript:load_page(false,'<?php echo 'DummyNote URLQuery'; ?>');'
             style='cursor:pointer;'
-    ><br>description .....</span>
+    ><br>{{$description}}</span>
 </li>

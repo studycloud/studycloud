@@ -30,8 +30,8 @@ class NoticeController extends Controller
         $notices = Notice::all();
         return $notices->map(function($notice, $notice_id) {
             return view('notice', [
-                'author' => $notice->author 
-                //'description' => $notice->description
+                'author' => $notice->author, 
+                'description' => $notice->description
                 //'deadline' => $notice->deadline
             ])->render();
         })->implode("");
