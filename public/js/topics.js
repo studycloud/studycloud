@@ -164,6 +164,19 @@ var data =
 	]
 };
 
+var data =
+{
+	"nodes": [
+		{
+			"name": "Topic Root",
+			"author_id": 1,
+			"created_at": "2017-11-02 21:02:03",
+			"updated_at": "2017-11-02 21:02:03",
+			"id": "t0"
+		}],
+	"connections": []
+}
+
 var connections = data.connections;
 var IDNodeMap = d3.map(data.nodes, function (d) { return d.id; });
 

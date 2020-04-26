@@ -191,6 +191,11 @@ Tree.prototype.getNLevelIds = function(node_id, levels_num)
 
 Tree.prototype.getIDLevelMaps = function(node_id, levels_up_num, levels_down_num)
 {
+	//This functions returns maps from node_id to level for the tree. This essentially creates a labeled form of the tree.
+	//It returns levels_up_num straight up the tree (can only be non-resources)
+	//It return levels_down_num down the tree of nodes, and then one more level of resources. 
+	//	If you ask for 3 levels down, you get 3 levels of nodes, and 1 more level of only resources.
+
 	var self = this;
 
 	var ID_Level_Map = d3.map();
@@ -251,10 +256,31 @@ Tree.prototype.getIDLevelMapTraverseDown = function(IDLevelMap, node_id, levels_
 	IDLevelMap.set(node_id, levels_traversed);
 	
 	if (levels_down_num === 0)
+	{	
+		//now do one pass just for resources.
+		
+		//We are searching for children, so check if our current node is a parent of any nodes, and traverse downwards
+		self.links.data().forEach(function (link)
+		{
+			if (link.source.id === node_id && link.target.id[0] === 'r')
+			{
+				//We found a resource child!!
+				//A child is any node that has a link that originates at our node
+				self.getIDLevelMapTraverseDown(IDLevelMap, link.target.id, levels_down_num - 1, levels_traversed + 1);
+			}
+			}
+		);
+		
+		return;
+	}
+
+	if (levels_down_num === -1)
 	{
 		//there are no more children to find
 		return;
 	}
+
+
 	
 	//We are searching for children, so check if our current node is a parent of any nodes, and traverse downwards
 	self.links.data().forEach(function (link)
@@ -379,6 +405,8 @@ Tree.prototype.updateDataNodes = function(selection, data)
 				.on("click", function(){self.nodeClicked(this);})
 				.on('contextmenu', function(d, i){self.menuContextNodeOpen(this, d, i);});
 	
+	console.log("Added nodes: ", nodes_enter);
+
 	nodes_enter.append("rect");
 	nodes_enter.append("text");
 
@@ -402,8 +430,8 @@ Tree.prototype.updateDataNodes = function(selection, data)
 
 			var coordinates = 
 			{
-				x: 0,
-				y: 0,
+				x: self.frame.boundary.width/2,
+				y: self.frame.boundary.height/2,
 				fx: null,
 				fy: null,
 				x_new: null,
@@ -521,6 +549,7 @@ Tree.prototype.updateDataNLevels = function(node_id, levels_up_num, levels_down_
 
 	console.log("Updating data for N Levels with:", node_id, levels_up_num, levels_down_num, data);
 
+	self.simulation.stop();
 
 	var nodes_updated_map;
 
@@ -939,7 +968,7 @@ Tree.prototype.centerOnNode = function(node)
 	self.nodes_simulated = self.nodes.filter(function(d)
 		{
 			var style = self.locals.style.get(this);
-			return style.level !== undefined;
+			return (style.level >= -1 && style.level <= 2);
 		}	
 	);
 	self.links_simulated = self.links.filter(function(d)
