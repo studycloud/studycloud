@@ -620,13 +620,12 @@ Tree.prototype.drawNodes = function()
 							}
 						);
 
-				if(style.level <= 1) // leaves text hidden for level 2+ nodes
-				{
-					node.select("text")
-						.text(function(d){return d.name;});
-				}
+				node_text = node.select("text");
 
-				node.select("text")
+				node_text
+					.text(function(d){return d.name;});
+
+				node_text
 					.transition(transition)
 						.on("start", function(d)
 							{	
@@ -646,7 +645,7 @@ Tree.prototype.drawNodes = function()
 						)
 						.attr("opacity",function(d)
 							{
-								return style.opacity;
+									return style.labeled * style.opacity;
 							}
 						);
 			}
@@ -950,7 +949,7 @@ Tree.prototype.centerOnNode = function(node)
 	self.links_simulated = self.links.filter(function(d)
 		{
 			var style = self.locals.style.get(this);
-			return style.level !== undefined;
+			return (style.level >= -1 && style.level <= 1);
 		}	
 	);
 
