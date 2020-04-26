@@ -11,27 +11,32 @@ $(document).ready(function() {
     displayContainer("forget");
   });
 
-	// When the user clicks on the create button, also open the modal but with the resource viewer
+	// TODO: delete the button and this, testing only
 	$("#editor-btn").click(function(event)
 	{
-    var temp_resource_id = 23;
+    var temp_resource_id = 2;
 		openResourceEditor(temp_resource_id);
 	});
 
+  // TODO: delete the button and this, testing only
 	$("#resource-meta-btn").click(function(event)
 	{
-    var temp_resource_id = 23;
+    var temp_resource_id = 2;
 		openResourceViewer(temp_resource_id);
   });
 
+  // TODO: delete the button and this, testing only
   $("#resource-creator-btn").click(function(event)
   {
-    openResourceEditor(25);
+    var temp_node_id = 10;
+    openResourceCreator(temp_node_id);
   });
   
   // When the user clicks on edit icon in resource viewer 
   $("#open-resource-editor").click(function(event) 
   {
+    // get the resource id
+    var temp_resource_id = document.getElementById('resource-id').innerHTML;
     // clear what is displayed in resource viewer
     document.getElementById('edit-icon').style.display = "none";
     document.getElementById('modules').innerHTML = " "; //clean the display box up
@@ -39,7 +44,7 @@ $(document).ready(function() {
 
     // change the url from /resources/{resource_id} to 
     // /resources/{resource_id}/edit
-    history.pushState({},'','edit');
+    history.pushState({},'',window.location.href+'/edit');
 
     openResourceEditor(temp_resource_id);
   });
@@ -74,17 +79,4 @@ window.onmousedown = function(event)
 function displayContainer(container) {
   // Display this container, undisplay all other containers.
   document.getElementById(container + "-container").style.display = "block";
-}
-
-// When the user clicks on the create button, also open the modal but with the resource viewer
-function openResourceCreator(nodeId) {
-  document.getElementById("my-modal").style.display = "block";
-  displayContainer("resource");
-  createNewResource(nodeId);
-  $('select[name="attach').selectstyle({
-    width: 400,
-    height: 300,
-    theme: "light",
-    onchange: function(val) {}
-  });
 }
