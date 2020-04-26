@@ -363,3 +363,13 @@ h6 {
   font-weight: bold;
 }
 
+sup {
+  vertical-align: super;
+  font-size: smaller;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+

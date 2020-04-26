@@ -6,21 +6,23 @@ var pre_updated_content_num = content_num;
 
 /**
  * TODO: 
- * 2. Ask Max does the resource creator takes the node id?
+ * 2. Ask: does the resource creator takes the node id?
  * 3. Problem that might not be a problem in the future? 
  * 	http://127.0.0.1:8000/resources/2/edit/edit
  *  in login modal, now it will just append edit to the current url
  * 	Hopefully in the future, it will redirect to the right url after we submit the content?
  * 4. TinyMCE text styling problems...
- * 		- h2, h3, h4, h5, h6
- * 		- subscript
- * 		- superscript
  * 		- code block
  * 		- hide DIV and pre?
  * 	  currently working...
  * 		- indent
  * 		- underline
  * 		- strike through
+ *  	- h2, h3, h4, h5, h6
+ * 		- bold
+ * 		- italicize
+ * 		- subscript
+ * 		- superscript
  * 		
  * 
  */
