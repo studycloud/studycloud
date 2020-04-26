@@ -230,11 +230,6 @@
           box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #0b0c17, inset 0 0.063em #2e2f5a, inset 0 -0.188em #2e2f5a;
 }
 
-h1 {
-  font-size: 50px;
-  font-weight: bold;
-}
-
 .use-list-scrolling-wrapper {
   height: 60px;
   width: 60%;
@@ -299,10 +294,72 @@ ul#content-type-selector li input {
 * Somehow these tags get overwritten (maybe due to CSS inheritence)
 *   redefine the tag here
 */
+
 strong {
-  font-weight: bold; 
+  font-weight: bold;
 }
 
 em {
   font-style: italic;
 }
+
+h1 {
+  display: block;
+  font-size: 2em;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-top: 0.83em;
+  margin-bottom: 0.83em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h3 {
+  display: block;
+  font-size: 1.17em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h4 {
+  display: block;
+  font-size: 1em;
+  margin-top: 1.33em;
+  margin-bottom: 1.33em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h5 {
+  display: block;
+  font-size: .83em;
+  margin-top: 1.67em;
+  margin-bottom: 1.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h6 {
+  display: block;
+  font-size: .67em;
+  margin-top: 2.33em;
+  margin-bottom: 2.33em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+

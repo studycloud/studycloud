@@ -1,5 +1,4 @@
-svg.tree 
-{
+svg.tree {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -7,95 +6,83 @@ svg.tree
 }
 
 .link,
-.link-deleted 
-{
+.link-deleted {
   display: none;
 }
 
-#topic-tree 
-{
+#topic-tree {
   width: 100%;
   height: 600px;
 }
 
-.tree 
-{
+.tree {
   width: 100%;
   height: 100%;
   overflow: none;
 }
 
-.menu_context 
-{
-	position: absolute;
-	display: block;
-    visibility: hidden;
-	background-color: #f2f2f2;
-	border-radius: 10px;
-
-	font-family: Arial, sans-serif;
-	font-size: 16px;
-	border: none;
-
-	z-index:1200;
+.menu_context {
+  position: absolute;
+  display: block;
+  visibility: hidden;
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  border: none;
+  z-index: 1200;
 }
 
-.menu_context ul 
-{
-	list-style-type: none;
-	margin: 0px 0px;
-	padding: 0px;
-	cursor: default;
+.menu_context ul {
+  list-style-type: none;
+  margin: 0px 0px;
+  padding: 0px;
+  cursor: default;
 }
 
-.menu_context li 
-{
-	padding: 4px 10px;
-	border-radius: 10px;
+.menu_context li {
+  padding: 4px 10px;
+  border-radius: 10px;
 }
 
-.menu_context .material-icons
-{
-	padding-right: 6px;
+.menu_context .material-icons {
+  padding-right: 6px;
 }
 
-.menu_context *
-{
-	vertical-align: middle;
+.menu_context * {
+  vertical-align: middle;
 }
 
-.menu_context li[enabled=true]:hover, li[enabled=true]:active 
-{
-    background-color: #cddbff;
+.menu_context li[enabled=true]:hover,
+li[enabled=true]:active {
+  background-color: #cddbff;
 }
 
-.menu_context li[enabled=false] 
-{
-    color: grey !important;
+.menu_context li[enabled=false] {
+  color: grey !important;
 }
 
-.node text, .node_captured text {
-    dominant-baseline: central;
-    text-anchor: middle;
-    fill: white;
-    stroke: black;
-    stroke-width: 0.02em;
-    font-size: 16pt;
-    font-family: sans-serif;
-    font-weight: bold;
-    text-anchor: middle;
+.node text,
+.node_captured text {
+  dominant-baseline: central;
+  text-anchor: middle;
+  fill: white;
+  stroke: black;
+  stroke-width: 0.02em;
+  font-size: 16pt;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-anchor: middle;
 }
 
-.node.captured rect 
-{
-    stroke: #686868;
-    stroke-width: 0.3em;
-    stroke-dasharray: 1.4em;
+.node.captured rect {
+  stroke: #686868;
+  stroke-width: 0.3em;
+  stroke-dasharray: 1.4em;
 }
 
-.node_captured rect
-{
-    rx: 20px;
+.node_captured rect {
+  rx: 20px;
 }
 
 .button_remove circle {
@@ -107,3 +94,4 @@ svg.tree
   stroke-width: 2;
   stroke: black;
 }
+

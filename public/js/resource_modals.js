@@ -12,8 +12,6 @@ var pre_updated_content_num = content_num;
  *  in login modal, now it will just append edit to the current url
  * 	Hopefully in the future, it will redirect to the right url after we submit the content?
  * 4. TinyMCE text styling problems...
- * 		- bold
- * 		- italicize
  * 		- h2, h3, h4, h5, h6
  * 		- subscript
  * 		- superscript
