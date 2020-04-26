@@ -295,3 +295,14 @@ ul#content-type-selector li input {
   left: 100%;
 }
 
+/**
+* Somehow these tags get overwritten (maybe due to CSS inheritence)
+*   redefine the tag here
+*/
+strong {
+  font-weight: bold; 
+}
+
+em {
+  font-style: italic;
+}
