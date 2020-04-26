@@ -73,6 +73,7 @@ Route::patch('/classes/attach/{class?}',
 		return (new ClassController)->attach($request, $class);
 	}
 )->name('resources.attach');
+Route::get('import_classes', 'ClassController@import');
 
 Route::get('admin',
 	function()
