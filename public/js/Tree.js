@@ -116,32 +116,24 @@ Tree.prototype.simulationInitialize = function()
 		.alphaTarget(-1)
 		.alphaDecay(0.002)
 		.force("ForceLink", d3.forceLink())
-		.force("ForceCharge", d3.forceManyBody())
-		.force("ForceCenterX", d3.forceX(self.frame.boundary.width/2))
-		.force("ForceCenterY", d3.forceY(self.frame.boundary.height/2));
+		.force("ForceCharge", d3.forceManyBody());
 
 	// every time a tick event is fired on a node, call self.draw()
 	self.simulation
 		.nodes(self.nodes.data())
 		.on('tick', function(){self.draw()});
 
-	self.simulation.force("ForceCenterX")
-		.strength(0.11);
-
-	self.simulation.force("ForceCenterY")
-		.strength(0.11);	
-
 	// does the id function set the data_id attribute on every link?
 	self.simulation
 		.force("ForceLink")
-			.strength(1)
+			.strength(.5)
 			.links(self.links.data())
 			.id(function(d){return d.id;})
 			.distance(400);
 
 	self.simulation
 		.force("ForceCharge")
-			.strength(-1000);
+			.strength(-100);
 };
 
 Tree.prototype.simulationReheat = function()
@@ -898,7 +890,7 @@ Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 			case 0: 
 				return 200;
 			case 1: 
-				return 50;	
+				return 80;	
 			default:
 				return 280;
 			}
