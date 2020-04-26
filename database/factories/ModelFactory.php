@@ -112,6 +112,10 @@ $factory->define(App\Notice::class, function (Faker\Generator $faker) {
 		'deadline' => Carbon::createFromTimestamp($faker->dateTimeBetween('now', '+1 month')->getTimestamp())->addHours($faker->numberBetween(1, 20))->format('Y-m-d H:i:s'),
 		'description' => $faker->text(),
 		'link' => $faker->text(),
+		'status' => $faker->randomElement(
+			//get all user ids and allow some to be null
+			array_merge(App\User::pluck('id')->toArray(), [null])
+		)
     ];
 });
 

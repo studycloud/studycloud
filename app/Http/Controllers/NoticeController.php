@@ -31,8 +31,11 @@ class NoticeController extends Controller
         return $notices->map(function($notice, $notice_id) {
             return view('notice', [
                 'author' => $notice->author, 
-                'description' => $notice->description
-                //'deadline' => $notice->deadline
+                'description' => $notice->description,
+                'deadline' => $notice->deadline,
+                'link' => $notice->link,
+                'priority' => $notice->priority,
+                'id' => $notice_id
             ])->render();
         })->implode("");
     }
@@ -59,11 +62,17 @@ class NoticeController extends Controller
             ], 
             'priority' => 'integer|max:255',
             'deadline' => 'date|after:now|nullable',
-            'description' => 'string|required'
-		]);
+            'description' => 'string|required',
+            'status' => [
+                'integer',
+                'nullable',
+                Rule::in(
+                    User::pluck('id')->toArray()
+                )
+		    ]]);
 
 		// create a new Notice using mass assignment to add the 'name' attribute
-		$notice = (new Notice)->fill($validated);
+        $notice = (new Notice)->fill($validated);
 		$notice->author_id = Auth::id();
 		// check that the parent attribute is not 0
 		// otherwise, don't set the parent attribute, since it will default to NULL

@@ -116,7 +116,7 @@ class User extends Authenticatable
 
 	// again, probs not relevant anymore
 	/**
-	 * returns all users as a collection of User objects
+	 * returns all admins as a collection of User objects
 	 */
 	public static function getAllAdmins()
 	{

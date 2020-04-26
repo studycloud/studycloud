@@ -12,7 +12,8 @@ class Notice extends Model
 	 * @var array
 	 */
     //need to validate parent_id
-    protected $fillable = ['description', 'link', 'priority', 'deadline', 'parent_id'];
+    //status is null if not claimed, and owner_id if claimed
+    protected $fillable = ['description', 'link', 'priority', 'deadline', 'parent_id', 'status'];
     
     public $timestamps = false;
     public static function boot() 

@@ -25,6 +25,8 @@ class CreateNoticesTable extends Migration
             //$table->tinyInteger('difficulty')->unsigned()->default(1);
             $table->timestamp('deadline')->nullable();
             $table->timestamp('created_at')->useCurrent();
+            $table->integer('status')->unsigned()->nullable();
+            $table->foreign('status')->references('id')->on('users');
         });
     }
 
