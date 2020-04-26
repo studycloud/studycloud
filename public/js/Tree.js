@@ -339,7 +339,7 @@ Tree.prototype.updateDataNodes = function(selection, data)
 			var coordinates = self.locals.coordinates.get(this);
 
 			coordinates.x = d.x;
-			coordinates.x = d.y;
+			coordinates.y = d.y;
 			coordinates.fx = d.fx;
 			coordinates.fy = d.fy;
 		}
@@ -417,7 +417,7 @@ Tree.prototype.updateDataNodes = function(selection, data)
 			var coordinates = self.locals.coordinates.get(this);
 
 			d.x = coordinates.x;
-			d.y = coordinates.x;
+			d.y = coordinates.y;
 			d.fx = coordinates.fx;
 			d.fy = coordinates.fy;
 		}
@@ -508,26 +508,14 @@ Tree.prototype.updateDataNLevels = function(node_id, levels_up_num, levels_down_
 	console.log("data:", data);
 
 	var nodes_updated_selection = self.nodes.filter(function(d){return nodes_updated_map.has(d.id)});
-	var links_updated_selection = self.links.filter(function(d)
-		{
-			//console.log(nodes_updated_map.get(d.source.id) < levels_down_num);
-			if (nodes_updated_map.has(d.source.id) && nodes_updated_map.has(d.target.id))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-	);
+	var links_updated_selection = self.links.filter(function(d){return nodes_updated_map.has(d.source.id) && nodes_updated_map.has(d.target.id)});
 
 	console.log(links_updated_selection);
 
 	self.updateDataNodes(nodes_updated_selection, data.nodes);
 	self.updateDataLinks(links_updated_selection, data.connections);
 
-	//self.simulationRestart();
+	self.simulationRestart();
 };
 
 
@@ -995,6 +983,9 @@ Tree.prototype.nodeClicked = function(node)
 		var callback_error = function(error){console.log(error)};
 
 		self.server.getTree(node_ID.slice(1), 1, 2, callback_error, callback_success);
+
+		//Center on the node we clicked on
+		self.centerOnNode(node);
 
 	}
 	else
