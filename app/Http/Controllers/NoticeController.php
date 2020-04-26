@@ -35,7 +35,8 @@ class NoticeController extends Controller
                 'deadline' => $notice->deadline,
                 'link' => $notice->link,
                 'priority' => $notice->priority,
-                'id' => $notice_id
+                'id' => $notice_id,
+                'status' => $notice->status
             ])->render();
         })->implode("");
     }
