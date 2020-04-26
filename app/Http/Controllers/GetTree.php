@@ -80,6 +80,7 @@ class GetTree extends Controller
 			],
 			'levels_up' => 'nullable|integer|min:0',
 			'levels_down' => 'nullable|integer|min:0',
+			'ancestor_resources' => 'nullable|boolean'
 		]);
 
 		// now, retrieve the input
@@ -87,23 +88,37 @@ class GetTree extends Controller
 		$node_id = is_null($node_id) ? 0 : $node_id;
 		$up = $request->input('levels_up');
 		$down = $request->input('levels_down');
+		$ancestor_resources = $request->input('ancestor_resources');
+		$ancestor_resources = is_null($ancestor_resources) ? false : $ancestor_resources;
 
-		return $this->show($node_id, $up, $down);
+		return $this->show($node_id, $up, $down, $ancestor_resources);
 	}
 
 	/**
 	 * converts a portion of the tree to JSON for traversal by the JavaScript team
-	 * @param	integer		$node_id		the id of the current node in the tree; defaults to the root of the tree, which has an id of 0
-	 * @param	int|null	$levels_up		the number of ancestor levels of the tree to return; defaults to infinity
-	 * @param	int|null	$levels_down	the number of descendant levels of the tree to return; defaults to infinity
+	 * @param	integer		$node_id			the id of the current node in the tree; defaults to the root of the tree, which has an id of 0
+	 * @param	int|null	$levels_up			the number of ancestor levels of the tree to return; defaults to infinity
+	 * @param	int|null	$levels_down		the number of descendant levels of the tree to return; defaults to infinity
+	 * @param	bool|null	$ancestor_resources	whether to return the resources of the ancestors; defaults to true
 	 * @return	Collection					the nodes and connections of the target portion of the tree
 	 */
-	public function show($node_id = 0, int $levels_up = null, int $levels_down = null)
+	public function show($node_id = 0, int $levels_up = null, int $levels_down = null, bool $ancestor_resources = false)
 	{
-		// first, get the required data
-		$this->getNodes($node_id, $levels_up, $levels_down);
+		// first, get the required descendants (and the current node)
+		$this->getDescendantNodes($node_id, $levels_down);
+		// now, get the node_ids, since we'll need to get resources for them
+		$node_ids = $this->tree->pluck('id');
+		// next, get the ancestor nodes
+		$this->getAncestorNodes($node_id, $levels_up);
 		// then, convert the data to the nodes/connections format
-		$node_ids = $this->convertFormat();
+		if ($ancestor_resources)
+		{
+			$node_ids = $this->convertFormat();
+		}
+		else
+		{
+			$this->convertFormat();	
+		}
 
 		// get the converted resources of each node in the tree
 		$resources = $this->getResourceNodes($node_ids);
@@ -122,7 +137,7 @@ class GetTree extends Controller
 	 * @param	int|null	$levels_up		the number of ancestor levels of the tree to return; defaults to infinity
 	 * @param	int|null	$levels_down	the number of descendant levels of the tree to return; defaults to infinity
 	 */
-	private function getNodes($node_id, $levels_up, $levels_down)
+	private function getAncestorNodes($node_id, $levels_up)
 	{
 		$root = $this->model_name::getRoot();
 		$node = null;
@@ -130,10 +145,26 @@ class GetTree extends Controller
 		{
 			$node = $this->model_name::find($node_id);
 		}
-		// get the ancestors and descendants of this node in a flat collection
-		$this->tree = (new $this->repo)->ancestors($node, $levels_up, $root)->merge(
-			(new $this->repo)->descendants($node, $levels_down, $root)
-		);
+		// get ancestors
+		$this->tree = (new $this->repo)->ancestors($node, $levels_up, $root)->merge($this->tree);
+	}
+
+	/**
+	 * get the raw nodes and connections data
+	 * @param	integer		$node_id		the id of the current node in the tree; defaults to the root of the tree, which has an id of 0
+	 * @param	int|null	$levels_up		the number of ancestor levels of the tree to return; defaults to infinity
+	 * @param	int|null	$levels_down	the number of descendant levels of the tree to return; defaults to infinity
+	 */
+	private function getDescendantNodes($node_id, $levels_down)
+	{
+		$root = $this->model_name::getRoot();
+		$node = null;
+		if ($node_id != 0)
+		{
+			$node = $this->model_name::find($node_id);
+		}
+		// get the descendants
+		$this->tree = (new $this->repo)->descendants($node, $levels_down, $root);
 		// add the current node to the data
 		// but use the root if the current node is null
 		$this->tree->prepend(collect(is_null($node) ? $root : $node));
