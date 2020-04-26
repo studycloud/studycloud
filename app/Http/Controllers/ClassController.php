@@ -281,6 +281,7 @@ class ClassController extends Controller
 	 */
 	public function import(Request $request)
 	{
-		return $this->tree_api->update();
+		// TODO: validate request
+		return $this->tree_api->update($request->input('parent_id'));
 	}
 }

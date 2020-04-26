@@ -4,6 +4,7 @@ namespace App\TreeAPIs;
 
 use GuzzleHttp\Client;
 use App\TreeAPIs\TreeAPI;
+use App\Academic_Class;
 use Illuminate\Support\Facades\Validator;
 
 class HyperscheduleAPI implements TreeAPI
@@ -27,7 +28,7 @@ class HyperscheduleAPI implements TreeAPI
 	/**
 	 * update the data associated with this API in the database
 	 */
-	public function update()
+	public function update(int $parent_id = null)
 	{
 		// make the request to their API
 		$res = $this->client->request('GET', $this->url, [
@@ -43,7 +44,7 @@ class HyperscheduleAPI implements TreeAPI
 			abort($res->getStatusCode(), $response['error']);
 		}
 		// convert the class data to a format we can work with
-		$classes = $this->toClasses($response);
+		$classes = $this->toClasses($response['data']['courses'], $parent_id);
 		// tell the user if it worked
 		return $response;
 	}
@@ -60,9 +61,21 @@ class HyperscheduleAPI implements TreeAPI
 		// TODO: validate the data, too
 	}
 
-	protected function toClasses($value='')
+	protected function toClasses($courses, $parent_id)
 	{
-		# code...
+		$classes = collect();
+		$parent = App\Academic_Class::find($parent_id);
+		foreach ($courses as $course_code => $course)
+		{
+			$class = new Academic_Class();
+			$class->name = $course['courseName'];
+			if (!is_null($parent_id))
+			{
+				$class->parent()->associate($parent);
+			}
+			$classes = $classes->push($class);
+		}
+		return $classes;
 	}
 
 }
