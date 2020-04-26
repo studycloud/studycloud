@@ -13,6 +13,7 @@ var pre_updated_content_num = content_num;
  * 	Hopefully in the future, it will redirect to the right url after we submit the content?
  * 4. TinyMCE text styling problems...
  * 		- code block
+ * 			code block is styled, but Tiny MCE likes to add random code tags once you hit enter (TODO)
  * 		- hide DIV and pre?
  * 	  currently working...
  * 		- indent
@@ -23,7 +24,7 @@ var pre_updated_content_num = content_num;
  * 		- italicize
  * 		- subscript
  * 		- superscript
- * 		
+ * 
  * 
  */
 
@@ -438,6 +439,7 @@ function addTinyMCE() {
 		selector: "#tinymce",
 		// disable menubar (file, edit, etc.)
 		menubar: false,
+		// allow tinyMCE to have something close to tab indent
 		setup: function(ed) {
 			ed.on('keydown', function(evt) {
 				if (evt.keyCode == 9){ // tab pressed	

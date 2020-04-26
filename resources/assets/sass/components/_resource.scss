@@ -312,12 +312,29 @@ h6 {
 	font-weight: bold;
 }
 
-sup{
+sup {
 	vertical-align: super;
 	font-size: smaller;
 }
 
-sub{
+sub {
 	vertical-align: sub;
 	font-size: smaller;
+}
+
+code {
+	background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-left: 3px solid #f36d33;
+    color: #666;
+    page-break-inside: avoid;
+    font-family: monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 1.6em;
+    max-width: 100%;
+    overflow: auto;
+    padding: 1em 1.5em;
+    display: block;
+    word-wrap: break-word;
 }
