@@ -405,6 +405,8 @@ Tree.prototype.updateDataNodes = function(selection, data)
 				.on("click", function(){self.nodeClicked(this);})
 				.on('contextmenu', function(d, i){self.menuContextNodeOpen(this, d, i);});
 	
+	console.log("Added nodes: ", nodes_enter);
+
 	nodes_enter.append("rect");
 	nodes_enter.append("text");
 
@@ -428,8 +430,8 @@ Tree.prototype.updateDataNodes = function(selection, data)
 
 			var coordinates = 
 			{
-				x: 0,
-				y: 0,
+				x: self.frame.boundary.width/2,
+				y: self.frame.boundary.height/2,
 				fx: null,
 				fy: null,
 				x_new: null,
@@ -547,6 +549,7 @@ Tree.prototype.updateDataNLevels = function(node_id, levels_up_num, levels_down_
 
 	console.log("Updating data for N Levels with:", node_id, levels_up_num, levels_down_num, data);
 
+	self.simulation.stop();
 
 	var nodes_updated_map;
 
@@ -969,7 +972,7 @@ Tree.prototype.centerOnNode = function(node)
 	self.nodes_simulated = self.nodes.filter(function(d)
 		{
 			var style = self.locals.style.get(this);
-			return style.level !== undefined;
+			return (style.level >= -1 && style.level <= 2);
 		}	
 	);
 	self.links_simulated = self.links.filter(function(d)
