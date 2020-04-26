@@ -36,23 +36,28 @@ class HyperscheduleAPI implements TreeAPI
 			]
 		]);
 		// validate the response! <-- important to make sure the data doesn't have anything sneaky in it!
-		$this->validate($res);
+		$response = $this->validate($res);
 		// now check that there wasn't an error
-		if ($res->getStatusCode() == 200 || !is_null($res->getBody()['error']))
+		if ($res->getStatusCode() != 200 || !is_null($response['error']))
 		{
-			abort($res->getStatusCode(), $res->getBody()['error']);
+			abort($res->getStatusCode(), $response['error']);
 		}
 		// convert the class data to a format we can work with
-		$classes = $this->toClasses($res->getBody());
+		$classes = $this->toClasses($response);
 		// tell the user if it worked
-		return $res->getBody();
+		return $response;
 	}
 
-	protected function validate($response)
+	protected function validate($res)
 	{
-		$validator = Validator::make($res->getBody(), [
-
-		]);
+		$response = json_decode($res->getBody()->__toString(), true);
+		return Validator::make($response, [
+			'error' => 'string|nullable',
+			'data' => 'exclude_if:error,null|array',
+			'until' => 'exclude_if:error,null|integer',
+			'full' => 'exclude_if:error,null|boolean'
+		])->validate();
+		// TODO: validate the data, too
 	}
 
 	protected function toClasses($value='')
