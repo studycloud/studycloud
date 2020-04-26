@@ -553,113 +553,129 @@ Tree.prototype.drawLinks = function()
 		.attr('y2', function(d) { return d.target.y;});
 };
 
-Tree.prototype.drawNodes = function()
+Tree.prototype.drawNodesStyle = function(transition = null)
 {
 	var self = this;
 
-	self.nodes.each(function(d)
-		{
-			//Get the style object for the current node
-			var style = self.locals.style.get(this);
-			
-			// Check if the style has changed since the last time we rendered 
-			// so we don't run uncessesary code
-			if (style.updated === true)
-			{
-				var transition = d3.transition();
-				transition.duration(500);
-				transition.ease(d3.easeBackOut.overshoot(0.8));
-
-				var node = d3.select(this);
-
-				// Only run this code when we are not centering
-				// (since we do not need to change these transitions when centering)
-				
-				node.attr('transform', d3.transform()
-					.translate(function(d)
-						{
-							return [d.x, d.y];
-						}
-					)
-				);
-
-				node.select("rect")
-					.attr("fill", function(d)
-						{
-							return style.color;
-						}
-					)
-					.attr('transform', d3.transform()
-						.translate(function(d)
-							{
-								var width = this.width.animVal.value;
-								var height = this.height.animVal.value;
-								return [-width/2, -height/2];
-							}
-						)
-					);
-
-				node.select("rect")
-					.transition(transition)
-						.attr("width", function(d)
-							{
-								return style.width;
-							}
-						)
-						.attr("height", function(d)
-							{
-								return style.height;
-							}
-						)
-						.attr("rx", function(d)
-							{
-								if (style.level === -1)
-									return 0;
-								else
-									return style.width/2;
-							}
-						);
-
-				node_text = node.select("text");
-
-				node_text
-					.text(function(d){return d.name;});
-
-				node_text
-					.transition(transition)
-						.on("start", function(d)
-							{	
-								if (style.labeled)
-								{
-									this.style.visibility = "unset";
-								}
-							}
-						)
-						.on("end", function(d)
-							{
-								if (!style.labeled)
-								{
-									this.style.visibility = "hidden";
-								}
-							}
-						)
-						.attr("opacity",function(d)
-							{
-									return style.labeled * style.opacity;
-							}
-						);
+	if (transition === null)
+	{
+		transition = self.nodes.transition("style_redraw");
+		transition.duration(500);
+		transition.ease(d3.easeBackOut.overshoot(0.8));
+	}
+		
+	transition
+		.on("start", function(d)
+			{	
+				if (self.locals.style.get(this).visible)
+				{
+					this.style.visibility = "unset";
+				}
 			}
-			
-		}
-	);
+		)
+		.on("end", function(d)
+			{
+				var style = self.locals.style.get(this);
+				if (!style.visible)
+				{
+					this.style.visibility = "hidden";
+				}
+			}
+		)
+		.attr("opacity",function(d)
+			{
+				return self.locals.style.get(this).opacity;
+			}
+		);
+
+
+	transition.select("rect")
+		.attr("fill", function(d)
+			{
+				var style = self.locals.style.get(this);
+				return style.color;
+			}
+		)
+		.attr("width", function(d)
+			{
+				var style = self.locals.style.get(this);
+				return style.width;
+			}
+		)
+		.attr("height", function(d)
+			{
+				var style = self.locals.style.get(this);
+				return style.height;
+			}
+		)
+		.attr("rx", function(d)
+			{
+				var style = self.locals.style.get(this);
+
+				if (style.level === -1)
+					return 0;
+				else
+					return style.width/2;
+			}
+		);
 	
+	transition.select("text")
+			.on("start", function(d)
+				{	
+					var style = self.locals.style.get(this);
+					if (style.labeled)
+					{
+						this.style.visibility = "unset";
+					}
+				}
+			)
+			.on("end", function(d)
+				{
+					var style = self.locals.style.get(this);
+					if (!style.labeled)
+					{
+						this.style.visibility = "hidden";
+					}
+				}
+			)
+			.text(function(d){return d.name;})
+			.attr("opacity",function(d)
+				{
+					var style = self.locals.style.get(this);
+					return style.labeled * style.opacity;
+				}
+			);
+}
+
+Tree.prototype.drawNodesPosition = function()
+{
+	var  self = this;
+
+	self.nodes.attr('transform', d3.transform()
+		.translate(function(d)
+			{
+				return [d.x, d.y];
+			}	
+		)
+	);
+			
+	self.nodes.select("rect")
+		.attr('transform', d3.transform()
+			.translate(function(d)
+				{
+					var width = this.width.animVal.value;
+					var height = this.height.animVal.value;
+					return [-width/2, -height/2];
+				}
+			)
+		);
 };
 
 Tree.prototype.draw = function()
 {
 	var self = this;
 	
-	self.drawNodes();
+	self.drawNodesPosition();
 	self.drawLinks();
 };
 
@@ -757,7 +773,8 @@ Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
 
 				//Label the node with the level computed in the ID_level_Map
 				style.level = level;
-				
+				style.updated = true;	
+
 				coordinates.fx = null;
 				coordinates.fy = null;
 				coordinates.x_old = d.x;
@@ -889,7 +906,6 @@ Tree.prototype.centerOnNode = function(node)
 	//Set the on click handlers
 	self.nodes.on("click", function(d)
 	{
-
 		var style = self.locals.style.get(this);
 
 		switch (style.level)
@@ -905,38 +921,18 @@ Tree.prototype.centerOnNode = function(node)
 			}
 	});
 
-	var transition = d3.transition();
-				transition.duration(500);
-				transition.ease(d3.easeBackOut.overshoot(0.8));
+	var transition = self.nodes.transition();
+	transition.duration(500);
+	transition.ease(d3.easeBackOut.overshoot(0.8));
 
-	self.nodes
-		.transition(transition)
-			.on("start", function(d)
-				{	
-					if (self.locals.style.get(this).visible)
-					{
-						this.style.visibility = "unset";
-					}
-				}
-			)
-			.on("end", function(d)
-				{
-					if (!self.locals.style.get(this).visible)
-					{
-						this.style.visibility = "hidden";
-					}
-				}
-			)
-			.attr("opacity",function(d)
-				{
-					return self.locals.style.get(this).opacity;
-				}
-			)
-			.tween("coordinates", function(d)
-				{
-					return self.nodeCoordinateInterpolatorGenerator.bind(self)(d, this);
-				}
-			);
+	self.drawNodesStyle(transition)
+
+	transition
+		.tween("coordinates", function(d)
+			{
+				return self.nodeCoordinateInterpolatorGenerator.bind(self)(d, this);
+			}
+		);
 
 	self.simulation.stop();
 	
