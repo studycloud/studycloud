@@ -436,7 +436,16 @@ function submitNewResource(node_id_num) {
 function addTinyMCE() {
 	tinymce.init({
 		selector: "#tinymce",
-		menubar: false // disable menubar (file, edit, etc.)
+		// disable menubar (file, edit, etc.)
+		menubar: false,
+		setup: function(ed) {
+			ed.on('keydown', function(evt) {
+				if (evt.keyCode == 9){ // tab pressed	
+					ed.execCommand('mceInsertContent', false, '&emsp;&emsp;'); // inserts tab
+					evt.preventDefault();
+				}
+			});
+		},
 	});
 }
 
