@@ -1,4 +1,4 @@
-function Tree(type, frame_id, server, node_id = "t0", action = "open")
+function Tree(type, frame_id, server, node_id = "t0", action = "none")
 {		
 	//Creates a tree visualization with a type of <type> inside the DOM element <frame_id>
 	
@@ -80,7 +80,7 @@ function Tree(type, frame_id, server, node_id = "t0", action = "open")
 	self.menuContextNodeCreate();
 
 
-	if(action !== "open" && node_id.charAt(0) !== 'r')
+	if(action !== "none" && node_id.charAt(0) !== 'r')
 	{
 		throw "Tree constructor attempting to edit/add non-resource node " + node_id;
 	}
@@ -97,7 +97,7 @@ function Tree(type, frame_id, server, node_id = "t0", action = "open")
 	{
 		self.centerAndAdd(node_id);
 	}
-	else
+	else if(action !== "none")
 	{
 		throw "Invalid action passed to tree constructor: " + action;
 	}
@@ -929,9 +929,17 @@ Tree.prototype.centerOnNode = function(node)
 	{
 		var style = self.locals.style.get(this);
 
+		isResource = this.__data__.id.charAt(0) === 'r';
+
 		switch (style.level)
 			{
+
 				case -1:
+				case 0:
+					if(isResource){
+						self.nodeClicked(this);
+						break;
+					}
 				case 1:
 				case 2:
 					self.nodeClicked(this);
@@ -1029,8 +1037,7 @@ Tree.prototype.nodeClicked = function(node)
 	}
 	else
 	{
-		alert("Clicked resource: " + node.__data__.name);
-		//TODO: call the resource viewer on this node.
+		self.centerAndOpen(node_ID);
 	}
 
 };
@@ -1167,8 +1174,12 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 
 	if(data.id.charAt(0) !== 'r')
 	{
-		menu_context_items.add.enabled = false;
 		menu_context_items.edit.enabled = false;
+	}
+
+	if(data.id.charAt(0) !== 't')
+	{
+		menu_context_items.add.enabled = false;
 	}
 	
 	if (self.user_active_id === 0)
@@ -1421,16 +1432,34 @@ Tree.prototype.nodeUncapture = function(node, data, index)
 Tree.prototype.centerAndAdd = function(node_id)
 {
 	var self = this;
+
+	var node = self.nodes.filter(function(d,i){
+		return d.id === node_id;
+	});
+	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
+	openResourceCreator(node_id.substr(1));
 };
 
 Tree.prototype.centerAndEdit = function(node_id)
 {
 	var self = this;
+
+	var node = self.nodes.filter(function(d,i){
+		return d.id === node_id;
+	});
+	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
+	openResourceEditor(node_id.substr(1));
 };
 
 Tree.prototype.centerAndOpen = function(node_id)
 {
 	var self = this;
+
+	var node = self.nodes.filter(function(d,i){
+		return d.id === node_id;
+	});
+	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
+	openResourceViewer(node_id.substr(1));
 };
 
 //wrapper for centerAndAdd to be called from context menu
