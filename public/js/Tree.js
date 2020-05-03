@@ -929,9 +929,17 @@ Tree.prototype.centerOnNode = function(node)
 	{
 		var style = self.locals.style.get(this);
 
+		isResource = this.__data__.id.charAt(0) === 'r';
+
 		switch (style.level)
 			{
+
 				case -1:
+				case 0:
+					if(isResource){
+						self.nodeClicked(this);
+						break;
+					}
 				case 1:
 				case 2:
 					self.nodeClicked(this);
@@ -1166,8 +1174,12 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 
 	if(data.id.charAt(0) !== 'r')
 	{
-		menu_context_items.add.enabled = false;
 		menu_context_items.edit.enabled = false;
+	}
+
+	if(data.id.charAt(0) !== 't')
+	{
+		menu_context_items.add.enabled = false;
 	}
 	
 	if (self.user_active_id === 0)
@@ -1421,39 +1433,33 @@ Tree.prototype.centerAndAdd = function(node_id)
 {
 	var self = this;
 
-	console.log("node_id= " + node_id)
 	var node = self.nodes.filter(function(d,i){
-		console.log(d.id);
 		return d.id === node_id;
 	});
 	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
-	openResourceCreator(node_id);
+	openResourceCreator(node_id.substr(1));
 };
 
 Tree.prototype.centerAndEdit = function(node_id)
 {
 	var self = this;
 
-	console.log("node_id= " + node_id)
 	var node = self.nodes.filter(function(d,i){
-		console.log(d.id);
 		return d.id === node_id;
 	});
 	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
-	openResourceEditor(node_id);
+	openResourceEditor(node_id.substr(1));
 };
 
 Tree.prototype.centerAndOpen = function(node_id)
 {
 	var self = this;
 
-	console.log("node_id= " + node_id)
 	var node = self.nodes.filter(function(d,i){
-		console.log(d.id);
 		return d.id === node_id;
 	});
 	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
-	openResourceViewer(node_id);
+	openResourceViewer(node_id.substr(1));
 };
 
 //wrapper for centerAndAdd to be called from context menu
