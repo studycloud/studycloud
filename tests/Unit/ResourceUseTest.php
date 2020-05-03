@@ -17,8 +17,7 @@ class ResourceUseTest extends TestCase
      */
     public function testResourceUseCreation()
     {
-        //$this->assertTrue(true);
-    // how many ResourceUses do we have?
+    	// how many ResourceUses do we have?
 		$resource_use_count = ResourceUse::count();
 		// make a new resource_use but don't add it to database yet
 		$resource_use = factory(ResourceUse::class)->make([
@@ -32,13 +31,11 @@ class ResourceUseTest extends TestCase
 				'name' => $resource_use->name
 			]
 		);
-		//dd($response->exception);
 		$new_resource_use = ResourceUse::latest()->first();
 		// check: do we have a new ResourceUse?
 		$response->assertSuccessful();
 		$this->assertEquals(ResourceUse::count()-1, $resource_use_count);
 		// check: is the name what we expect?
 		$this->assertEquals($resource_use->name, $new_resource_use->name);
-
     }
 }
