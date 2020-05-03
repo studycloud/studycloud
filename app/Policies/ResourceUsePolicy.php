@@ -41,7 +41,6 @@ class ResourceUsePolicy
      */
     public function create(User $user)
     {
-        // return true;
         if (Auth::check()) {
             // The user is logged in...
             return true;
@@ -55,10 +54,10 @@ class ResourceUsePolicy
      * @param  \App\ResourceUse  $resourceUse
      * @return mixed
      */
-    // public function update(User $user, ResourceUse $resourceUse)
-    // {
-    //     //
-    // }
+    public function update(User $user, ResourceUse $resourceUse)
+    {
+        return Auth::user() == $resourceUse->author;
+    }
 
     /**
      * Determine whether the user can delete the resourceUse.
@@ -70,9 +69,6 @@ class ResourceUsePolicy
     public function delete(User $user, ResourceUse $resourceUse)
     {
         //TODO: implement admin here (or with the before function at the top)
-        if (Auth::check()) {
-            // The user is logged in...
-            return false;
-        }
+        return Auth::user() == $resourceUse->author;
     }
 }
