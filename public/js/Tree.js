@@ -776,7 +776,7 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 
 };
 
-Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
+Tree.prototype.computeTreeStyle = function(ID_Level_Map)
 {
 	var self = this;
 	
@@ -922,24 +922,28 @@ Tree.prototype.centerOnNode = function(node)
 
 	self.simulation.stop();
 	
-	self.computeTreeAttributes(ID_Level_Map);
+	self.computeTreeStyle(ID_Level_Map);
 
 	//Set the on click handlers
 	self.nodes.on("click", function(d)
 	{
 		var style = self.locals.style.get(this);
 
-		isResource = this.__data__.id.charAt(0) === 'r';
+		var is_resource = this.__data__.id.charAt(0) === 'r';
 
+
+		// Only handle the click event if the node that we clicked on was not currently centered on, or it is a resource
+		// TODO: Move all of these checks into the nodeClicked function itself. Here is not the right place to handle them
 		switch (style.level)
 			{
+				case 0:
+					if(is_resource)
+					{
+						self.nodeClicked(this);
+					}
+				break;
 
 				case -1:
-				case 0:
-					if(isResource){
-						self.nodeClicked(this);
-						break;
-					}
 				case 1:
 				case 2:
 					self.nodeClicked(this);
