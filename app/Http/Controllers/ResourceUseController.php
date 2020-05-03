@@ -81,7 +81,7 @@ class ResourceUseController extends Controller
      */
     public function update(Request $request, ResourceUse $resource_use)
     {
-        $this->authorize('update', ResourceUse::class);
+        $this->authorize('update', $resource_use);
         $validated = $request->validate([
             'name' => 'string|required|max:255|unique:App\ResourceUse,name'
         ]);
@@ -99,7 +99,7 @@ class ResourceUseController extends Controller
      */
     public function destroy(ResourceUse $resource_use)
     {
-        $this->authorize('delete', ResourceUse::class);
+        $this->authorize('delete', $resource_use);
         // check that the resource can be deleted
         Validator::make([
             'resources_count' => $resource_use->resources()->count()
