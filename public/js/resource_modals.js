@@ -367,6 +367,11 @@ function submitNewResource(node_id_num) {
 	var resource_name = document.getElementById("resource-name").innerHTML;
 	var resource_use = findUseOrType("resource-use-selector");
 	var class_id = node_id_num.toString();
+	var content = document.getElementById("tinymce").value;
+	// NOTE: not so good hack to solve the problem:
+	// if the tinymce has code block, it will like to randomly add 
+	// <code> tag when the user hits enter
+	content = content.replace(new RegExp("<code></code>", "g"), "");
 
 	//store all the data in json
 	//PROBLEM: can only create 1 content for 1 resource
@@ -378,7 +383,7 @@ function submitNewResource(node_id_num) {
 			{
 				name: document.getElementById("content-name0").innerHTML,
 				type: findUseOrType("content-type-selector").toLowerCase(),
-				content: document.getElementById("tinymce").value,
+				content: content,
 			}
 		]
 	};
