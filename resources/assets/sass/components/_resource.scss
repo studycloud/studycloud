@@ -29,6 +29,7 @@ $off-wht: rgba(white,.4);
 	color: #4a4a54;
 	font-size:18px;
 }
+
 #resource-name {
 	font-size: 40px;
 	font-weight: bold;
@@ -333,7 +334,8 @@ code {
     line-height: 1.6;
     margin-bottom: 1.6em;
     max-width: 100%;
-    overflow: auto;
+	overflow: auto;
+	margin: 1.5em 10px;
     padding: 1em 1.5em;
     display: block;
     word-wrap: break-word;
@@ -345,13 +347,4 @@ blockquote {
 	margin: 1.5em 10px;
 	padding: 0.5em 10px;
 	quotes: "\201C""\201D""\2018""\2019";
-}
-
-blockquote:before {
-	color: #ccc;
-	content: open-quote;
-	font-size: 4em;
-	line-height: 0.1em;
-	margin-right: 0.25em;
-	vertical-align: -0.4em;
 }

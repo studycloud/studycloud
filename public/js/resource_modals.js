@@ -11,19 +11,6 @@ var pre_updated_content_num = content_num;
  * 	http://127.0.0.1:8000/resources/2/edit/edit
  *  in login modal, now it will just append edit to the current url
  * 	Hopefully in the future, it will redirect to the right url after we submit the content?
- * 4. TinyMCE text styling problems...
- * 	  currently working...
- * 		- indent
- * 		- underline
- * 		- strike through
- *  	- h2, h3, h4, h5, h6
- * 		- bold
- * 		- italicize
- * 		- subscript
- * 		- superscript
- * 		- code block
- * 			Note: the code itself is not highlighted (not MVP?)
- * 		- hide DIV and pre
  */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +70,7 @@ function openResourceViewer(resource_id) {
 }
 
 /**
- * NOT WORKING, NOT TESTED 
+ * Wrapper function to open the resource creator
  * @param {*} node_id_in Forgot what exactly is this... Probably the node where this resource
  * 							will branch off?
  */
@@ -467,7 +454,8 @@ function addTinyMCE() {
 				{title: 'Underline', icon: 'underline', format: 'underline'},
 				{title: 'Strikethrough', icon: 'strikethrough', format: 'strikethrough'},
 				{title: 'Superscript', icon: 'superscript', format: 'superscript'},
-				{title: 'Subscript', icon: 'subscript', format: 'subscript'}
+				{title: 'Subscript', icon: 'subscript', format: 'subscript'},
+				{title: 'Code', icon: 'code', format: 'code'}
 			]},
 			{title: 'Blocks', items: [
 				{title: 'Paragraph', format: 'p'},
@@ -480,6 +468,29 @@ function addTinyMCE() {
 				{title: 'Justify', icon: 'alignjustify', format: 'alignjustify'}
 			]}
 		],
+		content_style: 'blockquote {\
+			background: #f9f9f9;\
+			border-left: 10px solid #ccc;\
+			margin: 1.5em 10px;\
+			padding: 0.5em 10px;\
+			quotes: "\201C""\201D""\2018""\2019";\
+		}' +
+		'code {\
+			background: #f4f4f4;\
+			border: 1px solid #ddd;\
+			border-left: 3px solid #f36d33;\
+			color: #666;\
+			page-break-inside: avoid;\
+			font-family: monospace;\
+			font-size: 15px;\
+			line-height: 1.6;\
+			margin-bottom: 1.6em;\
+			max-width: 100%;\
+			overflow: auto;\
+			padding: 1em 1.5em;\
+			display: block;\
+			word-wrap: break-word;\
+		}',
 	});
 }
 
