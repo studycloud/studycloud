@@ -1,4 +1,4 @@
-function Tree(type, frame_id, server, node_id = "t0", action = "open")
+function Tree(type, frame_id, server, node_id = "t0", action = "none")
 {		
 	//Creates a tree visualization with a type of <type> inside the DOM element <frame_id>
 	
@@ -80,7 +80,7 @@ function Tree(type, frame_id, server, node_id = "t0", action = "open")
 	self.menuContextNodeCreate();
 
 
-	if(action !== "open" && node_id.charAt(0) !== 'r')
+	if(action !== "none" && node_id.charAt(0) !== 'r')
 	{
 		throw "Tree constructor attempting to edit/add non-resource node " + node_id;
 	}
@@ -97,7 +97,7 @@ function Tree(type, frame_id, server, node_id = "t0", action = "open")
 	{
 		self.centerAndAdd(node_id);
 	}
-	else
+	else if(action !== "none")
 	{
 		throw "Invalid action passed to tree constructor: " + action;
 	}
@@ -1029,8 +1029,7 @@ Tree.prototype.nodeClicked = function(node)
 	}
 	else
 	{
-		alert("Clicked resource: " + node.__data__.name);
-		//TODO: call the resource viewer on this node.
+		self.centerAndOpen(node_ID);
 	}
 
 };
@@ -1421,16 +1420,40 @@ Tree.prototype.nodeUncapture = function(node, data, index)
 Tree.prototype.centerAndAdd = function(node_id)
 {
 	var self = this;
+
+	console.log("node_id= " + node_id)
+	var node = self.nodes.filter(function(d,i){
+		console.log(d.id);
+		return d.id === node_id;
+	});
+	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
+	openResourceCreator(node_id);
 };
 
 Tree.prototype.centerAndEdit = function(node_id)
 {
 	var self = this;
+
+	console.log("node_id= " + node_id)
+	var node = self.nodes.filter(function(d,i){
+		console.log(d.id);
+		return d.id === node_id;
+	});
+	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
+	openResourceEditor(node_id);
 };
 
 Tree.prototype.centerAndOpen = function(node_id)
 {
 	var self = this;
+
+	console.log("node_id= " + node_id)
+	var node = self.nodes.filter(function(d,i){
+		console.log(d.id);
+		return d.id === node_id;
+	});
+	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
+	openResourceViewer(node_id);
 };
 
 //wrapper for centerAndAdd to be called from context menu
