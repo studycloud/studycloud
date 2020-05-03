@@ -6,13 +6,11 @@ var pre_updated_content_num = content_num;
 
 /**
  * TODO: 
- * 1. Merge???
- * 2. Ask Max does the resource creator takes the node id?
+ * 2. Ask: does the resource creator takes the node id?
  * 3. Problem that might not be a problem in the future? 
  * 	http://127.0.0.1:8000/resources/2/edit/edit
  *  in login modal, now it will just append edit to the current url
  * 	Hopefully in the future, it will redirect to the right url after we submit the content?
- * 
  */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +70,7 @@ function openResourceViewer(resource_id) {
 }
 
 /**
- * NOT WORKING, NOT TESTED 
+ * Wrapper function to open the resource creator
  * @param {*} node_id_in Forgot what exactly is this... Probably the node where this resource
  * 							will branch off?
  */
@@ -260,6 +258,12 @@ function submitEditedResource()
 	// 	so content_id is the same as resource_id
 	var content_id = resource_id;
 
+	var content = document.getElementById("tinymce").value;
+	// NOTE: not so good hack to solve the problem:
+	// if the tinymce has code block, it will like to randomly add 
+	// <code> tag when the user hits enter
+	content = content.replace(new RegExp("<code></code>", "g"), "");
+
 	// content_num = pre_updated_content_num;
 	
 	// store all the data in json
@@ -276,7 +280,7 @@ function submitEditedResource()
 				"id": content_id,
 				"name": document.getElementById("content-name0").innerHTML,
 				"type": findUseOrType("content-type-selector").toLowerCase(),
-				"content": document.getElementById("tinymce").value
+				"content": content
 			}
 		]
 	};
@@ -363,6 +367,11 @@ function submitNewResource(node_id_num) {
 	var resource_name = document.getElementById("resource-name").innerHTML;
 	var resource_use = findUseOrType("resource-use-selector");
 	var class_id = node_id_num.toString();
+	var content = document.getElementById("tinymce").value;
+	// NOTE: not so good hack to solve the problem:
+	// if the tinymce has code block, it will like to randomly add 
+	// <code> tag when the user hits enter
+	content = content.replace(new RegExp("<code></code>", "g"), "");
 
 	//store all the data in json
 	//PROBLEM: can only create 1 content for 1 resource
@@ -374,7 +383,7 @@ function submitNewResource(node_id_num) {
 			{
 				name: document.getElementById("content-name0").innerHTML,
 				type: findUseOrType("content-type-selector").toLowerCase(),
-				content: document.getElementById("tinymce").value,
+				content: content,
 			}
 		]
 	};
@@ -424,7 +433,69 @@ function submitNewResource(node_id_num) {
 function addTinyMCE() {
 	tinymce.init({
 		selector: "#tinymce",
-		menubar: false // disable menubar (file, edit, etc.)
+		// disable menubar (file, edit, etc.)
+		menubar: false,
+		// allow tinyMCE to have something close to tab indent
+		setup: function(ed) {
+			ed.on('keydown', function(evt) {
+				if (evt.keyCode == 9){ // tab pressed	
+					ed.execCommand('mceInsertContent', false, '&emsp;&emsp;'); // inserts tab
+					evt.preventDefault();
+				}
+			});
+		},
+		style_formats: [
+			{title: 'Headers', items: [
+				{title: 'Header 1', format: 'h1'},
+				{title: 'Header 2', format: 'h2'},
+				{title: 'Header 3', format: 'h3'},
+				{title: 'Header 4', format: 'h4'},
+				{title: 'Header 5', format: 'h5'},
+				{title: 'Header 6', format: 'h6'}
+			]},
+			{title: 'Inline', items: [
+				{title: 'Bold', icon: 'bold', format: 'bold'},
+				{title: 'Italic', icon: 'italic', format: 'italic'},
+				{title: 'Underline', icon: 'underline', format: 'underline'},
+				{title: 'Strikethrough', icon: 'strikethrough', format: 'strikethrough'},
+				{title: 'Superscript', icon: 'superscript', format: 'superscript'},
+				{title: 'Subscript', icon: 'subscript', format: 'subscript'},
+				{title: 'Code', icon: 'code', format: 'code'}
+			]},
+			{title: 'Blocks', items: [
+				{title: 'Paragraph', format: 'p'},
+				{title: 'Blockquote', format: 'blockquote'}
+			]},
+			{title: 'Alignment', items: [
+				{title: 'Left', icon: 'alignleft', format: 'alignleft'},
+				{title: 'Center', icon: 'aligncenter', format: 'aligncenter'},
+				{title: 'Right', icon: 'alignright', format: 'alignright'},
+				{title: 'Justify', icon: 'alignjustify', format: 'alignjustify'}
+			]}
+		],
+		content_style: 'blockquote {\
+			background: #f9f9f9;\
+			border-left: 10px solid #ccc;\
+			margin: 1.5em 10px;\
+			padding: 0.5em 10px;\
+			quotes: "\201C""\201D""\2018""\2019";\
+		}' +
+		'code {\
+			background: #f4f4f4;\
+			border: 1px solid #ddd;\
+			border-left: 3px solid #f36d33;\
+			color: #666;\
+			page-break-inside: avoid;\
+			font-family: monospace;\
+			font-size: 15px;\
+			line-height: 1.6;\
+			margin-bottom: 1.6em;\
+			max-width: 100%;\
+			overflow: auto;\
+			padding: 1em 1.5em;\
+			display: block;\
+			word-wrap: break-word;\
+		}',
 	});
 }
 

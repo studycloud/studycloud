@@ -1,4 +1,6 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);#resource-container {
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);@charset "UTF-8";
+
+#resource-container {
   max-width: 800px;
   margin: 0 auto;
 }
@@ -230,11 +232,6 @@
           box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #0b0c17, inset 0 0.063em #2e2f5a, inset 0 -0.188em #2e2f5a;
 }
 
-h1 {
-  font-size: 50px;
-  font-weight: bold;
-}
-
 .use-list-scrolling-wrapper {
   height: 60px;
   width: 60%;
@@ -293,5 +290,114 @@ ul#resource-use-selector li input,
 ul#content-type-selector li input {
   position: fixed;
   left: 100%;
+}
+
+/**
+* Somehow these tags get overwritten (maybe due to CSS inheritence)
+*   redefine the tag here
+*/
+
+strong {
+  font-weight: bold;
+}
+
+em {
+  font-style: italic;
+}
+
+h1 {
+  display: block;
+  font-size: 2em;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-top: 0.83em;
+  margin-bottom: 0.83em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h3 {
+  display: block;
+  font-size: 1.17em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h4 {
+  display: block;
+  font-size: 1em;
+  margin-top: 1.33em;
+  margin-bottom: 1.33em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h5 {
+  display: block;
+  font-size: .83em;
+  margin-top: 1.67em;
+  margin-bottom: 1.67em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+h6 {
+  display: block;
+  font-size: .67em;
+  margin-top: 2.33em;
+  margin-bottom: 2.33em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
+sup {
+  vertical-align: super;
+  font-size: smaller;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+code {
+  background: #f4f4f4;
+  border: 1px solid #ddd;
+  border-left: 3px solid #f36d33;
+  color: #666;
+  page-break-inside: avoid;
+  font-family: monospace;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 1.6em;
+  max-width: 100%;
+  overflow: auto;
+  margin: 1.5em 10px;
+  padding: 1em 1.5em;
+  display: block;
+  word-wrap: break-word;
+}
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C" "\201D" "\2018" "\2019";
 }
 
