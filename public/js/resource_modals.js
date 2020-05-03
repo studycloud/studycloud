@@ -273,6 +273,12 @@ function submitEditedResource()
 	// 	so content_id is the same as resource_id
 	var content_id = resource_id;
 
+	var content = document.getElementById("tinymce").value;
+	// NOTE: not so good hack to solve the problem:
+	// if the tinymce has code block, it will like to randomly add 
+	// <code> tag when the user hits enter
+	content = content.replace(new RegExp("<code></code>", "g"), "");
+
 	// content_num = pre_updated_content_num;
 	
 	// store all the data in json
@@ -289,7 +295,7 @@ function submitEditedResource()
 				"id": content_id,
 				"name": document.getElementById("content-name0").innerHTML,
 				"type": findUseOrType("content-type-selector").toLowerCase(),
-				"content": document.getElementById("tinymce").value
+				"content": content
 			}
 		]
 	};
