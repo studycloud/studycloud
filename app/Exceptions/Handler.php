@@ -60,6 +60,8 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 
-        return redirect()->guest('login');
+        // TODO: fix /login so that it redirects to the defualt provider
+        // and then change this to /login
+        return redirect()->guest('/login/google');
     }
 }
