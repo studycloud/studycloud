@@ -102,5 +102,7 @@ Route::resource('notices', 'NoticeController', ['only' => [
 ]]);
 
 Route::resource('resource_uses', 'ResourceUseController', ['only' => [
-	'index', 'store', 'destroy'
-]]);
+	'index', 'store', 'update', 'destroy'
+]])->parameters([
+	'resource_uses' => 'resource_use'
+]);
