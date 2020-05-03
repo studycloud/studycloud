@@ -103,13 +103,14 @@ class User extends Authenticatable
 		// }
 	}
 
+	//TO-DO: I DON'T THINK THIS FUNCTION WORKS!!!!!! try $this->getRoles()->contains($role)
 	/**
 	 * returns true if this user has the specified role and false otherwise
 	 * can take as input either a string representing a role (ex: "moderator") or an instance of Role. An exception will be raised if these criteria are not met
 	 */
 	public function hasRole($role)
 	{
-		Bouncer::is($user)->a($role);
+		Bouncer::is($this)->a($role);
 		//$role = User::roleAsStringWrapper($role);
 		//return $this->roles()->get()->contains($role);
 	}

@@ -36,7 +36,7 @@ class NoticeController extends Controller
                 'link' => $notice->link,
                 'priority' => $notice->priority,
                 'id' => $notice_id,
-                'status' => $notice->status
+                'owner' => $notice->owner
             ])->render();
         })->implode("");
     }

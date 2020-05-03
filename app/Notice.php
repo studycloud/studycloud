@@ -43,8 +43,8 @@ class Notice extends Model
     }
 
     /**
-	 * define the many-to-one relationship between classes and their author
-	 * @return User	the author of this class
+	 * define the many-to-one relationship between notices and their author
+	 * @return User	the author of this class, or "Study Cloud" if null
 	 */
     public function author()
 	{
@@ -53,5 +53,23 @@ class Notice extends Model
             $user->fname = 'Study';
             $user->lname = 'Cloud';
         });
-	}
+    }
+    
+    /**
+     * defines the many-to-one relationship between notices and their owner
+     * @return User the owner of the notice, or "No One" if null
+     */
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'status')->withDefault(function ($user) {
+            $user->fname = "No";
+            $user->lname = "One";
+        });
+        // $owner = User::find($this->status);
+        // if ($owner)
+        // {
+        //     return $owner->name();
+        // }
+        // return "No One";
+    }
 }
