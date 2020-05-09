@@ -15,6 +15,7 @@ abstract class CourseImportRequest extends FormRequest
      */
     public function authorize()
     {
+        // TODO: check if the current user has the course_import ability
         return true;
     }
 
@@ -28,5 +29,5 @@ abstract class CourseImportRequest extends FormRequest
     /**
      * import the data associated with this API in the database
      */
-    abstract public function import();
+    abstract public function course_import();
 }

@@ -273,6 +273,6 @@ class ClassController extends Controller
 	{
 		// when you have different API's, you'll be able to call each one from here
 		// in the same way, since they should all implement the CourseImportAPI abstract class
-		return $request->import();
+		return $request->course_import();
 	}
 }

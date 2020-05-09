@@ -21,29 +21,32 @@ class HyperscheduleAPI extends CourseImportRequest
 	 */
 	protected $client;
 
-
-	function __construct()
+	/**
+	 * Get the validation rules that apply to the request.
+	 *
+	 * @return array
+	 */
+	public function rules()
 	{
-		$this->client = new Client();
+		// check that school is valid according to https://github.com/MuddCreates/hyperschedule-api/blob/03e2d871fab46b8a23a96d4d7eefda07074cf8fb/hyperschedule/app.py#L75
+		return [
+			'parent_id' => 'string|nullable',
+			'school' => 'string|in:cmc,hmc,pitzer,pomona,scripps|required'
+		];
 	}
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
-            //
-        ];
-    }
 
 	/**
 	 * import the data associated with this API and add it to the database
 	 */
-	public function import(int $parent_id = null, string $school = 'hmc')
+	public function course_import()
 	{
+		// first, instantiate the guzzle client to make the request
+		$this->client = new Client();
+
+		// also, retrieve the input variables
+		$parent_id = $this->input('parent_id');
+		$school = $this->input('school');
+
 		// make the request to their API
 		$res = $this->client->request('GET', $this->url, [
 			'query' => [
@@ -68,11 +71,11 @@ class HyperscheduleAPI extends CourseImportRequest
 	{
 		return json_decode($res->getBody()->__toString(), true);
 		return Validator::make($response, [
-			'error' => 'string|nullable',
-			'data' => 'exclude_if:error,null|array',
-			'data.courses' => 'exclude_if:error,null|array',
-			'data.courses.courseName' => 'exclude_if:error,null|string|required|max:255',
-			'until' => 'exclude_if:error,null|integer',
+			'error' => 'string|nullable|required',
+			'data' => 'exclude_if:error,null|array|required',
+			'data.courses' => 'exclude_if:error,null|array|required',
+			'data.courses.courseName' => 'exclude_if:error,null|string|required|max:255|required',
+			'until' => 'exclude_if:error,null|integer|required',
 			'full' => 'exclude_if:error,null|boolean'
 		])->validate();
 		// TODO: validate the data, too
