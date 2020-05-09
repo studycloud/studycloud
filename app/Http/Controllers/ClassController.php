@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
-// use Validator;
-
 use App\Academic_Class;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -12,8 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Repositories\ClassRepository;
 use App\Rules\ValidClassParentAttachment;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\CourseImportRequest;
 use App\Rules\ValidClassChildrenAttachment;
-use App\TreeAPIs\HyperscheduleAPI as TreeAPI;
 
 class ClassController extends Controller
 {
@@ -30,20 +27,13 @@ class ClassController extends Controller
 	 *	PATCH		/classes/attach/{id}	classes.attach	alter either the parent or children of this class
 	 */
 
-	/**
-     * The course API instance. This is used for importing course data from an outside source.
-     */
-    protected $tree_api;
 
-
-	function __construct(TreeAPI $tree_api)
+	function __construct()
 	{
 		// verify that the user is signed in for all methods except index, show, and json
 		$this->middleware('auth', ['except' => ['index', 'show']]);
 
-		// TODO: add CheckStatus middleware?
-
-		$this->tree_api = $tree_api;
+		// TODO: add CheckStatus middleware?S
 	}
 
 	/**
@@ -276,12 +266,13 @@ class ClassController extends Controller
 	/**
 	 * Import course data from the school's API
 	 * 
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param  CourseImportRequest  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function import(Request $request)
+	public function import(CourseImportRequest $request)
 	{
-		// TODO: validate request
-		return $this->tree_api->update($request->input('parent_id'));
+		// when you have different API's, you'll be able to call each one from here
+		// in the same way, since they should all implement the CourseImportAPI abstract class
+		return $request->import();
 	}
 }

@@ -1,19 +1,20 @@
 <?php
 
-namespace App\TreeAPIs;
+namespace App\Http\Requests\CourseImportAPIs;
 
 use GuzzleHttp\Client;
-use App\TreeAPIs\TreeAPI;
 use App\Academic_Class;
+use App\Http\Requests\CourseImportRequest;
 use Illuminate\Support\Facades\Validator;
 
-class HyperscheduleAPI implements TreeAPI
+// CourseImportRequest is an abstract class
+class HyperscheduleAPI extends CourseImportRequest
 {
 	/**
 	 * the url from which to get the data
 	 */
 	// protected $url = "https://hyperschedule.herokuapp.com/api/v3/courses";
-	protected $url = "http://localhost:8000/courses.json";
+	protected $url = "http://localhost:8001/courses.json";
 
 	/**
 	 * the Guzzle client
@@ -26,10 +27,22 @@ class HyperscheduleAPI implements TreeAPI
 		$this->client = new Client();
 	}
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            //
+        ];
+    }
+
 	/**
-	 * update the data associated with this API in the database
+	 * import the data associated with this API and add it to the database
 	 */
-	public function update(int $parent_id = null, string $school = 'hmc')
+	public function import(int $parent_id = null, string $school = 'hmc')
 	{
 		// make the request to their API
 		$res = $this->client->request('GET', $this->url, [

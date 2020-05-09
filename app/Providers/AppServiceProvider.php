@@ -30,5 +30,14 @@ class AppServiceProvider extends ServiceProvider
 		if (file_exists($file)) {
 			require_once($file);
 		}
+
+		// register the import course request class
+		// So that when a controller asks for a class that implements the
+		// ImportCourseRequest abstract class, Laravel will be able to resolve
+		// it appropriately.
+		// When you have other schools and other CourseImportAPIs, you can
+		// turn this into a conditional if/elseif/elseif etc to determine the
+		// correct CourseImportAPI to use
+		$this->app->bind('App\Http\Requests\CourseImportRequest', 'App\Http\Requests\CourseImportAPIs\HyperscheduleAPI');
 	}
 }
