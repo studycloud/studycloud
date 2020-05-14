@@ -78,7 +78,7 @@ class Resource extends Model
 	 * Is this resource viewable by the public?
 	 * @return boolean
 	 */
-	public function status()
+	public function getStatus()
 	{
 		return boolval($this->status);
 	}
@@ -130,6 +130,6 @@ class Resource extends Model
 	 */
 	public function shouldBeSearchable()
 	{
-		return $this->status();
+		return $this->getStatus();
 	}
 }

@@ -13,7 +13,7 @@ class AddStatusColumn extends Migration
      */
     public function up()
     {
-         Schema::table('resources', function(Blueprint $table)
+        Schema::table('resources', function(Blueprint $table)
         {
             $table->integer('status')->default(1);
 

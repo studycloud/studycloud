@@ -26,6 +26,9 @@ class AddClassStatusColumn extends Migration
 	 */
 	public function down()
 	{
-		$table->dropColumn('status');
+        Schema::table('classes', function(Blueprint $table)
+        {
+			$table->dropColumn('status');
+		});
 	}
 }
