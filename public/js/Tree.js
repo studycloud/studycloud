@@ -1037,12 +1037,27 @@ Tree.prototype.nodeClicked = function(node)
 
 		//Center on the node we clicked on
 		self.centerOnNode(node);
-
+		//update url
+		if(node_ID !== "t0")
+		{
+			var newUrl = window.location.protocol + "//" + window.location.host + "/classes/" + node_ID;
+			window.history.replaceState("class", "class"+node_ID, newUrl);
+		}
+		else
+		{
+			//root node center is just /topics
+			var newUrl = window.location.protocol + "//" + window.location.host + "/topics";
+			window.history.replaceState("classTree", "topics", newUrl);
+		}
 	}
 	else
 	{
 		self.centerAndOpen(node_ID);
+		//update url
+		var newUrl = window.location.protocol + "//" + window.location.host + "/resources/" + node_ID;
+		window.history.replaceState("viewNode", "resourceViewer"+node_ID, newUrl);
 	}
+
 
 };
 
@@ -1453,6 +1468,9 @@ Tree.prototype.centerAndEdit = function(node_id)
 	});
 	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
 	openResourceEditor(node_id.substr(1));
+	//update url
+	var newUrl = window.location.protocol + "//" + window.location.host + "/resources/" + node_ID + "/edit";
+	window.history.replaceState("viewNode", "resourceEditor"+node_ID, newUrl);
 };
 
 Tree.prototype.centerAndOpen = function(node_id)
