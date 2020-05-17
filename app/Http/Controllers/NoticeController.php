@@ -66,10 +66,7 @@ class NoticeController extends Controller
             'description' => 'string|required',
             'status' => [
                 'integer',
-                'nullable',
-                Rule::in(
-                    User::pluck('id')->toArray()
-                )
+                'nullable'
 		    ]]);
 
 		// create a new Notice using mass assignment to add the 'name' attribute
@@ -91,10 +88,22 @@ class NoticeController extends Controller
      * @param  \App\Notice  $notice
      * @return \Illuminate\Http\Response
      */
-    // public function update(Request $request, Notice $notice)
-    // {
-    //     //
-    // }
+    public function update(Request $request, Notice $notice)
+    {
+        // first, validate the request
+		$validated = $request->validate([
+            'claimed' => 'boolean'
+            ]);
+            
+        if ($validated['claimed'])
+        {
+            $notice->status = Auth::user()->id;
+        }
+        else
+        {
+            $notice->status = null;
+        }
+    }
 
     /**
      * Remove the specified resource from storage.

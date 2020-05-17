@@ -98,7 +98,7 @@ Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider')->where
 Route::get('login/{provider}/callback', 'Auth\LoginController@handleProviderCallback')->where('provider', '^(google)$');
 
 Route::resource('notices', 'NoticeController', ['only' => [
-	'index', 'store', 'destroy'
+	'index', 'store', 'update', 'destroy'
 ]]);
 
 Route::resource('resource_uses', 'ResourceUseController', ['only' => [
