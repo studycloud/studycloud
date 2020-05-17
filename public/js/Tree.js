@@ -776,7 +776,7 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 
 };
 
-Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
+Tree.prototype.computeTreeStyle = function(ID_Level_Map)
 {
 	var self = this;
 	
@@ -922,24 +922,28 @@ Tree.prototype.centerOnNode = function(node)
 
 	self.simulation.stop();
 	
-	self.computeTreeAttributes(ID_Level_Map);
+	self.computeTreeStyle(ID_Level_Map);
 
 	//Set the on click handlers
 	self.nodes.on("click", function(d)
 	{
 		var style = self.locals.style.get(this);
 
-		isResource = this.__data__.id.charAt(0) === 'r';
+		var is_resource = this.__data__.id.charAt(0) === 'r';
 
+
+		// Only handle the click event if the node that we clicked on was not currently centered on, or it is a resource
+		// TODO: Move all of these checks into the nodeClicked function itself. Here is not the right place to handle them
 		switch (style.level)
 			{
+				case 0:
+					if(is_resource)
+					{
+						self.nodeClicked(this);
+					}
+				break;
 
 				case -1:
-				case 0:
-					if(isResource){
-						self.nodeClicked(this);
-						break;
-					}
 				case 1:
 				case 2:
 					self.nodeClicked(this);
@@ -1033,12 +1037,19 @@ Tree.prototype.nodeClicked = function(node)
 
 		//Center on the node we clicked on
 		self.centerOnNode(node);
+		//update url
+		var newUrl = window.location.protocol + "//" + window.location.host + "/classes/" + node_ID;
+		window.history.pushState("class", "class"+node_ID, newUrl);
 
 	}
 	else
 	{
 		self.centerAndOpen(node_ID);
+		//update url
+		var newUrl = window.location.protocol + "//" + window.location.host + "/resources/" + node_ID;
+		window.history.pushState("viewNode", "resourceViewer"+node_ID, newUrl);
 	}
+
 
 };
 
@@ -1449,6 +1460,9 @@ Tree.prototype.centerAndEdit = function(node_id)
 	});
 	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
 	openResourceEditor(node_id.substr(1));
+	//update url
+	var newUrl = window.location.protocol + "//" + window.location.host + "/resources/" + node_ID + "/edit";
+	window.history.pushState("viewNode", "resourceEditor"+node_ID, newUrl);
 };
 
 Tree.prototype.centerAndOpen = function(node_id)
