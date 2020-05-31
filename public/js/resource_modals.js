@@ -117,16 +117,18 @@ function displayResource(received, resource_id) {
 
 	received.json().then(function(resource){
 		console.log(resource);
-		document.getElementById('resource-head').innerHTML = "\
-			<div id = 'resource-id' style='visibility: hidden'> </div>\
-			<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1>\
-			<div>contributed by <div id='author-name'></div></div>";
+		document.getElementById('resource-head').innerHTML =
+			"<div id = 'resource-id' style='visibility: hidden'></div>" + 
+			"<h1 id = 'resource-name'>" + resource.meta.name + "</h1>" + 
+			"<div>contributed by " + 
+				"<div id='author-name'></div>" + 
+			"</div>";
 		
 		document.getElementById("resource-id").innerHTML = resource_id;
 
 		set_author(resource.meta.author_name, resource.meta.author_type);
 		for (var i = 0; i < resource.contents.length; i++) {
-		display_content(i, resource.contents[i]);
+			display_content(i, resource.contents[i]);
 		}
   });
 }
@@ -140,7 +142,7 @@ function set_author(name, type) {
 	// Clear all classes on the author-name field.
 	var cl = document.getElementById("author-name").classList;
 	for (var i = cl.length; i > 0; i--) {
-	cl.remove(cl[0]);
+		cl.remove(cl[0]);
 	}
 	document.getElementById("author-name").classList.add(type);
 	document.getElementById("author-name").innerHTML = name;
@@ -191,22 +193,22 @@ function display_content(num, element)
 function resourceEditorHTML(resourceUseData)
 {
 	// create all the input to create resources
-	document.getElementById('resource-head').innerHTML="\
-		<div id = 'resource-id' style='visibility: hidden'> </div>\
-		<div id = 'resource-name' contenteditable=true> Resource Name </div>";
-	document.getElementById('modules').innerHTML = "\
-		<div class=resource-modal-label> Resource Use:</div>\
-		<br>" + selectorCodeGenerator("resource-use", resourceUseData) + "<br>\
-		<div class=resource-divider></div>\
-		<div class = 'content-creator'>\
-		<div class=resource-modal-label>Resource Content Name:</div><br>\
-		<div class=content-name id ='content-name0' contenteditable=true> Content Name </div> <br>\
-		<div class=resource-modal-label> Content Type: </div>\
-		<br>" + selectorCodeGenerator("content-type") + "<br>\
-		<div class=resource-modal-label>Content:</div>\
-		<br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
-		<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedResource()'> Submit </button>\
-		<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
+	document.getElementById('resource-head').innerHTML = 
+		"<div id = 'resource-id' style='visibility: hidden'></div>" + 
+		"<div id = 'resource-name' contenteditable = true>Resource Name</div>";
+	document.getElementById('modules').innerHTML = 
+		"<div class=resource-modal-label>Resource Use:</div>" + 
+		selectorCodeGenerator("resource-use", resourceUseData) +
+		"<div class=resource-divider></div>" + 
+		"<div class = 'content-creator'>" + 
+			"<div class=resource-modal-label>Resource Content Name:</div>" + 
+			"<div class=content-name id ='content-name0' contenteditable=true>Content Name</div>" +
+		"<div class=resource-modal-label>Content Type:</div>" + 
+		selectorCodeGenerator("content-type") + 
+		"<div class=resource-modal-label>Content:</div>" + 
+		"<textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>" + 
+		"<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedResource()'> Submit </button>" +
+		"<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
 }
 
 /** 
@@ -337,21 +339,20 @@ function submitEditedResource()
 function resourceCreatorHTML(resourceUseData, nodeId)
 {
 	// create all the input to create resources
-	document.getElementById('resource-head').innerHTML="\
-		<div id = 'resource-name' contenteditable=true> Resource Name </div>";
-	document.getElementById('modules').innerHTML = "\
-		<div class=resource-modal-label> Resource Use:</div>\
-		<br>" + selectorCodeGenerator("resource-use", resourceUseData) + "<br>\
-		<div class=resource-divider></div>\
-		<div class = 'content-creator'>\
-		<div class=resource-modal-label>Resource Content Name:</div><br>\
-		<div class=content-name id ='content-name0' contenteditable=true> Content Name </div> <br>\
-		<div class=resource-modal-label> Content Type: </div>\
-		<br>" + selectorCodeGenerator("content-type") + "<br>\
-		<div class=resource-modal-label>Content:</div>\
-		<br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
-		<div> <button type = 'button' id = 'submit-button' onclick = 'submitNewResource("+nodeId+")'> Submit </button>\
-		<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
+	document.getElementById('resource-head').innerHTML= "<div id = 'resource-name' contenteditable=true> Resource Name </div>";
+	document.getElementById('modules').innerHTML = "<div class=resource-modal-label> Resource Use:</div>" +
+		selectorCodeGenerator("resource-use", resourceUseData) + 
+		"<div class=resource-divider></div>" +
+		"<div class = 'content-creator'>" +
+			"<div class=resource-modal-label>Resource Content Name:</div>" + 
+			"<div class=content-name id ='content-name0' contenteditable=true>Content Name</div>" +
+			"<div class=resource-modal-label> Content Type: </div>" + selectorCodeGenerator("content-type") + 
+			"<div class=resource-modal-label>Content:</div>" +
+			"<textarea rows = '5' id = 'tinymce'> </textarea>" +
+		"</div>"+
+		"<div id = 'more-contents'></div>" +
+		"<button type = 'button' id = 'submit-button' onclick = 'submitNewResource("+nodeId+")'> Submit </button>" + 
+		"<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
 
 	addTinyMCE();
 }
@@ -556,9 +557,8 @@ function selectorCodeGenerator(selectorFor, data)
 		 * 				{"id":2,"name":"Notes"}	]
 		 */
 		for (var i = 0; i < data.length; ++i) {
-			html_code += "\
-			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ data[i].id +"'>\
-				<label for='" + inputId +""+ data[i].id + "'>" + data[i].name + "</label></li>";
+			html_code += "<li><input type='radio' name='" + name + "' id='"+ inputId +""+ data[i].id +"'>" +
+				"<label for='" + inputId +""+ data[i].id + "'>" + data[i].name + "</label></li>";
 		}
 	}
 	else if (selectorFor == "content-type") {
@@ -576,9 +576,8 @@ function selectorCodeGenerator(selectorFor, data)
 		 * 			["type1", "type2", "type3"]
 		 */
 		for (var i = 0; i < dictionary.length; ++i) {
-			html_code += "\
-			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ i +"'>\
-				<label for='" + inputId +""+ i + "'>" + contentTypeData[i] + "</label></li>";
+			html_code += "<li><input type='radio' name='" + name + "' id='"+ inputId +""+ i +"'>" +
+				"<label for='" + inputId +""+ i + "'>" + contentTypeData[i] + "</label></li>";
 		}
 	}
 	
@@ -657,10 +656,12 @@ function newContent()
 	// if user exit resource editor/creator, clear previous entries
 	pre_updated_content_num += 1;
 	document.getElementById('more-contents').innerHTML += "<div id='content-"+pre_updated_content_num+"'></div>";
-	document.getElementById('content-'+pre_updated_content_num).innerHTML += "<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
-	<input type = 'text' id = 'content-name"+pre_updated_content_num+"'> <br> \
-	Content Type:  <select id = 'content-type"+pre_updated_content_num+"'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
-	Content: <br> <textarea rows = '5' id = 'content"+pre_updated_content_num+"'> </textarea> </div> </form>";
+	document.getElementById('content-'+pre_updated_content_num).innerHTML += "<div class=resource-divider></div>" + 
+	"<div class = 'content-creator'> Resource Content Name:" +
+	"<input type = 'text' id = 'content-name"+pre_updated_content_num+"'>" +
+	"Content Type:  <select id = 'content-type"+pre_updated_content_num+"'>" +
+	"<option value = 'text'> Text </option> <option value = 'link'> Link </option> </select>" +
+	"Content:<textarea rows = '5' id = 'content"+pre_updated_content_num+"'> </textarea> </div> </form>";
 
 	// load the stored content back to the content textboxes
 	loadContent(storedContent);
