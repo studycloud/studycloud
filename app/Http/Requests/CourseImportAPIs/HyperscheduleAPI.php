@@ -60,6 +60,9 @@ class HyperscheduleAPI extends CourseImportRequest
 		{
 			abort($res->getStatusCode(), $response['error']);
 		}
+		// TODO: check if the since value is stored in the meta table
+		// and if it is, do a diff instead
+		
 		// convert the class data to a format we can work with
 		$classes = $this->toClasses($response['data']['courses'], $parent_id);
 		return $classes;
@@ -97,6 +100,15 @@ class HyperscheduleAPI extends CourseImportRequest
 			$classes = $classes->push($class);
 		}
 		return $classes;
+	}
+
+	protected function diffClasses($courses, $parent_id)
+	{
+		// go through each class and check if we already have it in the database
+		// if it doesn't appear in the diff, leave it in the database
+		// if it's been deleted in the diff (ie if its value is $delete), then we
+		// should attempt to delete it from the database
+		// otherwise, if its changed, we should try to change it in the database
 	}
 
 }
