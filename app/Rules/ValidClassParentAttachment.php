@@ -45,6 +45,7 @@ class ValidClassParentAttachment implements Rule
 	{
 		$this->class = $class;
 		$this->class_is_root = is_null($this->class) || $this->class->id == 0;
+		// check if class is root, if not, set tree to be an instance of NodesAndConnections else null
 		$this->tree = (is_null($tree) and !$this->class_is_root) ? $this->getTree() : $tree;
 	}
 

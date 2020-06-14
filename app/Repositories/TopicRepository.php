@@ -66,7 +66,7 @@ class TopicRepository
 				$tree->push(collect($child));
 				$tree = $tree->merge(
 					// RECURSION!
-					$this->descendants($child, $levels - 1, $root)
+					$this->descendants($child, is_null($levels) ? null : $levels - 1, $root)
 				);
 			}
 		}
@@ -114,7 +114,7 @@ class TopicRepository
 				$tree->push(collect($parent));
 				$tree = $tree->merge(
 					// RECURSION!
-					$this->ancestors($parent, $levels - 1, $root)
+					$this->ancestors($parent, is_null($levels) ? null : $levels - 1, $root)
 				);
 			}
 		}

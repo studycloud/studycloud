@@ -56,7 +56,7 @@ class ClassRepository
 				);
 				$tree = $tree->merge(
 					// RECURSION!
-					$this->descendants($child, $levels - 1, $root)
+					$this->descendants($child, is_null($levels) ? null : $levels - 1, $root)
 				);
 			}
 		}
@@ -105,7 +105,7 @@ class ClassRepository
 				);
 				$tree = $tree->merge(
 					// RECURSION!
-					$this->ancestors($parent, $levels - 1, $root)
+					$this->ancestors($parent, is_null($levels) ? null : $levels - 1, $root)
 				);
 			}
 		}
@@ -191,7 +191,7 @@ class ClassRepository
 	/**
 	 * given a portion of the tree, check to see whether $ancestor_class_id is an ancestor of $class_id
 	 * @param  int			$class_id			the descendant class
-	 * @param  int|array	$ancestor_class_id	the ancestor to search for
+	 * @param  int|array	$ancestor_class_id	the ancestor(s) to search for
 	 * @param  Collection	$connections		a portion of the tree to traverse, in the connections or separated connections format
 	 * @return boolean|array					whether $ancestor_class_id is an ancestor of $class; if $ancestor_class_id is an array, return the elements in it that are ancestors
 	 */
