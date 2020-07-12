@@ -33,7 +33,7 @@ class ClassController extends Controller
 		// verify that the user is signed in for all methods except index, show, and json
 		$this->middleware('auth', ['except' => ['index', 'show']]);
 
-		// TODO: add CheckStatus middleware?S
+		// TODO: add CheckStatus middleware?
 	}
 
 	/**
