@@ -5,23 +5,34 @@
   margin: 0 auto;
 }
 
+/*********************************************************************************************************
+* 	
+*   Grid Display
+*
+**********************************************************************************************************/
+
 .resource-background {
-  padding: 20px;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto;
+  grid-template-areas: "resource-head" "content-module" "buttons";
 }
 
-.resource-modal-label {
-  color: #4a4a54;
-  font-size: 18px;
+#resource-head {
+  grid-area: resource-head;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  grid-template-areas: "r-name r-name" "r-use r-use-selector";
 }
 
 #resource-name {
+  grid-area: r-name;
   font-size: 40px;
   font-weight: bold;
   margin-bottom: 15px;
   -moz-appearance: textfield-multiline;
   -webkit-appearance: textarea;
-  /* font: medium -moz-fixed; */
-  /* font: -webkit-small-control; */
   max-height: 100px;
   overflow: auto;
   padding: 2px;
@@ -29,19 +40,77 @@
   max-width: 500px;
 }
 
+#resource-use-label {
+  font-size: 18px;
+  grid-area: r-use;
+}
+
+#resource-use-selector {
+  grid-area: r-use-selector;
+}
+
+.resource-divider {
+  grid-area: divider;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  height: 2px;
+  background-color: #8a8a8a;
+}
+
+#modules {
+  display: grid;
+  grid-area: content-module;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto auto auto auto;
+  grid-template-areas: "divider divider" "c-name-label c-name" "c-type c-type-selector" "content-label content-label" "tinymce tinymce";
+}
+
+#content-name-label {
+  grid-area: c-name-label;
+}
+
 .content-name {
+  grid-area: c-name;
   font-size: 25px;
   font-weight: bold;
   -moz-appearance: textfield-multiline;
   -webkit-appearance: textarea;
-  /* font: medium -moz-fixed; */
-  /* font: -webkit-small-control; */
   height: 28px;
   overflow: auto;
   padding: 2px;
   resize: both;
   width: 500px;
 }
+
+#content-type-label {
+  grid-area: c-type;
+}
+
+#content-type-selector {
+  grid-area: c-type-selector;
+}
+
+#content-label {
+  grid-area: content-label;
+}
+
+#content-input {
+  grid-area: tinymce;
+}
+
+#buttons {
+  grid-area: buttons;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  grid-template-areas: "space submit-button" "space cancel-button";
+}
+
+/*********************************************************************************************************
+*
+* 	Miscs
+*
+**********************************************************************************************************/
 
 #author-name {
   align: inline;
@@ -62,16 +131,16 @@
 }
 
 .module {
+  display: grid;
   font-size: 20px;
   padding: 10px;
 }
 
-.resource-divider {
-  margin-top: 5px;
-  margin-bottom: 15px;
-  height: 2px;
-  background-color: #8a8a8a;
-}
+/*********************************************************************************************************
+*
+* 	Icons to open the resource editor from resource viewer
+*
+**********************************************************************************************************/
 
 #open-resource-editor {
   color: #aaa;
@@ -86,6 +155,12 @@
   text-decoration: none;
   cursor: pointer;
 }
+
+/*********************************************************************************************************
+*
+* 		Buttons
+*
+**********************************************************************************************************/
 
 .purple {
   border-color: #673693;
@@ -183,6 +258,7 @@
   color: white;
   border-color: #2e2f5a;
   background-color: #50529e;
+  grid-area: submit-button;
 }
 
 #submit-button:hover {
@@ -219,6 +295,7 @@
   color: white;
   border-color: #2e2f5a;
   background-color: #50529e;
+  grid-area: cancel-button;
 }
 
 #cancel-button:hover {
@@ -231,6 +308,12 @@
   -webkit-box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #0b0c17, inset 0 0.063em #2e2f5a, inset 0 -0.188em #2e2f5a;
           box-shadow: 0 0.063em rgba(255, 255, 255, 0.4), inset 0 0 1.094em #0b0c17, inset 0 0.063em #2e2f5a, inset 0 -0.188em #2e2f5a;
 }
+
+/*********************************************************************************************************
+*
+* 	Resource Use, Content Type Selector Styles
+*
+**********************************************************************************************************/
 
 .use-list-scrolling-wrapper {
   height: 60px;
@@ -292,10 +375,12 @@ ul#content-type-selector li input {
   left: 100%;
 }
 
-/**
-* Somehow these tags get overwritten (maybe due to CSS inheritence)
-*   redefine the tag here
-*/
+/*********************************************************************************************************
+*
+* 	Redefine tags for basic styling
+*   	Somehow these tags get overwritten (maybe due to CSS inheritence)
+*
+**********************************************************************************************************/
 
 strong {
   font-weight: bold;

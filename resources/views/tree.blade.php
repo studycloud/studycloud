@@ -30,6 +30,7 @@
 				<div id="resource-head"></div>
 				<div id="modules"> <!-- This is where you put the modules. -->
 				</div>
+				<div id="buttons"></div>
 			</div>
 		</div>
 	</div>

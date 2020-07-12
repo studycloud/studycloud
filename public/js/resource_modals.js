@@ -4,14 +4,6 @@ var content_num = 0;
 // having this will clear any unsaved changes
 var pre_updated_content_num = content_num;
 
-/**
- * TODO: 
- * 2. Ask: does the resource creator takes the node id?
- * 3. Problem that might not be a problem in the future? 
- * 	http://127.0.0.1:8000/resources/2/edit/edit
- *  in login modal, now it will just append edit to the current url
- * 	Hopefully in the future, it will redirect to the right url after we submit the content?
- */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -195,19 +187,21 @@ function resourceEditorHTML(resourceUseData)
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML = 
 		"<div id = 'resource-id' style='visibility: hidden'></div>" + 
-		"<div id = 'resource-name' contenteditable = true>Resource Name</div>";
+		"<div id = 'resource-name' contenteditable = true>Resource Name</div>" + 
+		"<div id = 'resource-use-label' >Resource Use:</div>" + 
+		selectorCodeGenerator("resource-use", resourceUseData);
 	document.getElementById('modules').innerHTML = 
-		"<div class=resource-modal-label>Resource Use:</div>" + 
-		selectorCodeGenerator("resource-use", resourceUseData) +
 		"<div class=resource-divider></div>" + 
-		"<div class = 'content-creator'>" + 
-			"<div class=resource-modal-label>Resource Content Name:</div>" + 
-			"<div class=content-name id ='content-name0' contenteditable=true>Content Name</div>" +
-		"<div class=resource-modal-label>Content Type:</div>" + 
+		"<div id='content-name-label'>Resource Content Name:</div>" + 
+		"<div class=content-name id ='content-name0' contenteditable=true>Content Name</div>" +
+		"<div id='content-type-label'>Content Type:</div>" + 
 		selectorCodeGenerator("content-type") + 
-		"<div class=resource-modal-label>Content:</div>" + 
-		"<textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>" + 
-		"<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedResource()'> Submit </button>" +
+		"<div id='content-label'>Content:</div>" + 
+		"<div id='content-input'>" + 
+			"<textarea rows = '5' id = 'tinymce'> </textarea>" + 
+		"</div> <div id = 'more-contents'> </div>";
+	document.getElementById('buttons').innerHTML = 
+		"<button type = 'button' id = 'submit-button' onclick = 'submitEditedResource()'> Submit </button>" +
 		"<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
 }
 
@@ -537,7 +531,7 @@ function selectorCodeGenerator(selectorFor, data)
 	var inputId = "";
 
 	// html code for selector
-	var html_code = "<div class='use-list-scrolling-wrapper'>";
+	var html_code = "";
 
 	if (selectorFor == "resource-use") {
 		// set up relevant variables for resource-use selector
@@ -581,7 +575,7 @@ function selectorCodeGenerator(selectorFor, data)
 		}
 	}
 	
-	html_code +=  "</ul></div>";
+	html_code +=  "</ul>";
 
   return html_code;
 }
