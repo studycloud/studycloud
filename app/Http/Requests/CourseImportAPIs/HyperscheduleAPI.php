@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\CourseImportAPIs;
 
+use App\Meta;
 use GuzzleHttp\Client;
 use App\Academic_Class;
 use App\Http\Requests\CourseImportRequest;
@@ -47,26 +48,40 @@ class HyperscheduleAPI extends CourseImportRequest
 		$parent_id = $this->input('parent_id');
 		$school = $this->input('school');
 
-		// make the request to their API
-		$res = $this->client->request('GET', $this->url, [
-			'query' => [
-				'school' => $school
-			]
-		]);
-		// validate the response! <-- important to make sure the data doesn't have anything sneaky in it!
+		// 1) construct the request to their API
+		$query = [
+			'school' => $school
+		];
+		// add the since parameter if we already imported via the API
+		$query['since'] = Meta::find('since_class_import');
+		$res = $this->client->request('GET', $this->url, ['query' => $query]);
+
+		// 2) validate the response! <-- important to make sure the data doesn't have anything sneaky in it!
 		$response = $this->validate($res);
 		// now check that there wasn't an error
 		if ($res->getStatusCode() != 200 || !is_null($response['error']))
 		{
 			abort($res->getStatusCode(), $response['error']);
 		}
-		// TODO: check if the since value is stored in the meta table
-		// and if it is, do a diff instead
+
+		// 3) check if the since value is stored in the meta table
+		if (is_null($query['since']))
+		{
+			// convert the class data to a format we can work with
+			$classes = $this->toClasses($response['data']['courses'], $parent_id);
+			return $classes; // TODO: remove this code later
+		}
+		else
+		{
+			// if we've already done an import, we should do a diff instead
+			$classes = $this->diffClasses($response['data']['courses'], $parent_id);
+			return $classes; // TODO: remove this code later
+		}
+
+		// 4) record that we did an import already so that we do diff's from now on
+		Meta::add('since_class_import', $response['until']);
 		
-		// convert the class data to a format we can work with
-		$classes = $this->toClasses($response['data']['courses'], $parent_id);
-		return $classes;
-		// tell the user if it worked
+		// tell the user if it worked		
 		return $response;
 	}
 
