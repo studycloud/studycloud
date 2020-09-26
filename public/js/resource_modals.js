@@ -124,7 +124,7 @@ function displayResource(received, resource_id) {
 		
 		document.getElementById("resource-id").innerHTML = resource_id;
 
-		set_author(resource.meta.author_name, resource.meta.author_type);
+		display_author(resource.meta.author_name, resource.meta.author_type);
 		for (var i = 0; i < resource.contents.length; i++) {
 		display_content(i, resource.contents[i]);
 		}
@@ -136,7 +136,7 @@ function displayResource(received, resource_id) {
  * @param {*} name String, author's name
  * @param {*} type String, author's type
  */
-function set_author(name, type) {
+function display_author(name, type) {
 	// Clear all classes on the author-name field.
 	var cl = document.getElementById("author-name").classList;
 	for (var i = cl.length; i > 0; i--) {
