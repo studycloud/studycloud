@@ -17,46 +17,79 @@ $off-wht: rgba(white,.4);
 	margin: 0 auto;
 }
 
+* {
+	box-sizing: border-box;
+  }
+
 /*********************************************************************************************************
+**********************************************************************************************************
 * 	
 *   Grid Display
 *
+**********************************************************************************************************
 **********************************************************************************************************/
-
+/**
+* For resource editor/creator, the div elements are split into:
+* 	.resource-background
+*		.resource-head
+*		#modules
+* 		.buttons
+* Similarily, the grid cells are split into these layers:
+*	.resource-background
+*		[resource-head]
+*		[content-module]
+*		[buttons]
+*/
 .resource-background {
-	display: grid;
-	// grid-template-columns: [label] auto [content] auto [col-end];
-	// grid-template-rows: [r-name] auto [r-use] auto [divider] auto [c-name] auto [c-type] auto [content] auto [tinymce] auto [row-end];
-	grid-template-columns: auto;
-	grid-template-rows: auto auto;
-	grid-template-areas:
-		"resource-head"
-		"content-module"
-		"buttons";
+	display: block;
+	// // grid-template-columns: [label] auto [content] auto [col-end];
+	// // grid-template-rows: [r-name] auto [r-use] auto [divider] auto [c-name] auto [c-type] auto [content] auto [tinymce] auto [row-end];
+	// grid-template-columns: auto;
+	// grid-template-rows: auto auto;
+	// grid-template-areas:
+	// 	"resource-head"
+	// 	"content-module"
+	// 	"buttons";
+	// grid-row-gap: 2rem;
 }
 
+/*********************************************************************************************************
+* 	
+*   Grid Display: resource-head
+*
+**********************************************************************************************************/
+
 #resource-head {
-	grid-area: resource-head;
+	// grid-area: resource-head;
 	display: grid;
 	grid-template-columns: auto auto;
 	grid-template-rows: auto auto;
 	grid-template-areas:
 		"r-name r-name"
 		"r-use r-use-selector";
+	grid-row-gap: 1rem;
 }
 
 #resource-name {
 	grid-area: r-name;
-	font-size: 40px;
+	font-size: 3rem;
 	font-weight: bold;
-	margin-bottom:15px;
     -moz-appearance: textfield-multiline;
 	-webkit-appearance: textarea;
-    max-height: 100px;
-    overflow: auto;
-    padding: 2px;
-    resize: both;
-	max-width: 500px;
+    min-height: 5rem;
+	overflow: scroll;
+	scrollbar-width: none;  // not showing scrollbar for firefox
+	white-space: nowrap;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	// not showing scrollbar for chrome
+	&::-webkit-scrollbar { 
+		display: none; 
+	} 
+}
+
+#resource-name:focus{
+	border-color:$blue;
 }
 
 #resource-use-label{
@@ -76,9 +109,15 @@ $off-wht: rgba(white,.4);
 	background-color: #8a8a8a;
 }
 
+/*********************************************************************************************************
+* 	
+*   Grid Display: content-module
+*
+**********************************************************************************************************/
+
 #modules {
 	display: grid;
-	grid-area: content-module;
+	// grid-area: content-module;
 	grid-template-columns: auto auto;
 	grid-template-rows: auto auto auto auto auto;
 	grid-template-areas:
@@ -87,6 +126,7 @@ $off-wht: rgba(white,.4);
 		"c-type c-type-selector"
 		"content-label content-label"
 		"tinymce tinymce";
+	grid-row-gap: 1rem;
 }
 
 #content-name-label{
@@ -122,8 +162,14 @@ $off-wht: rgba(white,.4);
 	grid-area: tinymce;
 }
 
+/*********************************************************************************************************
+* 	
+*   Grid Display: buttons
+*
+**********************************************************************************************************/
+
 #buttons {
-	grid-area: buttons;
+	// grid-area: buttons;
 	display: grid;
 	grid-template-columns: auto auto;
 	grid-template-rows: auto auto;
@@ -133,9 +179,11 @@ $off-wht: rgba(white,.4);
 }
 
 /*********************************************************************************************************
+**********************************************************************************************************
+* 	
+*   Miscs
 *
-* 	Miscs
-*
+**********************************************************************************************************
 **********************************************************************************************************/
 
 #author-name {

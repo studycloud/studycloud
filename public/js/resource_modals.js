@@ -187,7 +187,7 @@ function resourceEditorHTML(resourceUseData)
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML = 
 		"<div id = 'resource-id' style='visibility: hidden'></div>" + 
-		"<div id = 'resource-name' contenteditable = true>Resource Name</div>" + 
+		"<span id = 'resource-name' contenteditable = true>Resource Name</span>" + 
 		"<div id = 'resource-use-label' >Resource Use:</div>" + 
 		selectorCodeGenerator("resource-use", resourceUseData);
 	document.getElementById('modules').innerHTML = 
@@ -198,11 +198,27 @@ function resourceEditorHTML(resourceUseData)
 		selectorCodeGenerator("content-type") + 
 		"<div id='content-label'>Content:</div>" + 
 		"<div id='content-input'>" + 
-			"<textarea rows = '5' id = 'tinymce'> </textarea>" + 
+			"<textarea rows = '20' id = 'tinymce'> </textarea>" + 
 		"</div> <div id = 'more-contents'> </div>";
 	document.getElementById('buttons').innerHTML = 
 		"<button type = 'button' id = 'submit-button' onclick = 'submitEditedResource()'> Submit </button>" +
 		"<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
+
+	// prevent "ENTER" from enterng the new line, then exit editting mode for resourcename
+	document.getElementById('resource-name').addEventListener('keydown', (evt) => {
+		if (evt.keyCode === 13) {
+			evt.preventDefault();
+			// exit editting mode
+			document.getElementById('resource-name').blur();
+		}
+	});
+
+	// users can only paste plain text into resource name
+	document.getElementById('resource-name').addEventListener('paste', (evt) => {
+		evt.preventDefault();
+		var text = evt.clipboardData.getData("text/plain");
+		document.execCommand("insertHTML", false, text);
+	});
 }
 
 /** 

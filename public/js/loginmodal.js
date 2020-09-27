@@ -58,7 +58,9 @@ $(document).ready(function() {
 		document.getElementById('modules').innerHTML = " "; //clean the display box up
     resetContentNum();
     tinymce.remove();
-	});
+  });
+  
+  $('#resource-name').keypress(function(e){ return e.which != 13; });
 });
 
 // When the user clicks anywhere outside of the modal, close it

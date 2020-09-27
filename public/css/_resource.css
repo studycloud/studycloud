@@ -5,39 +5,70 @@
   margin: 0 auto;
 }
 
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
 /*********************************************************************************************************
+**********************************************************************************************************
 * 	
 *   Grid Display
 *
+**********************************************************************************************************
 **********************************************************************************************************/
 
+/**
+* For resource editor/creator, the div elements are split into:
+* 	.resource-background
+*		.resource-head
+*		#modules
+* 		.buttons
+* Similarily, the grid cells are split into these layers:
+*	.resource-background
+*		[resource-head]
+*		[content-module]
+*		[buttons]
+*/
+
 .resource-background {
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto auto;
-  grid-template-areas: "resource-head" "content-module" "buttons";
+  display: block;
 }
 
+/*********************************************************************************************************
+* 	
+*   Grid Display: resource-head
+*
+**********************************************************************************************************/
+
 #resource-head {
-  grid-area: resource-head;
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: auto auto;
   grid-template-areas: "r-name r-name" "r-use r-use-selector";
+  grid-row-gap: 1rem;
 }
 
 #resource-name {
   grid-area: r-name;
-  font-size: 40px;
+  font-size: 3rem;
   font-weight: bold;
-  margin-bottom: 15px;
   -moz-appearance: textfield-multiline;
   -webkit-appearance: textarea;
-  max-height: 100px;
-  overflow: auto;
-  padding: 2px;
-  resize: both;
-  max-width: 500px;
+  min-height: 5rem;
+  overflow: scroll;
+  scrollbar-width: none;
+  white-space: nowrap;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+#resource-name::-webkit-scrollbar {
+  display: none;
+}
+
+#resource-name:focus {
+  border-color: #3BA9E4;
 }
 
 #resource-use-label {
@@ -57,12 +88,18 @@
   background-color: #8a8a8a;
 }
 
+/*********************************************************************************************************
+* 	
+*   Grid Display: content-module
+*
+**********************************************************************************************************/
+
 #modules {
   display: grid;
-  grid-area: content-module;
   grid-template-columns: auto auto;
   grid-template-rows: auto auto auto auto auto;
   grid-template-areas: "divider divider" "c-name-label c-name" "c-type c-type-selector" "content-label content-label" "tinymce tinymce";
+  grid-row-gap: 1rem;
 }
 
 #content-name-label {
@@ -98,8 +135,13 @@
   grid-area: tinymce;
 }
 
+/*********************************************************************************************************
+* 	
+*   Grid Display: buttons
+*
+**********************************************************************************************************/
+
 #buttons {
-  grid-area: buttons;
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: auto auto;
@@ -107,9 +149,11 @@
 }
 
 /*********************************************************************************************************
+**********************************************************************************************************
+* 	
+*   Miscs
 *
-* 	Miscs
-*
+**********************************************************************************************************
 **********************************************************************************************************/
 
 #author-name {
