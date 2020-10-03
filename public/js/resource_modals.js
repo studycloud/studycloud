@@ -205,6 +205,9 @@ function resourceEditorHTML(resourceUseData)
 		<br>" + selectorCodeGenerator("content-type") + "<br>\
 		<div class=resource-modal-label>Content:</div>\
 		<br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
+		<input type = 'checkbox' id = 'profPermission'>\
+		<label for = 'profPermission' id = 'labelProfPermission'> It is okay with my professor to edit this resource. </label>\
+		<span style = 'color:red' display = 'inline'>* </span>\
 		<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedResource()'> Submit </button>\
 		<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
 }
@@ -250,76 +253,86 @@ function fillInResourceForEditor(received, resource_id)
 */
 function submitEditedResource() 
 {
-	tinymce.get("tinymce").save();
-	var resource_name = document.getElementById("resource-name").innerHTML;
-	var resource_id = document.getElementById("resource-id").innerHTML;
-	var resource_use = findUseOrType("resource-use-selector");
-	// TODO: Right now, assume that each resource only has 1 content
-	// 	so content_id is the same as resource_id
-	var content_id = resource_id;
+	var profPermission = document.getElementById("profPermission");
 
-	var content = document.getElementById("tinymce").value;
-	// NOTE: not so good hack to solve the problem:
-	// if the tinymce has code block, it will like to randomly add 
-	// <code> tag when the user hits enter
-	content = content.replace(new RegExp("<code></code>", "g"), "");
+	// user verified they got permission from their prof
+	if (profPermission.checked) {
+		tinymce.get("tinymce").save();
+		var resource_name = document.getElementById("resource-name").innerHTML;
+		var resource_id = document.getElementById("resource-id").innerHTML;
+		var resource_use = findUseOrType("resource-use-selector");
+		// TODO: Right now, assume that each resource only has 1 content
+		// 	so content_id is the same as resource_id
+		var content_id = resource_id;
 
-	// content_num = pre_updated_content_num;
-	
-	// store all the data in json
-	// NEED TO INCLUDE: resouce id, content id
-	// TODO: can't create additional content (this content doesn't have id)
-	var resource =  
-	{
-		"id": resource_id,
-		"name":resource_name,
-		"use_id": resource_use,
-		"contents":
-		[
-			{
-				"id": content_id,
-				"name": document.getElementById("content-name0").innerHTML,
-				"type": findUseOrType("content-type-selector").toLowerCase(),
-				"content": content
+		var content = document.getElementById("tinymce").value;
+		// NOTE: not so good hack to solve the problem:
+		// if the tinymce has code block, it will like to randomly add 
+		// <code> tag when the user hits enter
+		content = content.replace(new RegExp("<code></code>", "g"), "");
+
+		// content_num = pre_updated_content_num;
+		
+		// store all the data in json
+		// NEED TO INCLUDE: resouce id, content id
+		// TODO: can't create additional content (this content doesn't have id)
+		var resource =  
+		{
+			"id": resource_id,
+			"name":resource_name,
+			"use_id": resource_use,
+			"contents":
+			[
+				{
+					"id": content_id,
+					"name": document.getElementById("content-name0").innerHTML,
+					"type": findUseOrType("content-type-selector").toLowerCase(),
+					"content": content
+				}
+			]
+		};
+		
+		// TODO: For more contents in future, type is not correct
+		// for (i = 1; i < (content_num+1); i++)
+		// {
+		// 	var content_array =
+		// 	{
+		// 		"name": document.getElementById("content-name"+i).innerHTML,
+		// 		"type": tempType,
+		// 		"content": document.getElementById("content"+i).value
+		// 	};
+		// 	resource.contents.push(content_array);
+		// }
+
+		console.log(resource);
+
+		// call the server to edit the resource
+		var server = new Server();
+
+		server.editResource(resource_id, resource, 
+			(error) => {
+				console.log("Edit resource - error");
+				console.log(error);
+			}, 
+			(data) => {
+				console.log("Edit resource - success");
+				console.log(data);
 			}
-		]
-	};
+		);
+
+		// close the content editor
+		document.getElementById('my-modal').style.display = "none";
+		document.getElementById('resource-head').innerHTML = " ";
+		document.getElementById('modules').innerHTML = " "; //clean the display box up
 	
-	// TODO: For more contents in future, type is not correct
-	// for (i = 1; i < (content_num+1); i++)
-	// {
-	// 	var content_array =
-	// 	{
-	// 		"name": document.getElementById("content-name"+i).innerHTML,
-	// 		"type": tempType,
-	// 		"content": document.getElementById("content"+i).value
-	// 	};
-	// 	resource.contents.push(content_array);
-	// }
+		// remove instance of tinymce
+		tinymce.remove();
+	} else {
+		labelProfPermission = document.getElementById('labelProfPermission');
+		labelProfPermission.style.color = "red";
+	}
 
-	console.log(resource);
-
-	// call the server to edit the resource
-	var server = new Server();
-
-	server.editResource(resource_id, resource, 
-		(error) => {
-			console.log("Edit resource - error");
-			console.log(error);
-		}, 
-		(data) => {
-			console.log("Edit resource - success");
-			console.log(data);
-		}
-	);
-
-	// close the content editor
-	document.getElementById('my-modal').style.display = "none";
-	document.getElementById('resource-head').innerHTML = " ";
-	document.getElementById('modules').innerHTML = " "; //clean the display box up
-  
-	// remove instance of tinymce
-	tinymce.remove();
+	
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -350,6 +363,9 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 		<br>" + selectorCodeGenerator("content-type") + "<br>\
 		<div class=resource-modal-label>Content:</div>\
 		<br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
+		<input type = 'checkbox' id = 'profPermission'>\
+		<label for = 'profPermission' id = 'labelProfPermission'> I have gotten permission from my professor to post this resource. </label>\
+		<span style = 'color:red' display = 'inline'>* </span>\
 		<div> <button type = 'button' id = 'submit-button' onclick = 'submitNewResource("+nodeId+")'> Submit </button>\
 		<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
 
@@ -363,62 +379,72 @@ function resourceCreatorHTML(resourceUseData, nodeId)
  *			Call the server to edit the resource
  */
 function submitNewResource(node_id_num) {
-	tinymce.get("tinymce").save();
-	var resource_name = document.getElementById("resource-name").innerHTML;
-	var resource_use = findUseOrType("resource-use-selector");
-	var class_id = node_id_num.toString();
-	var content = document.getElementById("tinymce").value;
-	// NOTE: not so good hack to solve the problem:
-	// if the tinymce has code block, it will like to randomly add 
-	// <code> tag when the user hits enter
-	content = content.replace(new RegExp("<code></code>", "g"), "");
+	var profPermission = document.getElementById("profPermission");
 
-	//store all the data in json
-	//PROBLEM: can only create 1 content for 1 resource
-	var resource = {
-		name: resource_name,
-		use_id: resource_use,
-		class_id: class_id,
-		contents: [
-			{
-				name: document.getElementById("content-name0").innerHTML,
-				type: findUseOrType("content-type-selector").toLowerCase(),
-				content: content,
-			}
-		]
-	};
+	// checks that the user checked the checkbox
+	if (profPermission.checked) {
+		tinymce.get("tinymce").save();
+		var resource_name = document.getElementById("resource-name").innerHTML;
+		var resource_use = findUseOrType("resource-use-selector");
+		var class_id = node_id_num.toString();
+		var content = document.getElementById("tinymce").value;
 
-	// TODO: For when a resource have multiple contents, not MVP
-	// for (i = 1; i < content_num + 1; i++) {
-	// 	var content_array = {
-	// 		name: document.getElementById("content-name" + i).value,
-	// 		type: document.getElementById("content-type" + i).value,
-	// 		content: document.getElementById("content" + i).value
-	// 	};
-	// 	resource.contents.push(content_array);
-	// }
+		// NOTE: not so good hack to solve the problem:
+		// if the tinymce has code block, it will like to randomly add 
+		// <code> tag when the user hits enter
+		content = content.replace(new RegExp("<code></code>", "g"), "");
 
-	console.log(resource);
+		//store all the data in json
+		//PROBLEM: can only create 1 content for 1 resource
+		var resource = {
+			name: resource_name,
+			use_id: resource_use,
+			class_id: class_id,
+			contents: [
+				{
+					name: document.getElementById("content-name0").innerHTML,
+					type: findUseOrType("content-type-selector").toLowerCase(),
+					content: content,
+				}
+			]
+		};
 
-	//call the server to add resource
-	var server = new Server();
-	server.addResource(resource, 
-		(error) => {
-			console.log("Create resource - error");
-			console.log(error);
-		}, 
-		(data) => {
-			console.log("Create resource - success");
-			console.log(data);
-	});
+		// TODO: For when a resource have multiple contents, not MVP
+		// for (i = 1; i < content_num + 1; i++) {
+		// 	var content_array = {
+		// 		name: document.getElementById("content-name" + i).value,
+		// 		type: document.getElementById("content-type" + i).value,
+		// 		content: document.getElementById("content" + i).value
+		// 	};
+		// 	resource.contents.push(content_array);
+		// }
 
-	//close the content creator
-	document.getElementById("my-modal").style.display = "none";
-	document.getElementById("resource-head").innerHTML = " ";
-	document.getElementById("modules").innerHTML = " "; //clean the display box up
+		console.log(resource);
 
-	// remove instance of tinymce
-	tinymce.remove();
+		//call the server to add resource
+		var server = new Server();
+		server.addResource(resource, 
+			(error) => {
+				console.log("Create resource - error");
+				console.log(error);
+			}, 
+			(data) => {
+				console.log("Create resource - success");
+				console.log(data);
+		});
+
+		//close the content creator
+		document.getElementById("my-modal").style.display = "none";
+		document.getElementById("resource-head").innerHTML = " ";
+		document.getElementById("modules").innerHTML = " "; //clean the display box up
+		
+		// remove instance of tinymce
+		tinymce.remove();
+	} else {
+		console.log("User has not checked the prof permission checkbox");
+		labelProfPermission = document.getElementById('labelProfPermission');
+		labelProfPermission.style.color = "red";
+	}
 }
   
 /////////////////////////////////////////////////////////////////////////////////////////////////
