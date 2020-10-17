@@ -351,7 +351,9 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 {
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML="\
-		<div id = 'resource-name' contenteditable=true> Resource Name </div>";
+		<div class = 'hoverable-text-wrapper'> \
+		<div class = 'edittooltip-text'> Edit </div>\
+		<div id = 'resource-name' contenteditable=true onClick = hideElement(this)> Resource Name </div></div>";
 	document.getElementById('modules').innerHTML = "\
 		<div class=resource-modal-label> Resource Use:</div>\
 		<br>" + selectorCodeGenerator("resource-use", resourceUseData) + "<br>\
@@ -365,7 +367,7 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 		<br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
 		<input type = 'checkbox' id = 'profPermission'>\
 		<label for = 'profPermission' id = 'labelProfPermission'> I have gotten permission from my professor to post this resource. </label>\
-		<span style = 'color:red' display = 'inline'>* </span>\
+		<span style = 'color:red'>* </span>\
 		<div> <button type = 'button' id = 'submit-button' onclick = 'submitNewResource("+nodeId+")'> Submit </button>\
 		<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
 
@@ -586,6 +588,7 @@ function selectorCodeGenerator(selectorFor, data)
 			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ data[i].id +"'>\
 				<label for='" + inputId +""+ data[i].id + "'>" + data[i].name + "</label></li>";
 		}
+		html_code +=  "</ul></div>";
 	}
 	else if (selectorFor == "content-type") {
 		name = "content-type";
@@ -606,11 +609,29 @@ function selectorCodeGenerator(selectorFor, data)
 			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ i +"'>\
 				<label for='" + inputId +""+ i + "'>" + contentTypeData[i] + "</label></li>";
 		}
+		
+		html_code +=  "</ul></div>";
+
+		// add invisible error message to be displayed if user does not select a use
 	}
 	
-	html_code +=  "</ul></div>";
 
   return html_code;
+}
+
+/** Helper function for changing textbox tooltip visibility
+ * \brief	Used in create resource modal, edit resource modal
+ * 			Used to set a tooltip's visibility to hidden after the corresponding textbox is clicked on
+ * \warning currently only works for tooltips with a specific relation to this:
+ * 			tooltip must be this' parent's 2nd child
+ * @param {*} elemPar Parent of the tooltip to be hidden 
+ */
+function hideElement(elemPar) { 
+	// 
+	var tooltip = elemPar.parentNode.childNodes[1];
+	tooltip.style.visibility = 'hidden';
+
+	// it looks like the on hover property is getting overwritten by this :( see if there's a way to make it override this?
 }
 
 /**
@@ -641,6 +662,8 @@ function loadSelectedUseOrType (ulId, selected)
  * Helper function for Submitting an edited resource
  * \brief 	Find the resource use id (int) or 
  * 				 the content type name (string)
+ * 			If the user has not selected one or more of the above, displays
+ * 				an appropriate error message
  * 
  * @param {*} ulId String, determines if we finding resource use or content type
  * 			either: "resource-use-selector" or "content-type-selector"
@@ -650,17 +673,30 @@ function findUseOrType(ulId)
 	var ul = document.getElementById(ulId);
 	var listInsideUl = ul.getElementsByTagName("li");
 
+	// switches to True if one of the list items has been selected
+	var displayError = False;
+
 	for (var ele of listInsideUl) {
 		if (ele.getElementsByTagName("input")[0].checked == true) {
+			displayError = True;
 			if (ulId == "resource-use-selector") {
 				return parseInt(ele.getElementsByTagName("input")[0].id);
 			} 
 			else if (ulId == "content-type-selector") {
-				console.log(ele.getElementsByTagName("label")[0].innerHTML);
 				return ele.getElementsByTagName("label")[0].innerHTML;
 			}
 		}
 	}
+
+	// displays an error depending on ulID
+	if (displayError) {
+		if (ulId == "resource-use-selector") {
+
+		} else if (ulId == "content-type-selector") {
+
+		}
+	} 
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////

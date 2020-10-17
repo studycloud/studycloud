@@ -47,6 +47,14 @@ $off-wht: rgba(white,.4);
     max-width: 500px;
 }
 
+#resource-name:hover {
+	background-color: #EAEAEA;
+}
+
+.hoverable-text-wrapper:hover .edittooltip-text {
+	visibility: visible;
+}
+
 .content-name {
 	font-size: 25px;
     font-weight: bold;
@@ -61,6 +69,23 @@ $off-wht: rgba(white,.4);
     padding: 2px;
     resize: both;
     width: 500px;
+}
+
+.edittooltip-text {
+	visibility: hidden;
+	width: 120px;
+	background-color: black;
+	color: white;
+	text-align: center;
+	padding: 5px 0;
+	border-radius: 6px;
+
+	/* position tooltip text */
+	position: relative;
+	z-index: 1;
+	bottom: 60%;
+	left: 28%;
+	margin-left: -60px;
 }
 
 #author-name {
