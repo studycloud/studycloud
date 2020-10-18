@@ -351,9 +351,9 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 {
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML="\
-		<div class = 'hoverable-text-wrapper'> \
+		<div class = 'hoverable-text-wrapper' onmouseout = hideElement(this) onmouseover = showElement(this) onClick = hideElement(this)> \
 		<div class = 'edittooltip-text'> Edit </div>\
-		<div id = 'resource-name' contenteditable=true onClick = hideElement(this)> Resource Name </div></div>";
+		<div id = 'resource-name' contenteditable=true> Resource Name </div></div>";
 	document.getElementById('modules').innerHTML = "\
 		<div class=resource-modal-label> Resource Use:</div>\
 		<br>" + selectorCodeGenerator("resource-use", resourceUseData) + "<br>\
@@ -623,15 +623,27 @@ function selectorCodeGenerator(selectorFor, data)
  * \brief	Used in create resource modal, edit resource modal
  * 			Used to set a tooltip's visibility to hidden after the corresponding textbox is clicked on
  * \warning currently only works for tooltips with a specific relation to this:
- * 			tooltip must be this' parent's 2nd child
+ * 			tooltip must be elemPar's second child
  * @param {*} elemPar Parent of the tooltip to be hidden 
  */
 function hideElement(elemPar) { 
 	// 
-	var tooltip = elemPar.parentNode.childNodes[1];
+	var tooltip = elemPar.childNodes[1]
 	tooltip.style.visibility = 'hidden';
 
 	// it looks like the on hover property is getting overwritten by this :( see if there's a way to make it override this?
+}
+
+/** Helper function for changing textbox tooltip visibility
+ * \brief	Used in create resource modal, edit resource modal
+ * 			Used to set a tooltip's visibility to hidden after the corresponding textbox is clicked on
+ * \warning currently only works for tooltips with a specific relation to elemPar:
+ * 			tooltip must be elemPar's second child
+ * @param {*} elemPar Parent of the tooltip to be hidden 
+ */
+function showElement(elemPar) {
+	var tooltip = elemPar.childNodes[1]
+	tooltip.style.visibility = 'visible';
 }
 
 /**
