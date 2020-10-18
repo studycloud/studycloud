@@ -43,8 +43,8 @@
 
 #resource-head {
   display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: auto auto;
+  grid-template-columns: 35% 65%;
+  grid-template-rows: auto 5rem;
   grid-template-areas: "r-name r-name" "r-use r-use-selector";
   grid-row-gap: 1rem;
 }
@@ -67,13 +67,11 @@
   display: none;
 }
 
-#resource-name:focus {
-  border-color: #3BA9E4;
-}
-
 #resource-use-label {
-  font-size: 18px;
+  font-size: 1.5rem;
   grid-area: r-use;
+  -ms-flex-item-align: center;
+      align-self: center;
 }
 
 #resource-use-selector {
@@ -104,19 +102,28 @@
 
 #content-name-label {
   grid-area: c-name-label;
+  -ms-flex-item-align: center;
+      align-self: center;
 }
 
 .content-name {
   grid-area: c-name;
-  font-size: 25px;
+  -ms-flex-item-align: center;
+      align-self: center;
+  font-size: 1rem;
   font-weight: bold;
   -moz-appearance: textfield-multiline;
   -webkit-appearance: textarea;
-  height: 28px;
-  overflow: auto;
-  padding: 2px;
-  resize: both;
-  width: 500px;
+  min-height: 2rem;
+  overflow: scroll;
+  scrollbar-width: none;
+  white-space: nowrap;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.content-name::-webkit-scrollbar {
+  display: none;
 }
 
 #content-type-label {
