@@ -47,20 +47,18 @@
   width: 500px;
 }
 
-.edittooltip-text {
+.tooltip {
   visibility: hidden;
   width: 120px;
-  background-color: black;
-  color: white;
+  background-color: #aca9a9;
+  color: black;
   text-align: center;
   padding: 5px 0;
   border-radius: 6px;
   /* position tooltip text */
   position: relative;
   z-index: 1;
-  bottom: 60%;
-  left: 28%;
-  margin-left: -60px;
+  left: 24.5%;
 }
 
 #author-name {

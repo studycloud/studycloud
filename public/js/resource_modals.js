@@ -351,9 +351,9 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 {
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML="\
-		<div class = 'hoverable-text-wrapper' onmouseout = hideElement(this) onmouseover = showElement(this) onClick = hideElement(this)> \
-		<div class = 'edittooltip-text'> Edit </div>\
-		<div id = 'resource-name' contenteditable=true> Resource Name </div></div>";
+		<div> <div class = 'tooltip'> Edit </div>\
+		<div id = 'resource-name' onmouseout = hideTooltip(this) onmouseover = showTooltip(this) onClick = hideTooltip(this)\
+		contenteditable=true> Resource Name </div></div>";
 	document.getElementById('modules').innerHTML = "\
 		<div class=resource-modal-label> Resource Use:</div>\
 		<br>" + selectorCodeGenerator("resource-use", resourceUseData) + "<br>\
@@ -621,14 +621,14 @@ function selectorCodeGenerator(selectorFor, data)
 
 /** Helper function for changing textbox tooltip visibility
  * \brief	Used in create resource modal, edit resource modal
- * 			Used to set a tooltip's visibility to hidden after the corresponding textbox is clicked on
- * \warning currently only works for tooltips with a specific relation to this:
- * 			tooltip must be elemPar's second child
- * @param {*} elemPar Parent of the tooltip to be hidden 
+ * 			Used to set a tooltip's visibility to hidden
+ * \warning will only hide ttSib's first sibling of class tooltip
+ * 
+ * @param {*} ttSib Parent of the tooltip to be hidden 
  */
-function hideElement(elemPar) { 
+function hideTooltip(ttSib) { 
 	// 
-	var tooltip = elemPar.childNodes[1]
+	var tooltip = ttSib.parentNode.getElementsByClassName("tooltip")[0];
 	tooltip.style.visibility = 'hidden';
 
 	// it looks like the on hover property is getting overwritten by this :( see if there's a way to make it override this?
@@ -636,13 +636,13 @@ function hideElement(elemPar) {
 
 /** Helper function for changing textbox tooltip visibility
  * \brief	Used in create resource modal, edit resource modal
- * 			Used to set a tooltip's visibility to hidden after the corresponding textbox is clicked on
- * \warning currently only works for tooltips with a specific relation to elemPar:
- * 			tooltip must be elemPar's second child
- * @param {*} elemPar Parent of the tooltip to be hidden 
+ * 			Used to set a tooltip's visibility to visible
+ * \warning will only hide ttSib's first sibling of class tooltip
+ * 
+ * @param {*} ttSib Parent of the tooltip to be hidden 
  */
-function showElement(elemPar) {
-	var tooltip = elemPar.childNodes[1]
+function showTooltip(ttSib) {
+	var tooltip = ttSib.parentNode.getElementsByClassName("tooltip")[0];
 	tooltip.style.visibility = 'visible';
 }
 
