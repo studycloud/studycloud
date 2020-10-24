@@ -24,7 +24,7 @@ $off-wht: rgba(white,.4);
 /*********************************************************************************************************
 **********************************************************************************************************
 * 	
-*   Grid Display
+*   Grid Display for Resource Editor / Creator
 *
 **********************************************************************************************************
 **********************************************************************************************************/
@@ -42,20 +42,11 @@ $off-wht: rgba(white,.4);
 */
 .resource-background {
 	display: block;
-	// // grid-template-columns: [label] auto [content] auto [col-end];
-	// // grid-template-rows: [r-name] auto [r-use] auto [divider] auto [c-name] auto [c-type] auto [content] auto [tinymce] auto [row-end];
-	// grid-template-columns: auto;
-	// grid-template-rows: auto auto;
-	// grid-template-areas:
-	// 	"resource-head"
-	// 	"content-module"
-	// 	"buttons";
-	// grid-row-gap: 2rem;
 }
 
 /*********************************************************************************************************
 * 	
-*   Grid Display: resource-head
+*   Grid Display: resource-head (for Resource Editor / Creator)
 *
 **********************************************************************************************************/
 
@@ -101,17 +92,17 @@ $off-wht: rgba(white,.4);
 	align-self: center;
 }
 
+
 .resource-divider{
 	grid-area: divider;
-	margin-top: 5px;
-	margin-bottom: 15px;
-	height: 2px;
+	padding: 0.1rem;
 	background-color: #8a8a8a;
+	margin-bottom: 0.5rem;
 }
 
 /*********************************************************************************************************
 * 	
-*   Grid Display: content-module
+*   Grid Display: content-module (for Resource Editor / Creator)
 *
 **********************************************************************************************************/
 
@@ -174,9 +165,10 @@ $off-wht: rgba(white,.4);
 	align-self: center;
 }
 
+
 /*********************************************************************************************************
 * 	
-*   Grid Display: buttons
+*   Grid Display: buttons (for Resource Editor / Creator)
 *
 **********************************************************************************************************/
 
@@ -190,6 +182,86 @@ $off-wht: rgba(white,.4);
 		"space cancel-button";
 }
 
+
+/*********************************************************************************************************
+**********************************************************************************************************
+* 	
+*   Grid Display for Resource viewer
+*
+**********************************************************************************************************
+**********************************************************************************************************/
+/**
+* For resource editor/creator, the div elements are split into:
+* 	.resource-background
+*		#resource-head-display
+*		#modules-display
+*/
+
+/*********************************************************************************************************
+* 	
+*   Grid Display: resource-head-display (for Resource Editor / Creator)
+*
+**********************************************************************************************************/
+#resource-head-display {
+	// grid-area: resource-head;
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: auto auto;
+	grid-template-areas:
+		"r-name"
+		"author";
+	grid-row-gap: 1rem;
+}
+
+#resource-name-display {
+	grid-area: r-name;
+	font-size: 3rem;
+	font-weight: bold;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+}
+
+#author-info{
+	grid-area: author;
+}
+
+/*********************************************************************************************************
+* 	
+*   Grid Display: modules-display (for Resource Editor / Creator)
+*
+**********************************************************************************************************/
+.module {
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: auto auto auto auto;
+	grid-template-areas:
+		"content-title"
+		"content-text"
+		"created-date"
+		"modified-date";
+	grid-row-gap: 0.5rem;
+}
+
+.content-title{
+	grid-area: content-title;
+	align-self: center;
+	min-height: 2rem;
+	display: flex;
+	align-items: center;
+}
+
+.content{
+	grid-area: content-text;
+}
+
+#created-date{
+	grid-area: created-date;
+}
+
+#modified-date{
+	grid-area: modified-date;
+}
+
 /*********************************************************************************************************
 **********************************************************************************************************
 * 	
@@ -197,10 +269,6 @@ $off-wht: rgba(white,.4);
 *
 **********************************************************************************************************
 **********************************************************************************************************/
-
-#author-name {
-	align: inline;
-}
 
 .student {
 	color: $student-color;
@@ -214,13 +282,6 @@ $off-wht: rgba(white,.4);
 	color: lighten($text-default, 50%);
 	font-size: 12px;
 	margin-top: 5px;
-}
-
-.module {
-	// TODO please style accordingly.
-	display: grid;
-	font-size: 20px; //change the font size of the resource
-	padding: 10px;
 }
 
 

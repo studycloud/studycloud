@@ -26,12 +26,6 @@
 		<span id="open-resource-editor"><i id="edit-icon" display="none" class='fas fa-edit'></i></span>
 		<!-- Container for resource. -->
 		<div id="resource-container">
-			<div class="resource-background">
-				<div id="resource-head"></div>
-				<div id="modules"> <!-- This is where you put the modules. -->
-				</div>
-				<div id="buttons"></div>
-			</div>
 		</div>
 	</div>
 </div>

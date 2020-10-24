@@ -13,7 +13,7 @@
 /*********************************************************************************************************
 **********************************************************************************************************
 * 	
-*   Grid Display
+*   Grid Display for Resource Editor / Creator
 *
 **********************************************************************************************************
 **********************************************************************************************************/
@@ -37,7 +37,7 @@
 
 /*********************************************************************************************************
 * 	
-*   Grid Display: resource-head
+*   Grid Display: resource-head (for Resource Editor / Creator)
 *
 **********************************************************************************************************/
 
@@ -83,15 +83,14 @@
 
 .resource-divider {
   grid-area: divider;
-  margin-top: 5px;
-  margin-bottom: 15px;
-  height: 2px;
+  padding: 0.1rem;
   background-color: #8a8a8a;
+  margin-bottom: 0.5rem;
 }
 
 /*********************************************************************************************************
 * 	
-*   Grid Display: content-module
+*   Grid Display: content-module (for Resource Editor / Creator)
 *
 **********************************************************************************************************/
 
@@ -156,7 +155,7 @@
 
 /*********************************************************************************************************
 * 	
-*   Grid Display: buttons
+*   Grid Display: buttons (for Resource Editor / Creator)
 *
 **********************************************************************************************************/
 
@@ -170,14 +169,90 @@
 /*********************************************************************************************************
 **********************************************************************************************************
 * 	
-*   Miscs
+*   Grid Display for Resource viewer
 *
 **********************************************************************************************************
 **********************************************************************************************************/
 
-#author-name {
-  align: inline;
+/**
+* For resource editor/creator, the div elements are split into:
+* 	.resource-background
+*		#resource-head-display
+*		#modules-display
+*/
+
+/*********************************************************************************************************
+* 	
+*   Grid Display: resource-head-display (for Resource Editor / Creator)
+*
+**********************************************************************************************************/
+
+#resource-head-display {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto;
+  grid-template-areas: "r-name" "author";
+  grid-row-gap: 1rem;
 }
+
+#resource-name-display {
+  grid-area: r-name;
+  font-size: 3rem;
+  font-weight: bold;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+#author-info {
+  grid-area: author;
+}
+
+/*********************************************************************************************************
+* 	
+*   Grid Display: modules-display (for Resource Editor / Creator)
+*
+**********************************************************************************************************/
+
+.module {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto auto auto;
+  grid-template-areas: "content-title" "content-text" "created-date" "modified-date";
+  grid-row-gap: 0.5rem;
+}
+
+.content-title {
+  grid-area: content-title;
+  -ms-flex-item-align: center;
+      align-self: center;
+  min-height: 2rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.content {
+  grid-area: content-text;
+}
+
+#created-date {
+  grid-area: created-date;
+}
+
+#modified-date {
+  grid-area: modified-date;
+}
+
+/*********************************************************************************************************
+**********************************************************************************************************
+* 	
+*   Miscs
+*
+**********************************************************************************************************
+**********************************************************************************************************/
 
 .student {
   color: purple;
@@ -191,12 +266,6 @@
   color: #807f7f;
   font-size: 12px;
   margin-top: 5px;
-}
-
-.module {
-  display: grid;
-  font-size: 20px;
-  padding: 10px;
 }
 
 /*********************************************************************************************************

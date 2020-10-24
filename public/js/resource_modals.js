@@ -109,12 +109,19 @@ function displayResource(received, resource_id) {
 
 	received.json().then(function(resource){
 		console.log(resource);
-		document.getElementById('resource-head').innerHTML =
-			"<div id = 'resource-id' style='visibility: hidden'></div>" + 
-			"<h1 id = 'resource-name'>" + resource.meta.name + "</h1>" + 
-			"<div>contributed by " + 
-				"<div id='author-name'></div>" + 
+		// set the template of the page
+		document.getElementById('resource-container').innerHTML = 
+			"<div class='resource-background'>" + 
+				"<div id='resource-head-display'></div>" + 
+				"<div id='modules-display'>" +
+					"<!-- This is where you put the modules. -->" +
+				"</div>" + 
+				"<div id='buttons'></div>" + 
 			"</div>";
+		document.getElementById('resource-head-display').innerHTML =
+			"<div id = 'resource-id' style='visibility: hidden'></div>" + 
+			"<div id = 'resource-name-display'>" + resource.meta.name + "</div>" + 
+			"<div id = 'author-info'>contributed by <div id='author-name'></div></div>";
 		
 		document.getElementById("resource-id").innerHTML = resource_id;
 
@@ -148,7 +155,7 @@ function set_author(name, type) {
 function display_content(num, element)
 {
 	// Create a new module.
-	document.getElementById('modules').innerHTML+="<div class=module id='module-"+num+"'></div>";
+	document.getElementById('modules-display').innerHTML+="<div class=resource-divider></div><div class=module id='module-"+num+"'></div>";
 
 	// TODO: very inefficient way to decide how contents are displayed
 	if(element.type=="link")
@@ -158,17 +165,26 @@ function display_content(num, element)
 		if (!display_link.includes("https://")){
 			display_link = "https://" + display_link;
 		}
-		document.getElementById('module-'+num).innerHTML+="<div><a href="+display_link+" target='_blank'>"+element.name+"</a></div>";
+		document.getElementById('module-'+num).innerHTML += 
+			"<div class='content-title'>" + 
+				"<a href="+display_link+" target='_blank'>" + element.name + "</a>" +
+			"</div>";
 	}
 	else // Apparently by MVP things are HTML text. Check this. 
 	{
-		document.getElementById('module-'+num).innerHTML+="<div class=resource-divider></div><h2>"+element.name+"</h2><div>"+element.content+"</div>";
+		document.getElementById('module-'+num).innerHTML += 
+			"<div class='content-title'>" +
+				"<h2>" + element.name + "</h2>" +
+			"</div>" + 
+			"<div id='content-" + num + "' class='content'>" +
+				element.content + 
+			"</div>";
 	}
 	// Add other types as you will. 
 
 	// Display dates. 
-	document.getElementById('module-'+num).innerHTML+="<div class='date'>Created: "+element.created+"</div>";
-	document.getElementById('module-'+num).innerHTML+="<div class='date'>Modified: "+element.modified+"</div>";
+	document.getElementById('module-'+num).innerHTML+="<div id='created-date' class='date'>Created: "+element.created+"</div>";
+	document.getElementById('module-'+num).innerHTML+="<div id='modified-date' class='date'>Modified: "+element.modified+"</div>";
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,6 +200,14 @@ function display_content(num, element)
  */
 function resourceEditorHTML(resourceUseData)
 {
+	document.getElementById('resource-container').innerHTML = 
+		"<div class='resource-background'>" + 
+			"<div id='resource-head'></div>" + 
+			"<div id='modules'>" +
+				"<!-- This is where you put the modules. -->" +
+			"</div>" + 
+			"<div id='buttons'></div>" + 
+		"</div>";
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML = 
 		"<div id = 'resource-id' style='visibility: hidden'></div>" + 
@@ -348,6 +372,14 @@ function submitEditedResource()
  */
 function resourceCreatorHTML(resourceUseData, nodeId)
 {
+	document.getElementById('resource-container').innerHTML = 
+		"<div class='resource-background'>" + 
+			"<div id='resource-head'></div>" + 
+			"<div id='modules'>" +
+				"<!-- This is where you put the modules. -->" +
+			"</div>" + 
+			"<div id='buttons'></div>" + 
+		"</div>";
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML = 
 		"<div id = 'resource-id' style='visibility: hidden'></div>" + 
