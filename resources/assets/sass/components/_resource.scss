@@ -68,6 +68,7 @@ $off-wht: rgba(white,.4);
 		"r-name r-name"
 		"r-use r-use-selector";
 	grid-row-gap: 1rem;
+	grid-column-gap: 0.5rem;
 }
 
 #resource-name {
@@ -90,13 +91,14 @@ $off-wht: rgba(white,.4);
 
 
 #resource-use-label{
-	font-size: 1.5rem;
+	font-size: 1rem;
 	grid-area: r-use;
 	align-self: center;
 }
 
-#resource-use-selector{
+#resource-use-selector {
 	grid-area: r-use-selector;
+	align-self: center;
 }
 
 .resource-divider{
@@ -116,8 +118,8 @@ $off-wht: rgba(white,.4);
 #modules {
 	display: grid;
 	// grid-area: content-module;
-	grid-template-columns: auto auto;
-	grid-template-rows: auto auto auto auto auto;
+	grid-template-columns: 35% 65%;
+	grid-template-rows: auto auto 5rem auto auto;
 	grid-template-areas:
 		"divider divider"
 		"c-name-label c-name"
@@ -125,6 +127,7 @@ $off-wht: rgba(white,.4);
 		"content-label content-label"
 		"tinymce tinymce";
 	grid-row-gap: 1rem;
+	grid-column-gap: 0.5rem;
 }
 
 #content-name-label{
@@ -153,18 +156,22 @@ $off-wht: rgba(white,.4);
 
 #content-type-label {
 	grid-area: c-type;
+	align-self: center;
 }
 
 #content-type-selector {
 	grid-area: c-type-selector;
+	align-self: center;
 }
 
 #content-label {
 	grid-area: content-label;
+	align-self: center;
 }
 
 #content-input {
 	grid-area: tinymce;
+	align-self: center;
 }
 
 /*********************************************************************************************************
@@ -350,7 +357,7 @@ $wrapper-height: 60px;
 ul#resource-use-selector, ul#content-type-selector{
 	padding-top: 5%;
 	font-family: $main-font;
-	height: 20px;
+	height: 5rem;
 
 	li {
 		display: inline-block;
