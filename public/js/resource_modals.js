@@ -371,7 +371,9 @@ function submitEditedResource()
  * @param {*} nodeId the nodeID of where the resource will be attached (actually not sure...)
  */
 function resourceCreatorHTML(resourceUseData, nodeId)
-{
+{	
+	data = [{"id":1,"name":"Class Notes"}, {"id":3,"name":"Flashcards"}, {"id":2,"name":"Notes"},{"id":4,"name":"Item 4"},{"id":5,"name":"Item 5"},{"id":6,"name":"Item 6"},{"id":7,"name":"Try a pretty long name and such"},{"id":8,"name":"A"}, {"id":9,"name":"Even longer name I guess?? I really hope it works"}, {"id":10,"name":"Maybe should have restriction on long names..."}];
+
 	document.getElementById('resource-container').innerHTML = 
 		"<div class='resource-background'>" + 
 			"<div id='resource-head'></div>" + 
@@ -385,7 +387,7 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 		"<div id = 'resource-id' style='visibility: hidden'></div>" + 
 		"<span id = 'resource-name' contenteditable = true>Resource Name</span>" + 
 		"<div id = 'resource-use-label' >Resource Use:</div>" + 
-		selectorCodeGenerator("resource-use", resourceUseData);
+		selectorCodeGenerator("resource-use", data);
 	document.getElementById('modules').innerHTML = 
 		"<div class=resource-divider></div>" + 
 		"<div id='content-name-label'>Resource Content Name:</div>" + 

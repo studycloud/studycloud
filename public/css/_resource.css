@@ -2,7 +2,7 @@
 
 #resource-container {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 1rem auto;
 }
 
 * {
@@ -33,6 +33,7 @@
 
 .resource-background {
   display: block;
+  font-size: 1.5rem;
 }
 
 /*********************************************************************************************************
@@ -47,7 +48,7 @@
   grid-template-rows: auto 5rem;
   grid-template-areas: "r-name r-name" "r-use r-use-selector";
   grid-row-gap: 1rem;
-  grid-column-gap: 0.5rem;
+  grid-column-gap: 1rem;
 }
 
 #resource-name {
@@ -69,7 +70,6 @@
 }
 
 #resource-use-label {
-  font-size: 1rem;
   grid-area: r-use;
   -ms-flex-item-align: center;
       align-self: center;
@@ -100,7 +100,7 @@
   grid-template-rows: auto auto 5rem auto auto;
   grid-template-areas: "divider divider" "c-name-label c-name" "c-type c-type-selector" "content-label content-label" "tinymce tinymce";
   grid-row-gap: 1rem;
-  grid-column-gap: 0.5rem;
+  grid-column-gap: 1rem;
 }
 
 #content-name-label {
@@ -161,9 +161,11 @@
 
 #buttons {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 35% 65%;
   grid-template-rows: auto auto;
   grid-template-areas: "space submit-button" "space cancel-button";
+  grid-row-gap: 0.5rem;
+  grid-column-gap: 1rem;
 }
 
 /*********************************************************************************************************
@@ -205,6 +207,7 @@
 
 #author-info {
   grid-area: author;
+  font-size: 1rem;
 }
 
 /*********************************************************************************************************
@@ -363,10 +366,7 @@
 #cancel-button {
   font-family: "Open Sans", sans-serif;
   display: inline-block;
-  margin: 0rem;
   margin-left: auto;
-  margin-right: 5px;
-  margin-top: 5px;
   padding: .5em .5em;
   border: .094em solid;
   border-radius: .625em;
@@ -376,7 +376,7 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  font: bold 1rem sans-serif;
+  font: bold 1rem "Open Sans", sans-serif;
   -webkit-transition: 0.2s ease-in-out;
   transition: 0.2s ease-in-out;
   text-transform: uppercase;
@@ -467,30 +467,53 @@
 
 ul#resource-use-selector,
 ul#content-type-selector {
-  padding-top: 5%;
   font-family: "Open Sans", sans-serif;
-  height: 5rem;
+  height: 4rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  overflow: scroll;
+  scrollbar-width: none;
+}
+
+ul#resource-use-selector::-webkit-scrollbar,
+ul#content-type-selector::-webkit-scrollbar {
+  display: none;
 }
 
 ul#resource-use-selector li,
 ul#content-type-selector li {
   display: inline-block;
+  background-color: #dadada;
+  margin: 0 0.25rem;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 0 auto;
+          flex: 1 0 auto;
 }
 
 ul#resource-use-selector li label,
 ul#content-type-selector li label {
-  background-color: #dadada;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%;
+  padding: 0.5rem 0.5rem;
   color: black;
-  padding: 20px 30px;
   text-decoration: none;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   -webkit-transition: 0.2s;
   transition: 0.2s;
 }
 
-ul#resource-use-selector li label:hover,
-ul#resource-use-selector li input:checked + label,
-ul#content-type-selector li label:hover,
-ul#content-type-selector li input:checked + label {
+ul#resource-use-selector li:hover,
+ul#resource-use-selector li input:checked + li,
+ul#content-type-selector li:hover,
+ul#content-type-selector li input:checked + li {
   background-color: #6D7993;
   -webkit-transition: 0.3s;
   transition: 0.3s;
@@ -503,8 +526,7 @@ ul#content-type-selector li input:checked + label {
 
 ul#resource-use-selector li input,
 ul#content-type-selector li input {
-  position: fixed;
-  left: 100%;
+  display: none;
 }
 
 /*********************************************************************************************************
