@@ -109,6 +109,10 @@
       align-self: center;
 }
 
+#resource-name:hover {
+  background-color: #EAEAEA;
+}
+
 .content-name {
   grid-area: c-name;
   -ms-flex-item-align: center;
@@ -139,6 +143,25 @@
   grid-area: c-type-selector;
   -ms-flex-item-align: center;
       align-self: center;
+}
+
+
+.content-name:hover {
+  background-color: #EAEAEA;
+}
+
+.tooltip {
+  visibility: hidden;
+  width: 120px;
+  background-color: #aca9a9;
+  color: black;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  /* position tooltip text */
+  position: relative;
+  z-index: 1;
+  left: 24.5%;
 }
 
 #content-label {

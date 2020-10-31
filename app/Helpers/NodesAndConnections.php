@@ -81,10 +81,10 @@ class NodesAndConnections
 	/**
 	 * some data won't have pivot objects, but conversion function depends on their existence
 	 * let's format an $node into the "nodes with pivot" format
-	 * @param array		$node	the data that needs to be converted; the node must have a 'parent_id' attribute
-	 * @param string	$name		the name of the type of object (ex: "topic" or "class")
-	 * @param int|null	$other_id	the id of the pivot's parent_id, if not the parent_id itself
-	 * @return array				the reformated data as a collection with a pivot attribute
+	 * @param array		$node			the data that needs to be converted; the node must have a 'parent_id' attribute
+	 * @param string	$name			the name of the type of object (ex: "topic" or "class")
+	 * @param int|null	$replace_child	the id of the pivot's parent_id, if not the parent_id itself
+	 * @return array					the reformated data as a collection with a pivot attribute
 	 * added and the 'parent_id' attribute removed
 	 */
 	public static function addPivot($node, $name, $replace_child=null)
