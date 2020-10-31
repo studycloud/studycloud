@@ -47,6 +47,10 @@
   width: 500px;
 }
 
+.content-name:hover {
+  background-color: #EAEAEA;
+}
+
 .tooltip {
   visibility: hidden;
   width: 120px;

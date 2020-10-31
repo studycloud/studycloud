@@ -360,7 +360,9 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 		<div class=resource-divider></div>\
 		<div class = 'content-creator'>\
 		<div class=resource-modal-label>Resource Content Name:</div><br>\
-		<div class=content-name id ='content-name0' contenteditable=true> Content Name </div> <br>\
+		<div> <div class = 'tooltip'> Edit </div>\
+		<div class=content-name id ='content-name0' contenteditable=true\
+		onmouseout = hideTooltip(this) onmouseover = showTooltip(this) onClick = hideTooltip(this)> Content Name </div> <br>\
 		<div class=resource-modal-label> Content Type: </div>\
 		<br>" + selectorCodeGenerator("content-type") + "<br>\
 		<div class=resource-modal-label>Content:</div>\
