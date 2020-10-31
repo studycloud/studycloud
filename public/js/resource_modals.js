@@ -626,7 +626,7 @@ function selectorCodeGenerator(selectorFor, data)
  * 			Used to set a tooltip's visibility to hidden
  * \warning will only hide ttSib's first sibling of class tooltip
  * 
- * @param {*} ttSib Parent of the tooltip to be hidden 
+ * @param {*} ttSib sibling of the tooltip to be hidden
  */
 function hideTooltip(ttSib) { 
 	var tooltip = ttSib.parentNode.getElementsByClassName("tooltip")[0];
@@ -636,9 +636,9 @@ function hideTooltip(ttSib) {
 /** Helper function for changing textbox tooltip visibility
  * \brief	Used in create resource modal, edit resource modal
  * 			Used to set a tooltip's visibility to visible
- * \warning will only hide ttSib's first sibling of class tooltip
+ * \warning will only show ttSib's first sibling of class tooltip
  * 
- * @param {*} ttSib Parent of the tooltip to be hidden 
+ * @param {*} ttSib sibling of the tooltip to be hidden 
  */
 function showTooltip(ttSib) {
 	var tooltip = ttSib.parentNode.getElementsByClassName("tooltip")[0];
