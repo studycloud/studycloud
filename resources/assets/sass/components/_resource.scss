@@ -1,10 +1,8 @@
 // Sass file for the resource viewer. 
-
 @import "../helpers/color.scss";
 @import "../helpers/fonts.scss";
 //@import "https://fonts.googleapis.com/css?family=Poiret+One";
 //@import "buttons";
-
 
 $student-color: purple;
 $teacher-color: green;
@@ -14,37 +12,118 @@ $green: #75B343;
 $orange: #FF6A42;
 $off-wht: rgba(white,.4);
 
-#resource-container { // For now. 
-	// background: $content-bg-color;
+#resource-container {
 	max-width: 800px;
-	margin: 0 auto;
+	margin: 1rem auto;
 }
 
+* {
+	box-sizing: border-box;
+  }
+
+/*********************************************************************************************************
+**********************************************************************************************************
+* 	
+*   Grid Display for Resource Editor / Creator
+*
+**********************************************************************************************************
+**********************************************************************************************************/
+/**
+* For resource editor/creator, the div elements are split into:
+* 	.resource-background
+*		.resource-head
+*		#modules
+* 		.buttons
+* Similarily, the grid cells are split into these layers:
+*	.resource-background
+*		[resource-head]
+*		[content-module]
+*		[buttons]
+*/
 .resource-background {
-	// background: red;
-	padding: 20px; 	// External spacing.
+	display: block;
+	font-size: 1.5rem;
 }
 
-.resource-modal-label{
-	color: #4a4a54;
-	font-size:18px;
+/*********************************************************************************************************
+* 	
+*   Grid Display: resource-head (for Resource Editor / Creator)
+*
+**********************************************************************************************************/
+
+#resource-head {
+	// grid-area: resource-head;
+	display: grid;
+	grid-template-columns: 35% 65%;
+	grid-template-rows: auto 5rem;
+	grid-template-areas:
+		"r-name r-name"
+		"r-use r-use-selector";
+	grid-row-gap: 1rem;
+	grid-column-gap: 1rem;
 }
 
 #resource-name {
-	font-size: 40px;
+	grid-area: r-name;
+	font-size: 3rem;
 	font-weight: bold;
-	margin-bottom:15px;
     -moz-appearance: textfield-multiline;
 	-webkit-appearance: textarea;
-	// TODO: Do we need the border? Will it look more natural without the border?
-    // border: 1px solid gray; 
-    /* font: medium -moz-fixed; */
-    /* font: -webkit-small-control; */
-    max-height: 100px;
-    overflow: auto;
-    padding: 2px;
-    resize: both;
-    max-width: 500px;
+    min-height: 5rem;
+	overflow: scroll;
+	scrollbar-width: none;  // not showing scrollbar for firefox
+	white-space: nowrap;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	// not showing scrollbar for chrome
+	&::-webkit-scrollbar { 
+		display: none; 
+	} 
+}
+
+
+#resource-use-label{
+	grid-area: r-use;
+	align-self: center;
+}
+
+#resource-use-selector {
+	grid-area: r-use-selector;
+	align-self: center;
+}
+
+
+.resource-divider{
+	grid-area: divider;
+	padding: 0.1rem;
+	background-color: #8a8a8a;
+	margin-bottom: 0.5rem;
+}
+
+/*********************************************************************************************************
+* 	
+*   Grid Display: content-module (for Resource Editor / Creator)
+*
+**********************************************************************************************************/
+
+#modules {
+	display: grid;
+	// grid-area: content-module;
+	grid-template-columns: 35% 65%;
+	grid-template-rows: auto auto 5rem auto auto;
+	grid-template-areas:
+		"divider divider"
+		"c-name-label c-name"
+		"c-type c-type-selector"
+		"content-label content-label"
+		"tinymce tinymce";
+	grid-row-gap: 1rem;
+	grid-column-gap: 1rem;
+}
+
+#content-name-label{
+	grid-area: c-name-label;
+	align-self: center;
 }
 
 #resource-name:hover {
@@ -52,19 +131,138 @@ $off-wht: rgba(white,.4);
 }
 
 .content-name {
-	font-size: 25px;
+	grid-area: c-name;
+	align-self: center;
+	font-size: 1.5rem;
     font-weight: bold;
     -moz-appearance: textfield-multiline;
 	-webkit-appearance: textarea;
-	// TODO: Do we need the border? Will it look more natural without the border?
-    // border: 1px solid gray; 
-    /* font: medium -moz-fixed; */
-    /* font: -webkit-small-control; */
-    height: 28px;
-    overflow: auto;
-    padding: 2px;
-    resize: both;
-    width: 500px;
+    min-height: 2rem;
+	overflow: scroll;
+	scrollbar-width: none;  // not showing scrollbar for firefox
+	white-space: nowrap;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+	// not showing scrollbar for chrome
+	&::-webkit-scrollbar { 
+		display: none; 
+	} 
+}
+
+#content-type-label {
+	grid-area: c-type;
+	align-self: center;
+}
+
+#content-type-selector {
+	grid-area: c-type-selector;
+	align-self: center;
+}
+
+#content-label {
+	grid-area: content-label;
+	align-self: center;
+}
+
+#content-input {
+	grid-area: tinymce;
+	align-self: center;
+}
+
+
+/*********************************************************************************************************
+* 	
+*   Grid Display: buttons (for Resource Editor / Creator)
+*
+**********************************************************************************************************/
+
+#buttons {
+	// grid-area: buttons;
+	display: grid;
+	grid-template-columns: 35% 65%;
+	grid-template-rows: auto auto;
+	grid-template-areas:
+		"space submit-button"
+		"space cancel-button";
+	grid-row-gap: 0.5rem;
+	grid-column-gap: 1rem;
+}
+
+
+/*********************************************************************************************************
+**********************************************************************************************************
+* 	
+*   Grid Display for Resource viewer
+*
+**********************************************************************************************************
+**********************************************************************************************************/
+/**
+* For resource editor/creator, the div elements are split into:
+* 	.resource-background
+*		#resource-head-display
+*		#modules-display
+*/
+
+/*********************************************************************************************************
+* 	
+*   Grid Display: resource-head-display (for Resource Editor / Creator)
+*
+**********************************************************************************************************/
+#resource-head-display {
+	// grid-area: resource-head;
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: auto auto;
+	grid-template-areas:
+		"r-name"
+		"author";
+	grid-row-gap: 1rem;
+}
+
+#resource-name-display {
+	grid-area: r-name;
+	font-size: 3rem;
+	font-weight: bold;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+}
+
+#author-info{
+	grid-area: author;
+	font-size: 1rem;
+}
+
+/*********************************************************************************************************
+* 	
+*   Grid Display: modules-display (for Resource Editor / Creator)
+*
+**********************************************************************************************************/
+.module {
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: auto auto auto auto;
+	grid-template-areas:
+		"content-title"
+		"content-text"
+		"created-date"
+		"modified-date";
+	grid-row-gap: 0.5rem;
+}
+
+.content-title{
+	grid-area: content-title;
+	align-self: center;
+	min-height: 2rem;
+	display: flex;
+	align-items: center;
+}
+
+.content{
+	grid-area: content-text;
+}
+
+#created-date{
+	grid-area: created-date;
 }
 
 .content-name:hover {
@@ -86,9 +284,18 @@ $off-wht: rgba(white,.4);
 	left: 24.5%;
 }
 
-#author-name {
-	align: inline;
+#modified-date{
+	grid-area: modified-date;
+
 }
+
+/*********************************************************************************************************
+**********************************************************************************************************
+* 	
+*   Miscs
+*
+**********************************************************************************************************
+**********************************************************************************************************/
 
 .student {
 	color: $student-color;
@@ -104,20 +311,13 @@ $off-wht: rgba(white,.4);
 	margin-top: 5px;
 }
 
-.module {
-	// TODO please style accordingly.
-	font-size: 20px; //change the font size of the resource
-	padding: 10px;
-}
 
-.resource-divider{
-	margin-top: 5px;
-	margin-bottom: 15px;
-	height: 2px;
-	background-color: #8a8a8a;
-}
+/*********************************************************************************************************
+*
+* 	Icons to open the resource editor from resource viewer
+*
+**********************************************************************************************************/
 
-// button in resource viewer to open resource editor
 #open-resource-editor{
 	color: $text-light;
     float: left;
@@ -132,16 +332,21 @@ $off-wht: rgba(white,.4);
     cursor: pointer;
 }
 
+/*********************************************************************************************************
+*
+* 		Buttons
+*
+**********************************************************************************************************/
 
 @mixin btn-theme($btn-color) {
 	border-color: darken($btn-color, 20%);
 	background-color: $btn-color;
 	&:hover {
-   background-color: darken($btn-color, 6%);
-   box-shadow: 0 .125em $off-wht, inset 0 .063em $off-wht, inset 0 -.188em lighten($btn-color, 2%);
+		background-color: darken($btn-color, 6%);
+		box-shadow: 0 .125em $off-wht, inset 0 .063em $off-wht, inset 0 -.188em lighten($btn-color, 2%);
 	}
 	&:active {
-   box-shadow: 0 .063em $off-wht, inset 0 0 1.094em darken($btn-color, 40%), inset 0 .063em darken($btn-color, 20%),inset 0 -0.188em darken($btn-color, 20%); 
+		box-shadow: 0 .063em $off-wht, inset 0 0 1.094em darken($btn-color, 40%), inset 0 .063em darken($btn-color, 20%),inset 0 -0.188em darken($btn-color, 20%); 
 	}
  }
 
@@ -169,24 +374,21 @@ $off-wht: rgba(white,.4);
 %button {
     font-family: $body-font;
 	display: inline-block;
-	margin: 0rem; 
 	margin-left: auto;
-	margin-right: 5px;
-	margin-top: 5px;
 	padding: .5em .5em;
 	border: .094em solid;
 	border-radius: .625em;
 	box-shadow: 0 .375em .313em -.313em rgba(black,.8), inset 0 .063em $off-wht, inset 0 -.188em rgba(black,.15);
 	color: #FFF;
 	display: flex;
-	font: bold 1rem sans-serif;
+	font: bold 1rem $main-font;
 	@include trans(0.2s ease-in-out); 
 	text: {
 		transform: uppercase;
 		decoration: none;
 		shadow: 0 .063em rgba(black,.3);
 	}
-  cursor:pointer;
+  	cursor:pointer;
 }
 
 #submit-button {
@@ -194,6 +396,7 @@ $off-wht: rgba(white,.4);
     background: rgba(black,.15);
 	color: $text-invert;
 	@include btn-theme(#50529e);
+	grid-area: submit-button;
 }
 
 #new-content-button{
@@ -207,8 +410,15 @@ $off-wht: rgba(white,.4);
 	@extend %button;
     background: rgba(black,.15);
 	color: $text-invert;
-	@include btn-theme(#50529e)
+	@include btn-theme(#50529e);
+	grid-area: cancel-button;
 }
+
+/*********************************************************************************************************
+*
+* 	Resource Use, Content Type Selector Styles
+*
+**********************************************************************************************************/
 
 $wrapper-height: 60px;
 // style the resource use selector
@@ -230,23 +440,35 @@ $wrapper-height: 60px;
 }
 
 ul#resource-use-selector, ul#content-type-selector{
-	padding-top: 5%;
 	font-family: $main-font;
-	height: 20px;
+	height: 4rem;
+	display: flex;
+	overflow: scroll;
+	scrollbar-width: none;  // not showing scrollbar for firefox
+	// not showing scrollbar for chrome
+	&::-webkit-scrollbar { 
+		display: none; 
+	} 
 
 	li {
 		display: inline-block;
+		background-color: #dadada;
+		margin: 0 0.25rem;
+		flex: 1 0 auto;
 	}
 
 	li label {
-		background-color: #dadada;
+		display: flex;
+		height: 100%;
+		padding: 0.5rem 0.5rem;
 		color: black;
-		padding: 20px 30px;
 		text-decoration: none;
+		align-items: center;
+		justify-content: center;
 		transition: 0.2s;
 	}
 
-	li label:hover, li input:checked + label {
+	li:hover, li input:checked + li {
 		background-color: #6D7993;
 		transition: 0.3s;
 	}
@@ -256,15 +478,18 @@ ul#resource-use-selector, ul#content-type-selector{
 	}
 
 	li input {
-		position: fixed;
-		left: 100%;
+		display: none;
 	}
 }
 
-/**
-* Somehow these tags get overwritten (maybe due to CSS inheritence)
-*   redefine the tag here
-*/
+
+/*********************************************************************************************************
+*
+* 	Redefine tags for basic styling
+*   	Somehow these tags get overwritten (maybe due to CSS inheritence)
+*
+**********************************************************************************************************/
+
 strong {
 	font-weight: bold; 
   }
