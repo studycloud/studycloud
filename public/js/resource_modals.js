@@ -629,11 +629,8 @@ function selectorCodeGenerator(selectorFor, data)
  * @param {*} ttSib Parent of the tooltip to be hidden 
  */
 function hideTooltip(ttSib) { 
-	// 
 	var tooltip = ttSib.parentNode.getElementsByClassName("tooltip")[0];
 	tooltip.style.visibility = 'hidden';
-
-	// it looks like the on hover property is getting overwritten by this :( see if there's a way to make it override this?
 }
 
 /** Helper function for changing textbox tooltip visibility
