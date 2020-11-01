@@ -4,14 +4,6 @@ var content_num = 0;
 // having this will clear any unsaved changes
 var pre_updated_content_num = content_num;
 
-/**
- * TODO: 
- * 2. Ask: does the resource creator takes the node id?
- * 3. Problem that might not be a problem in the future? 
- * 	http://127.0.0.1:8000/resources/2/edit/edit
- *  in login modal, now it will just append edit to the current url
- * 	Hopefully in the future, it will redirect to the right url after we submit the content?
- */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -117,16 +109,25 @@ function displayResource(received, resource_id) {
 
 	received.json().then(function(resource){
 		console.log(resource);
-		document.getElementById('resource-head').innerHTML = "\
-			<div id = 'resource-id' style='visibility: hidden'> </div>\
-			<div><h1 id = 'resource-name'>"+resource.meta.name+"</h1>\
-			<div>contributed by <div id='author-name'></div></div>";
+		// set the template of the page
+		document.getElementById('resource-container').innerHTML = 
+			"<div class='resource-background'>" + 
+				"<div id='resource-head-display'></div>" + 
+				"<div id='modules-display'>" +
+					"<!-- This is where you put the modules. -->" +
+				"</div>" + 
+				"<div id='buttons'></div>" + 
+			"</div>";
+		document.getElementById('resource-head-display').innerHTML =
+			"<div id = 'resource-id' style='visibility: hidden'></div>" + 
+			"<div id = 'resource-name-display'>" + resource.meta.name + "</div>" + 
+			"<div id = 'author-info'>contributed by <div id='author-name'></div></div>";
 		
 		document.getElementById("resource-id").innerHTML = resource_id;
 
-		set_author(resource.meta.author_name, resource.meta.author_type);
+		display_author(resource.meta.author_name, resource.meta.author_type);
 		for (var i = 0; i < resource.contents.length; i++) {
-		display_content(i, resource.contents[i]);
+			display_content(i, resource.contents[i]);
 		}
   });
 }
@@ -136,11 +137,11 @@ function displayResource(received, resource_id) {
  * @param {*} name String, author's name
  * @param {*} type String, author's type
  */
-function set_author(name, type) {
+function display_author(name, type) {
 	// Clear all classes on the author-name field.
 	var cl = document.getElementById("author-name").classList;
 	for (var i = cl.length; i > 0; i--) {
-	cl.remove(cl[0]);
+		cl.remove(cl[0]);
 	}
 	document.getElementById("author-name").classList.add(type);
 	document.getElementById("author-name").innerHTML = name;
@@ -154,7 +155,7 @@ function set_author(name, type) {
 function display_content(num, element)
 {
 	// Create a new module.
-	document.getElementById('modules').innerHTML+="<div class=module id='module-"+num+"'></div>";
+	document.getElementById('modules-display').innerHTML+="<div class=resource-divider></div><div class=module id='module-"+num+"'></div>";
 
 	// TODO: very inefficient way to decide how contents are displayed
 	if(element.type=="link")
@@ -164,17 +165,26 @@ function display_content(num, element)
 		if (!display_link.includes("https://")){
 			display_link = "https://" + display_link;
 		}
-		document.getElementById('module-'+num).innerHTML+="<div><a href="+display_link+" target='_blank'>"+element.name+"</a></div>";
+		document.getElementById('module-'+num).innerHTML += 
+			"<div class='content-title'>" + 
+				"<a href="+display_link+" target='_blank'>" + element.name + "</a>" +
+			"</div>";
 	}
 	else // Apparently by MVP things are HTML text. Check this. 
 	{
-		document.getElementById('module-'+num).innerHTML+="<div class=resource-divider></div><h2>"+element.name+"</h2><div>"+element.content+"</div>";
+		document.getElementById('module-'+num).innerHTML += 
+			"<div class='content-title'>" +
+				"<h2>" + element.name + "</h2>" +
+			"</div>" + 
+			"<div id='content-" + num + "' class='content'>" +
+				element.content + 
+			"</div>";
 	}
 	// Add other types as you will. 
 
 	// Display dates. 
-	document.getElementById('module-'+num).innerHTML+="<div class='date'>Created: "+element.created+"</div>";
-	document.getElementById('module-'+num).innerHTML+="<div class='date'>Modified: "+element.modified+"</div>";
+	document.getElementById('module-'+num).innerHTML+="<div id='created-date' class='date'>Created: "+element.created+"</div>";
+	document.getElementById('module-'+num).innerHTML+="<div id='modified-date' class='date'>Modified: "+element.modified+"</div>";
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -190,23 +200,80 @@ function display_content(num, element)
  */
 function resourceEditorHTML(resourceUseData)
 {
+	document.getElementById('resource-container').innerHTML = 
+		"<div class='resource-background'>" + 
+			"<div id='resource-head'></div>" + 
+			"<div id='modules'>" +
+				"<!-- This is where you put the modules. -->" +
+			"</div>" + 
+			"<div id='buttons'></div>" + 
+		"</div>";
 	// create all the input to create resources
-	document.getElementById('resource-head').innerHTML="\
-		<div id = 'resource-id' style='visibility: hidden'> </div>\
-		<div id = 'resource-name' contenteditable=true> Resource Name </div>";
-	document.getElementById('modules').innerHTML = "\
-		<div class=resource-modal-label> Resource Use:</div>\
-		<br>" + selectorCodeGenerator("resource-use", resourceUseData) + "<br>\
-		<div class=resource-divider></div>\
-		<div class = 'content-creator'>\
-		<div class=resource-modal-label>Resource Content Name:</div><br>\
-		<div class=content-name id ='content-name0' contenteditable=true> Content Name </div> <br>\
-		<div class=resource-modal-label> Content Type: </div>\
-		<br>" + selectorCodeGenerator("content-type") + "<br>\
-		<div class=resource-modal-label>Content:</div>\
-		<br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
-		<div> <button type = 'button' id = 'submit-button' onclick = 'submitEditedResource()'> Submit </button>\
-		<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
+	document.getElementById('resource-head').innerHTML = 
+		"<div id = 'resource-id' style='visibility: hidden'></div>" + 
+		"<div class = 'tooltip' id = 'resource-name-tip'> Edit </div>" +
+		"<span id = 'resource-name' onmouseout = hideTooltip(this) onmouseover = showTooltip(this) onClick = hideTooltip(this) " + 
+			"contenteditable = true>Resource Name</span>" + 
+		"<div id = 'resource-use-label' >Resource Use:</div>" + 
+		selectorCodeGenerator("resource-use", resourceUseData);
+	document.getElementById('modules').innerHTML = 
+		"<div class=resource-divider></div>" + 
+		"<div id='content-name-label'>Resource Content Name:</div>" + 
+		"<div class = 'tooltip' id = 'content-name-tip'> Edit </div>" + 
+		"<div class=content-name id ='content-name0' contenteditable=true " + 
+          "onmouseout = hideTooltip(this) onmouseover = showTooltip(this) onClick = hideTooltip(this)>Content Name</div>" +
+		"<div id='content-type-label'>Content Type:</div>" + 
+		selectorCodeGenerator("content-type") + 
+		"<div id='content-label'>Content:</div>" + 
+		"<div id='content-input'>" + 
+			"<textarea rows = '20' id = 'tinymce'> </textarea>" + 
+		"</div>" + 
+    "<div id = 'more-contents'> </div>";
+	document.getElementById('buttons').innerHTML = 
+		"<div id = 'warning-msg'>" + 
+			"<input type = 'checkbox' id = 'profPermission'>" + 
+			"<label for = 'profPermission' id = 'labelProfPermission'>" + 
+				"It is okay with my professor to edit this resource." + 
+			"</label>" + 
+			"<span style = 'color:red' display = 'inline'>* </span>" + 
+		"</div>" +
+		"<button type = 'button' id = 'submit-button' onclick = 'submitEditedResource()'> Submit </button>" +
+		"<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
+
+	// prevent "ENTER" from enterng the new line, then exit editting mode for resourcename
+	document.getElementById('resource-name').addEventListener('keydown', (evt) => {
+		if (evt.keyCode === 13) {
+			evt.preventDefault();
+			// exit editting mode
+			document.getElementById('resource-name').blur();
+		}
+	});
+
+	// users can only paste plain text into resource name
+	document.getElementById('resource-name').addEventListener('paste', (evt) => {
+		evt.preventDefault();
+		var text = evt.clipboardData.getData("text/plain");
+		document.execCommand("insertHTML", false, text);
+	});
+
+	var content_name_items = document.getElementsByClassName('content-name');
+
+	// iterate through all the content-name (for MVP, there's only one)
+	for (var i = 0; i < content_name_items.length; i++) {	
+		content_name_items[i].addEventListener('keydown', (evt) => {
+			if (evt.keyCode === 13) {
+				evt.preventDefault();
+				// exit editting mode
+				evt.target.blur();
+			}
+		});
+
+		content_name_items[i].addEventListener('paste', (evt) => {
+			evt.preventDefault();
+			var text = evt.clipboardData.getData("text/plain");
+			document.execCommand("insertHTML", false, text);
+		});
+	}
 }
 
 /** 
@@ -250,76 +317,86 @@ function fillInResourceForEditor(received, resource_id)
 */
 function submitEditedResource() 
 {
-	tinymce.get("tinymce").save();
-	var resource_name = document.getElementById("resource-name").innerHTML;
-	var resource_id = document.getElementById("resource-id").innerHTML;
-	var resource_use = findUseOrType("resource-use-selector");
-	// TODO: Right now, assume that each resource only has 1 content
-	// 	so content_id is the same as resource_id
-	var content_id = resource_id;
+	var profPermission = document.getElementById("profPermission");
 
-	var content = document.getElementById("tinymce").value;
-	// NOTE: not so good hack to solve the problem:
-	// if the tinymce has code block, it will like to randomly add 
-	// <code> tag when the user hits enter
-	content = content.replace(new RegExp("<code></code>", "g"), "");
+	// user verified they got permission from their prof
+	if (profPermission.checked) {
+		tinymce.get("tinymce").save();
+		var resource_name = document.getElementById("resource-name").innerHTML;
+		var resource_id = document.getElementById("resource-id").innerHTML;
+		var resource_use = findUseOrType("resource-use-selector");
+		// TODO: Right now, assume that each resource only has 1 content
+		// 	so content_id is the same as resource_id
+		var content_id = resource_id;
 
-	// content_num = pre_updated_content_num;
-	
-	// store all the data in json
-	// NEED TO INCLUDE: resouce id, content id
-	// TODO: can't create additional content (this content doesn't have id)
-	var resource =  
-	{
-		"id": resource_id,
-		"name":resource_name,
-		"use_id": resource_use,
-		"contents":
-		[
-			{
-				"id": content_id,
-				"name": document.getElementById("content-name0").innerHTML,
-				"type": findUseOrType("content-type-selector").toLowerCase(),
-				"content": content
+		var content = document.getElementById("tinymce").value;
+		// NOTE: not so good hack to solve the problem:
+		// if the tinymce has code block, it will like to randomly add 
+		// <code> tag when the user hits enter
+		content = content.replace(new RegExp("<code></code>", "g"), "");
+
+		// content_num = pre_updated_content_num;
+		
+		// store all the data in json
+		// NEED TO INCLUDE: resouce id, content id
+		// TODO: can't create additional content (this content doesn't have id)
+		var resource =  
+		{
+			"id": resource_id,
+			"name":resource_name,
+			"use_id": resource_use,
+			"contents":
+			[
+				{
+					"id": content_id,
+					"name": document.getElementById("content-name0").innerHTML,
+					"type": findUseOrType("content-type-selector").toLowerCase(),
+					"content": content
+				}
+			]
+		};
+		
+		// TODO: For more contents in future, type is not correct
+		// for (i = 1; i < (content_num+1); i++)
+		// {
+		// 	var content_array =
+		// 	{
+		// 		"name": document.getElementById("content-name"+i).innerHTML,
+		// 		"type": tempType,
+		// 		"content": document.getElementById("content"+i).value
+		// 	};
+		// 	resource.contents.push(content_array);
+		// }
+
+		console.log(resource);
+
+		// call the server to edit the resource
+		var server = new Server();
+
+		server.editResource(resource_id, resource, 
+			(error) => {
+				console.log("Edit resource - error");
+				console.log(error);
+			}, 
+			(data) => {
+				console.log("Edit resource - success");
+				console.log(data);
 			}
-		]
-	};
+		);
+
+		// close the content editor
+		document.getElementById('my-modal').style.display = "none";
+		document.getElementById('resource-head').innerHTML = " ";
+		document.getElementById('modules').innerHTML = " "; //clean the display box up
 	
-	// TODO: For more contents in future, type is not correct
-	// for (i = 1; i < (content_num+1); i++)
-	// {
-	// 	var content_array =
-	// 	{
-	// 		"name": document.getElementById("content-name"+i).innerHTML,
-	// 		"type": tempType,
-	// 		"content": document.getElementById("content"+i).value
-	// 	};
-	// 	resource.contents.push(content_array);
-	// }
+		// remove instance of tinymce
+		tinymce.remove();
+	} else {
+		labelProfPermission = document.getElementById('labelProfPermission');
+		labelProfPermission.style.color = "red";
+	}
 
-	console.log(resource);
-
-	// call the server to edit the resource
-	var server = new Server();
-
-	server.editResource(resource_id, resource, 
-		(error) => {
-			console.log("Edit resource - error");
-			console.log(error);
-		}, 
-		(data) => {
-			console.log("Edit resource - success");
-			console.log(data);
-		}
-	);
-
-	// close the content editor
-	document.getElementById('my-modal').style.display = "none";
-	document.getElementById('resource-head').innerHTML = " ";
-	document.getElementById('modules').innerHTML = " "; //clean the display box up
-  
-	// remove instance of tinymce
-	tinymce.remove();
+	
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -335,25 +412,84 @@ function submitEditedResource()
  * @param {*} nodeId the nodeID of where the resource will be attached (actually not sure...)
  */
 function resourceCreatorHTML(resourceUseData, nodeId)
-{
-	// create all the input to create resources
-	document.getElementById('resource-head').innerHTML="\
-		<div id = 'resource-name' contenteditable=true> Resource Name </div>";
-	document.getElementById('modules').innerHTML = "\
-		<div class=resource-modal-label> Resource Use:</div>\
-		<br>" + selectorCodeGenerator("resource-use", resourceUseData) + "<br>\
-		<div class=resource-divider></div>\
-		<div class = 'content-creator'>\
-		<div class=resource-modal-label>Resource Content Name:</div><br>\
-		<div class=content-name id ='content-name0' contenteditable=true> Content Name </div> <br>\
-		<div class=resource-modal-label> Content Type: </div>\
-		<br>" + selectorCodeGenerator("content-type") + "<br>\
-		<div class=resource-modal-label>Content:</div>\
-		<br> <textarea rows = '5' id = 'tinymce'> </textarea> </div> <div id = 'more-contents'> </div>\
-		<div> <button type = 'button' id = 'submit-button' onclick = 'submitNewResource("+nodeId+")'> Submit </button>\
-		<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
+{	
+	// data = [{"id":1,"name":"Class Notes"}, {"id":3,"name":"Flashcards"}, {"id":2,"name":"Notes"},{"id":4,"name":"Item 4"},{"id":5,"name":"Item 5"},{"id":6,"name":"Item 6"},{"id":7,"name":"Try a pretty long name and such"},{"id":8,"name":"A"}, {"id":9,"name":"Even longer name I guess?? I really hope it works"}, {"id":10,"name":"Maybe should have restriction on long names..."}];
 
-	addTinyMCE();
+	document.getElementById('resource-container').innerHTML = 
+		"<div class='resource-background'>" + 
+			"<div id='resource-head'></div>" + 
+			"<div id='modules'>" +
+				"<!-- This is where you put the modules. -->" +
+			"</div>" + 
+			"<div id='buttons'></div>" + 
+		"</div>";
+	// create all the input to create resources
+	document.getElementById('resource-head').innerHTML = 
+      "<div id = 'resource-id' style='visibility: hidden'></div>" + 
+      "<div class = 'tooltip' id = 'resource-name-tip'> Edit </div>" +
+      "<span id = 'resource-name' onmouseout = hideTooltip(this) onmouseover = showTooltip(this) onClick = hideTooltip(this) " + 
+          "contenteditable = true>Resource Name</span>" + 
+    "<div id = 'resource-use-label' >Resource Use:</div>" + 
+    selectorCodeGenerator("resource-use", resourceUseData);
+	document.getElementById('modules').innerHTML = 
+		"<div class=resource-divider></div>" + 
+		"<div id='content-name-label'>Resource Content Name:</div>" + 
+      	"<div class = 'tooltip' id = 'content-name-tip'> Edit </div>" + 
+		"<div class=content-name id ='content-name0' contenteditable=true " + 
+          "onmouseout = hideTooltip(this) onmouseover = showTooltip(this) onClick = hideTooltip(this)>Content Name</div>" +
+		"<div id='content-type-label'>Content Type:</div>" + 
+		selectorCodeGenerator("content-type") + 
+		"<div id='content-label'>Content:</div>" + 
+		"<div id='content-input'>" + 
+			"<textarea rows = '20' id = 'tinymce'> </textarea>" + 
+		"</div> <div id = 'more-contents'> </div>";
+	document.getElementById('buttons').innerHTML = 
+		"<div id = 'warning-msg'>" + 
+			"<input type = 'checkbox' id = 'profPermission'>" + 
+			"<label for = 'profPermission' id = 'labelProfPermission'>" + 
+				"It is okay with my professor to edit this resource." + 
+			"</label>" + 
+			"<span style = 'color:red' display = 'inline'>* </span>" + 
+		"</div>" +
+		"<button type = 'button' id = 'submit-button' onclick = 'submitNewResource("+nodeId+")'> Submit </button>" + 
+		"<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
+
+	addTinyMCE();	
+
+	// prevent "ENTER" from enterng the new line, then exit editting mode for resourcename
+	document.getElementById('resource-name').addEventListener('keydown', (evt) => {
+		if (evt.keyCode === 13) {
+			evt.preventDefault();
+			// exit editting mode
+			document.getElementById('resource-name').blur();
+		}
+	});
+
+	// users can only paste plain text into resource name
+	document.getElementById('resource-name').addEventListener('paste', (evt) => {
+		evt.preventDefault();
+		var text = evt.clipboardData.getData("text/plain");
+		document.execCommand("insertHTML", false, text);
+	});
+	
+	var content_name_items = document.getElementsByClassName('content-name');
+
+	// iterate through all the content-name (for MVP, there's only one)
+	for (var i = 0; i < content_name_items.length; i++) {	
+		content_name_items[i].addEventListener('keydown', (evt) => {
+			if (evt.keyCode === 13) {
+				evt.preventDefault();
+				// exit editting mode
+				evt.target.blur();
+			}
+		});
+
+		content_name_items[i].addEventListener('paste', (evt) => {
+			evt.preventDefault();
+			var text = evt.clipboardData.getData("text/plain");
+			document.execCommand("insertHTML", false, text);
+		});
+	}
 }
 
 /** 
@@ -363,62 +499,72 @@ function resourceCreatorHTML(resourceUseData, nodeId)
  *			Call the server to edit the resource
  */
 function submitNewResource(node_id_num) {
-	tinymce.get("tinymce").save();
-	var resource_name = document.getElementById("resource-name").innerHTML;
-	var resource_use = findUseOrType("resource-use-selector");
-	var class_id = node_id_num.toString();
-	var content = document.getElementById("tinymce").value;
-	// NOTE: not so good hack to solve the problem:
-	// if the tinymce has code block, it will like to randomly add 
-	// <code> tag when the user hits enter
-	content = content.replace(new RegExp("<code></code>", "g"), "");
+	var profPermission = document.getElementById("profPermission");
 
-	//store all the data in json
-	//PROBLEM: can only create 1 content for 1 resource
-	var resource = {
-		name: resource_name,
-		use_id: resource_use,
-		class_id: class_id,
-		contents: [
-			{
-				name: document.getElementById("content-name0").innerHTML,
-				type: findUseOrType("content-type-selector").toLowerCase(),
-				content: content,
-			}
-		]
-	};
+	// checks that the user checked the checkbox
+	if (profPermission.checked) {
+		tinymce.get("tinymce").save();
+		var resource_name = document.getElementById("resource-name").innerHTML;
+		var resource_use = findUseOrType("resource-use-selector");
+		var class_id = node_id_num.toString();
+		var content = document.getElementById("tinymce").value;
 
-	// TODO: For when a resource have multiple contents, not MVP
-	// for (i = 1; i < content_num + 1; i++) {
-	// 	var content_array = {
-	// 		name: document.getElementById("content-name" + i).value,
-	// 		type: document.getElementById("content-type" + i).value,
-	// 		content: document.getElementById("content" + i).value
-	// 	};
-	// 	resource.contents.push(content_array);
-	// }
+		// NOTE: not so good hack to solve the problem:
+		// if the tinymce has code block, it will like to randomly add 
+		// <code> tag when the user hits enter
+		content = content.replace(new RegExp("<code></code>", "g"), "");
 
-	console.log(resource);
+		//store all the data in json
+		//PROBLEM: can only create 1 content for 1 resource
+		var resource = {
+			name: resource_name,
+			use_id: resource_use,
+			class_id: class_id,
+			contents: [
+				{
+					name: document.getElementById("content-name0").innerHTML,
+					type: findUseOrType("content-type-selector").toLowerCase(),
+					content: content,
+				}
+			]
+		};
 
-	//call the server to add resource
-	var server = new Server();
-	server.addResource(resource, 
-		(error) => {
-			console.log("Create resource - error");
-			console.log(error);
-		}, 
-		(data) => {
-			console.log("Create resource - success");
-			console.log(data);
-	});
+		// TODO: For when a resource have multiple contents, not MVP
+		// for (i = 1; i < content_num + 1; i++) {
+		// 	var content_array = {
+		// 		name: document.getElementById("content-name" + i).value,
+		// 		type: document.getElementById("content-type" + i).value,
+		// 		content: document.getElementById("content" + i).value
+		// 	};
+		// 	resource.contents.push(content_array);
+		// }
 
-	//close the content creator
-	document.getElementById("my-modal").style.display = "none";
-	document.getElementById("resource-head").innerHTML = " ";
-	document.getElementById("modules").innerHTML = " "; //clean the display box up
+		console.log(resource);
 
-	// remove instance of tinymce
-	tinymce.remove();
+		//call the server to add resource
+		var server = new Server();
+		server.addResource(resource, 
+			(error) => {
+				console.log("Create resource - error");
+				console.log(error);
+			}, 
+			(data) => {
+				console.log("Create resource - success");
+				console.log(data);
+		});
+
+		//close the content creator
+		document.getElementById("my-modal").style.display = "none";
+		document.getElementById("resource-head").innerHTML = " ";
+		document.getElementById("modules").innerHTML = " "; //clean the display box up
+		
+		// remove instance of tinymce
+		tinymce.remove();
+	} else {
+		console.log("User has not checked the prof permission checkbox");
+		labelProfPermission = document.getElementById('labelProfPermission');
+		labelProfPermission.style.color = "red";
+	}
 }
   
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -536,7 +682,7 @@ function selectorCodeGenerator(selectorFor, data)
 	var inputId = "";
 
 	// html code for selector
-	var html_code = "<div class='use-list-scrolling-wrapper'>";
+	var html_code = "";
 
 	if (selectorFor == "resource-use") {
 		// set up relevant variables for resource-use selector
@@ -556,9 +702,8 @@ function selectorCodeGenerator(selectorFor, data)
 		 * 				{"id":2,"name":"Notes"}	]
 		 */
 		for (var i = 0; i < data.length; ++i) {
-			html_code += "\
-			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ data[i].id +"'>\
-				<label for='" + inputId +""+ data[i].id + "'>" + data[i].name + "</label></li>";
+			html_code += "<li><input type='radio' name='" + name + "' id='"+ inputId +""+ data[i].id +"'>" +
+				"<label for='" + inputId +""+ data[i].id + "'>" + data[i].name + "</label></li>";
 		}
 	}
 	else if (selectorFor == "content-type") {
@@ -576,15 +721,40 @@ function selectorCodeGenerator(selectorFor, data)
 		 * 			["type1", "type2", "type3"]
 		 */
 		for (var i = 0; i < dictionary.length; ++i) {
-			html_code += "\
-			<li><input type='radio' name='" + name + "' id='"+ inputId +""+ i +"'>\
-				<label for='" + inputId +""+ i + "'>" + contentTypeData[i] + "</label></li>";
+			html_code += "<li><input type='radio' name='" + name + "' id='"+ inputId +""+ i +"'>" +
+				"<label for='" + inputId +""+ i + "'>" + contentTypeData[i] + "</label></li>";
 		}
+
+		// add invisible error message to be displayed if user does not select a use
 	}
 	
-	html_code +=  "</ul></div>";
-
+	html_code +=  "</ul>";
+  
   return html_code;
+}
+
+/** Helper function for changing textbox tooltip visibility
+ * \brief	Used in create resource modal, edit resource modal
+ * 			Used to set a tooltip's visibility to hidden
+ * \warning will only hide ttSib's first sibling of class tooltip
+ * 
+ * @param {*} ttSib sibling of the tooltip to be hidden
+ */
+function hideTooltip(ttSib) { 
+	var tooltip = ttSib.parentNode.getElementsByClassName("tooltip")[0];
+	tooltip.style.visibility = 'hidden';
+}
+
+/** Helper function for changing textbox tooltip visibility
+ * \brief	Used in create resource modal, edit resource modal
+ * 			Used to set a tooltip's visibility to visible
+ * \warning will only show ttSib's first sibling of class tooltip
+ * 
+ * @param {*} ttSib sibling of the tooltip to be hidden 
+ */
+function showTooltip(ttSib) {
+	var tooltip = ttSib.parentNode.getElementsByClassName("tooltip")[0];
+	tooltip.style.visibility = 'visible';
 }
 
 /**
@@ -615,6 +785,8 @@ function loadSelectedUseOrType (ulId, selected)
  * Helper function for Submitting an edited resource
  * \brief 	Find the resource use id (int) or 
  * 				 the content type name (string)
+ * 			If the user has not selected one or more of the above, displays
+ * 				an appropriate error message
  * 
  * @param {*} ulId String, determines if we finding resource use or content type
  * 			either: "resource-use-selector" or "content-type-selector"
@@ -624,17 +796,30 @@ function findUseOrType(ulId)
 	var ul = document.getElementById(ulId);
 	var listInsideUl = ul.getElementsByTagName("li");
 
+	// switches to True if one of the list items has been selected
+	var displayError = false;
+
 	for (var ele of listInsideUl) {
 		if (ele.getElementsByTagName("input")[0].checked == true) {
+			displayError = true;
 			if (ulId == "resource-use-selector") {
 				return parseInt(ele.getElementsByTagName("input")[0].id);
 			} 
 			else if (ulId == "content-type-selector") {
-				console.log(ele.getElementsByTagName("label")[0].innerHTML);
 				return ele.getElementsByTagName("label")[0].innerHTML;
 			}
 		}
 	}
+
+	// displays an error depending on ulID
+	if (displayError) {
+		if (ulId == "resource-use-selector") {
+
+		} else if (ulId == "content-type-selector") {
+
+		}
+	} 
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -657,10 +842,12 @@ function newContent()
 	// if user exit resource editor/creator, clear previous entries
 	pre_updated_content_num += 1;
 	document.getElementById('more-contents').innerHTML += "<div id='content-"+pre_updated_content_num+"'></div>";
-	document.getElementById('content-'+pre_updated_content_num).innerHTML += "<div class=resource-divider></div> <br> </div> <div class = 'content-creator'> Resource Content Name: <br> \
-	<input type = 'text' id = 'content-name"+pre_updated_content_num+"'> <br> \
-	Content Type:  <select id = 'content-type"+pre_updated_content_num+"'> <option value = 'text'> Text </option> <option value = 'link'> Link </option> </select> <br> \
-	Content: <br> <textarea rows = '5' id = 'content"+pre_updated_content_num+"'> </textarea> </div> </form>";
+	document.getElementById('content-'+pre_updated_content_num).innerHTML += "<div class=resource-divider></div>" + 
+	"<div class = 'content-creator'> Resource Content Name:" +
+	"<input type = 'text' id = 'content-name"+pre_updated_content_num+"'>" +
+	"Content Type:  <select id = 'content-type"+pre_updated_content_num+"'>" +
+	"<option value = 'text'> Text </option> <option value = 'link'> Link </option> </select>" +
+	"Content:<textarea rows = '5' id = 'content"+pre_updated_content_num+"'> </textarea> </div> </form>";
 
 	// load the stored content back to the content textboxes
 	loadContent(storedContent);
