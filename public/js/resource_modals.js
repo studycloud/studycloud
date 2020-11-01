@@ -211,26 +211,32 @@ function resourceEditorHTML(resourceUseData)
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML = 
 		"<div id = 'resource-id' style='visibility: hidden'></div>" + 
-		"<span id = 'resource-name' contenteditable = true>Resource Name</span>" + 
+		"<div class = 'tooltip' id = 'resource-name-tip'> Edit </div>" +
+		"<span id = 'resource-name' onmouseout = hideTooltip(this) onmouseover = showTooltip(this) onClick = hideTooltip(this) " + 
+			"contenteditable = true>Resource Name</span>" + 
 		"<div id = 'resource-use-label' >Resource Use:</div>" + 
 		selectorCodeGenerator("resource-use", resourceUseData);
 	document.getElementById('modules').innerHTML = 
 		"<div class=resource-divider></div>" + 
 		"<div id='content-name-label'>Resource Content Name:</div>" + 
-		"<div class=content-name id ='content-name0' contenteditable=true>Content Name</div>" +
+		"<div class = 'tooltip' id = 'content-name-tip'> Edit </div>" + 
+		"<div class=content-name id ='content-name0' contenteditable=true " + 
+          "onmouseout = hideTooltip(this) onmouseover = showTooltip(this) onClick = hideTooltip(this)>Content Name</div>" +
 		"<div id='content-type-label'>Content Type:</div>" + 
 		selectorCodeGenerator("content-type") + 
 		"<div id='content-label'>Content:</div>" + 
 		"<div id='content-input'>" + 
 			"<textarea rows = '20' id = 'tinymce'> </textarea>" + 
 		"</div>" + 
-    "<div id = 'more-contents'> </div>" + 
-    "<input type = 'checkbox' id = 'profPermission'>" + 
-    "<label for = 'profPermission' id = 'labelProfPermission'>" + 
-      "It is okay with my professor to edit this resource." + 
-    "</label>" + 
-    "<span style = 'color:red' display = 'inline'>* </span>";
+    "<div id = 'more-contents'> </div>";
 	document.getElementById('buttons').innerHTML = 
+		"<div id = 'warning-msg'>" + 
+			"<input type = 'checkbox' id = 'profPermission'>" + 
+			"<label for = 'profPermission' id = 'labelProfPermission'>" + 
+				"It is okay with my professor to edit this resource." + 
+			"</label>" + 
+			"<span style = 'color:red' display = 'inline'>* </span>" + 
+		"</div>" +
 		"<button type = 'button' id = 'submit-button' onclick = 'submitEditedResource()'> Submit </button>" +
 		"<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
 
@@ -249,6 +255,25 @@ function resourceEditorHTML(resourceUseData)
 		var text = evt.clipboardData.getData("text/plain");
 		document.execCommand("insertHTML", false, text);
 	});
+
+	var content_name_items = document.getElementsByClassName('content-name');
+
+	// iterate through all the content-name (for MVP, there's only one)
+	for (var i = 0; i < content_name_items.length; i++) {	
+		content_name_items[i].addEventListener('keydown', (evt) => {
+			if (evt.keyCode === 13) {
+				evt.preventDefault();
+				// exit editting mode
+				evt.target.blur();
+			}
+		});
+
+		content_name_items[i].addEventListener('paste', (evt) => {
+			evt.preventDefault();
+			var text = evt.clipboardData.getData("text/plain");
+			document.execCommand("insertHTML", false, text);
+		});
+	}
 }
 
 /** 
@@ -388,7 +413,7 @@ function submitEditedResource()
  */
 function resourceCreatorHTML(resourceUseData, nodeId)
 {	
-	data = [{"id":1,"name":"Class Notes"}, {"id":3,"name":"Flashcards"}, {"id":2,"name":"Notes"},{"id":4,"name":"Item 4"},{"id":5,"name":"Item 5"},{"id":6,"name":"Item 6"},{"id":7,"name":"Try a pretty long name and such"},{"id":8,"name":"A"}, {"id":9,"name":"Even longer name I guess?? I really hope it works"}, {"id":10,"name":"Maybe should have restriction on long names..."}];
+	// data = [{"id":1,"name":"Class Notes"}, {"id":3,"name":"Flashcards"}, {"id":2,"name":"Notes"},{"id":4,"name":"Item 4"},{"id":5,"name":"Item 5"},{"id":6,"name":"Item 6"},{"id":7,"name":"Try a pretty long name and such"},{"id":8,"name":"A"}, {"id":9,"name":"Even longer name I guess?? I really hope it works"}, {"id":10,"name":"Maybe should have restriction on long names..."}];
 
 	document.getElementById('resource-container').innerHTML = 
 		"<div class='resource-background'>" + 
@@ -400,34 +425,32 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 		"</div>";
 	// create all the input to create resources
 	document.getElementById('resource-head').innerHTML = 
-    "<div>" + 
       "<div id = 'resource-id' style='visibility: hidden'></div>" + 
-      "<div class = 'tooltip'> Edit </div>" +
-      "<span id = 'resource-name' onmouseout = hideTooltip(this) onmouseover = showTooltip(this) onClick = hideTooltip(this)" + 
+      "<div class = 'tooltip' id = 'resource-name-tip'> Edit </div>" +
+      "<span id = 'resource-name' onmouseout = hideTooltip(this) onmouseover = showTooltip(this) onClick = hideTooltip(this) " + 
           "contenteditable = true>Resource Name</span>" + 
-    "</div>" + 
     "<div id = 'resource-use-label' >Resource Use:</div>" + 
-    selectorCodeGenerator("resource-use", data);
+    selectorCodeGenerator("resource-use", resourceUseData);
 	document.getElementById('modules').innerHTML = 
 		"<div class=resource-divider></div>" + 
 		"<div id='content-name-label'>Resource Content Name:</div>" + 
-    "<div>" + 
-      "<div class = 'tooltip'> Edit </div>" + 
-		  "<div class=content-name id ='content-name0' contenteditable=true" + 
+      	"<div class = 'tooltip' id = 'content-name-tip'> Edit </div>" + 
+		"<div class=content-name id ='content-name0' contenteditable=true " + 
           "onmouseout = hideTooltip(this) onmouseover = showTooltip(this) onClick = hideTooltip(this)>Content Name</div>" +
-    "</div>" + 
 		"<div id='content-type-label'>Content Type:</div>" + 
 		selectorCodeGenerator("content-type") + 
 		"<div id='content-label'>Content:</div>" + 
 		"<div id='content-input'>" + 
 			"<textarea rows = '20' id = 'tinymce'> </textarea>" + 
-		"</div> <div id = 'more-contents'> </div>" +
-    "<input type = 'checkbox' id = 'profPermission'>" + 
-    "<label for = 'profPermission' id = 'labelProfPermission'>" + 
-      "It is okay with my professor to edit this resource." + 
-    "</label>" + 
-    "<span style = 'color:red' display = 'inline'>* </span>";
+		"</div> <div id = 'more-contents'> </div>";
 	document.getElementById('buttons').innerHTML = 
+		"<div id = 'warning-msg'>" + 
+			"<input type = 'checkbox' id = 'profPermission'>" + 
+			"<label for = 'profPermission' id = 'labelProfPermission'>" + 
+				"It is okay with my professor to edit this resource." + 
+			"</label>" + 
+			"<span style = 'color:red' display = 'inline'>* </span>" + 
+		"</div>" +
 		"<button type = 'button' id = 'submit-button' onclick = 'submitNewResource("+nodeId+")'> Submit </button>" + 
 		"<button type = 'button' id = 'cancel-button' onclick = 'newContent()'> Cancel </button>";
 
@@ -448,6 +471,25 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 		var text = evt.clipboardData.getData("text/plain");
 		document.execCommand("insertHTML", false, text);
 	});
+	
+	var content_name_items = document.getElementsByClassName('content-name');
+
+	// iterate through all the content-name (for MVP, there's only one)
+	for (var i = 0; i < content_name_items.length; i++) {	
+		content_name_items[i].addEventListener('keydown', (evt) => {
+			if (evt.keyCode === 13) {
+				evt.preventDefault();
+				// exit editting mode
+				evt.target.blur();
+			}
+		});
+
+		content_name_items[i].addEventListener('paste', (evt) => {
+			evt.preventDefault();
+			var text = evt.clipboardData.getData("text/plain");
+			document.execCommand("insertHTML", false, text);
+		});
+	}
 }
 
 /** 
@@ -755,11 +797,11 @@ function findUseOrType(ulId)
 	var listInsideUl = ul.getElementsByTagName("li");
 
 	// switches to True if one of the list items has been selected
-	var displayError = False;
+	var displayError = false;
 
 	for (var ele of listInsideUl) {
 		if (ele.getElementsByTagName("input")[0].checked == true) {
-			displayError = True;
+			displayError = true;
 			if (ulId == "resource-use-selector") {
 				return parseInt(ele.getElementsByTagName("input")[0].id);
 			} 

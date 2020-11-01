@@ -55,13 +55,15 @@ $off-wht: rgba(white,.4);
 	// grid-area: resource-head;
 	display: grid;
 	grid-template-columns: 35% 65%;
-	grid-template-rows: auto 5rem;
+	grid-template-rows: auto auto 1rem 5rem;
 	grid-template-areas:
+		"tip tip"
 		"r-name r-name"
+		"gap gap"
 		"r-use r-use-selector";
-	grid-row-gap: 1rem;
 	grid-column-gap: 1rem;
 }
+
 
 #resource-name {
 	grid-area: r-name;
@@ -79,6 +81,16 @@ $off-wht: rgba(white,.4);
 	&::-webkit-scrollbar { 
 		display: none; 
 	} 
+}
+
+
+#resource-name:hover {
+	background-color: #EAEAEA;
+}
+
+
+#resource-name-tip {
+	grid-area: tip;
 }
 
 
@@ -108,26 +120,25 @@ $off-wht: rgba(white,.4);
 
 #modules {
 	display: grid;
-	// grid-area: content-module;
 	grid-template-columns: 35% 65%;
-	grid-template-rows: auto auto 5rem auto auto;
+	grid-template-rows: auto auto 2.5rem 1rem auto 1rem auto 1rem auto;
 	grid-template-areas:
 		"divider divider"
+		"space c-name-tip"
 		"c-name-label c-name"
+		"gap2 gap2"
 		"c-type c-type-selector"
+		"gap3 gap3"
 		"content-label content-label"
+		"gap4 gap4"
 		"tinymce tinymce";
-	grid-row-gap: 1rem;
 	grid-column-gap: 1rem;
+	margin-top: 1.5rem;
 }
 
 #content-name-label{
 	grid-area: c-name-label;
 	align-self: center;
-}
-
-#resource-name:hover {
-	background-color: #EAEAEA;
 }
 
 .content-name {
@@ -147,6 +158,10 @@ $off-wht: rgba(white,.4);
 	&::-webkit-scrollbar { 
 		display: none; 
 	} 
+}
+
+#content-name-tip{
+	grid-area: c-name-tip;
 }
 
 #content-type-label {
@@ -180,12 +195,21 @@ $off-wht: rgba(white,.4);
 	// grid-area: buttons;
 	display: grid;
 	grid-template-columns: 35% 65%;
-	grid-template-rows: auto auto;
+	grid-template-rows: auto auto auto;
 	grid-template-areas:
+		"warning warning"
 		"space submit-button"
 		"space cancel-button";
 	grid-row-gap: 0.5rem;
 	grid-column-gap: 1rem;
+}
+
+#labelProfPermission{
+	font-size: 1.25rem;
+}
+
+#warning-msg{
+	grid-area: warning;
 }
 
 
@@ -277,11 +301,7 @@ $off-wht: rgba(white,.4);
 	text-align: center;
 	padding: 5px 0;
 	border-radius: 6px;
-
-	/* position tooltip text */
-	position: relative;
-	z-index: 1;
-	left: 24.5%;
+	justify-self: center;
 }
 
 #modified-date{
