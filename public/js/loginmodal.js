@@ -15,41 +15,44 @@ $(document).ready(function() {
 	$("#editor-btn").click(function(event)
 	{
     var temp_resource_id = 2;
-		openResourceEditor(temp_resource_id);
+    var resourceModal= new ResourceModal(type = "edit", resource_id = temp_resource_id);
+		resourceModal.openResourceEditor();
 	});
 
   // TODO: delete the button and this, testing only
 	$("#resource-meta-btn").click(function(event)
 	{
     var temp_resource_id = 2;
-    let resourceViewer = new ResourceModal(resource_id = temp_resource_id);
-    // console.log(resourceViewer);
-		resourceViewer.openResourceViewer(resource_id, );
+    var resourceModal = new ResourceModal(type = "view", resource_id = temp_resource_id);
+		resourceModal.openResourceViewer();
   });
 
   // TODO: delete the button and this, testing only
   $("#resource-creator-btn").click(function(event)
   {
     var temp_node_id = 10;
-    openResourceCreator(temp_node_id);
+    var resourceModal = new ResourceModal(type = "create", resource_id = temp_node_id);
+		resourceModal.openResourceCreator();
   });
   
-  // When the user clicks on edit icon in resource viewer 
-  $("#open-resource-editor").click(function(event) 
-  {
-    // get the resource id
-    var temp_resource_id = document.getElementById('resource-id').innerHTML;
-    // clear what is displayed in resource viewer
-    document.getElementById('edit-icon').style.display = "none";
-    // clear the modal
-    document.getElementById('resource-container').innerHTML = "";
+  // // When the user clicks on edit icon in resource viewer 
+  // $("#open-resource-editor").click(function(event) 
+  // {
+  //   // get the resource id
+  //   var temp_resource_id = document.getElementById('resource-id').innerHTML;
+    
+  //   // clear what is displayed in resource viewer
+  //   document.getElementById('edit-icon').style.display = "none";
+  //   // clear the modal
+  //   document.getElementById('resource-container').innerHTML = "";
 
-    // change the url from /resources/{resource_id} to 
-    // /resources/{resource_id}/edit
-    history.pushState({},'',window.location.href+'/edit');
+  //   // change the url from /resources/{resource_id} to 
+  //   // /resources/{resource_id}/edit
+  //   history.pushState({},'',window.location.href+'/edit');
 
-    openResourceEditor(temp_resource_id);
-  });
+  //   var resourceModal= new ResourceModal(type = "edit", resource_id = temp_resource_id);
+	// 	resourceModal.openResourceEditor(temp_resource_id);
+  // });
 
 	// When the user clicks on <span> (x), close the modal
 	$("#close-modal").click(function(event) 
@@ -58,7 +61,7 @@ $(document).ready(function() {
     document.getElementById('edit-icon').style.display = "none";
     // clear the modal
 		document.getElementById('resource-container').innerHTML = "";
-    resetContentNum();
+
     tinymce.remove();
   });
   
@@ -74,7 +77,6 @@ window.onmousedown = function(event)
       document.getElementById('edit-icon').style.display = "none";
       // clear the modal
 		  document.getElementById('resource-container').innerHTML = "";
-      resetContentNum();
       tinymce.remove();
 	}
 }

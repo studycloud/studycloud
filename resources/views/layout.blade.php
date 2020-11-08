@@ -6,10 +6,13 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"> <!--Google material design icons-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- for jQuery -->
-	@stack('styles') {{-- include whatever code has been pushed to the styles stack --}}
+	
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/_resource.css') }}">
 	<link rel="stylesheet" type="text/css" href="/storage/LogoTree.css"> <!-- TODO tree is probably not supposed to be here -->
+	@stack('styles') {{-- include whatever code has been pushed to the styles stack --}}
+
 	<script type="text/javascript" src="{{ asset('js/header.js') }}"></script> <!-- javascript for header but mostly for login drop down -->
+	<script type="text/javascript" src="{{ asset('js/ResourceModal.js') }}"></script> <!-- aw heck -->
 	<script type="text/javascript" src="{{ asset('js/loginmodal.js') }}"></script> <!-- javascript for forgetting your login -->
 	<!-- Need to decide where to put this later (prevents it from getting loaded everytime) -->
    <!-- Used in resource_view.js -->
@@ -17,7 +20,6 @@
       resourceUseData = @json( App\ResourceUse::select('id', 'name')->get() );
       contentTypeData = @json( App\ResourceContent::getPossibleTypes() );
 	</script>
-	<script type="text/javascript" src="{{ asset('js/ResourceModal.js') }}"></script> <!-- aw heck -->
 	<!-- Tree scripts -->
 	<script src="https://d3js.org/d3.v5.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
