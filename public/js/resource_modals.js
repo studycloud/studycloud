@@ -572,7 +572,6 @@ function submitNewResource(node_id_num) {
 		// remove instance of tinymce
 		tinymce.remove();
 	} else {
-		console.log("User has not checked the prof permission checkbox");
 		labelProfPermission = document.getElementById('labelProfPermission');
 		labelProfPermission.style.color = "red";
 	}
