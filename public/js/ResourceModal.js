@@ -11,216 +11,212 @@ var pre_updated_content_num = content_num;
  * 		"edit": open the resource editor
  * 		"create": open the resource creator
  */
-function ResourceModal(type, resource_id = null, class_parent_id = null, tree = null)
-{
-	// self is a special variable that contains a reference to the class instance itself
-	var self = this;
+class ResourceModal {
+	constructor(resource_id = null, tree = null) {
+		// self is a special variable that contains a reference to the class instance itself. 
+		//	This is created in every function so that we can use anonymous functions
+		var self = this;
 
-	self.type = type;
+		self.resource_id = resource_id;
 
-	self.resource_id = resource_id;
+		// TODO: get access to the tree object 
+		// 	so hopefully we can use the tree's rendering function as
+		// 	callback function in the future?
+		self.tree = tree;
 
-	self.class_parent_id = class_parent_id;
+		// Server object so we can get, update and create resources
+		self.server = new Server();
+	}
 
-	// TODO: get access to the tree object 
-	// 	so hopefully we can use the tree's rendering function as
-	// 	callback function in the future?
-	self.tree = tree;
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	//	Wrapper functions for integrating with the tree
+	// 
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	/**
+	 * Wrapper function to open up the resource viewer
+	 * @param {*} resource_id int, resource id for the resource
+	 */
+	openResourceViewer() {
+		var self = this;
 
-	// Server object so we can get, update and create resources
-	self.server = new Server();
-}
+		document.getElementById('my-modal').style.display = "block";
+		document.getElementById('edit-icon').style.display = "none";
+		displayContainer("resource");
 
+		self.server.getResource(self.resource_id,
+			// failure callback
+			(error) => {
+				console.log("Resourcer viewer error");
+				console.log(error);
+			},
+			// success callback
+			(resource_data) => {
+				self.displayResource(resource_data);
+			}
+		);
+	}
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Wrapper functions for integrating with the tree
-// 
-/////////////////////////////////////////////////////////////////////////////////////////////////
+	/**
+	 * Wrapper function to open up the resource editor
+	 * @param {*} resource_id int, resource id for the resource
+	 */
+	openResourceEditor(resource_id) {
+		var self = this;
 
-/**
- * Wrapper function to open up the resource viewer
- * @param {*} resource_id int, resource id for the resource
- */
-ResourceModal.prototype.openResourceViewer = function ()
-{
-	document.getElementById('my-modal').style.display = "block";
-	document.getElementById('edit-icon').style.display = "none";
-	displayContainer("resource");
+		document.getElementById('my-modal').style.display = "block";
+		document.getElementById('edit-icon').style.display = "none";
+		displayContainer("resource");
 
-	console.log("server");
-	console.log(self.server);
+		self.resource_id = resource_id;
 
-	self.server.getResource(self.resource_id, 
-		// failure callback
-		(error) => {
-			console.log("Resourcer viewer error");
-			console.log(error);
-		}, 
-		// success callback
-		(resource_data) => {
-			self.displayResource(resource_data);
-		}
-	);
-};
-
-
-/**
- * Wrapper function to open up the resource editor
- * @param {*} resource_id int, resource id for the resource
- */
-ResourceModal.prototype.openResourceEditor = function (resource_id) {
-	document.getElementById('my-modal').style.display = "block";
-	document.getElementById('edit-icon').style.display = "none";
-	displayContainer("resource");
-	
-	self.resource_id = resource_id;
-
-	self.server.getResourceUseJSON((error) => {
+		self.server.getResourceUseJSON((error) => {
 			console.log("Get resource use error");
 			console.log(error);
 		}, resourceEditorHTML);
-	self.server.getResource(resource_id, 
-		(error) => {
-			console.log("Open resource editor error");
-			console.log(error);
-		},
-		// creating an anonymous function so we can pass in the resource_id
-		// as well as receiving the data from the server
-		(resource_data) => {
-			self.fillInResourceForEditor(resource_data);
-		}
-	);
-};
+		self.server.getResource(resource_id,
+			(error) => {
+				console.log("Open resource editor error");
+				console.log(error);
+			},
+			// creating an anonymous function so we can pass in the resource_id
+			// as well as receiving the data from the server
+			(resource_data) => {
+				self.fillInResourceForEditor(resource_data);
+			}
+		);
+	}
 
+	/**
+	 * Wrapper function to open the resource creator
+	 * @param {*} parent_class_id the id of the class
+	 * 		this class will be the parent of the new resource
+	 */
+	openResourceCreator(parent_class_id) {
+		var self = this;
 
-/**
- * Wrapper function to open the resource creator
- * @param {*} parent_class_id the id of the class
- * 		this class will be the parent of the new resource
- */
-Resource_model.prototype.openResourceCreator = function(parent_class_id) {
-	document.getElementById('my-modal').style.display = "block";
-	document.getElementById('edit-icon').style.display = "none";
-	displayContainer("resource");
+		document.getElementById('my-modal').style.display = "block";
+		document.getElementById('edit-icon').style.display = "none";
+		displayContainer("resource");
 
-	self.parent_class_id = parent_class_id
+		self.parent_class_id = parent_class_id
 
-	// use the same template as resource editor
-	self.server.getResourceUseJSON(
-		(error) => {
-			console.log("Get resource use error");
-			console.log(error);
-		}, 
-		// creating an anonymous function so we can pass in the node_id
-		// as well as receiving the data from the server
-		(resourceUseData) => {
-			self.resourceCreatorHTML(resourceUseData);
-		}
-	);
-};
+		// use the same template as resource editor
+		self.server.getResourceUseJSON(
+			(error) => {
+				console.log("Get resource use error");
+				console.log(error);
+			}, 
+			// creating an anonymous function so we can pass in the node_id
+			// as well as receiving the data from the server
+			(resourceUseData) => {
+				self.resourceCreatorHTML(resourceUseData);
+			}
+		);
+	}
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Resource Viewer functions
-//
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/** 
- * \brief display resources on resource viewer
- * @param {*} received a response (needs to turn into a json)
- */
-ResourceModal.prototype.displayResource = function (received) {
-  /*
-		received.json() gives us a Promise
-		.then(function(resource){
-			...
-		} is an anonymous function
-			resource is the json we want
-	*/
-	
-	document.getElementById('edit-icon').style.display = "block";
-
-	received.json().then(function(resource){
-		console.log(resource);
-		// set the template of the page
-		document.getElementById('resource-container').innerHTML = 
-			"<div class='resource-background'>" + 
-				"<div id='resource-head-display'></div>" + 
-				"<div id='modules-display'>" +
-					"<!-- This is where you put the modules. -->" +
-				"</div>" + 
-				"<div id='buttons'></div>" + 
-			"</div>";
-		// set the resource head (name and author)
-		document.getElementById('resource-head-display').innerHTML =
-			"<div id = 'resource-id' style='visibility: hidden'></div>" + 
-			"<div id = 'resource-name-display'>" + resource.meta.name + "</div>" + 
-			"<div id = 'author-info'>contributed by <div id='author-name'></div></div>";
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	//	Resource Viewer functions
+	//
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	/**
+	 * \brief display resources on resource viewer
+	 * @param {*} received a response (needs to turn into a json)
+	 */
+	displayResource(received) {
+		/*
+			  received.json() gives us a Promise
+			  .then(function(resource){
+				  ...
+			  } is an anonymous function
+				  resource is the json we want
+		*/
+		var self = this;
 		
-		self.display_author(resource.meta.author_name, resource.meta.author_type);
+		document.getElementById('edit-icon').style.display = "block";
 
-		for (var i = 0; i < resource.contents.length; i++) {
-			self.display_content(i, resource.contents[i]);
-		}
-  });
-};
+		received.json().then(function (resource) {
+			console.log(resource);
+			// set the template of the page
+			document.getElementById('resource-container').innerHTML =
+				"<div class='resource-background'>" +
+				"<div id='resource-head-display'></div>" +
+				"<div id='modules-display'>" +
+				"<!-- This is where you put the modules. -->" +
+				"</div>" +
+				"<div id='buttons'></div>" +
+				"</div>";
+			// set the resource head (name and author)
+			document.getElementById('resource-head-display').innerHTML =
+				"<div id = 'resource-id' style='visibility: hidden'></div>" +
+				"<div id = 'resource-name-display'>" + resource.meta.name + "</div>" +
+				"<div id = 'author-info'>contributed by <div id='author-name'></div></div>";
 
-/**
- * \brief display author's name and type
- * @param {*} name String, author's name
- * @param {*} type String, author's type
- */
-ResourceModal.prototype.display_author = function (name, type) {
-	// Clear all classes on the author-name field.
-	var cl = document.getElementById("author-name").classList;
-	for (var i = cl.length; i > 0; i--) {
-		cl.remove(cl[0]);
+			self.display_author(resource.meta.author_name, resource.meta.author_type);
+
+			for (var i = 0; i < resource.contents.length; i++) {
+				self.display_content(i, resource.contents[i]);
+			}
+		});
 	}
-	document.getElementById("author-name").classList.add(type);
-	document.getElementById("author-name").innerHTML = name;
-};
 
-/**
- * @param {*} num content's index in the content array
- * @param {*} element json for that content
- *
- */
-ResourceModal.prototype.display_content = function(num, element)
-{
-	// Create a new module.
-	document.getElementById('modules-display').innerHTML+="<div class=resource-divider></div><div class=module id='module-"+num+"'></div>";
-
-	// TODO: very inefficient way to decide how contents are displayed
-	if(element.type=="link")
-	{
-		// tinyMCE tends to wrap content in <p> </p> which will affect the link
-		// 	so we need to remove them
-		var display_link = element.content.replace( /(<([^>]+)>)/ig, '');
-		if (!display_link.includes("https://")){
-			display_link = "https://" + display_link;
+	/**
+	 * \brief display author's name and type
+	 * @param {*} name String, author's name
+	 * @param {*} type String, author's type
+	 */
+	display_author(name, type) {
+		// Clear all classes on the author-name field.
+		var cl = document.getElementById("author-name").classList;
+		for (var i = cl.length; i > 0; i--) {
+			cl.remove(cl[0]);
 		}
-		document.getElementById('module-'+num).innerHTML += 
-			"<div class='content-title'>" + 
-				"<a href="+display_link+" target='_blank'>" + element.name + "</a>" +
-			"</div>";
+		document.getElementById("author-name").classList.add(type);
+		document.getElementById("author-name").innerHTML = name;
 	}
-	else // Apparently by MVP things are HTML text. Check this. 
-	{
-		document.getElementById('module-'+num).innerHTML += 
-			"<div class='content-title'>" +
+
+	/**
+	 * @param {*} num content's index in the content array
+	 * @param {*} element json for that content
+	 *
+	 */
+	display_content(num, element) {
+		// Create a new module.
+		document.getElementById('modules-display').innerHTML += "<div class=resource-divider></div><div class=module id='module-" + num + "'></div>";
+
+		// TODO: very inefficient way to decide how contents are displayed
+		if (element.type == "link") {
+			// tinyMCE tends to wrap content in <p> </p> which will affect the link
+			// 	so we need to remove them
+			var display_link = element.content.replace(/(<([^>]+)>)/ig, '');
+			if (!display_link.includes("https://")) {
+				display_link = "https://" + display_link;
+			}
+			document.getElementById('module-' + num).innerHTML +=
+				"<div class='content-title'>" +
+				"<a href=" + display_link + " target='_blank'>" + element.name + "</a>" +
+				"</div>";
+		}
+		else // Apparently by MVP things are HTML text. Check this. 
+		{
+			document.getElementById('module-' + num).innerHTML +=
+				"<div class='content-title'>" +
 				"<h2>" + element.name + "</h2>" +
-			"</div>" + 
-			"<div id='content-" + num + "' class='content'>" +
-				element.content + 
-			"</div>";
+				"</div>" +
+				"<div id='content-" + num + "' class='content'>" +
+				element.content +
+				"</div>";
+		}
+		// Add other types as you will. 
+		// Display dates. 
+		document.getElementById('module-' + num).innerHTML += "<div id='created-date' class='date'>Created: " + element.created + "</div>";
+		document.getElementById('module-' + num).innerHTML += "<div id='modified-date' class='date'>Modified: " + element.modified + "</div>";
 	}
-	// Add other types as you will. 
+}
 
-	// Display dates. 
-	document.getElementById('module-'+num).innerHTML+="<div id='created-date' class='date'>Created: "+element.created+"</div>";
-	document.getElementById('module-'+num).innerHTML+="<div id='modified-date' class='date'>Modified: "+element.modified+"</div>";
-};
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //

@@ -1480,7 +1480,10 @@ Tree.prototype.centerAndOpen = function(node_id)
 		return d.id === node_id;
 	});
 	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
-	openResourceViewer(node_id.substr(1));
+	console.log("before passing into");
+	console.log(self);
+	var resource_modal = new ResourceModal(resource_id = node_id.substr(1), tree = self);
+	resource_modal.openResourceViewer();
 };
 
 //wrapper for centerAndAdd to be called from context menu
