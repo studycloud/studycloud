@@ -4,6 +4,12 @@ var content_num = 0;
 // having this will clear any unsaved changes
 var pre_updated_content_num = content_num;
 
+// variables to define default resource use and content type selected when user 
+// opens the resource creator to create a new resource
+var DEFAULT_RESOURCE_USE = "Class Notes";
+var DEFAULT_CONTENT_TYPE = "text";
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -490,6 +496,11 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 			document.execCommand("insertHTML", false, text);
 		});
 	}
+
+	// enter default values for resource use selectors, to prevent
+	// the user from submitting a new resource without something selected for each 
+	loadSelectedUseOrType("resource-use-selector", DEFAULT_RESOURCE_USE);
+	loadSelectedUseOrType("content-type-selector", DEFAULT_CONTENT_TYPE);
 }
 
 /** 
