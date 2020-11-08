@@ -17,7 +17,7 @@
       resourceUseData = @json( App\ResourceUse::select('id', 'name')->get() );
       contentTypeData = @json( App\ResourceContent::getPossibleTypes() );
 	</script>
-	<script type="text/javascript" src="{{ asset('js/resource_modals.js') }}"></script> <!-- aw heck -->
+	<script type="text/javascript" src="{{ asset('js/ResourceModal.js') }}"></script> <!-- aw heck -->
 	<!-- Tree scripts -->
 	<script src="https://d3js.org/d3.v5.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>

@@ -7,7 +7,6 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 	
 	//self is a special variable that contains a reference to the class instance itself. 
 	//	This is created in every function so that we can d3 and other libraries with anonymous functions
-	
 	var self = this;
 	
 	//Create the various DOM element groups needed by the tree
@@ -59,6 +58,7 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 	// set the breadcrumb stack for use when we decide to implement it
 	self.breadcrumbStack = [0];
 
+	// a Server object, defined in Server.js
 	self.server = server;
 
 	//Setup Local variables that we keep track of about nodes in our tree. This is necessary so that they stay persistent across data updates
@@ -70,7 +70,7 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 	self.locals.coordinates = d3.local();
 
 	self.user_active_id = parseInt(document.getElementById("meta_user_active_id").getAttribute('content'));
-	//console.log('Active user has ID: ' + self.user_active_id);
+	// console.log('Active user has ID: ' + self.user_active_id);
 
 	self.nodes_captured = self.frame.svg
 		.append("g")
@@ -78,7 +78,6 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 			.selectAll(".node_captured");
 
 	self.menuContextNodeCreate();
-
 
 	if(action !== "none" && node_id.charAt(0) !== 'r')
 	{
@@ -1201,6 +1200,7 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 		menu_context_items.add.enabled = false;
 	}
 	
+	// if the user is not logged in, none of the context menu option will be on
 	if (self.user_active_id === 0)
 	{
 		menu_context_items.add.enabled = false;
@@ -1210,7 +1210,6 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 		menu_context_items.detach.enabled = false;
 		menu_context_items.edit.enabled = false;
 		menu_context_items.move.enabled = false;
-
 	}
 
 	menu_context_items.capture.enabled = this.frame.select(".node_captured[data_id =" + data.id +"]").empty() 

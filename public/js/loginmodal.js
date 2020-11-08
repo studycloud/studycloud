@@ -22,7 +22,9 @@ $(document).ready(function() {
 	$("#resource-meta-btn").click(function(event)
 	{
     var temp_resource_id = 2;
-		openResourceViewer(temp_resource_id);
+    let resourceViewer = new ResourceModal(type = , resource_id = temp_resource_id);
+    // // console.log(resourceViewer);
+		// resourceViewer.openResourceViewer();
   });
 
   // TODO: delete the button and this, testing only

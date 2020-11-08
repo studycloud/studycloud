@@ -4,6 +4,33 @@ var content_num = 0;
 // having this will clear any unsaved changes
 var pre_updated_content_num = content_num;
 
+/**
+ * Resource Modals class
+ * @param {*} type string, 3 options
+ * 		"view": open the resource viewer
+ * 		"edit": open the resource editor
+ * 		"create": open the resource creator
+ */
+function ResourceModal(type, resource_id = null, class_parent_id = null, tree = null)
+{
+	// self is a special variable that contains a reference to the class instance itself
+	var self = this;
+
+	self.type = type;
+
+	self.resource_id = resource_id;
+
+	self.class_parent_id = class_parent_id;
+
+	// TODO: get access to the tree object 
+	// 	so hopefully we can use the tree's rendering function as
+	// 	callback function in the future?
+	self.tree = tree;
+
+	// Server object so we can get, update and create resources
+	self.server = new Server();
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -12,20 +39,48 @@ var pre_updated_content_num = content_num;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Wrapper function to open up the resource editor
+ * Wrapper function to open up the resource viewer
  * @param {*} resource_id int, resource id for the resource
  */
-function openResourceEditor(resource_id) {
+ResourceModal.prototype.openResourceViewer = function ()
+{
 	document.getElementById('my-modal').style.display = "block";
 	document.getElementById('edit-icon').style.display = "none";
 	displayContainer("resource");
 
-	var server = new Server();
-	server.getResourceUseJSON((error) => {
+	console.log("server");
+	console.log(self.server);
+
+	self.server.getResource(self.resource_id, 
+		// failure callback
+		(error) => {
+			console.log("Resourcer viewer error");
+			console.log(error);
+		}, 
+		// success callback
+		(resource_data) => {
+			self.displayResource(resource_data);
+		}
+	);
+};
+
+
+/**
+ * Wrapper function to open up the resource editor
+ * @param {*} resource_id int, resource id for the resource
+ */
+ResourceModal.prototype.openResourceEditor = function (resource_id) {
+	document.getElementById('my-modal').style.display = "block";
+	document.getElementById('edit-icon').style.display = "none";
+	displayContainer("resource");
+	
+	self.resource_id = resource_id;
+
+	self.server.getResourceUseJSON((error) => {
 			console.log("Get resource use error");
 			console.log(error);
 		}, resourceEditorHTML);
-	server.getResource(resource_id, 
+	self.server.getResource(resource_id, 
 		(error) => {
 			console.log("Open resource editor error");
 			console.log(error);
@@ -33,47 +88,26 @@ function openResourceEditor(resource_id) {
 		// creating an anonymous function so we can pass in the resource_id
 		// as well as receiving the data from the server
 		(resource_data) => {
-			fillInResourceForEditor(resource_data, resource_id);
+			self.fillInResourceForEditor(resource_data);
 		}
 	);
-}
+};
 
-/**
- * Wrapper function to open up the resource viewer
- * @param {*} resource_id int, resource id for the resource
- */
-function openResourceViewer(resource_id) {
-	document.getElementById('my-modal').style.display = "block";
-	document.getElementById('edit-icon').style.display = "none";
-	displayContainer("resource");
-
-	var server = new Server();
-	server.getResource(resource_id, 
-		(error) => {
-			console.log("Resourcer viewer error");
-			console.log(error);
-		}, 
-		// creating an anonymous function so we can pass in the resource_id
-		// as well as receiving the data from the server
-		(resource_data) => {
-			displayResource(resource_data, resource_id);
-		}
-	);
-}
 
 /**
  * Wrapper function to open the resource creator
- * @param {*} node_id_in Forgot what exactly is this... Probably the node where this resource
- * 							will branch off?
+ * @param {*} parent_class_id the id of the class
+ * 		this class will be the parent of the new resource
  */
-function openResourceCreator(node_id_in) {
+Resource_model.prototype.openResourceCreator = function(parent_class_id) {
 	document.getElementById('my-modal').style.display = "block";
 	document.getElementById('edit-icon').style.display = "none";
 	displayContainer("resource");
 
-	var server = new Server();
+	self.parent_class_id = parent_class_id
+
 	// use the same template as resource editor
-	server.getResourceUseJSON(
+	self.server.getResourceUseJSON(
 		(error) => {
 			console.log("Get resource use error");
 			console.log(error);
@@ -81,10 +115,10 @@ function openResourceCreator(node_id_in) {
 		// creating an anonymous function so we can pass in the node_id
 		// as well as receiving the data from the server
 		(resourceUseData) => {
-			resourceCreatorHTML(resourceUseData, node_id_in);
+			self.resourceCreatorHTML(resourceUseData);
 		}
 	);
-}
+};
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -96,7 +130,7 @@ function openResourceCreator(node_id_in) {
  * \brief display resources on resource viewer
  * @param {*} received a response (needs to turn into a json)
  */
-function displayResource(received, resource_id) {
+ResourceModal.prototype.displayResource = function (received) {
   /*
 		received.json() gives us a Promise
 		.then(function(resource){
@@ -118,26 +152,26 @@ function displayResource(received, resource_id) {
 				"</div>" + 
 				"<div id='buttons'></div>" + 
 			"</div>";
+		// set the resource head (name and author)
 		document.getElementById('resource-head-display').innerHTML =
 			"<div id = 'resource-id' style='visibility: hidden'></div>" + 
 			"<div id = 'resource-name-display'>" + resource.meta.name + "</div>" + 
 			"<div id = 'author-info'>contributed by <div id='author-name'></div></div>";
 		
-		document.getElementById("resource-id").innerHTML = resource_id;
+		self.display_author(resource.meta.author_name, resource.meta.author_type);
 
-		display_author(resource.meta.author_name, resource.meta.author_type);
 		for (var i = 0; i < resource.contents.length; i++) {
-			display_content(i, resource.contents[i]);
+			self.display_content(i, resource.contents[i]);
 		}
   });
-}
+};
 
 /**
  * \brief display author's name and type
  * @param {*} name String, author's name
  * @param {*} type String, author's type
  */
-function display_author(name, type) {
+ResourceModal.prototype.display_author = function (name, type) {
 	// Clear all classes on the author-name field.
 	var cl = document.getElementById("author-name").classList;
 	for (var i = cl.length; i > 0; i--) {
@@ -145,14 +179,14 @@ function display_author(name, type) {
 	}
 	document.getElementById("author-name").classList.add(type);
 	document.getElementById("author-name").innerHTML = name;
-}
+};
 
 /**
  * @param {*} num content's index in the content array
  * @param {*} element json for that content
  *
  */
-function display_content(num, element)
+ResourceModal.prototype.display_content = function(num, element)
 {
 	// Create a new module.
 	document.getElementById('modules-display').innerHTML+="<div class=resource-divider></div><div class=module id='module-"+num+"'></div>";
@@ -161,6 +195,7 @@ function display_content(num, element)
 	if(element.type=="link")
 	{
 		// tinyMCE tends to wrap content in <p> </p> which will affect the link
+		// 	so we need to remove them
 		var display_link = element.content.replace( /(<([^>]+)>)/ig, '');
 		if (!display_link.includes("https://")){
 			display_link = "https://" + display_link;
@@ -185,7 +220,7 @@ function display_content(num, element)
 	// Display dates. 
 	document.getElementById('module-'+num).innerHTML+="<div id='created-date' class='date'>Created: "+element.created+"</div>";
 	document.getElementById('module-'+num).innerHTML+="<div id='modified-date' class='date'>Modified: "+element.modified+"</div>";
-}
+};
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
