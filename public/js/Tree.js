@@ -60,6 +60,8 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 
 	// a Server object, defined in Server.js
 	self.server = server;
+	
+	self.resource_modal = new ResourceModal();
 
 	//Setup Local variables that we keep track of about nodes in our tree. This is necessary so that they stay persistent across data updates
 	self.locals = {};
@@ -1455,7 +1457,8 @@ Tree.prototype.centerAndAdd = function(node_id)
 		return d.id === node_id;
 	});
 	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
-	openResourceCreator(node_id.substr(1));
+
+	self.resource_modal.openResourceCreator(node_id.substr(1));
 };
 
 Tree.prototype.centerAndEdit = function(node_id)
@@ -1466,7 +1469,7 @@ Tree.prototype.centerAndEdit = function(node_id)
 		return d.id === node_id;
 	});
 	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
-	openResourceEditor(node_id.substr(1));
+	self.resource_modal.openResourceEditor(node_id.substr(1));
 	//update url
 	var newUrl = window.location.protocol + "//" + window.location.host + "/resources/" + node_ID + "/edit";
 	window.history.replaceState("viewNode", "resourceEditor"+node_ID, newUrl);
@@ -1480,10 +1483,8 @@ Tree.prototype.centerAndOpen = function(node_id)
 		return d.id === node_id;
 	});
 	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
-	console.log("before passing into");
-	console.log(self);
-	var resource_modal = new ResourceModal(type = "view", resource_id = node_id.substr(1), tree = self);
-	resource_modal.openResourceViewer();
+
+	self.resource_modal.openResourceViewer(node_id.substr(1));
 };
 
 //wrapper for centerAndAdd to be called from context menu

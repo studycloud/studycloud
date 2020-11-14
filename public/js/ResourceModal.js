@@ -6,19 +6,10 @@
  * 		"create": open the resource creator
  */
 class ResourceModal {
-	constructor(type, resource_id = null, tree = null) {
+	constructor() {
 		// self is a special variable that contains a reference to the class instance itself. 
 		//	This is created in every function so that we can use anonymous functions
 		var self = this;
-
-		self.type = type;
-
-		self.resource_id = resource_id;
-
-		// TODO: get access to the tree object 
-		// 	so hopefully we can use the tree's rendering function as
-		// 	callback function in the future?
-		self.tree = tree;
 
 		// Server object so we can get, update and create resources
 		self.server = new Server();
@@ -28,7 +19,6 @@ class ResourceModal {
 		// use this to fix problem with "add new content" but not submitting
 		// having this will clear any unsaved changes
 		self.pre_updated_content_num = self.content_num;
-
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,8 +29,11 @@ class ResourceModal {
 	/**
 	 * Wrapper function to open up the resource viewer
 	 */
-	openResourceViewer() {
+	openResourceViewer(resource_id) {
 		var self = this;
+
+		self.resource_id = resource_id;
+		self.type = "view";
 
 		document.getElementById('my-modal').style.display = "block";
 		document.getElementById('edit-icon').style.display = "none";
@@ -62,8 +55,11 @@ class ResourceModal {
 	/**
 	 * Wrapper function to open up the resource editor
 	 */
-	openResourceEditor() {
+	openResourceEditor(resource_id) {
 		var self = this;
+
+		self.resource_id = resource_id;
+		self.type = "edit";
 
 		document.getElementById('my-modal').style.display = "block";
 		document.getElementById('edit-icon').style.display = "none";
@@ -87,8 +83,11 @@ class ResourceModal {
 	/**
 	 * Wrapper function to open the resource creator
 	 */
-	openResourceCreator() {
+	openResourceCreator(resource_id) {
 		var self = this;
+
+		self.resource_id = resource_id;
+		self.type = "create";
 
 		document.getElementById('my-modal').style.display = "block";
 		document.getElementById('edit-icon').style.display = "none";
@@ -137,7 +136,7 @@ class ResourceModal {
 			// /resources/{resource_id}/edit
 			history.pushState({},'',window.location.href+'/edit');
 		
-			self.openResourceEditor();
+			self.openResourceEditor(self.resource_id);
 		})
 
 		received.json().then(function (resource) {
