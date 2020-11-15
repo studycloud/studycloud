@@ -36,7 +36,6 @@ class ResourceModal {
 		self.type = "view";
 
 		document.getElementById('my-modal').style.display = "block";
-		document.getElementById('edit-icon').style.display = "none";
 		document.getElementById("resource-container").style.display = "block";
 
 		self.server.getResource(self.resource_id,
@@ -62,7 +61,6 @@ class ResourceModal {
 		self.type = "edit";
 
 		document.getElementById('my-modal').style.display = "block";
-		document.getElementById('edit-icon').style.display = "none";
 		document.getElementById("resource-container").style.display = "block";
 
 		self.server.getResourceUseJSON((error) => {
@@ -90,7 +88,6 @@ class ResourceModal {
 		self.type = "create";
 
 		document.getElementById('my-modal').style.display = "block";
-		document.getElementById('edit-icon').style.display = "none";
 		document.getElementById("resource-container").style.display = "block";
 
 		// use the same template as resource editor
@@ -126,11 +123,14 @@ class ResourceModal {
 		*/
 		var self = this;
 		
-		document.getElementById('edit-icon').style.display = "block";
+		// add the edit icon
+		document.getElementById("open-resource-editor").innerHTML = "<i id='edit-icon' display='none' class='fas fa-edit'></i>";
 
 		document.getElementById('edit-icon').addEventListener('click', () => {
-			// clear the modal
+			// clear the modal	
 			document.getElementById('resource-container').innerHTML = "";
+			// delete the edit icon
+			document.getElementById('open-resource-editor').innerHTML = "";
 
 			// change the url from /resources/{resource_id} to 
 			// /resources/{resource_id}/edit

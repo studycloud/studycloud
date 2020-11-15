@@ -23,16 +23,12 @@
 <div id="my-modal" class="modal">
 	<div class="modal-content">
 		<span id="close-modal"><i class="fas fa-times"></i></span>
-		<span id="open-resource-editor"><i id="edit-icon" display="none" class='fas fa-edit'></i></span>
+		<span id="open-resource-editor"></span>
 		<!-- Container for resource. -->
 		<div id="resource-container">
 		</div>
 	</div>
 </div>
-
-<button id="editor-btn">temporary resource editor button</button>
-<button id="resource-meta-btn">resource meta button</button>
-<button id="resource-creator-btn">resource creator button</button>
 
 <script>
 	@if(isset($action) && !is_null($action))
