@@ -17,7 +17,7 @@ class CreateResourceContentsTable extends Migration
         {
             $table->increments('id');
             $table->string('name');
-            $table->enum('type', ['text', 'link', 'file']); //if you change this enum, make sure you also change it in the ResourceContent factory
+            $table->enum('type', ['text', 'link']); //if you change this enum, make sure you also change options for it in the ResourceContent factory and validation for it in the relevant controllers
             $table->longText('content');
             $table->integer('resource_id')->unsigned();
             $table->foreign('resource_id')->references('id')->on('resources');

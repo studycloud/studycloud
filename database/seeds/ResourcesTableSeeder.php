@@ -7,7 +7,7 @@ class ResourcesTableSeeder extends Seeder
 	/**
 	 * The number of fake classes to make
 	 */
-	const NUM_RESOURCES = 30;
+	const NUM_RESOURCES = 20;
 
     /**
      * Run the database seeds.

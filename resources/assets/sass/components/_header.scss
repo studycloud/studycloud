@@ -19,11 +19,44 @@
 
 // MASTHEAD
 
-.logo-full { // For svg.
-	display: block;
+
+#nameplate {
+	width: 500px;
 	margin: auto;
-	padding: 10px;
-	width: 55%;
+	a {
+		text-decoration: none;
+		color: $primary-0;
+		display: grid;
+		grid-template-columns: 1fr 5fr 1fr;
+
+		// School logo
+		object {
+			width: 100px;
+			padding: 20px;
+		}
+		
+		div {
+			div {
+				// Font formatting. 
+				text-align: center;
+				font-family: $main-font;
+				text-transform: $main-transform;
+				font-size: $main-font-size + 20;
+				font-weight: bold;
+
+				// Position in the middle of the text box--sorry, hardcoded. For now. 
+				position: relative;
+				top: 140px/2-30px/2;
+			}
+		}
+
+		// Study Cloud logo
+		svg {
+			width: 140px;
+			height: 140px;
+			z-index: 1;
+		}
+	}
 }
 
 
@@ -32,7 +65,9 @@
 .navbar {
 	@extend %navbar-gradient;
 	font-family: $main-font;
-	font-size: 20px;
+	text-transform: $main-transform;
+	font-size: $main-font-size;
+	font-weight: bold;
 	ul {
 		text-align: center;
 		list-style-type: none;
@@ -48,13 +83,11 @@
 			margin: 0;
 			padding: 0.3em;
 			a, input { // Default behavior of navbar items.
-				font-weight: bolder;
 				color: $navbar-text-color;
 				display: block;
 				text-decoration: none;
 				text-align: center;
 				font-size: inherit;
-				// font-size: 20px;
 				padding: 0.35em;
 				white-space: nowrap;
 				border-radius: 0.1em;
@@ -88,8 +121,10 @@
 					border-radius: 0.1em;
 					width: 100%;
 					resize: none;
-					font-size: 18px;
-					font-family: inherit;
+					font-size: $body-font-size;
+					font-family: $body-font;
+					text-transform: $body-transform;
+					padding: 10px 0px;
 					&:focus {
 						color: $search-box-text-focus-color;
 						background: $search-box-bg-focus-color;
@@ -106,9 +141,10 @@
 		    padding: 0.3em;
 		    #log-in-button {
 				background-color: $login-button-color;
-
+				font-weight: bold;
 				&:hover, &:focus {
 					background-color: $login-button-hover-color;
+					cursor: pointer;
 				}
 			}
 		}
@@ -124,6 +160,9 @@
 #log-in-hidden { // Content box containing login form.
 	padding: 5px;
 	text-align: right;
+	font-family: $body-font;
+	font-size: $body-font-size - 2px;
+	text-transform: $body-transform;
 
     position: absolute;
     background-color: $login-dropdown-color;
@@ -152,7 +191,6 @@
 	    text-decoration: none;
 	    border-radius: 0;
 	    background: none;
-	    font-size: 12px;
 	    font-weight: normal;
 	    text-align: right;
 
@@ -172,18 +210,33 @@
 		transition: all 0.15s;
 		border-radius: 0.1em;
 		resize: none;
-		font-size: inherit;
-		font-family: inherit;
+		font-size: 18px;
+		font-family: $body-font;
 		margin-bottom: 2%;
 	}
 
-	#remember {
-		margin: 0 0 0 auto;
-		input {
-			margin: 2%;
-			display: inline;
+	#rememberDiv { // Div containing remember me checkbox and label.
+		display: inline;
+
+		// CUSTOM CHECKBOXES (source: https://codepen.io/jamesbarnett/pen/yILjk)
+
+		/* Hide the default checkbox. */
+		input[type=checkbox] {
+			display: none;
+		}
+
+		/* Set the unchecked icon. */
+		input[type=checkbox] + label:before {
+			font-family: "FontAwesome";
+		    content: "\F0C8";
+		}
+
+		/* Set the checked icon. */
+		input[type=checkbox]:checked + label:before {
+			content: "\F14A";
 		}
 	}
+
 
 	#logInSub { // Style your submit button.
 	    border: none;
@@ -220,9 +273,9 @@
 .modal-content {
     background-color: $content-bg-light;
     margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
+    padding: 10px;
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 900px; /* Could be more or less, depending on screen size */
 }
 
 /* The Close Button */

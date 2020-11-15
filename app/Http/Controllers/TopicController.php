@@ -4,90 +4,109 @@ namespace App\Http\Controllers;
 
 use App\Topic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TopicController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+	function __construct()
+	{
+		// verify that the user is signed in for all methods except index, show, and json
+		$this->middleware('auth', ['except' => ['index', 'show']]);
+	}
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+	/**
+	 * Display a listing of the topic.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function index()
+	{
+		return view('tree', ['type'=>'topic']);
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $newTopic = new Topic;
-        $newTopic->name = $request->name;
-        $newTopic->author_id = Auth::id();
+	/**
+	 * Show the form for creating a new topic.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function create()
+	{
+		// return a view for creating a new topic
+	}
 
-        $newTopic->save();
-    }
+	/**
+	 * Store a newly created topic in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(Request $request)
+	{
+		// first, validate the request
+		$validated = $request->validate([
+			'name' => 'string|required|max:255'
+		]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Topic  $topic
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Topic $topic)
-    {
-        //
-    }
+		// create a new Topic using mass assignment to add the 'name' attribute
+		$topic = (new Topic)->fill($validated);
+		$topic->author_id = Auth::id();
+		$topic->save();
+	}
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Topic  $topic
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Topic $topic)
-    {
-        //
-    }
+	/**
+	 * Display the specified topic.
+	 *
+	 * @param  \App\Topic  $topic
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show(Topic $topic)
+	{
+		// let the js handle parsing the URL to determine which topic to retrieve
+		return view('tree', ['type'=>'tree']);
+	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Topic  $topic
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Topic $topic)
-    {
-        $topic->name = $request->name;
-        $topic->author_id = Auth::id();
+	/**
+	 * Show the form for editing the specified topic.
+	 *
+	 * @param  \App\Topic  $topic
+	 * @return \Illuminate\Http\Response
+	 */
+	public function edit(Topic $topic)
+	{
+		// return a view for editing a topic
+		// perhaps this functionality should be embedded in the topic tree, though?
+	}
 
-        $topic->save();
-    }
+	/**
+	 * Update the specified topic in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \App\Topic  $topic
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, Topic $topic)
+	{
+		// first, validate the request
+		// note that we make the 'name' attribute required because there aren't any other attributes to validate
+		$validated = $request->validate([
+			'name' => 'string|required|max:255'
+		]);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Topic  $topic
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Topic $topic)
-    {
-        $topic->delete();
-    }
+		// create a new Topic using mass assignment to add the 'name' attribute
+		$topic = $topic->fill($validated);
+		$topic->author_id = Auth::id();
+		$topic->save();
+	}
+
+	/**
+	 * Remove the specified topic from storage.
+	 *
+	 * @param  \App\Topic  $topic
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy(Topic $topic)
+	{
+		$topic->delete();
+	}
 
 }

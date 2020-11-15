@@ -1,0 +1,25 @@
+// it's not a phase, mom. 
+// Trying a Bold New Look. 
+// too much blue :(
+
+$text-default: black;
+$text-invert: white;
+$text-light: #aaa;
+
+$primary-0: black;
+$primary-0-light: lighten($primary-0, 20%);
+
+$accent-0: #0044b3; // light blue: #5587d8 red: #dc3737
+$accent-1: #ed6639; // Optional; mouseover login? mint: #3ad076; lighter blue: lighten($accent-0, 20%)
+$accent-2: #0044b3; // Content boxes purple: purple lighterpurple: #9d3db3 salmonthanksihateit: #fd4444
+
+$input-minimal: lighten($primary-0-light, 40%);
+
+$bg-light: #fefefe;
+
+$link-default: $primary-0;
+$link-hover: $accent-2;
+
+$action-yes: #3fc53f;
+$action-meh: darken($bg-light, 20%);
+$action-no: red;

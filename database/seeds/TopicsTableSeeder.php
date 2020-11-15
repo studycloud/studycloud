@@ -7,7 +7,7 @@ class TopicsTableSeeder extends Seeder
 	/**
 	 * The number of fake classes to make
 	 */
-	const NUM_TOPICS = 25;
+	const NUM_TOPICS = 10;
 
     /**
      * Run the database seeds.
