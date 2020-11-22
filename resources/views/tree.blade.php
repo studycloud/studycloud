@@ -32,7 +32,6 @@
 
 <script>
 	@if(isset($action) && !is_null($action))
-		{{-- it's either create or edit or show --}}
 		@if(isset($node) && is_null($node))
 			tree = new Tree("{{ $type }}", "topic-tree", new Server(), "r0", "{{ $action }}");
 		@else

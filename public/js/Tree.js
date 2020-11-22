@@ -1041,8 +1041,9 @@ Tree.prototype.nodeClicked = function(node)
 		//update url
 		if(node_ID !== "t0")
 		{
-			var newUrl = window.location.protocol + "//" + window.location.host + "/classes/" + node_ID;
-			window.history.replaceState("class", "class"+node_ID, newUrl);
+			url_node_ID = node_ID.replace('t', '');
+			var newUrl = window.location.protocol + "//" + window.location.host + "/classes/" + url_node_ID;
+			window.history.replaceState("class", "class"+url_node_ID, newUrl);
 		}
 		else
 		{
@@ -1055,8 +1056,9 @@ Tree.prototype.nodeClicked = function(node)
 	{
 		self.centerAndOpen(node_ID);
 		//update url
-		var newUrl = window.location.protocol + "//" + window.location.host + "/resources/" + node_ID;
-		window.history.replaceState("viewNode", "resourceViewer"+node_ID, newUrl);
+		url_node_ID = node_ID.replace('r', '');
+		var newUrl = window.location.protocol + "//" + window.location.host + "/resources/" + url_node_ID;
+		window.history.replaceState("viewNode", "resourceViewer"+url_node_ID, newUrl);
 	}
 
 

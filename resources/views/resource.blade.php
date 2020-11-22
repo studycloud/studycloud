@@ -30,24 +30,14 @@
 
 <!-- The Modal -->
 <div id="my-modal" class="modal">
-	<!-- Modal content -->
 	<div class="modal-content">
 		<span id="close-modal"><i class="fas fa-times"></i></span>
-		<span id="open-resource-editor"><i id="edit-icon" display="none" class='fas fa-edit'></i></span>
+		<span id="open-resource-editor"></span>
 		<!-- Container for resource. -->
 		<div id="resource-container">
-			<div class="resource-background">
-				<div id="resource-head"></div>
-				<div id="modules"> <!-- This is where you put the modules. -->
-				</div>
-			</div>
 		</div>
 	</div>
 </div>
-<!--button id="creator-btn">temporary resource creator button</button-->
-<button id="editor-btn">temporary resource editor button</button>
-<button id="resource-meta-btn">resource meta button</button>
-<button id="resource-creator-btn">resource creator button</button>
 @stop
 
 @push('scripts')
