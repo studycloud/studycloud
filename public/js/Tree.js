@@ -30,6 +30,9 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 		.append("g")
 			.attr("class", "layer_nodes")
 			.selectAll(".node");
+
+	console.log('self.nodes in  initializatino');
+	console.log(self.nodes);
 	
 	
 	//Set up the right click menu
@@ -88,7 +91,12 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 
 	if(action === "open")
 	{
-		self.centerAndOpen(node_id);
+		console.log("what is node id?");
+		console.log(node_id);
+		num_only_node_id =  node_id.replace('r', '');
+		console.log("what is the new node id?");
+		console.log(num_only_node_id);
+		self.centerAndOpen(num_only_node_id);
 	}
 	else if(action === "edit")
 	{
@@ -102,6 +110,9 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 	{
 		throw "Invalid action passed to tree constructor: " + action;
 	}
+
+	console.log("nodes in initialization. Do we get more stuff here?");
+	console.log(self.nodes);
 }
 
 Tree.prototype.simulationInitialize = function()
@@ -1480,6 +1491,9 @@ Tree.prototype.centerAndEdit = function(node_id)
 Tree.prototype.centerAndOpen = function(node_id)
 {
 	var self = this;
+
+	console.log("nodes");
+	console.log(self.nodes);
 
 	var node = self.nodes.filter(function(d,i){
 		return d.id === node_id;
