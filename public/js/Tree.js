@@ -30,10 +30,6 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 		.append("g")
 			.attr("class", "layer_nodes")
 			.selectAll(".node");
-
-	console.log('self.nodes in  initializatino');
-	console.log(self.nodes);
-	
 	
 	//Set up the right click menu
 	self.menu_context = self.frame
@@ -111,8 +107,7 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 		throw "Invalid action passed to tree constructor: " + action;
 	}
 
-	console.log("nodes in initialization. Do we get more stuff here?");
-	console.log(self.nodes);
+	console.log("We go here before setData?");
 }
 
 Tree.prototype.simulationInitialize = function()
@@ -537,6 +532,8 @@ Tree.prototype.setData = function(data)
 {
 	var self = this;
 	
+	console.log("did we go here?")
+
 	self.updateDataNodes(self.nodes, data.nodes);
 	self.updateDataLinks(self.links, data.connections);
 	
