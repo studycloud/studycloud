@@ -188,10 +188,10 @@ connections.forEach(function (connection)
 );
 
 tree_topics.setData(data);
-console.log("so this part is fake data?")
 
+console.log("what is this node that gets clicked");
+console.log(d3.select(".node").node());
 tree_topics.nodeClicked(d3.select(".node").node());
-console.log("after this, we should have gotten the real data?");
 
 //tree_topics.server.getData(0, 1, 3, tree_topics.updateDataNLevels.bind(tree_topics), function (node, url, error) { console.log(node, url, error); });
 //tree_topics.setData(data);

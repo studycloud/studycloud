@@ -92,6 +92,7 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 		num_only_node_id =  node_id.replace('r', '');
 		console.log("what is the new node id?");
 		console.log(num_only_node_id);
+		
 		self.centerAndOpen(num_only_node_id);
 	}
 	else if(action === "edit")
@@ -380,7 +381,6 @@ Tree.prototype.updateDataNodes = function(selection, data)
 
 	console.log("Updating node data for ", selection, " to ", data);
 	
-
 	// save coordinates because they are overwritten with undefined coordinates from the server
 	self.nodes.each(function(d)
 		{
@@ -394,6 +394,9 @@ Tree.prototype.updateDataNodes = function(selection, data)
 	);
 
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
+
+	console.log("what is selection?");
+	console.log(selection);
 
 	// add visual components for each node
 	var nodes_enter = selection
@@ -534,11 +537,19 @@ Tree.prototype.setData = function(data)
 	
 	console.log("did we go here?")
 
+	console.log("data.nodes");
+	console.log(data.nodes);
+
 	self.updateDataNodes(self.nodes, data.nodes);
+	console.log("after calling updateDataNodes");
+	console.log(self.nodes);
 	self.updateDataLinks(self.links, data.connections);
 	
 	self.nodes_simulated = self.nodes;
 	self.links_simulated = self.links;
+
+	console.log("after calling updateDataNodes and updateDataLink");
+	console.log(self.nodes);
 	
 	//self.simulationRestart();
 };
@@ -1007,6 +1018,10 @@ Tree.prototype.BreadcrumbStackUpdate = function(id)
 Tree.prototype.nodeClicked = function(node)
 {
 	var self = this;
+
+	console.log("node got clicked???");
+	console.log(node);
+	console.log("=======");
 
 	var node_ID = node.__data__.id;
 	
