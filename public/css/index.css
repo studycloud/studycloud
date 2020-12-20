@@ -507,7 +507,7 @@ table {
   background-color: #fefefe;
   margin: 15% auto;
   /* 15% from the top and centered */
-  padding: 20px;
+  padding: 10px;
   border: 1px solid #888;
   max-width: 900px;
   /* Could be more or less, depending on screen size */

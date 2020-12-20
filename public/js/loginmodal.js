@@ -39,8 +39,8 @@ $(document).ready(function() {
     var temp_resource_id = document.getElementById('resource-id').innerHTML;
     // clear what is displayed in resource viewer
     document.getElementById('edit-icon').style.display = "none";
-    document.getElementById('modules').innerHTML = " "; //clean the display box up
-    document.getElementById('resource-head').innerHTML = " ";
+    // clear the modal
+    document.getElementById('resource-container').innerHTML = "";
 
     // change the url from /resources/{resource_id} to 
     // /resources/{resource_id}/edit
@@ -54,11 +54,13 @@ $(document).ready(function() {
 	{
     document.getElementById('my-modal').style.display = "none";
     document.getElementById('edit-icon').style.display = "none";
-		document.getElementById('resource-head').innerHTML = " ";
-		document.getElementById('modules').innerHTML = " "; //clean the display box up
+    // clear the modal
+		document.getElementById('resource-container').innerHTML = "";
     resetContentNum();
     tinymce.remove();
-	});
+  });
+  
+  $('#resource-name').keypress(function(e){ return e.which != 13; });
 });
 
 // When the user clicks anywhere outside of the modal, close it
@@ -68,8 +70,8 @@ window.onmousedown = function(event)
     {
       document.getElementById('my-modal').style.display = "none";
       document.getElementById('edit-icon').style.display = "none";
-      document.getElementById('resource-head').innerHTML = " ";
-      document.getElementById('modules').innerHTML = " "; //clean the display box up
+      // clear the modal
+		  document.getElementById('resource-container').innerHTML = "";
       resetContentNum();
       tinymce.remove();
 	}

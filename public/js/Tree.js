@@ -1,4 +1,4 @@
-function Tree(type, frame_id, server, node_id = "t0", action = "open")
+function Tree(type, frame_id, server, node_id = "t0", action = "none")
 {		
 	//Creates a tree visualization with a type of <type> inside the DOM element <frame_id>
 	
@@ -80,7 +80,7 @@ function Tree(type, frame_id, server, node_id = "t0", action = "open")
 	self.menuContextNodeCreate();
 
 
-	if(action !== "open" && node_id.charAt(0) !== 'r')
+	if(action !== "none" && node_id.charAt(0) !== 'r')
 	{
 		throw "Tree constructor attempting to edit/add non-resource node " + node_id;
 	}
@@ -97,7 +97,7 @@ function Tree(type, frame_id, server, node_id = "t0", action = "open")
 	{
 		self.centerAndAdd(node_id);
 	}
-	else
+	else if(action !== "none")
 	{
 		throw "Invalid action passed to tree constructor: " + action;
 	}
@@ -776,7 +776,7 @@ Tree.prototype.linkLengthInterpolatorGenerator = function(d)
 
 };
 
-Tree.prototype.computeTreeAttributes = function(ID_Level_Map)
+Tree.prototype.computeTreeStyle = function(ID_Level_Map)
 {
 	var self = this;
 	
@@ -922,15 +922,27 @@ Tree.prototype.centerOnNode = function(node)
 
 	self.simulation.stop();
 	
-	self.computeTreeAttributes(ID_Level_Map);
+	self.computeTreeStyle(ID_Level_Map);
 
 	//Set the on click handlers
 	self.nodes.on("click", function(d)
 	{
 		var style = self.locals.style.get(this);
 
+		var is_resource = this.__data__.id.charAt(0) === 'r';
+
+
+		// Only handle the click event if the node that we clicked on was not currently centered on, or it is a resource
+		// TODO: Move all of these checks into the nodeClicked function itself. Here is not the right place to handle them
 		switch (style.level)
 			{
+				case 0:
+					if(is_resource)
+					{
+						self.nodeClicked(this);
+					}
+				break;
+
 				case -1:
 				case 1:
 				case 2:
@@ -1025,13 +1037,27 @@ Tree.prototype.nodeClicked = function(node)
 
 		//Center on the node we clicked on
 		self.centerOnNode(node);
-
+		//update url
+		if(node_ID !== "t0")
+		{
+			var newUrl = window.location.protocol + "//" + window.location.host + "/classes/" + node_ID;
+			window.history.replaceState("class", "class"+node_ID, newUrl);
+		}
+		else
+		{
+			//root node center is just /topics
+			var newUrl = window.location.protocol + "//" + window.location.host + "/topics";
+			window.history.replaceState("classTree", "topics", newUrl);
+		}
 	}
 	else
 	{
-		alert("Clicked resource: " + node.__data__.name);
-		//TODO: call the resource viewer on this node.
+		self.centerAndOpen(node_ID);
+		//update url
+		var newUrl = window.location.protocol + "//" + window.location.host + "/resources/" + node_ID;
+		window.history.replaceState("viewNode", "resourceViewer"+node_ID, newUrl);
 	}
+
 
 };
 
@@ -1167,8 +1193,12 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 
 	if(data.id.charAt(0) !== 'r')
 	{
-		menu_context_items.add.enabled = false;
 		menu_context_items.edit.enabled = false;
+	}
+
+	if(data.id.charAt(0) !== 't')
+	{
+		menu_context_items.add.enabled = false;
 	}
 	
 	if (self.user_active_id === 0)
@@ -1421,16 +1451,37 @@ Tree.prototype.nodeUncapture = function(node, data, index)
 Tree.prototype.centerAndAdd = function(node_id)
 {
 	var self = this;
+
+	var node = self.nodes.filter(function(d,i){
+		return d.id === node_id;
+	});
+	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
+	openResourceCreator(node_id.substr(1));
 };
 
 Tree.prototype.centerAndEdit = function(node_id)
 {
 	var self = this;
+
+	var node = self.nodes.filter(function(d,i){
+		return d.id === node_id;
+	});
+	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
+	openResourceEditor(node_id.substr(1));
+	//update url
+	var newUrl = window.location.protocol + "//" + window.location.host + "/resources/" + node_ID + "/edit";
+	window.history.replaceState("viewNode", "resourceEditor"+node_ID, newUrl);
 };
 
 Tree.prototype.centerAndOpen = function(node_id)
 {
 	var self = this;
+
+	var node = self.nodes.filter(function(d,i){
+		return d.id === node_id;
+	});
+	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
+	openResourceViewer(node_id.substr(1));
 };
 
 //wrapper for centerAndAdd to be called from context menu
