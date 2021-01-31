@@ -563,6 +563,10 @@ ul#content-type-selector li input {
   display: none;
 }
 
+.dropdown-content {
+  visibility: hidden;
+}
+
 /*********************************************************************************************************
 *
 * 	Redefine tags for basic styling

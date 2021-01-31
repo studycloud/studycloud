@@ -701,7 +701,9 @@ function selectorCodeGenerator(selectorFor, data)
 		ulId = "resource-use-selector";
 		inputId = "";
 
-		html_code += "<ul id='" + ulId +"'>";
+		html_code += "<div class = 'dropdown'>"
+		html_code += "<button onclick = toggleDropdownContents('" + ulId + "') class = 'dropbtn'> Resource Use </button>"
+		html_code += "<div class = 'dropdown-content' id = '" + ulId + "'>"
 
 		/** resourceUseData (an array)
 		 * 		where all the content types are stored in resourceUseData (an array)
@@ -711,10 +713,18 @@ function selectorCodeGenerator(selectorFor, data)
 		 * 				{"id":3,"name":"Flashcards"},
 		 * 				{"id":2,"name":"Notes"}	]
 		 */
+
 		for (var i = 0; i < data.length; ++i) {
 			html_code += "<li><input type='radio' name='" + name + "' id='"+ inputId +""+ data[i].id +"'>" +
 				"<label for='" + inputId +""+ data[i].id + "'>" + data[i].name + "</label></li>";
 		}
+
+		//html_code += "<ul id='" + ulId +"'>";
+
+		//for (var i = 0; i < data.length; ++i) {
+		//	html_code += "<li><input type='radio' name='" + name + "' id='"+ inputId +""+ data[i].id +"'>" +
+		//		"<label for='" + inputId +""+ data[i].id + "'>" + data[i].name + "</label></li>";
+		//}
 	}
 	else if (selectorFor == "content-type") {
 		name = "content-type";
@@ -722,7 +732,10 @@ function selectorCodeGenerator(selectorFor, data)
 		ulId = "content-type-selector";
 		var inputId = "t";
 		dictionary = contentTypeData;
-		html_code += "<ul id='" + ulId +"'>";
+
+		html_code += "<div class = 'dropdown'>"
+		html_code += "<button onclick = toggleDropdownContents('" + ulId + "') class = 'dropbtn'> Resource Use </button>"
+		html_code += "<div class = 'dropdown-content' id = '" + ulId + "'>"
 
 		/** contentTypeData (an array)
 		 * 		where all the content types are stored in contentTypeData (an array)
@@ -738,7 +751,7 @@ function selectorCodeGenerator(selectorFor, data)
 		// add invisible error message to be displayed if user does not select a use
 	}
 	
-	html_code +=  "</ul>";
+	html_code +=  "</div>";
   
   return html_code;
 }
@@ -765,6 +778,20 @@ function hideTooltip(ttSib) {
 function showTooltip(ttSib) {
 	var tooltip = ttSib.parentNode.getElementsByClassName("tooltip")[0];
 	tooltip.style.visibility = 'visible';
+}
+
+/** 
+ * Helper function to show or hide the contents of a dropdown
+ * 
+ * @param {*} par id of a container containing dropdown contents to be shown
+ */
+function toggleDropdownContents(par) {
+	console.log("hello world");
+	if (document.getElementById(par).style.visibility == 'visible') {
+		document.getElementById(par).style.visibility = 'hidden';
+	} else {
+		document.getElementById(par).style.visibility = 'visible';
+	}
 }
 
 /**
