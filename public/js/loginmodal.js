@@ -11,52 +11,14 @@ $(document).ready(function() {
     displayContainer("forget");
   });
 
-	// TODO: delete the button and this, testing only
-	$("#editor-btn").click(function(event)
-	{
-    var temp_resource_id = 2;
-		openResourceEditor(temp_resource_id);
-	});
-
-  // TODO: delete the button and this, testing only
-	$("#resource-meta-btn").click(function(event)
-	{
-    var temp_resource_id = 2;
-		openResourceViewer(temp_resource_id);
-  });
-
-  // TODO: delete the button and this, testing only
-  $("#resource-creator-btn").click(function(event)
-  {
-    var temp_node_id = 10;
-    openResourceCreator(temp_node_id);
-  });
-  
-  // When the user clicks on edit icon in resource viewer 
-  $("#open-resource-editor").click(function(event) 
-  {
-    // get the resource id
-    var temp_resource_id = document.getElementById('resource-id').innerHTML;
-    // clear what is displayed in resource viewer
-    document.getElementById('edit-icon').style.display = "none";
-    // clear the modal
-    document.getElementById('resource-container').innerHTML = "";
-
-    // change the url from /resources/{resource_id} to 
-    // /resources/{resource_id}/edit
-    history.pushState({},'',window.location.href+'/edit');
-
-    openResourceEditor(temp_resource_id);
-  });
-
 	// When the user clicks on <span> (x), close the modal
 	$("#close-modal").click(function(event) 
 	{
     document.getElementById('my-modal').style.display = "none";
-    document.getElementById('edit-icon').style.display = "none";
     // clear the modal
+    document.getElementById('open-resource-editor').innerHTML = "";
 		document.getElementById('resource-container').innerHTML = "";
-    resetContentNum();
+
     tinymce.remove();
   });
   
@@ -69,10 +31,10 @@ window.onmousedown = function(event)
     if (event.target == document.getElementById('my-modal')) 
     {
       document.getElementById('my-modal').style.display = "none";
-      document.getElementById('edit-icon').style.display = "none";
+      // delete the edit icon
+      document.getElementById('open-resource-editor').innerHTML = "";
       // clear the modal
 		  document.getElementById('resource-container').innerHTML = "";
-      resetContentNum();
       tinymce.remove();
 	}
 }

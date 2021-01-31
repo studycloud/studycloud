@@ -189,7 +189,8 @@ connections.forEach(function (connection)
 
 tree_topics.setData(data);
 
-
+console.log("what is this node that gets clicked");
+console.log(d3.select(".node").node());
 tree_topics.nodeClicked(d3.select(".node").node());
 
 //tree_topics.server.getData(0, 1, 3, tree_topics.updateDataNLevels.bind(tree_topics), function (node, url, error) { console.log(node, url, error); });

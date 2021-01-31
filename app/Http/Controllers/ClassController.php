@@ -102,7 +102,7 @@ class ClassController extends Controller
 	{
 		// let the js handle parsing the URL to determine which class to retrieve
 		// currently this view doesn't exist, but maybe it should?
-		// return view('classes');
+		return view('tree', ['type'=>'tree']);
 	}
 
 	/**

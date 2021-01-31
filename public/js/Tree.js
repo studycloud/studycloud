@@ -7,7 +7,6 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 	
 	//self is a special variable that contains a reference to the class instance itself. 
 	//	This is created in every function so that we can d3 and other libraries with anonymous functions
-	
 	var self = this;
 	
 	//Create the various DOM element groups needed by the tree
@@ -31,7 +30,6 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 		.append("g")
 			.attr("class", "layer_nodes")
 			.selectAll(".node");
-	
 	
 	//Set up the right click menu
 	self.menu_context = self.frame
@@ -59,7 +57,10 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 	// set the breadcrumb stack for use when we decide to implement it
 	self.breadcrumbStack = [0];
 
+	// a Server object, defined in Server.js
 	self.server = server;
+	
+	self.resource_modal = new ResourceModal();
 
 	//Setup Local variables that we keep track of about nodes in our tree. This is necessary so that they stay persistent across data updates
 	self.locals = {};
@@ -70,7 +71,7 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 	self.locals.coordinates = d3.local();
 
 	self.user_active_id = parseInt(document.getElementById("meta_user_active_id").getAttribute('content'));
-	//console.log('Active user has ID: ' + self.user_active_id);
+	// console.log('Active user has ID: ' + self.user_active_id);
 
 	self.nodes_captured = self.frame.svg
 		.append("g")
@@ -79,7 +80,6 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 
 	self.menuContextNodeCreate();
 
-
 	if(action !== "none" && node_id.charAt(0) !== 'r')
 	{
 		throw "Tree constructor attempting to edit/add non-resource node " + node_id;
@@ -87,7 +87,13 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 
 	if(action === "open")
 	{
-		self.centerAndOpen(node_id);
+		console.log("what is node id?");
+		console.log(node_id);
+		num_only_node_id =  node_id.replace('r', '');
+		console.log("what is the new node id?");
+		console.log(num_only_node_id);
+		
+		self.centerAndOpen(num_only_node_id);
 	}
 	else if(action === "edit")
 	{
@@ -101,6 +107,8 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 	{
 		throw "Invalid action passed to tree constructor: " + action;
 	}
+
+	console.log("We go here before setData?");
 }
 
 Tree.prototype.simulationInitialize = function()
@@ -373,7 +381,6 @@ Tree.prototype.updateDataNodes = function(selection, data)
 
 	console.log("Updating node data for ", selection, " to ", data);
 	
-
 	// save coordinates because they are overwritten with undefined coordinates from the server
 	self.nodes.each(function(d)
 		{
@@ -387,6 +394,9 @@ Tree.prototype.updateDataNodes = function(selection, data)
 	);
 
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
+
+	console.log("what is selection?");
+	console.log(selection);
 
 	// add visual components for each node
 	var nodes_enter = selection
@@ -525,11 +535,21 @@ Tree.prototype.setData = function(data)
 {
 	var self = this;
 	
+	console.log("did we go here?")
+
+	console.log("data.nodes");
+	console.log(data.nodes);
+
 	self.updateDataNodes(self.nodes, data.nodes);
+	console.log("after calling updateDataNodes");
+	console.log(self.nodes);
 	self.updateDataLinks(self.links, data.connections);
 	
 	self.nodes_simulated = self.nodes;
 	self.links_simulated = self.links;
+
+	console.log("after calling updateDataNodes and updateDataLink");
+	console.log(self.nodes);
 	
 	//self.simulationRestart();
 };
@@ -999,6 +1019,10 @@ Tree.prototype.nodeClicked = function(node)
 {
 	var self = this;
 
+	console.log("node got clicked???");
+	console.log(node);
+	console.log("=======");
+
 	var node_ID = node.__data__.id;
 	
 	if (node_ID[0] === "t")
@@ -1040,8 +1064,9 @@ Tree.prototype.nodeClicked = function(node)
 		//update url
 		if(node_ID !== "t0")
 		{
-			var newUrl = window.location.protocol + "//" + window.location.host + "/classes/" + node_ID;
-			window.history.replaceState("class", "class"+node_ID, newUrl);
+			url_node_ID = node_ID.replace('t', '');
+			var newUrl = window.location.protocol + "//" + window.location.host + "/classes/" + url_node_ID;
+			window.history.replaceState("class", "class"+url_node_ID, newUrl);
 		}
 		else
 		{
@@ -1054,8 +1079,9 @@ Tree.prototype.nodeClicked = function(node)
 	{
 		self.centerAndOpen(node_ID);
 		//update url
-		var newUrl = window.location.protocol + "//" + window.location.host + "/resources/" + node_ID;
-		window.history.replaceState("viewNode", "resourceViewer"+node_ID, newUrl);
+		url_node_ID = node_ID.replace('r', '');
+		var newUrl = window.location.protocol + "//" + window.location.host + "/resources/" + url_node_ID;
+		window.history.replaceState("viewNode", "resourceViewer"+url_node_ID, newUrl);
 	}
 
 
@@ -1201,6 +1227,7 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 		menu_context_items.add.enabled = false;
 	}
 	
+	// if the user is not logged in, none of the context menu option will be on
 	if (self.user_active_id === 0)
 	{
 		menu_context_items.add.enabled = false;
@@ -1210,7 +1237,6 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 		menu_context_items.detach.enabled = false;
 		menu_context_items.edit.enabled = false;
 		menu_context_items.move.enabled = false;
-
 	}
 
 	menu_context_items.capture.enabled = this.frame.select(".node_captured[data_id =" + data.id +"]").empty() 
@@ -1456,7 +1482,8 @@ Tree.prototype.centerAndAdd = function(node_id)
 		return d.id === node_id;
 	});
 	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
-	openResourceCreator(node_id.substr(1));
+
+	self.resource_modal.openResourceCreator(node_id.substr(1));
 };
 
 Tree.prototype.centerAndEdit = function(node_id)
@@ -1467,7 +1494,7 @@ Tree.prototype.centerAndEdit = function(node_id)
 		return d.id === node_id;
 	});
 	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
-	openResourceEditor(node_id.substr(1));
+	self.resource_modal.openResourceEditor(node_id.substr(1));
 	//update url
 	var newUrl = window.location.protocol + "//" + window.location.host + "/resources/" + node_ID + "/edit";
 	window.history.replaceState("viewNode", "resourceEditor"+node_ID, newUrl);
@@ -1477,11 +1504,15 @@ Tree.prototype.centerAndOpen = function(node_id)
 {
 	var self = this;
 
+	console.log("nodes");
+	console.log(self.nodes);
+
 	var node = self.nodes.filter(function(d,i){
 		return d.id === node_id;
 	});
 	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
-	openResourceViewer(node_id.substr(1));
+
+	self.resource_modal.openResourceViewer(node_id.substr(1));
 };
 
 //wrapper for centerAndAdd to be called from context menu
