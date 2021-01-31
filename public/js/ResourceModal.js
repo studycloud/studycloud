@@ -19,6 +19,9 @@ class ResourceModal {
 		// use this to fix problem with "add new content" but not submitting
 		// having this will clear any unsaved changes
 		self.pre_updated_content_num = self.content_num;
+
+		self.DEFAULT_RESOURCE_USE = "Class Notes";
+		self.DEFAULT_CONTENT_TYPE = "text";
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -329,6 +332,11 @@ class ResourceModal {
 				document.execCommand("insertHTML", false, text);
 			});
 		}
+
+		// enter default values for resource use selectors, to prevent
+		// the user from submitting a new resource without something selected for each 
+		self.loadSelectedUseOrType("resource-use-selector", self.DEFAULT_RESOURCE_USE);
+		self.loadSelectedUseOrType("content-type-selector", self.DEFAULT_CONTENT_TYPE);
 	}
 
 	/** 
@@ -384,7 +392,7 @@ class ResourceModal {
 			var resource_use = self.findUseOrType("resource-use-selector");
 			// TODO: Right now, assume that each resource only has 1 content
 			// 	so content_id is the same as resource_id
-			var content_id = resource_id;
+			var content_id = self.resource_id;
 
 			var content = document.getElementById("tinymce").value;
 			// NOTE: not so good hack to solve the problem:
@@ -427,7 +435,7 @@ class ResourceModal {
 
 			console.log(resource);
 
-			self.server.editResource(resource_id, resource, 
+			self.server.editResource(self.resource_id, resource, 
 				(error) => {
 					console.log("Edit resource - error");
 					console.log(error);
@@ -447,7 +455,7 @@ class ResourceModal {
 			tinymce.remove();
 		} else {
 			// highlight the prof permission
-			labelProfPermission = document.getElementById('labelProfPermission');
+			var labelProfPermission = document.getElementById('labelProfPermission');
 			labelProfPermission.style.color = "red";
 		}		
 	}
