@@ -453,7 +453,7 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 		"<div id = 'warning-msg'>" + 
 			"<input type = 'checkbox' id = 'profPermission'>" + 
 			"<label for = 'profPermission' id = 'labelProfPermission'>" + 
-				"It is okay with my professor to edit this resource." + 
+				"It is okay with my professor to post this resource." + 
 			"</label>" + 
 			"<span style = 'color:red' display = 'inline'>* </span>" + 
 		"</div>" +
