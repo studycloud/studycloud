@@ -395,9 +395,6 @@ Tree.prototype.updateDataNodes = function(selection, data)
 
 	selection = selection.data(data, function(d){return d ? d.id : this.data_id; });
 
-	console.log("what is selection?");
-	console.log(selection);
-
 	// add visual components for each node
 	var nodes_enter = selection
 		.enter()
@@ -406,8 +403,6 @@ Tree.prototype.updateDataNodes = function(selection, data)
 				.attr("data_id", function (d) { return d.id; })
 				.on("click", function(){self.nodeClicked(this);})
 				.on('contextmenu', function(d, i){self.menuContextNodeOpen(this, d, i);});
-	
-	console.log("Added nodes: ", nodes_enter);
 
 	nodes_enter.append("rect");
 	nodes_enter.append("text");
@@ -1191,6 +1186,11 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 {	
 	var self = this;
 
+	console.log("====== Load Context Menu");
+	console.log(node);
+	console.log(data);
+	console.log(index);
+	console.log("=================");
 
 	var menu_context_items = self.menu_context_node_items;
 
@@ -1201,6 +1201,17 @@ Tree.prototype.menuContextNodeOpen = function(node, data, index)
 	menu_context_items.detach.enabled = true;
 	menu_context_items.edit.enabled = true;
 	menu_context_items.move.enabled = true;
+
+	// if it's the root of the class, everything should be disabled
+	if (data.id == "t0"){
+		menu_context_items.add.enabled = false;
+		menu_context_items.attach.enabled = false;
+		menu_context_items.capture.enabled = false;
+		menu_context_items.delete.enabled = false;
+		menu_context_items.detach.enabled = false;
+		menu_context_items.edit.enabled = false;
+		menu_context_items.move.enabled = false;
+	}
 
 	if (self.nodes_captured.data().length === 0)
 	{
