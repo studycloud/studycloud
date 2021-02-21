@@ -1,3 +1,12 @@
+// CURRENTLY: resources are not posting. problem from my code? the object looks different, 
+// but in both cases the server is throwing an error
+
+// Don't forget to look at code for automatically selecting things / the function used there. Due to changes,
+// needs to be updated.
+
+// Need to finish grid layout, and put things in it.
+
+
 // use when we have more than 1 content
 var content_num = 0;
 // use this to fix problem with "add new content" but not submitting
@@ -433,22 +442,26 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 	document.getElementById('resource-head').innerHTML = 
       "<div id = 'resource-id' style='visibility: hidden'></div>" + 
       "<div class = 'tooltip' id = 'resource-name-tip'> Edit </div>" +
-      "<span id = 'resource-name' onmouseout = hideTooltip(this) onmouseover = showTooltip(this) onClick = hideTooltip(this) " + 
-          "contenteditable = true>Resource Name</span>" + 
-    "<div id = 'resource-use-label' >Resource Use:</div>" + 
-    selectorCodeGenerator("resource-use", resourceUseData);
+	  "<div id = 'resource-name-label'> Resource Name: </div>" +
+      "<span id = 'resource-name' onmouseout = hideTooltip('resource-name-tip') " +
+	   	  "onmouseover = showTooltip('resource-name-tip') onClick = hideTooltip('resource-name-tip') " + 
+		  "contenteditable = true>Resource Name</span>" + 
+	  "<div id='content-name-label'>Resource Content Name:</div>" + 
+      "<div class = 'tooltip' id = 'content-name-tip'> Edit </div>" + 
+	  "<div class=content-name id ='content-name0' contenteditable=true " + 
+      	"onmouseout = hideTooltip('content-name-tip') " +
+	  	"onmouseover = showTooltip('content-name-tip') " +
+		"onClick = hideTooltip('content-name-tip')>Content Name</div>";  
+	// CURRENTLY EDITING HERE TO UPDATE CREATOR VIEW
+	// NEED TO POPULATE CLASSES
 	document.getElementById('modules').innerHTML = 
 		"<div class=resource-divider></div>" + 
-		"<div id='content-name-label'>Resource Content Name:</div>" + 
-      	"<div class = 'tooltip' id = 'content-name-tip'> Edit </div>" + 
-		"<div class=content-name id ='content-name0' contenteditable=true " + 
-          "onmouseout = hideTooltip(this) onmouseover = showTooltip(this) onClick = hideTooltip(this)>Content Name</div>" +
-		"<div id='content-type-label'>Content Type:</div>" + 
+		selectorCodeGenerator("resource-use", resourceUseData) +
 		selectorCodeGenerator("content-type") + 
 		"<div id='content-label'>Content:</div>" + 
 		"<div id='content-input'>" + 
 			"<textarea rows = '20' id = 'tinymce'> </textarea>" + 
-		"</div> <div id = 'more-contents'> </div>";
+		"</div>";
 	document.getElementById('buttons').innerHTML = 
 		"<div id = 'warning-msg'>" + 
 			"<input type = 'checkbox' id = 'profPermission'>" + 
@@ -499,8 +512,9 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 
 	// enter default values for resource use selectors, to prevent
 	// the user from submitting a new resource without something selected for each 
-	loadSelectedUseOrType("resource-use-selector", DEFAULT_RESOURCE_USE);
-	loadSelectedUseOrType("content-type-selector", DEFAULT_CONTENT_TYPE);
+	// CURRENTLY WORKING ON
+	// loadSelectedUseOrType("resource-use-selector", DEFAULT_RESOURCE_USE);
+	// loadSelectedUseOrType("content-type-selector", DEFAULT_CONTENT_TYPE);
 }
 
 /** 
@@ -701,9 +715,20 @@ function selectorCodeGenerator(selectorFor, data)
 		ulId = "resource-use-selector";
 		inputId = "";
 
-		html_code += "<div class = 'dropdown'>"
-		html_code += "<button onclick = toggleDropdownContents('" + ulId + "') class = 'dropbtn'> Resource Use </button>"
-		html_code += "<div class = 'dropdown-content' id = '" + ulId + "'>"
+		html_code += "<select class='selector' id = 'resource-use-selector'>"
+		html_code += "<option> Select resource use </option>"
+		
+		for (var i = 0; i < data.length; ++i) {
+			html_code += "<option name='" + name + "' id='"+ inputId +""+ data[i].id +"'>" + data[i].name + "</option>" 
+		}
+
+		html_code += "</select>"
+		
+		//<option> 'hello' </option> <option> 'hi' </option> </select>"
+
+		// html_code += "<div class = 'dropdown'>"
+		// html_code += "<button onclick = toggleDropdownContents('" + ulId + "') class = 'dropbtn'> Resource Use </button>"
+		// html_code += "<div class = 'dropdown-content' id = '" + ulId + "'>"
 
 		/** resourceUseData (an array)
 		 * 		where all the content types are stored in resourceUseData (an array)
@@ -714,10 +739,10 @@ function selectorCodeGenerator(selectorFor, data)
 		 * 				{"id":2,"name":"Notes"}	]
 		 */
 
-		for (var i = 0; i < data.length; ++i) {
-			html_code += "<li><input type='radio' name='" + name + "' id='"+ inputId +""+ data[i].id +"'>" +
-				"<label for='" + inputId +""+ data[i].id + "'>" + data[i].name + "</label></li>";
-		}
+		// for (var i = 0; i < data.length; ++i) {
+		// 	html_code += "<li><input type='radio' name='" + name + "' id='"+ inputId +""+ data[i].id +"'>" +
+		// 		"<label for='" + inputId +""+ data[i].id + "'>" + data[i].name + "</label></li>";
+		// }
 
 		//html_code += "<ul id='" + ulId +"'>";
 
@@ -733,25 +758,23 @@ function selectorCodeGenerator(selectorFor, data)
 		var inputId = "t";
 		dictionary = contentTypeData;
 
-		html_code += "<div class = 'dropdown'>"
-		html_code += "<button onclick = toggleDropdownContents('" + ulId + "') class = 'dropbtn'> Resource Use </button>"
-		html_code += "<div class = 'dropdown-content' id = '" + ulId + "'>"
-
+		html_code += "<select class='selector' id = 'content-type-selector'>"
+		html_code += "<option> Select content type </option>"
+		
 		/** contentTypeData (an array)
 		 * 		where all the content types are stored in contentTypeData (an array)
 		 * 		loaded in resource.blade.php
 		 * 		format:
 		 * 			["type1", "type2", "type3"]
 		 */
-		for (var i = 0; i < dictionary.length; ++i) {
-			html_code += "<li><input type='radio' name='" + name + "' id='"+ inputId +""+ i +"'>" +
-				"<label for='" + inputId +""+ i + "'>" + contentTypeData[i] + "</label></li>";
-		}
 
-		// add invisible error message to be displayed if user does not select a use
+		for (var i = 0; i < dictionary.length; ++i) {
+			html_code += "<option name='" + name + "' id='"+ inputId +""+ i +"'>" +
+			"<label for='" + inputId +""+ i + "'>" + contentTypeData[i] + "</option>" 
+		}
 	}
 	
-	html_code +=  "</div>";
+	// html_code +=  "</div>";
   
   return html_code;
 }
@@ -759,24 +782,22 @@ function selectorCodeGenerator(selectorFor, data)
 /** Helper function for changing textbox tooltip visibility
  * \brief	Used in create resource modal, edit resource modal
  * 			Used to set a tooltip's visibility to hidden
- * \warning will only hide ttSib's first sibling of class tooltip
  * 
- * @param {*} ttSib sibling of the tooltip to be hidden
+ * @param {*} tipID ID of the tip to be hidden
  */
-function hideTooltip(ttSib) { 
-	var tooltip = ttSib.parentNode.getElementsByClassName("tooltip")[0];
+function hideTooltip(tipID) { 
+	var tooltip = document.getElementById(tipID);
 	tooltip.style.visibility = 'hidden';
 }
 
 /** Helper function for changing textbox tooltip visibility
  * \brief	Used in create resource modal, edit resource modal
  * 			Used to set a tooltip's visibility to visible
- * \warning will only show ttSib's first sibling of class tooltip
  * 
- * @param {*} ttSib sibling of the tooltip to be hidden 
+ * @param {*} tipID ID of the tooltip to be hidden
  */
-function showTooltip(ttSib) {
-	var tooltip = ttSib.parentNode.getElementsByClassName("tooltip")[0];
+function showTooltip(tipID) {
+	var tooltip = document.getElementById(tipID);
 	tooltip.style.visibility = 'visible';
 }
 
