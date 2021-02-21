@@ -718,18 +718,6 @@ function selectorCodeGenerator(selectorFor, data)
 		html_code += "<select class='selector' id = 'resource-use-selector'>"
 		html_code += "<option> Select resource use </option>"
 		
-		for (var i = 0; i < data.length; ++i) {
-			html_code += "<option name='" + name + "' id='"+ inputId +""+ data[i].id +"'>" + data[i].name + "</option>" 
-		}
-
-		html_code += "</select>"
-		
-		//<option> 'hello' </option> <option> 'hi' </option> </select>"
-
-		// html_code += "<div class = 'dropdown'>"
-		// html_code += "<button onclick = toggleDropdownContents('" + ulId + "') class = 'dropbtn'> Resource Use </button>"
-		// html_code += "<div class = 'dropdown-content' id = '" + ulId + "'>"
-
 		/** resourceUseData (an array)
 		 * 		where all the content types are stored in resourceUseData (an array)
 		 * 		loaded in resource.blade.php
@@ -739,17 +727,12 @@ function selectorCodeGenerator(selectorFor, data)
 		 * 				{"id":2,"name":"Notes"}	]
 		 */
 
-		// for (var i = 0; i < data.length; ++i) {
-		// 	html_code += "<li><input type='radio' name='" + name + "' id='"+ inputId +""+ data[i].id +"'>" +
-		// 		"<label for='" + inputId +""+ data[i].id + "'>" + data[i].name + "</label></li>";
-		// }
+		for (var i = 0; i < data.length; ++i) {
+			html_code += "<option name='" + name + "' id='"+ inputId +""+ data[i].id +"'>" + data[i].name + "</option>" 
+		}
 
-		//html_code += "<ul id='" + ulId +"'>";
+		html_code += "</select>"
 
-		//for (var i = 0; i < data.length; ++i) {
-		//	html_code += "<li><input type='radio' name='" + name + "' id='"+ inputId +""+ data[i].id +"'>" +
-		//		"<label for='" + inputId +""+ data[i].id + "'>" + data[i].name + "</label></li>";
-		//}
 	}
 	else if (selectorFor == "content-type") {
 		name = "content-type";
@@ -849,37 +832,47 @@ function loadSelectedUseOrType (ulId, selected)
  * 			If the user has not selected one or more of the above, displays
  * 				an appropriate error message
  * 
- * @param {*} ulId String, determines if we finding resource use or content type
+ * @param {*} selectId String, determines if we finding resource use or content type
  * 			either: "resource-use-selector" or "content-type-selector"
  */
-function findUseOrType(ulId) 
+function findUseOrType(selectId) 
 {
+	var sel = document.getElementById(selectId)
+
+	if (selectId == "resource-use-selector") {
+		var opt = sel.options[sel.selectedIndex];
+		return parseInt(opt.id);
+	} else if (selectId == "content-type-selector") {
+		return sel.value;
+	}
+
 	var ul = document.getElementById(ulId);
 	var listInsideUl = ul.getElementsByTagName("li");
 
+	// FIXME delete old code
 	// switches to True if one of the list items has been selected
-	var displayError = false;
+	// var displayError = false;
 
-	for (var ele of listInsideUl) {
-		if (ele.getElementsByTagName("input")[0].checked == true) {
-			displayError = true;
-			if (ulId == "resource-use-selector") {
-				return parseInt(ele.getElementsByTagName("input")[0].id);
-			} 
-			else if (ulId == "content-type-selector") {
-				return ele.getElementsByTagName("label")[0].innerHTML;
-			}
-		}
-	}
+	// for (var ele of listInsideUl) {
+	// 	if (ele.getElementsByTagName("input")[0].checked == true) {
+	// 		displayError = true;
+	// 		if (ulId == "resource-use-selector") {
+	// 			return parseInt(ele.getElementsByTagName("input")[0].id);
+	// 		} 
+	// 		else if (ulId == "content-type-selector") {
+	// 			return ele.getElementsByTagName("label")[0].innerHTML;
+	// 		}
+	// 	}
+	// }
 
-	// displays an error depending on ulID
-	if (displayError) {
-		if (ulId == "resource-use-selector") {
+	// // displays an error depending on ulID
+	// if (displayError) {
+	// 	if (ulId == "resource-use-selector") {
 
-		} else if (ulId == "content-type-selector") {
+	// 	} else if (ulId == "content-type-selector") {
 
-		}
-	} 
+	// 	}
+	// } 
 
 }
 
