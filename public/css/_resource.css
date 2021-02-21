@@ -85,12 +85,26 @@
 
 /*********************************************************************************************************
 * 	
-*   Selectors (for Resource Editor / Creator)
+*   Selectors and warnings (for Resource Editor / Creator)
 *
 **********************************************************************************************************/
 
 .selector {
   font-size: 1.1rem;
+}
+
+.warning {
+  font-size: 0.6rem;
+  color: red;
+  visibility: hidden;
+}
+
+#resource-use-warning {
+  grid-area: r-warning;
+}
+
+#content-type-warning {
+  grid-area: c-warning;
 }
 
 /*********************************************************************************************************
@@ -101,9 +115,9 @@
 
 #modules {
   display: grid;
-  grid-template-columns: 35% 65%;
+  grid-template-columns: 25% 25% 25% 25%;
   grid-template-rows: 0.5rem 0.5rem auto 0.5rem auto 0.5rem auto;
-  grid-template-areas: "divider divider" "gap1 gap1" "r-use-selector c-type-selector" "gap2 gap2" "content-label content-label" "gap3 gap3" "tinymce tinymce";
+  grid-template-areas: "divider divider divider divider" "gap1 gap1 gap1 gap1" "r-use-selector r-warning c-type-selector c-warning" "gap2 gap2 gap2 gap2" "content-label content-label content-label content-label" "gap3 gap3 gap3 gap3" "tinymce tinymce tinymce tinymce";
   grid-column-gap: 1rem;
   margin-top: 1.5rem;
 }

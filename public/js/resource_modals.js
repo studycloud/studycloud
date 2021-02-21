@@ -1,6 +1,8 @@
 // CURRENTLY: resources are not posting. problem from my code? the object looks different, 
 // but in both cases the server is throwing an error
 
+const { use } = require("marked");
+
 // Don't forget to look at code for automatically selecting things / the function used there. Due to changes,
 // needs to be updated.
 
@@ -458,6 +460,8 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 		"<div class=resource-divider></div>" + 
 		selectorCodeGenerator("resource-use", resourceUseData) +
 		selectorCodeGenerator("content-type") + 
+		"<div id = 'resource-use-warning' class = 'warning'> Please select resource use </div>" +
+		"<div id = 'content-type-warning' class = 'warning'> Please select content type </div>" +
 		"<div id='content-label'>Content:</div>" + 
 		"<div id='content-input'>" + 
 			"<textarea rows = '20' id = 'tinymce'> </textarea>" + 
@@ -526,69 +530,91 @@ function resourceCreatorHTML(resourceUseData, nodeId)
 function submitNewResource(node_id_num) {
 	var profPermission = document.getElementById("profPermission");
 
+	var invalid = false  // controls whether or not we can submit resource
+
 	// checks that the user checked the checkbox
-	if (profPermission.checked) {
-		tinymce.get("tinymce").save();
-		var resource_name = document.getElementById("resource-name").innerHTML;
-		var resource_use = findUseOrType("resource-use-selector");
-		var class_id = node_id_num.toString();
-		var content = document.getElementById("tinymce").value;
-
-		// NOTE: not so good hack to solve the problem:
-		// if the tinymce has code block, it will like to randomly add 
-		// <code> tag when the user hits enter
-		content = content.replace(new RegExp("<code></code>", "g"), "");
-
-		//store all the data in json
-		//PROBLEM: can only create 1 content for 1 resource
-		var resource = {
-			name: resource_name,
-			use_id: resource_use,
-			class_id: class_id,
-			contents: [
-				{
-					name: document.getElementById("content-name0").innerHTML,
-					type: findUseOrType("content-type-selector").toLowerCase(),
-					content: content,
-				}
-			]
-		};
-
-		// TODO: For when a resource have multiple contents, not MVP
-		// for (i = 1; i < content_num + 1; i++) {
-		// 	var content_array = {
-		// 		name: document.getElementById("content-name" + i).value,
-		// 		type: document.getElementById("content-type" + i).value,
-		// 		content: document.getElementById("content" + i).value
-		// 	};
-		// 	resource.contents.push(content_array);
-		// }
-
-		console.log(resource);
-
-		//call the server to add resource
-		var server = new Server();
-		server.addResource(resource, 
-			(error) => {
-				console.log("Create resource - error");
-				console.log(error);
-			}, 
-			(data) => {
-				console.log("Create resource - success");
-				console.log(data);
-		});
-
-		//close the content creator
-		document.getElementById("my-modal").style.display = "none";
-		document.getElementById("resource-head").innerHTML = " ";
-		document.getElementById("modules").innerHTML = " "; //clean the display box up
-		
-		// remove instance of tinymce
-		tinymce.remove();
-	} else {
+	if (!profPermission.checked) {
 		labelProfPermission = document.getElementById('labelProfPermission');
 		labelProfPermission.style.color = "red";
+		invalid = true;
 	}
+	// check that user selected a resource and content type
+	var r_use = document.getElementById('resource-use-selector');
+	var c_use = document.getElementById('content-type-selector');
+	if (r_use.value == "default") {
+		warning = document.getElementById('resource-use-warning');
+		warning.style.visibility = 'visible';
+		invalid = true;
+	}
+	if (c_use.value == "default") {
+		warning = document.getElementById('content-type-warning');
+		warning.style.visibility = 'visible';
+		invalid = true;
+	} 
+
+	if (invalid) {
+		return;
+	}
+	
+	// else, submit resource to server
+
+	tinymce.get("tinymce").save();
+	var resource_name = document.getElementById("resource-name").innerHTML;
+	var resource_use = findUseOrType("resource-use-selector");
+	var class_id = node_id_num.toString();
+	var content = document.getElementById("tinymce").value;
+
+	// NOTE: not so good hack to solve the problem:
+	// if the tinymce has code block, it will like to randomly add 
+	// <code> tag when the user hits enter
+	content = content.replace(new RegExp("<code></code>", "g"), "");
+
+	//store all the data in json
+	//PROBLEM: can only create 1 content for 1 resource
+	var resource = {
+		name: resource_name,
+		use_id: resource_use,
+		class_id: class_id,
+		contents: [
+			{
+				name: document.getElementById("content-name0").innerHTML,
+				type: findUseOrType("content-type-selector").toLowerCase(),
+				content: content,
+			}
+		]
+	};
+
+	// TODO: For when a resource have multiple contents, not MVP
+	// for (i = 1; i < content_num + 1; i++) {
+	// 	var content_array = {
+	// 		name: document.getElementById("content-name" + i).value,
+	// 		type: document.getElementById("content-type" + i).value,
+	// 		content: document.getElementById("content" + i).value
+	// 	};
+	// 	resource.contents.push(content_array);
+	// }
+
+	console.log(resource);
+
+	//call the server to add resource
+	var server = new Server();
+	server.addResource(resource, 
+		(error) => {
+			console.log("Create resource - error");
+			console.log(error);
+		}, 
+		(data) => {
+			console.log("Create resource - success");
+			console.log(data);
+	});
+
+	//close the content creator
+	document.getElementById("my-modal").style.display = "none";
+	document.getElementById("resource-head").innerHTML = " ";
+	document.getElementById("modules").innerHTML = " "; //clean the display box up
+	
+	// remove instance of tinymce
+	tinymce.remove();
 }
   
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -716,7 +742,7 @@ function selectorCodeGenerator(selectorFor, data)
 		inputId = "";
 
 		html_code += "<select class='selector' id = 'resource-use-selector'>"
-		html_code += "<option> Select resource use </option>"
+		html_code += "<option value = 'default'> Select resource use </option>"
 		
 		/** resourceUseData (an array)
 		 * 		where all the content types are stored in resourceUseData (an array)
@@ -742,7 +768,7 @@ function selectorCodeGenerator(selectorFor, data)
 		dictionary = contentTypeData;
 
 		html_code += "<select class='selector' id = 'content-type-selector'>"
-		html_code += "<option> Select content type </option>"
+		html_code += "<option value = 'default'> Select content type </option>"
 		
 		/** contentTypeData (an array)
 		 * 		where all the content types are stored in contentTypeData (an array)
