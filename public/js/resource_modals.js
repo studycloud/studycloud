@@ -772,6 +772,9 @@ function selectorCodeGenerator(selectorFor, data)
 			html_code += "<option name='" + name + "' id='"+ inputId +""+ i +"'>" +
 			"<label for='" + inputId +""+ i + "'>" + contentTypeData[i] + "</option>" 
 		}
+
+		html_code += "</select>"
+
 	}
 	
 	// html_code +=  "</div>";
