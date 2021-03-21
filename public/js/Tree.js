@@ -14,7 +14,6 @@ function Tree(type, frame_id, server, node_id = "t0", action = "none")
 	// get the dimensions of the frame: width, height, bottom, top, left, right, etc
 	self.frame.boundary = self.frame.node().getBoundingClientRect();
 
-
 	// create the svg tag that will hold the visualization
 	self.frame.svg = self.frame.append("svg");
 
@@ -705,6 +704,7 @@ Tree.prototype.drawNodesPosition = function()
 				}
 			)
 		);
+
 };
 
 Tree.prototype.draw = function()
@@ -819,6 +819,7 @@ Tree.prototype.computeTreeStyle = function(ID_Level_Map)
 				switch(level)
 				{
 					case 0:
+						// centered node
 						style.visible = true;
 						style.opacity = 1;
 						style.labeled = true;
@@ -831,6 +832,7 @@ Tree.prototype.computeTreeStyle = function(ID_Level_Map)
 						break;
 
 					case -1:
+						// the top bar (as the ancestor)
 						style.visible = true;
 						style.opacity = 1;
 						style.labeled = true;
@@ -848,7 +850,6 @@ Tree.prototype.computeTreeStyle = function(ID_Level_Map)
 						style.width = self.frame.boundary.width / ancestor_count;
 						style.height = 40;
 
-
 						coordinates.x_new = style.width*ancestor_index + style.width/2;
 						coordinates.y_new = style.height/2;
 
@@ -857,6 +858,7 @@ Tree.prototype.computeTreeStyle = function(ID_Level_Map)
 						break;
 
 					case 1:
+						// first sub-layer
 						style.visible = true;
 						style.opacity = 1;
 						style.labeled = true;
@@ -869,6 +871,7 @@ Tree.prototype.computeTreeStyle = function(ID_Level_Map)
 						break;
 
 					case 2:
+						// second sub-layer
 						style.visible = true;
 						style.opacity = 0.3;
 						style.labeled = false;
@@ -881,10 +884,11 @@ Tree.prototype.computeTreeStyle = function(ID_Level_Map)
 						break;
 
 					default:
+						// invisble (could be lower layers)
 						style.visible = false;
 						style.opacity = 0;
 						style.labeled = false;
-						style.width = 0;
+						style.width = 20;
 						style.height = style.width;
 						
 						coordinates.x_new = null;
@@ -923,11 +927,20 @@ Tree.prototype.computeTreeStyle = function(ID_Level_Map)
 	
 };
 
+Tree.prototype.centerOnNodeId = function(node_id){
+	var node = self.nodes.filter(function(d,i){
+		return d.id === node_id;
+	});
+	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
+}
 
 Tree.prototype.centerOnNode = function(node)
 {
 	//This function centers the tree visualization on a node. It takes the DOM element of the node to center on.
-	
+	console.log(node);
+	console.log("node to center on.");
+	console.log("=======================");
+
 	var self = this;
 	
 	var center_node_ID = node.__data__.id;
@@ -945,7 +958,6 @@ Tree.prototype.centerOnNode = function(node)
 		var style = self.locals.style.get(this);
 
 		var is_resource = this.__data__.id.charAt(0) === 'r';
-
 
 		// Only handle the click event if the node that we clicked on was not currently centered on, or it is a resource
 		// TODO: Move all of these checks into the nodeClicked function itself. Here is not the right place to handle them
@@ -1485,16 +1497,23 @@ Tree.prototype.nodeUncapture = function(node, data, index)
 	self.captureBarRender(node_captured_data);
 };
 
-Tree.prototype.centerAndAdd = function(node_id)
+Tree.prototype.centerAndAdd = async function(node_id)
 {
 	var self = this;
+
+	console.log(self.nodes);
 
 	var node = self.nodes.filter(function(d,i){
 		return d.id === node_id;
 	});
+
 	self.centerOnNode(node.nodes()[0]);//kinda not really d3-ish, but whatever
 
-	self.resource_modal.openResourceCreator(node_id.substr(1));
+	let response = await self.resource_modal.openResourceCreator(node_id.substr(1));
+
+	document.getElementById('submit-button').addEventListener('click', () => {
+		self.centerOnNode(node.nodes()[0]);
+	});
 };
 
 Tree.prototype.centerAndEdit = function(node_id)
