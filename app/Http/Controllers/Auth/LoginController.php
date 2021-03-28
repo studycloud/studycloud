@@ -46,6 +46,7 @@ class LoginController extends Controller
 	  */
 	public function redirectToProvider($provider)
 	{
+		echo "redirect to provider";
 		$response = Socialite::driver($provider);
 		if ($provider == 'google')
 		{
@@ -65,16 +66,19 @@ class LoginController extends Controller
 	 */
 	public function handleProviderCallback($provider)
 	{
+		echo "before socialite";
 		try {
 			$user = Socialite::driver($provider)->stateless()->user();
 		} catch (\Exception $e) {
+			echo "400 error?";
+			dd ($e);
 			throw $e;
 			return abort(400, "Unable to process the user information provided by ".$provider);
 		}
-
+		echo "before checking exist";		
 		// check if they're an existing user
 		$existingUser = User::where('email', $user->email)->first();
-
+		echo "after check if existing";
 		if($existingUser){
 			// log them in
 			auth()->login($existingUser, true);
