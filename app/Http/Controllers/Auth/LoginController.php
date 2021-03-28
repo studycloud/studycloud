@@ -66,33 +66,32 @@ class LoginController extends Controller
 	 */
 	public function handleProviderCallback($provider)
 	{
-		echo "before socialite";
 		try {
 			$user = Socialite::driver($provider)->stateless()->user();
 		} catch (\Exception $e) {
-			echo "400 error?";
-			dd ($e);
 			throw $e;
 			return abort(400, "Unable to process the user information provided by ".$provider);
 		}
-		echo "before checking exist";		
+						
 		// check if they're an existing user
 		$existingUser = User::where('email', $user->email)->first();
-		echo "after check if existing";
+		
 		if($existingUser){
 			// log them in
 			auth()->login($existingUser, true);
 		} else {
+			echo "create new user";
 			// create a new user
 			$newUser = new User;
-			$newUser->fname = $user->user['name']['givenName'];
-			$newUser->lname = $user->user['name']['familyName'];
+			echo "created new user";
+			$newUser->fname = $user->user['given_name'];
+			$newUser->lname = $user->user['family_name'];
 			$newUser->email = $user->email;
 			$newUser->password = $user->token;
 			$newUser->type = "student";
 			$newUser->oauth_type = $provider;
 			$newUser->save();
-
+			
 			// add oauth meta data to the new user
 			$newUser->oauth()->createMany([
 				[
@@ -101,7 +100,7 @@ class LoginController extends Controller
 				],
 				[
 					'type' => "refresh_token",
-					'value' => $newUser->refreshToken
+					'value' => $user->refreshToken
 				]
 			]);
 
