@@ -33,11 +33,7 @@ $factory->define(App\Academic_Class::class, function (Faker\Generator $faker)
 {
 	return [
 		'name' => $faker->text($maxNbChars = 46),
-		'author_id' => $faker->randomElement(
-			// get all user id's
-			// but also allow some of them to be null
-			array_merge(App\User::pluck('id')->toArray(), [null])
-		)
+		'author_id' => null
 	];
 });
 

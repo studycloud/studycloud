@@ -19,18 +19,21 @@ class DatabaseSeeder extends Seeder
 		if (!App::environment('production','staging'))
 		{
 			// the order of these seeders is important because several of them depend on each other, so change it with care
-			$this->call('UsersTableSeeder');
-			$this->call('ClassesTableSeeder');
-			$this->call('ClassParentTableSeeder');
-			$this->call('TopicsTableSeeder');
-			$this->call('ResourcesTableSeeder');
-			$this->call('ResourceContentsTableSeeder');
-			$this->call('TopicParentTableSeeder');
-			$this->call('ResourceClassTableSeeder');
-			$this->call('ResourceTopicTableSeeder');
-			$this->call('RoleUserTableSeeder');
-			$this->call('NoticesTableSeeder');
-			$this->call('NoticeParentTableSeeder');
+			// $this->call('UsersTableSeeder');
+			// $this->call('ClassesTableSeeder');
+			// $this->call('ClassParentTableSeeder');
+			// $this->call('TopicsTableSeeder');
+			// $this->call('ResourcesTableSeeder');
+			// $this->call('ResourceContentsTableSeeder');
+			// $this->call('TopicParentTableSeeder');
+			// $this->call('ResourceClassTableSeeder');
+			// $this->call('ResourceTopicTableSeeder');
+			// $this->call('RoleUserTableSeeder');
+			// $this->call('NoticesTableSeeder');
+			// $this->call('NoticeParentTableSeeder');
+			$this->call('PredefinedClassesTableSeeder');
+		} else {
+			$this->call('PredefinedClassesTableSeeder');
 		}
 	}
 
