@@ -30,10 +30,6 @@
 	</div>
 </div>
 
-<button id="editor-btn">temporary resource editor button</button>
-<button id="resource-meta-btn">resource meta button</button>
-<button id="resource-creator-btn">resource creator button</button>
-
 <script>
 	@if(isset($action) && !is_null($action))
 		{{-- it's either create or edit or show --}}
