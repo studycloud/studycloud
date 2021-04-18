@@ -44,10 +44,6 @@
 		</div>
 	</div>
 </div>
-<!--button id="creator-btn">temporary resource creator button</button-->
-<button id="editor-btn">temporary resource editor button</button>
-<button id="resource-meta-btn">resource meta button</button>
-<button id="resource-creator-btn">resource creator button</button>
 @stop
 
 @push('scripts')
