@@ -23,6 +23,14 @@
 			<input type="number" value="60" id="seconds_delay" style="width: 40px" min="1" max="100" title="A longer refresh time means better performance."> seconds. You should also refresh the page if you've left it idle for a while. </label>
 			<ul id="notes_ul">
 				<!-- the javascript update_ul function puts stuff in here -->
+			@include('notice', ['author' => 'Author', 
+                'description' => 'Description',
+                'deadline' => 'Deadline',
+                'link' => 'Link',
+                'priority' => 'Priority',
+                'id' => 'ID',
+                'owner' => 'Owner'
+            ])
 			</ul>
 			<script type="text/javascript">
 				function check_if_clear(){
@@ -30,22 +38,33 @@
 						$('#notes_ul').append("<p id='notice_board_clear' style='margin: 1%; margin-left: 2%; font-size: larger;'>All clear! Nothing to see here.</p>");
 					}
 				}
-
 				function update_ul_POSTer() {
-					// $.post('includes/update_ul.php','',function(data){
-					// 	if (data == "could not retrieve userid"){
-					// 		location.reload();
-					// 	}
-					// 	$("#notes_ul").html(data);
-					// 	check_if_clear();
-					// 	$('#num_notice_count').text(" ("+$('.li_change_color > button[title="cancel your completion of this task"]').length+"/"+$('.li_change_color').length+")");
-					// });
+					$.post('includes/update_ul.php','',function(data){
+						if (data == "could not retrieve userid"){
+							location.reload();
+						}
+						$("#notes_ul").html(data);
+						check_if_clear();
+						$('#num_notice_count').text(" ("+$('.li_change_color > button[title="cancel your completion of this task"]').length+"/"+$('.li_change_color').length+")");
+					});
 					// // TODO: move the html below into a new request
-					$("#notes_ul").html(" \
-
-					");
+					// $("#notes_ul").html(" \
+					// 	<li class='li_change_color'> \
+					// 		<span title='DummyUser Roles'><b>DummyUser FullName</b></span> \
+					// 		<?php if ($showDictatorPanel=true){ ?> \
+					// 			<button class='notes' title='click to see dictator info' value='DummyRecipient FullNames'><img src='/images/question_mark.png' style='width:100%'></button> \
+					// 		<?php } if ($cancel_button=true){ ?> \
+					// 			<button class='notes' title='cancel your completion of this task' value='<?php if ($isOnlyRec=true){ echo 'disabled'; } else { echo 'DummyNote ID'; } ?>'><img src='images/cancel.png' style='width:100%'></button> \
+					// 		<?php } ?> \
+					// 		<button class='notes' title='DummyNote Title' value='<?php echo 'DummyNote ID' ?>'><img src='<?php echo 'DummyNote ImgSrc' ?>' style='width: 100%'></button> \
+					// 		<!-- note: it's importannt to have the buttons before the span that includes all the content so that the content will wrap around the buttons --> \
+					// 		<span title='<?php echo 'DummyNote Date' ?>' \
+					// 				onclick='javascript:load_page(false,'<?php echo 'DummyNote URLQuery'; ?>');' \
+					// 				style='cursor:pointer;' \
+					// 		><br><?php echo 'DummyNote Content blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah' ?></span> \
+					// 	</li> \
+					// ");
 				}
-
 				//continually update the stuffs
 				function update_ul(status, interval_delay){
 					if(isNaN(interval_delay)){
@@ -62,13 +81,11 @@
 					}
 				}
 				update_ul(true); //starts the function
-
 				$('#seconds_delay').change(function(){
 					update_ul(false);
 					interval_delay = $(this).val()*1000;
 					update_ul(true, interval_delay);
 				});
-
 				$('#notes_ul').on('click', '.notes', function(event){
 					update_ul(false);
 					event.preventDefault();
@@ -137,20 +154,16 @@
 								scrollTop: $("#content_nav").offset().top
 							}, 1000);
 						}
-
 						$('#content_nav_ul > li > a').click(function(event){
 							event.preventDefault();
 							page_to_load = $(this).attr('href');
-
 							//show that the page is selected in the nav
 							$('#content_nav_ul li a').css("background-color","#dddddd");
 							$(this).css("background-color","#b5b5b5");
-
 							//set the background of the div to be loading
 							if (!$('#actual_content').hasClass("add_background_to_actual_content")){
 								//$('#actual_content').addClass("add_background_to_actual_content");
 							}
-
 							//load the page
 							load_page(page_to_load);
 						});

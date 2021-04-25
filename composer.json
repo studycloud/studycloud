@@ -10,7 +10,8 @@
         "laravel/framework": "5.5.*",
         "laravel/socialite": "^3.2.0",
         "laravel/tinker": "^1.0",
-        "silber/bouncer": "v1.0.0-rc.6"
+        "silber/bouncer": "v1.0.0-rc.6",
+        "mews/purifier": "dev-master"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.0",

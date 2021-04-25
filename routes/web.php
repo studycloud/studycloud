@@ -80,6 +80,7 @@ Route::get('admin',
 		//$user = User::findOrFail($user_id);
 		// return $user;
 		return view('admin');
+		// , [NoticeController::class, 'index']
 	}
 );
 
