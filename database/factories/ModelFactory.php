@@ -126,10 +126,12 @@ $factory->define(App\ResourceUse::class, function (Faker\Generator $faker)
 {
 	return [
 		'name' => ucwords(
-			$faker->words($nb = 3, $asText = true)
+			$faker->unique()->words($nb = 3, $asText = true)
 		),
 		'author_id' => $faker->randomElement(
-			App\User::pluck('id')->toArray()
+			// get all user id's
+			// but also allow some of them to be null
+			array_merge(App\User::pluck('id')->toArray(), [null])
 		)
 	];
 });

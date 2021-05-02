@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\User;
 use App\ResourceUse;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\Auth;
 
 class ResourceUsePolicy
 {
@@ -27,7 +26,7 @@ class ResourceUsePolicy
      * @param  \App\ResourceUse  $resourceUse
      * @return mixed
      */
-    public function view(User $user)
+    public function view()
     {
         //anyone can view
         return true;
@@ -41,11 +40,9 @@ class ResourceUsePolicy
      */
     public function create(User $user)
     {
-        // return true;
-        if (Auth::check()) {
-            // The user is logged in...
-            return true;
-        }
+        // by requiring a user as a parameter to this function, we are checking that
+        // their exists a logged in user
+        return true;
     }
 
     /**
@@ -55,10 +52,10 @@ class ResourceUsePolicy
      * @param  \App\ResourceUse  $resourceUse
      * @return mixed
      */
-    // public function update(User $user, ResourceUse $resourceUse)
-    // {
-    //     //
-    // }
+    public function update(User $user, ResourceUse $resourceUse)
+    {
+        return $user == $resourceUse->author;
+    }
 
     /**
      * Determine whether the user can delete the resourceUse.
@@ -70,9 +67,6 @@ class ResourceUsePolicy
     public function delete(User $user, ResourceUse $resourceUse)
     {
         //TODO: implement admin here (or with the before function at the top)
-        if (Auth::check()) {
-            // The user is logged in...
-            return false;
-        }
+        return $user == $resourceUse->author;
     }
 }
