@@ -1071,8 +1071,8 @@ Tree.prototype.nodeClicked = function(node)
 		else
 		{
 			//root node center is just /topics
-			var newUrl = window.location.protocol + "//" + window.location.host + "/topics";
-			window.history.replaceState("classTree", "topics", newUrl);
+			var newUrl = window.location.protocol + "//" + window.location.host + "/classes";
+			window.history.replaceState("classTree", "classes", newUrl);
 		}
 	}
 	else
