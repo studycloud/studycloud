@@ -507,8 +507,7 @@
             <!-- Navbar goes here -->
             <div class="navbar"> 
                 <ul>
-                    <li><a href="{{ route('topics.index') }}">Topics</a></li>
-                    <li><a href="#">Classes</a></li>
+                    <li><a href="{{ route('topics.index') }}">Classes</a></li>
                     <li><a href="{{ route('about') }}">About</a></li>
                     <li id="search">
                         <form action="" method="get" id="search-form">
