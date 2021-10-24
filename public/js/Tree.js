@@ -615,6 +615,12 @@ Tree.prototype.drawNodesStyle = function(transition = null)
 				{
 					this.style.visibility = "hidden";
 				}
+
+				// if (style.fixed != true)
+				// {
+				// 	d.fx = null
+				// 	d.fy = null
+				// }
 			}
 		)
 		.attr("opacity",function(d)
@@ -858,7 +864,7 @@ Tree.prototype.computeTreeStyle = function(ID_Level_Map)
 						break;
 
 					case 1:
-						// first sub-layer
+						// first sub-layer (this is the children under the center node)
 						style.visible = true;
 						style.opacity = 1;
 						style.labeled = true;
@@ -1068,6 +1074,7 @@ Tree.prototype.nodeClicked = function(node)
 
 		//Center on the node we clicked on
 		self.centerOnNode(node);
+		
 		//update url
 		if(node_ID !== "t0")
 		{
