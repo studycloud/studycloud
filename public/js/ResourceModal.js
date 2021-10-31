@@ -276,6 +276,7 @@ class ResourceModal {
 				"</label>" + 
 				"<span style = 'color:red' display = 'inline'>* </span>" + 
 			"</div>" +
+			"<div id = 'error-msg' > </div>"+
 			"<button type = 'button' id = 'submit-button'> Submit </button>" +
 			"<button type = 'button' id = 'cancel-button'> Cancel </button>";
 		
@@ -521,19 +522,25 @@ class ResourceModal {
 				(error) => {
 					console.log("Create resource - error");
 					console.log(error);
+					console.log(error.responseJSON);
+					error.responseJSON.then((result) =>{
+						console.log("getting the error message");
+						console.log(result);
+						document.getElementById("error-msg").innerHTML = result;
+					});
 				}, 
 				(data) => {
 					console.log("Create resource - success");
 					console.log(data);
-			});
 
-			//close the content creator
-			document.getElementById("my-modal").style.display = "none";
-			document.getElementById("resource-head").innerHTML = " ";
-			document.getElementById("modules").innerHTML = " "; //clean the display box up
-			
-			// remove instance of tinymce
-			tinymce.remove();
+					//close the content creator
+					document.getElementById("my-modal").style.display = "none";
+					document.getElementById("resource-head").innerHTML = " ";
+					document.getElementById("modules").innerHTML = " "; //clean the display box up
+					
+					// remove instance of tinymce
+					tinymce.remove();
+			});
 		} else {	
 			var labelProfPermission = document.getElementById('labelProfPermission');
 			labelProfPermission.style.color = "red";
