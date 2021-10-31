@@ -94,7 +94,7 @@ class ResourceModal {
 		document.getElementById("resource-container").style.display = "block";
 
 		// use the same template as resource editor
-		self.server.getResourceUseJSON(
+		return self.server.getResourceUseJSON(
 			(error) => {
 				console.log("Get resource use error");
 				console.log(error);
@@ -103,6 +103,10 @@ class ResourceModal {
 			// as well as receiving the data from the server
 			(resourceUseData) => {
 				self.resourceEditorCreatorHTML(resourceUseData);
+			}
+		).then(() => {
+				// allow us to only return after injecting HTML code
+				return true
 			}
 		);
 	}
@@ -291,11 +295,6 @@ class ResourceModal {
 				self.submitNewResource();
 			});
 		}
-
-		// document.getElementById('cancel-button').on('click', () => {
-		// 	self.submitNewResource();
-		// });
-		
 		
 		// prevent "ENTER" from enterng the new line, then exit editting mode for resourcename
 		document.getElementById('resource-name').addEventListener('keydown', (evt) => {
@@ -337,6 +336,8 @@ class ResourceModal {
 		// the user from submitting a new resource without something selected for each 
 		self.loadSelectedUseOrType("resource-use-selector", self.DEFAULT_RESOURCE_USE);
 		self.loadSelectedUseOrType("content-type-selector", self.DEFAULT_CONTENT_TYPE);
+
+		return true
 	}
 
 	/** 
@@ -472,7 +473,8 @@ class ResourceModal {
 	*			Call the server to edit the resource
 	*/
 	submitNewResource()
-	{
+	{	
+		console.log("async await is hard...");
 		var self = this;
 
 		var profPermission = document.getElementById("profPermission");

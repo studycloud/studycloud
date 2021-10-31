@@ -494,7 +494,7 @@ Server.prototype.getResourceUseJSON = function(handleError, handleSuccess)
 	var self = this;		
 	url = "/resource_uses";	
 	const csrfToken = self.getCookie("XSRF-TOKEN");
-	fetch(url, {
+	return fetch(url, {
 		method: 'get',			
 		headers: {	
 			'X-XSRF-TOKEN': csrfToken,
@@ -506,7 +506,7 @@ Server.prototype.getResourceUseJSON = function(handleError, handleSuccess)
 		{
 			let resultData = data.json();
 
-			resultData.then((result) => {
+			return resultData.then((result) => {
 				return handleSuccess(result);
 			});
 		
@@ -522,7 +522,7 @@ Server.prototype.getResourceUseJSON = function(handleError, handleSuccess)
 				responseData = {statusCode: data.status, statusText: data.statusText, responseJSON: {}};		
 			}
 			console.log("error?");			
-			handleError(responseData);
+			return handleError(responseData);
 		}	
 	}).catch(function(error){		
 		return handleError(error);
