@@ -198,6 +198,7 @@ $off-wht: rgba(white,.4);
 	grid-template-rows: auto auto auto;
 	grid-template-areas:
 		"warning warning"
+		"error error"
 		"space submit-button"
 		"space cancel-button";
 	grid-row-gap: 0.5rem;
@@ -212,6 +213,9 @@ $off-wht: rgba(white,.4);
 	grid-area: warning;
 }
 
+#error-msg{
+	grid-area: error;
+}
 
 /*********************************************************************************************************
 **********************************************************************************************************

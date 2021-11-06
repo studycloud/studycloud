@@ -526,7 +526,7 @@ class ResourceModal {
 					error.responseJSON.then((result) =>{
 						console.log("getting the error message");
 						console.log(result);
-						document.getElementById("error-msg").innerHTML = result;
+						document.getElementById("error-msg").innerHTML = self.cleanMessage(result);
 					});
 				}, 
 				(data) => {
@@ -552,6 +552,35 @@ class ResourceModal {
 	// Helper functions
 	//
 	/////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/** 
+	 * \Takes in raw error JSON and returns cleaned string
+	 */
+
+	cleanMessage(rawmessage){
+		// console.log(typeof(rawmessage));
+		const parsedmsg = JSON.parse(rawmessage);
+		// console.log(typeof(parsedmsg));
+		// console.log(parsedmsg.errors);
+		// console.log(parsedmsg["errors"]);
+		//iterating through each key in list of errors
+		for(var key in parsedmsg["errors"]){
+        	var error=parsedmsg["errors"][key];
+			// console.log(error)
+			for (var errorMessage in error){
+				// console.log(error[errorMessage]);
+				if (error[errorMessage].includes("must be a string.")){
+					console.log(key);
+				
+				}
+
+			}
+			
+		}
+        // work with key and value
+
+		return "hi";
+	}
 
 	/** 
 	 * \brief Initialize TinyMCE
