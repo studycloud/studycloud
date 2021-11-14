@@ -558,11 +558,8 @@ class ResourceModal {
 	 */
 
 	cleanMessage(rawmessage){
-		// console.log(typeof(rawmessage));
 		const parsedmsg = JSON.parse(rawmessage);
-		// console.log(typeof(parsedmsg));
-		// console.log(parsedmsg.errors);
-		// console.log(parsedmsg["errors"]);
+		
 		//iterating through each key in list of errors
 		for(var key in parsedmsg["errors"]){
         	var error=parsedmsg["errors"][key];
