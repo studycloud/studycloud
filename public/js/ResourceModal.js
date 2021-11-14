@@ -559,24 +559,31 @@ class ResourceModal {
 
 	cleanMessage(rawmessage){
 		const parsedmsg = JSON.parse(rawmessage);
+
+		let errorMsgToDisplay = "<ul>";
 		
 		//iterating through each key in list of errors
 		for(var key in parsedmsg["errors"]){
         	var error=parsedmsg["errors"][key];
-			// console.log(error)
+			// iterataing through the specific err msg for each key
+			console.log("error: ");
+			console.log(error);
 			for (var errorMessage in error){
-				// console.log(error[errorMessage]);
-				if (error[errorMessage].includes("must be a string.")){
+				console.log(error[errorMessage]);
+				if (error[errorMessage].includes("is required")){
 					console.log(key);
-				
+					if (key === 'name'){
+						errorMsgToDisplay += '<li> The resource name is required </li>';
+					}
 				}
 
 			}
-			
 		}
         // work with key and value
-
-		return "hi";
+		errorMsgToDisplay += "</ul>";
+		console.log("errorMsgToDisplay");
+		console.log(errorMsgToDisplay);
+		return errorMsgToDisplay;
 	}
 
 	/** 
