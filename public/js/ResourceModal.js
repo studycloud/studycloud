@@ -480,6 +480,9 @@ class ResourceModal {
 
 		// checks that the user checked the checkbox
 		if (profPermission.checked) {
+			var labelProfPermission = document.getElementById('labelProfPermission');
+			labelProfPermission.style.color = "black";
+			
 			tinymce.get("tinymce").save();
 			var resource_name = document.getElementById("resource-name").innerHTML;
 			var resource_use = self.findUseOrType("resource-use-selector");

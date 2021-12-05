@@ -41,9 +41,7 @@
 *   Grid Display: resource-head (for Resource Editor / Creator)
 *
 **********************************************************************************************************/
-ul.b {
-	list-style-type: circle;
-}
+
 #resource-head {
   display: grid;
   grid-template-columns: 35% 65%;
@@ -172,6 +170,13 @@ ul.b {
 *
 **********************************************************************************************************/
 
+ul.b {
+  list-style-type: circle;
+  list-style-position: inside;
+  font-size: 1.25rem;
+  color: red;
+}
+
 #buttons {
   display: grid;
   grid-template-columns: 35% 65%;
@@ -187,6 +192,10 @@ ul.b {
 
 #warning-msg {
   grid-area: warning;
+}
+
+#error-msg {
+  grid-area: error;
 }
 
 /*********************************************************************************************************

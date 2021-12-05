@@ -192,7 +192,11 @@ $off-wht: rgba(white,.4);
 **********************************************************************************************************/
 ul.b {
 	list-style-type: circle;
+	list-style-position: inside;
+	font-size: 1.25rem;
+	color: red;
 }
+
 #buttons {
 	// grid-area: buttons;
 	display: grid;
