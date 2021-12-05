@@ -570,10 +570,19 @@ class ResourceModal {
 			console.log(error);
 			for (var errorMessage in error){
 				console.log(error[errorMessage]);
+				if (error[errorMessage].includes("string")){
+					if (key === 'contents.0.content'){
+						errorMsgToDisplay += '<li> &bull; The content is required </li>';
+					}
+				}
 				if (error[errorMessage].includes("is required")){
 					console.log(key);
 					if (key === 'name'){
-						errorMsgToDisplay += '<li> The resource name is required </li>';
+						errorMsgToDisplay += '<li> &bull; The resource name is required </li>';
+					}
+					// TODO: make this support having multiple contents
+					if (key === 'contents.0.name'){
+						errorMsgToDisplay += '<li> &bull; The resource content name is required </li>';
 					}
 				}
 
