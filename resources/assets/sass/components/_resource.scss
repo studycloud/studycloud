@@ -190,7 +190,9 @@ $off-wht: rgba(white,.4);
 *   Grid Display: buttons (for Resource Editor / Creator)
 *
 **********************************************************************************************************/
-
+ul.b {
+	list-style-type: circle;
+}
 #buttons {
 	// grid-area: buttons;
 	display: grid;

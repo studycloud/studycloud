@@ -560,8 +560,8 @@ class ResourceModal {
 	cleanMessage(rawmessage){
 		const parsedmsg = JSON.parse(rawmessage);
 
-		let errorMsgToDisplay = "<ul>";
-		
+		let errorMsgToDisplay = "<ul class='b'>";
+	
 		//iterating through each key in list of errors
 		for(var key in parsedmsg["errors"]){
         	var error=parsedmsg["errors"][key];
@@ -572,17 +572,17 @@ class ResourceModal {
 				console.log(error[errorMessage]);
 				if (error[errorMessage].includes("string")){
 					if (key === 'contents.0.content'){
-						errorMsgToDisplay += '<li> &bull; The content is required </li>';
+						errorMsgToDisplay += '<li> The content is required </li>';
 					}
 				}
 				if (error[errorMessage].includes("is required")){
 					console.log(key);
 					if (key === 'name'){
-						errorMsgToDisplay += '<li> &bull; The resource name is required </li>';
+						errorMsgToDisplay += '<li> The resource name is required </li>';
 					}
 					// TODO: make this support having multiple contents
 					if (key === 'contents.0.name'){
-						errorMsgToDisplay += '<li> &bull; The resource content name is required </li>';
+						errorMsgToDisplay += '<li> The resource content name is required </li>';
 					}
 				}
 

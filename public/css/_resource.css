@@ -41,7 +41,9 @@
 *   Grid Display: resource-head (for Resource Editor / Creator)
 *
 **********************************************************************************************************/
-
+ul.b {
+	list-style-type: circle;
+}
 #resource-head {
   display: grid;
   grid-template-columns: 35% 65%;
@@ -173,8 +175,8 @@
 #buttons {
   display: grid;
   grid-template-columns: 35% 65%;
-  grid-template-rows: auto auto auto;
-  grid-template-areas: "warning warning" "space submit-button" "space cancel-button";
+  grid-template-rows: auto auto auto auto;
+  grid-template-areas: "warning warning" "error error" "space submit-button" "space cancel-button";
   grid-row-gap: 0.5rem;
   grid-column-gap: 1rem;
 }
